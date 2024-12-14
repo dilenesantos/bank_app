@@ -1,6 +1,6 @@
 streamlit
 streamlit_option_menu
-streamlit_extras.no_default_selectbox
+streamlit_extras
 numpy
 pandas
 plotly
@@ -11,4 +11,5 @@ seaborn
 pyarrow
 scipy
 matplotlib
+joblib
 
