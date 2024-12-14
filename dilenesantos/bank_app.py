@@ -32,9 +32,9 @@ from sklearn.metrics import classification_report
 
 import joblib
 import shap
-shap.initjs()
 
-df=pd.read_csv('bank.csv')
+
+df=pd.read_csv('bank.csv', sep=',')
 
 dff = df.copy()
 dff = dff[dff['age'] < 75]
