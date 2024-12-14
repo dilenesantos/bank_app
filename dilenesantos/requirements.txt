@@ -1,5 +1,6 @@
 streamlit
 streamlit_option_menu
+streamlit_extras.no_default_selectbox
 numpy
 pandas
 plotly
