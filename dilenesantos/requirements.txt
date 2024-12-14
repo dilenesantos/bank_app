@@ -1,0 +1,12 @@
+python==3.11.10
+numpy==1.26.4
+pandas==2.2.3
+plotly==5.24.1
+streamlit==1.40.1
+scikit-learn==1.2.2
+xgboost==1.7.3
+matplotplib==3.9.2
+cmake==3.26.4
+seaborn==0.13.2
+pyarrow==16.1.0
+scipy==1.13.0
