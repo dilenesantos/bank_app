@@ -12,4 +12,5 @@ pyarrow
 scipy
 matplotlib
 joblib
+shap
 
