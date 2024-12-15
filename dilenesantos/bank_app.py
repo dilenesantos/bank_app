@@ -266,23 +266,23 @@ X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 #APPEL du modèle rf_avec_duration _carolle_sauvegardé
 @st.cache_resource
 def load_model():
-    return joblib.load("random_forest_model_carolle.pkl")
+    return joblib.load("dilenesantos/random_forest_model_carolle.pkl")
             
 loaded_model_carolle = load_model()
 
 #appel des shap values du modèle sauvegardé rf_carolle
-shap_values_carolle = joblib.load("shap_values_carolle.pkl")
+shap_values_carolle = joblib.load("dilenesantos/shap_values_carolle.pkl")
 
 #APPEL du modèle xgboost_sans_duration sauvegardé
 @st.cache_resource
 def load_model():
-    return joblib.load("xgboost_sd_opti.pkl")
+    return joblib.load("dilenesantos/xgboost_sd_opti.pkl")
 
 # Charger le modèle
 loaded_model_xgboost_sd = load_model()
 
 #charger les shap values du modèle xgboost sauvegardé
-shap_values_xgboost_sd = joblib.load("shap_values_xgboost_sd.pkl")          
+shap_values_xgboost_sd = joblib.load("dilenesantos/shap_values_xgboost_sd.pkl")          
 
 with st.sidebar:
     selected = option_menu(
@@ -520,7 +520,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de balance sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de balance sur la souscrition au Deposit")
         
-                st.image("stats_balance_deposit.png")
+                st.write("normalement image stats_balance_deposit.png")
         
                 st.write("P_value = 9.126568e-18")
                 st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit")
@@ -540,7 +540,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de duration sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de duration sur la souscrition au Deposit")
         
-                st.image("stats_duration_deposit.png")
+                st.write("noramelement image stats_duration_deposit.png")
 
         
                 st.write("P_value = 0")
@@ -560,7 +560,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de campaign sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de campaign la souscrition au Deposit")
         
-                st.image("stats_campaign_deposit.png")
+                st.write("normalement image stats_campaign_deposit.png")
 
         
                 st.write("P_value = 4.831324e-42")
@@ -579,7 +579,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de previous sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de previous sur la souscrition au Deposit")
         
-                st.image("stats_previous_deposit.png")
+                st.write("normalement stats_previous_deposit.png")
 
         
                 st.write("P_value = 7.125338e-50")
@@ -1938,13 +1938,13 @@ if selected == "Modélisation":
             #APPEL du modèle xgboost_sans_duration sauvegardé
             @st.cache_resource
             def load_model():
-                return joblib.load("xgboost_sd_opti.pkl")
+                return joblib.load("dilenesantos/xgboost_sd_opti.pkl")
 
             # Charger le modèle
             loaded_model_xgboost_sd = load_model()
 
             #charger les shap values du modèle xgboost sauvegardé
-            shap_values_xgboost_sd = joblib.load("shap_values_xgboost_sd.pkl") 
+            shap_values_xgboost_sd = joblib.load("dilenesantos/shap_values_xgboost_sd.pkl") 
             
             fig = plt.figure()
             shap.summary_plot(shap_values_xgboost_sd, X_test_sd)  
@@ -2698,12 +2698,12 @@ if selected == "Modélisation":
             # Charger le modèle sauvegardé
             @st.cache_resource
             def load_model():
-                return joblib.load("xgboost_model_sd_OK.pkl")
+                return joblib.load("dilenesantos/xgboost_model_sd_OK.pkl")
 
             # Charger les SHAP values sauvegardées
             @st.cache_data
             def load_shap_values():
-                return joblib.load("shap_values_xgboost_model_sd_OK.pkl")
+                return joblib.load("dilenesantos/shap_values_xgboost_model_sd_OK.pkl")
 
             # Charger le modèle et les SHAP values
             model_xgboost_sd_OK = load_model()
@@ -2813,120 +2813,6 @@ if selected == "Modélisation":
             st.write("____________________________")
             
 
-            # Charger le modèle sauvegardé
-            @st.cache_resource
-            def load_model():
-                return joblib.load("xgboost_model_sd_OK2_poub.pkl")
-
-            # Charger les SHAP values sauvegardées
-            @st.cache_data
-            def load_shap_values():
-                return joblib.load("shap_values_xgboost_model_sd_OK2_poub.pkl")
-
-            # Charger le modèle et les SHAP values
-            model_xgboost_sd_OK2_poub = load_model()
-            shap_values_xgboost_sd_ok2_poub = load_shap_values()
-
-            st.write("test sur le  XGBOOST OK !!!!!!!! ")
-
-
-
-            # Afficher un graphique SHAP sur Streamlit
-            st.subheader("SHAP Summary Plot")
-            fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_sd_ok2_poub, X_test_sd)  # X_test_sd est ton jeu de test standardisé
-            st.pyplot(fig)
-            
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_sd_ok2_poub, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation_ok3 = shap.Explanation(values=shap_values_xgboost_sd_ok2_poub,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation_ok3)
-            st.pyplot(fig)
-            
-
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_xgboost_sd_ok2_poub[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_xgboost_sd_ok2_poub):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_xgboost_sd_ok2_poub[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_sd_ok2_poub)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_sd_ok2_poub)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_sd_ok2_poub)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_sd_ok2_poub)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_sd_ok2_poub)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
             
             st.write("____________________________")
             
@@ -3813,18 +3699,18 @@ if selected == 'Interprétation':
 
             # Entraîner et sauvegarder le modèle
             #rf_model_carolle.fit(X_train, y_train)
-            #joblib.dump(rf_model_carolle, "random_forest_model_carolle.pkl")
+            #joblib.dump(rf_model_carolle, "dilenesantos/random_forest_model_carolle.pkl")
 
             # Cacher le modèle et les valeurs SHAP avec Streamlit
             @st.cache_resource
             def load_model():
-                return joblib.load("random_forest_model_carolle.pkl")
+                return joblib.load("dilenesantos/random_forest_model_carolle.pkl")
 
             #@st.cache_data
             #def compute_shap_values(_model, data):
                 #explainer = shap.TreeExplainer(_model)
                 #shap_values_carolle = explainer.shap_values(data)
-                #joblib.dump(shap_values_carolle, "shap_values_carolle.pkl")
+                #joblib.dump(shap_values_carolle, "dilenesantos/shap_values_carolle.pkl")
                 #return shap_values_carolle
 
             # Charger le modèle
@@ -3832,12 +3718,12 @@ if selected == 'Interprétation':
 
             # Calculer ou charger les SHAP values
             #try:
-                #shap_values_carolle = joblib.load("shap_values_carolle.pkl")
+                #shap_values_carolle = joblib.load("dilenesantos/shap_values_carolle.pkl")
             #except FileNotFoundError:
                 #shap_values_carolle = compute_shap_values(loaded_model_carolle, X_test)
 
             #modèle déjà chargé  auparavant,code a conserver
-            shap_values_carolle = joblib.load("shap_values_carolle.pkl")
+            shap_values_carolle = joblib.load("dilenesantos/shap_values_carolle.pkl")
 
             
             # Affichage des visualisations SHAP
