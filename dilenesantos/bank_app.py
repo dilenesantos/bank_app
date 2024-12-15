@@ -274,7 +274,6 @@ with st.sidebar:
 
 # Navigation dans les options
 if selected == 'Mes tests':
-    st.title("Projet de prédictions de souscription au dépôt à terme proposé par une banque")
 
     st.title("TESTS DIVERS POUR APPRENDRE")
     st.title("Titre : Test projet TEAM")
