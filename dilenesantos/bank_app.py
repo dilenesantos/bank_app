@@ -2176,6 +2176,397 @@ if selected == 'Outil Prédictif':
  
 
     
+if selected == 'Outil Prédictif':    
+    #code python SANS DURATION
+    dff_TEST = df.copy()
+    dff_TEST = dff_TEST[dff_TEST['age'] < 75]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] > -2257]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] < 4087]
+    dff_TEST = dff_TEST.loc[dff_TEST["campaign"] < 6]
+    dff_TEST = dff_TEST.loc[dff_TEST["previous"] < 2.5]
+    dff_TEST = dff_TEST.drop('contact', axis = 1)
+
+    bins = [-2, -1, 180, 855]
+    labels = ['Prospect', 'Reached-6M', 'Reached+6M']
+    dff_TEST['Client_Category_M'] = pd.cut(dff_TEST['pdays'], bins=bins, labels=labels)
+    dff_TEST['Client_Category_M'] = dff_TEST['Client_Category_M'].astype('object')
+    dff_TEST = dff_TEST.drop('pdays', axis = 1)
+
+    dff_TEST = dff_TEST.drop(['day'], axis=1)
+    dff_TEST = dff_TEST.drop(['duration'], axis=1)
+    dff_TEST = dff_TEST.drop(['job'], axis=1)
+    dff_TEST = dff_TEST.drop(['default'], axis=1)
+    dff_TEST = dff_TEST.drop(['month'], axis=1)
+    dff_TEST = dff_TEST.drop(['poutcome'], axis=1)
+    dff_TEST = dff_TEST.drop(['marital'], axis=1)
+    dff_TEST = dff_TEST.drop(['loan'], axis=1)
+    dff_TEST = dff_TEST.drop(['campaign'], axis=1)   
+     
+    dff_TEST['education'] = dff_TEST['education'].replace('unknown', np.nan)
+
+    X_dff_TEST = dff_TEST.drop('deposit', axis = 1)
+    y_dff_TEST = dff_TEST['deposit']
+
+    # Séparation des données en un jeu d'entrainement et jeu de test
+    X_train_o, X_test_o, y_train_o, y_test_o = train_test_split(X_dff_TEST, y_dff_TEST, test_size = 0.20, random_state = 48)
+                    
+    # On fait de même pour les NaaN de 'education'
+    X_train_o['education'] = X_train_o['education'].fillna(method ='bfill')
+    X_train_o['education'] = X_train_o['education'].fillna(X_train_o['education'].mode()[0])
+
+    X_test_o['education'] = X_test_o['education'].fillna(method ='bfill')
+    X_test_o['education'] = X_test_o['education'].fillna(X_test_o['education'].mode()[0])
+                
+    # Standardisation des variables quantitatives:
+    scaler_o = StandardScaler()
+    cols_num_sd = ['age', 'balance', 'previous']
+    X_train_o[cols_num_sd] = scaler_o.fit_transform(X_train_o[cols_num_sd])
+    X_test_o[cols_num_sd] = scaler_o.transform (X_test_o[cols_num_sd])
+
+    # Encodage de la variable Cible 'deposit':
+    le_o = LabelEncoder()
+    y_train_o = le_o.fit_transform(y_train_o)
+    y_test_o = le_o.transform(y_test_o)
+
+    # Encodage des variables explicatives de type 'objet'
+    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+    cat1_o = ['housing']
+    X_train_o.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o[cat1_o])
+    X_test_o.loc[:, cat1_o] = oneh_o.transform(X_test_o[cat1_o])
+
+    X_train_o[cat1_o] = X_train_o[cat1_o].astype('int64')
+    X_test_o[cat1_o] = X_test_o[cat1_o].astype('int64')
+
+    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+
+    # 'Client_Category_M' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    X_train_o['Client_Category_M'] = X_train_o['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+    X_test_o['Client_Category_M'] = X_test_o['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+
+    st.dataframe(dff_TEST)
+    
+
+   
+    #RÉSULTAT DES MODÈLES SANS PARAMETRES
+    # Initialisation des classifiers
+    classifiers = {
+        "Random Forest": RandomForestClassifier(random_state=42),
+        "Logistic Regression": LogisticRegression(random_state=42),
+        "Decision Tree": DecisionTreeClassifier(random_state=42),
+        "KNN": KNeighborsClassifier(),
+        "AdaBoost": AdaBoostClassifier(random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM": svm.SVC(random_state=42),
+        "XGBOOST": XGBClassifier(random_state=42),
+    }
+
+    # Résultats des modèles
+    results_sans_parametres = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_sd, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_sans_parametres[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+
+    # Conversion des résultats en DataFrame
+    results_sans_param = pd.DataFrame(results_sans_parametres).T
+    results_sans_param.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+    results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
+
+    st.subheader("Scores modèles sans paramètres")
+    st.write("On affiche le tableau des résultats des modèles :")
+    st.dataframe(results_sans_param)
+                
+    
+    # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
+    classifiers_param_DURATION = {
+        "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
+        "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
+
+    results_avec_parametres_avDuration = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers_param_DURATION.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_avec_parametres_avDuration[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+
+    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+    results_best_param_DURATION = pd.DataFrame(results_avec_parametres_avDuration)
+    results_best_param_DURATION = results_best_param_DURATION.T
+    results_best_param_DURATION.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+                        
+    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+    results_best_param_DURATION = results_best_param_DURATION.sort_values(by='Recall', ascending=False)
+
+      
+    st.write("On affiche le tableau des résultats des best modèles hyperamétrés avec Duration :")
+    st.dataframe(results_best_param_DURATION)
+                
+           
+    # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
+    classifiers_param_sans_DURATION = {
+        "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
+        "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
+        "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)}
+    results_avec_parametres_sansDuration = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers_param_sans_DURATION.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_avec_parametres_sansDuration[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+         
+    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+    results_param_sans_duration = pd.DataFrame(results_avec_parametres_sansDuration)
+    results_param_sans_duration = results_param_sans_duration.T
+    results_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+                        
+    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+    results_param_sans_duration = results_param_sans_duration.sort_values(by='Recall', ascending=False)
+
+     
+    st.write("On affiche le tableau des résultats des modèles des best modèles hyperparamétrés sans duration:")
+    st.dataframe(results_param_sans_duration)
+                
+
+    st.subheader("Modèle sélectionné")
+    st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+    st.write("Affichons le rapport de classification de ce modèle")
+    rf_best = RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)
+    rf_best.fit(X_train_o, y_train_o)
+    score_train = rf_best.score(X_train_o, y_train_o)
+    score_test = rf_best.score(X_test_o, y_test_o)
+    y_pred = rf_best.predict(X_test_o)
+    table_rf = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_rf)
+    st.write("Classification report :")
+    report_dict = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df = pd.DataFrame(report_dict).T
+    st.dataframe(report_df)
+
+                    
+    st.subheader("Modèle sélectionné")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)                   
+
+
+    st.subheader("Modèle XGBOOST 2")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)                   
+
+    
+    st.title("Démonstration et application de notre modèle à votre cas")               
+
+    st.subheader(f'### Vos Informations')
+    age = st.slider("Quel est l'âge du client ?", 18, 85, 1)
+    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
+    balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 80000, 1)
+    housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
+    Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,10,1)
+    
+    st.write(f'### Récapitulatif')
+    st.write("Votre âge est :", age)
+    st.write("Votre niveau d'étude est:", education)
+    st.write("Le solde de votre compte en banque est :", balance)
+    st.write("Vous êtes propriétaire :", housing)
+    st.write("Le nombre de jour entre les deux derniers contacts avec votre banque est de :", Client_Category_M)
+    st.write("Le nombre de contact que vous avez eu lors de la dernière campagne est de :", previous)
+    
+    # Créer un dataframe récapitulatif des données du prospect
+    infos_prospect = pd.DataFrame({
+        'age': [age], 
+        'education': [education], 
+        'balance': [balance], 
+        'housing': [housing], 
+        'previous': [previous],
+        'Client_Category_M': [Client_Category_M],
+    }, index=[0]) 
+
+    # Affichage pour vérifier le nouvel index
+    st.write("Voici le tableau avec vos informations")
+    st.dataframe(infos_prospect)
+
+    # Construction du DataFrame pour le prospect à partir de infos_prospect
+    pred_df = infos_prospect.copy()
+
+    # Remplacer 'unknown' par NaN uniquement pour les colonnes spécifiques
+    cols_to_check = ['education']  # Colonnes à vérifier
+    for col in cols_to_check:
+        if (pred_df[col] == 'unknown').any():  # Vérifie si la valeur est "unknown"
+            pred_df[col] = np.nan  # Remplace "unknown" par NaN
+
+    # Remplissage par le mode pour 'education' et 'poutcome' dans le cas où il y a des NaN
+    if pred_df['education'].isna().any():
+        # Utiliser le mode de 'education' dans dff
+        pred_df['education'] = dff['education'].mode()[0]
+
+    # Transformation de 'education' et 'Client_Category_M' pour respecter l'ordre ordinal
+    pred_df['education'] = pred_df['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+    
+
+    # Remplacer 'yes' par 1 et 'no' par 0 pour chaque colonne
+    cols_to_replace = ['housing']
+    for col in cols_to_replace:
+        pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
+
+
+    # Réorganiser les colonnes pour correspondre exactement à celles de dff
+    pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
+    
+    # Affichage du DataFrame transformé avant la standardisation
+    st.write("Affichage du dataframe transformé (avant standardisation):")
+    st.dataframe(pred_df)
+
+    # Liste des colonnes numériques à standardiser
+    num_cols = ['age', 'balance','previous']
+
+    # Étape 1 : Créer un index spécifique pour pred_df
+    # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+    pred_df.index = range(dff_TEST.shape[0], dff_TEST.shape[0] + len(pred_df))
+
+    # Étape 2 : Concaténer dff et pred_df
+    # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+    combined_df = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
+
+    # Étape 3 : Standardisation des données numériques
+    scaler = StandardScaler()
+    combined_df[num_cols] = scaler.fit_transform(combined_df[num_cols])
+
+    # Étape 4 : Séparer à nouveau pred_df des autres données
+    # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+    pred_df[num_cols] = combined_df.loc[pred_df.index, num_cols]
+
+    # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+    pred_df = pred_df.reset_index(drop=True)
+
+    # Affichage du DataFrame après la standardisation
+    st.write("Affichage de pred_df prêt pour la prédiction :")
+    st.dataframe(pred_df)
+    st.dataframe(dff_TEST)
+
+
+    # Bouton pour lancer la prédiction
+    prediction_button = st.button(label="Predict")
+    
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+          
+    # Prédiction
+    if prediction_button:
+        prediction = xgboost_best.predict(pred_df)
+        prediction_proba = xgboost_best.predict_proba(pred_df)
+        max_proba = np.max(prediction_proba[0]) * 100
+        
+        # Résultats
+        if prediction[0] == 0:
+            st.write(f"Prediction Outcome: {prediction[0]}")
+            st.write(f"Confidence: {max_proba:.2f}%")
+            st.write("Summary:", "\nThe customer is less likely to subscribe to a term deposit")
+        else:
+            st.write(f"Prediction Outcome: {prediction[0]}")
+            st.write(f"Confidence: {max_proba:.2f}%")
+            st.write("Summary:", "\nThe customer is more likely to subscribe to a term deposit")
+ 
+ 
+
+    
 if selected == 'Outil Prédictif_2':    
     #code python SANS DURATION
     dff_TEST = df.copy()
@@ -2478,13 +2869,13 @@ if selected == 'Outil Prédictif_2':
     st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
     st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
     st.write("Affichons le rapport de classification de ce modèle")
-    xgboost_best = XGBClassifier(gamma=0.2,colsample_bytree=0.43, learning_rate=0.27, max_depth=6,  n_estimators=20, reg_alpha=3.2, reg_lambda=3.7, subsample=0.8, random_state=42)            
-    xgboost_best.fit(X_train_o, y_train_o)
-    score_train = xgboost_best.score(X_train_o, y_train_o)
-    score_test = xgboost_best.score(X_test_o, y_test_o)
-    y_pred = xgboost_best.predict(X_test_o)
-    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-    st.dataframe(table_xgboost)
+    xgboost_best_def = XGBClassifier(gamma=0.2,colsample_bytree=0.43, learning_rate=0.27, max_depth=6,  n_estimators=20, reg_alpha=3.2, reg_lambda=3.7, subsample=0.8, random_state=42)            
+    xgboost_best_def.fit(X_train_o, y_train_o)
+    score_train = xgboost_best_def.score(X_train_o, y_train_o)
+    score_test = xgboost_best_def.score(X_test_o, y_test_o)
+    y_pred = xgboost_best_def.predict(X_test_o)
+    table_xgboost_best_def = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost_best_def)
     st.write("Classification report :")
     report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
     # Convertir le dictionnaire en DataFrame
@@ -2596,13 +2987,13 @@ if selected == 'Outil Prédictif_2':
     # Bouton pour lancer la prédiction
     prediction_button = st.button(label="Predict")
     
-    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
-    xgboost_best.fit(X_train_o, y_train_o)
+    xgboost_best_predict = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+    xgboost_best_predict.fit(X_train_o, y_train_o)
           
     # Prédiction
     if prediction_button:
-        prediction = xgboost_best.predict(pred_df)
-        prediction_proba = xgboost_best.predict_proba(pred_df)
+        prediction = xgboost_best_predict.predict(pred_df)
+        prediction_proba = xgboost_best_predict.predict_proba(pred_df)
         max_proba = np.max(prediction_proba[0]) * 100
         
         # Résultats
