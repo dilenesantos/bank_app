@@ -287,6 +287,7 @@ if selected == 'Introduction':
     
     st.write("BLABLABLA")
     st.write("FATOU")
+    st.write("carolle")
 
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
