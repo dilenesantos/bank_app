@@ -265,27 +265,7 @@ dummies_sd = pd.get_dummies(X_train_sd['weekday'], prefix='weekday').astype(int)
 X_train_sd = pd.concat([X_train_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 dummies_sd = pd.get_dummies(X_test_sd['weekday'], prefix='weekday').astype(int)
 X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
-
-#APPEL du modèle rf_avec_duration _carolle_sauvegardé
-@st.cache_resource
-def load_model():
-    return joblib.load("random_forest_model_carolle.pkl")
-            
-loaded_model_carolle = load_model()
-
-#appel des shap values du modèle sauvegardé rf_carolle
-shap_values_carolle = joblib.load("shap_values_carolle.pkl")
-
-#APPEL du modèle xgboost_sans_duration sauvegardé
-@st.cache_resource
-def load_model():
-    return joblib.load("xgboost_sd_opti.pkl")
-
-# Charger le modèle
-loaded_model_xgboost_sd = load_model()
-
-#charger les shap values du modèle xgboost sauvegardé
-shap_values_xgboost_sd = joblib.load("shap_values_xgboost_sd.pkl")          
+    
 
 with st.sidebar:
     selected = option_menu(
@@ -1747,30 +1727,6 @@ if selected == 'Interprétation':
         submenu_interpretation = st.selectbox("Menu", ("Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"))
         
         if submenu_interpretation == "Summary plot" : 
-    
-            # Cacher le modèle et les valeurs SHAP avec Streamlit
-            @st.cache_resource
-            def load_model():
-                return joblib.load("random_forest_model_carolle.pkl")
-
-            #@st.cache_data
-            #def compute_shap_values(_model, data):
-                #explainer = shap.TreeExplainer(_model)
-                #shap_values_carolle = explainer.shap_values(data)
-                #joblib.dump(shap_values_carolle, "shap_values_carolle.pkl")
-                #return shap_values_carolle
-
-            # Charger le modèle
-            loaded_model_carolle = load_model()
-
-            # Calculer ou charger les SHAP values
-            #try:
-                #shap_values_carolle = joblib.load("shap_values_carolle.pkl")
-            #except FileNotFoundError:
-                #shap_values_carolle = compute_shap_values(loaded_model_carolle, X_test)
-
-            #modèle déjà chargé  auparavant,code a conserver
-            shap_values_carolle = joblib.load("shap_values_carolle.pkl")
 
             
             # Affichage des visualisations SHAP
@@ -1779,17 +1735,6 @@ if selected == 'Interprétation':
             fig = plt.figure()
             shap.summary_plot(shap_values_carolle[:,:,1], X_test)  # Supposant un problème de classification binaire
             st.pyplot(fig)
-
-            # Prédiction et matrice de confusion
-            y_pred = loaded_model_carolle.predict(X_test)
-            table_rf = pd.crosstab(y_test, y_pred, rownames=["Réalité"], colnames=["Prédiction"])
-            st.dataframe(table_rf)
-
-            # Rapport de classification
-            st.write("Classification report :")
-            report_dict = classification_report(y_test, y_pred, output_dict=True)
-            report_df = pd.DataFrame(report_dict).T
-            st.dataframe(report_df)
 
         if submenu_interpretation == "Bar plot poids des variables" :
             st.subheader("Poids des variables dans le modèle")
