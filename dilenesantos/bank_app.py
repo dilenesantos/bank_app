@@ -2738,4 +2738,4 @@ if selected == 'Outil Prédictif_2':
             st.write(f"Prediction Outcome: {prediction[0]}")
             st.write(f"Confidence: {max_proba:.2f}%")
             st.write("Summary:", "\nThe customer is more likely to subscribe to a term deposit")
- st.write("hello")
+ st.write("hello Fatou")
