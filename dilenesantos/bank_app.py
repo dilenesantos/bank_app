@@ -1,8 +1,8 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-import seaborn as sns
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 import scipy.stats as stats
 from sklearn.model_selection import train_test_split
@@ -32,7 +32,6 @@ from sklearn.metrics import classification_report
 
 import joblib
 import shap
-
 
 df=pd.read_csv('dilenesantos/bank.csv')
 
@@ -156,10 +155,14 @@ dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["balance"] > -2257]
 dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["balance"] < 4087]
 dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["campaign"] < 6]
 dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["previous"] < 2.5]
+dff_sans_duration = dff_sans_duration.drop('contact', axis = 1)
+
 bins = [-2, -1, 180, 855]
 labels = ['Prospect', 'Reached-6M', 'Reached+6M']
 dff_sans_duration['Client_Category_M'] = pd.cut(dff_sans_duration['pdays'], bins=bins, labels=labels)
 dff_sans_duration['Client_Category_M'] = dff_sans_duration['Client_Category_M'].astype('object')
+dff_sans_duration = dff_sans_duration.drop('pdays', axis = 1)
+
 liste_annee =[]
 for i in dff_sans_duration["month"] :
     if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
@@ -172,12 +175,12 @@ dff_sans_duration['date']= pd.to_datetime(dff_sans_duration['date'])
 dff_sans_duration["weekday"] = dff_sans_duration["date"].dt.weekday
 dic = {0 : "Lundi", 1 : "Mardi", 2 : "Mercredi", 3 : "Jeudi", 4 : "Vendredi", 5 : "Samedi", 6 : "Dimanche"}
 dff_sans_duration["weekday"] = dff_sans_duration["weekday"].replace(dic)
-dff_sans_duration = dff_sans_duration.drop(['contact'], axis=1)
-dff_sans_duration = dff_sans_duration.drop(['pdays'], axis=1)
+
 dff_sans_duration = dff_sans_duration.drop(['day'], axis=1)
 dff_sans_duration = dff_sans_duration.drop(['date'], axis=1)
 dff_sans_duration = dff_sans_duration.drop(['year'], axis=1)
 dff_sans_duration = dff_sans_duration.drop(['duration'], axis=1)
+
 dff_sans_duration['job'] = dff_sans_duration['job'].replace('unknown', np.nan)
 dff_sans_duration['education'] = dff_sans_duration['education'].replace('unknown', np.nan)
 dff_sans_duration['poutcome'] = dff_sans_duration['poutcome'].replace('unknown', np.nan)
@@ -263,44 +266,31 @@ X_train_sd = pd.concat([X_train_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 dummies_sd = pd.get_dummies(X_test_sd['weekday'], prefix='weekday').astype(int)
 X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 
-       
+#APPEL du modèle rf_avec_duration _carolle_sauvegardé
+@st.cache_resource
+def load_model():
+    return joblib.load("random_forest_model_carolle.pkl")
+            
+loaded_model_carolle = load_model()
+
+#appel des shap values du modèle sauvegardé rf_carolle
+shap_values_carolle = joblib.load("shap_values_carolle.pkl")
+
+#APPEL du modèle xgboost_sans_duration sauvegardé
+@st.cache_resource
+def load_model():
+    return joblib.load("xgboost_sd_opti.pkl")
+
+# Charger le modèle
+loaded_model_xgboost_sd = load_model()
+
+#charger les shap values du modèle xgboost sauvegardé
+shap_values_xgboost_sd = joblib.load("shap_values_xgboost_sd.pkl")          
 
 with st.sidebar:
     selected = option_menu(
         menu_title='Sections',
-        options=['Mes tests', 'Introduction','DataVisualisation', "Pre-processing", "Choix des métriques", "Modélisation", "Interprétation", "Conclusion", "Démo", "DémoSD"])
-
-
-
-# Navigation dans les options
-if selected == 'Mes tests':
-
-    st.title("TESTS DIVERS POUR APPRENDRE")
-    st.title("Titre : Test projet TEAM")
-    st.header("Header : Introduction")
-    st.subheader("Subheader : Projet Datascientest")
-    if st.checkbox("Afficher") : 
-        st.write("Suite du Streamlit BASE")
-
-    st.write("Test affichage du dataframe")
-
-
-    # Affichage
-    st.dataframe(df.head(10))
-    st.write(df.shape)
-    st.dataframe(df.describe())
-    
-    #checkbox pour afficher ou non le nombre de Nans
-    if st.checkbox("Afficher les NAns") :
-        st.dataframe(df.isna().sum())
-
-
-    st.write("test affichage d'un bouton")
-    if st.button("Bouton : touche ici") :
-        st.write("J'ai appuyé sur le bouton")
-
-    st.write("test affichage d'une barre déroulante de sélection")
-    st.selectbox("Quel est votre choix ?", ('Premier choix', "Second choix", 'Troisième choix'))
+        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil Prédictif", "Outil Prédictif_2"])
 
 
 
@@ -313,11 +303,12 @@ if selected == 'Introduction':
     st.write("L'objectif est double :")
     st.write("- Identifier et analyser visuellement et statistiquement les caractéristiques des clients qui sont corrélées avec la souscription au 'dépôt à terme'.")
     st.write("- Utiliser des techniques de Machine Learning pour prédire si un client va souscrire au 'dépôt à terme'.")
-
+    
+    st.write("BLABLABLA")
 
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
-    st.sidebar.title("MENU DATAVISUALISATION")
+    st.sidebar.title("SOUS MENU DATAVISUALISATION")
     option_submenu = st.sidebar.selectbox('Sélection', ("Description des données", "Analyse des variables", "Analyse des variables qualitatives", "Corrélations entre les variables", "Évolution de la variable deposit dans le temps"))
     if option_submenu == 'Description des données':
         st.subheader("Description des données")
@@ -500,7 +491,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de balance sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de balance sur la souscrition au Deposit")
         
-                st.write("normalement image stats_balance_deposit.png")
+                st.image("dilenesantos/stats_balance_deposit.png")
         
                 st.write("P_value = 9.126568e-18")
                 st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit")
@@ -520,7 +511,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de duration sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de duration sur la souscrition au Deposit")
         
-                st.write("noramelement image stats_duration_deposit.png")
+                st.image("dilenesantos/stats_duration_deposit.png")
 
         
                 st.write("P_value = 0")
@@ -540,7 +531,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de campaign sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de campaign la souscrition au Deposit")
         
-                st.write("normalement image stats_campaign_deposit.png")
+                st.image("dilenesantos/stats_campaign_deposit.png")
 
         
                 st.write("P_value = 4.831324e-42")
@@ -559,7 +550,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de previous sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de previous sur la souscrition au Deposit")
         
-                st.write("normalement stats_previous_deposit.png")
+                st.image("dilenesantos/stats_previous_deposit.png")
 
         
                 st.write("P_value = 7.125338e-50")
@@ -1327,11 +1318,6 @@ if selected == "Pre-processing":
             st.write("Vérification sur X_test, reste-t-il des Nans ?")
             st.dataframe(X_test_pre_pros2.isna().sum())
                 
-        
-if selected == 'Choix des métriques':
-    st.title("Réflexion sur les métriques")
-
-
 
 if selected == "Modélisation":
     
@@ -1450,77 +1436,21 @@ if selected == "Modélisation":
     results_param_df_melted_DURATION.rename(columns={"index": "Classifier"}, inplace=True)
 
 
-    # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
-    classifiers_param_sans_DURATION = {
-        "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
-        "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
-        "Bagging": BaggingClassifier(random_state=42),
-        "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
-        "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)}
-    results_param_sans_duration = {}  # Affichage des résultats dans results
-
-
-    # Fonction pour entraîner et sauvegarder un modèle
-    def train_and_save_model_avec_param_sans_duration(model_name, clf, X_train, y_train):
-        filename = f"{model_name.replace(' ', '_')}_model_sans_duration_hyperparam_test_ad.pkl"  # Nom du fichier
-        try:
-            # Charger le modèle si le fichier existe déjà
-            trained_clf = joblib.load(filename)
-        except FileNotFoundError:
-            # Entraîner et sauvegarder le modèle
-            clf.fit(X_train, y_train)
-            joblib.dump(clf, filename)
-            trained_clf = clf
-        return trained_clf
-
-    # Boucle pour entraîner ou charger les modèles
-    for name, clf in classifiers_param_sans_DURATION.items():
-        # Entraîner ou charger le modèle
-        trained_clf = train_and_save_model_avec_param_sans_duration(name, clf, X_train, y_train)
-        y_pred = trained_clf.predict(X_test)
-            
-        # Calcul des métriques
-        accuracy = accuracy_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred)
-        precision = precision_score(y_test, y_pred)
-        recall = recall_score(y_test, y_pred)
-            
-        # Stocker les résultats
-        results_param_sans_duration[name] = {
-            "Accuracy": accuracy,
-            "F1 Score": f1,
-            "Precision": precision,
-            "Recall": recall,
-        }
-         
-    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-    results_param_sans_duration = pd.DataFrame(results_param_sans_duration)
-    results_param_sans_duration = results_param_sans_duration.T
-    results_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                        
-    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-    results_param_sans_duration = results_param_sans_duration.sort_values(by='Recall', ascending=False)
-
-    results_param_sans_duration_melted = results_param_sans_duration.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-    results_param_sans_duration_melted.rename(columns={"index": "Classifier"}, inplace=True)
-
-
-    
     st.title("MODÉLISATION")
-    st.sidebar.title("MENU MODÉLISATION")   
-    option_submenu = st.sidebar.selectbox('Sélection', ("Introduction", "Modélisation avec Duration", "Modélisation sans Duration", "Conclusion"))
-        
-    if option_submenu == 'Introduction':
+    st.sidebar.title("MENU MODÉLISATION")  
+    pages=["Introduction", "Modélisation avec Duration", "Modélisation sans Duration"]
+    page=st.sidebar.radio('Afficher', pages)
+ 
+
+    if page == pages[0] : 
         st.subheader("Méthodologie")
         st.write("On va effectuer deux modélisations, l'une en conservant la variable Duration et l'autre sans la variable Duration : on explique pourquoi blablabla.")
         st.write("Pour chaque modélisation, avec ou sans Duration, nous analysons les scores des principaux modèles de classification d'abord dans paramètres afin de sélectionner les 3 meilleurs modèles, puis sur ces 3 modèles nous effectuons des recherches d'hyperparamètres à l'aide de la fonction GridSearchCV afin de sélectionner le modèle le plus performant possible.")
         st.write("Enfin sur le meilleur modèle trouvé, nous effectuons une analyse SHAP afin d'interpréter les décisions prises par le modèle dans la détection des clients susceptibles de Deposit YES")
                 
-    if option_submenu == 'Modélisation avec Duration':
-        pages=["Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"]
-        page=st.sidebar.radio('Afficher', pages)
-               
-        if page == pages[0] :
+    if page == pages[1] : 
+        submenu_modelisation = st.selectbox("Menu", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"))
+        if submenu_modelisation == "Scores modèles sans paramètres" :
             st.subheader("Scores modèles sans paramètres")
             st.write("On affiche le tableau des résultats des modèles :")
             st.dataframe(results_sans_param)
@@ -1540,7 +1470,7 @@ if selected == "Modélisation":
             st.pyplot(fig)
                 
     
-        if page == pages[1] :
+        if submenu_modelisation == "Hyperparamètres et choix du modèle" :
             st.subheader("Hyperparamètres et choix du modèle")
             st.write("blabla GridSearchCV ....")
                 
@@ -1599,108 +1529,37 @@ if selected == "Modélisation":
             st.dataframe(report_df)
 
 
+    if page == pages[2] :
+        submenu_modelisation2 = st.selectbox("Menu", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"))
     
-    if option_submenu == 'Modélisation sans Duration':
-        pages=["Scores modèles sans paramètres", "Hyperparamètres et choix du modèle", "Hyperparamètres et choix du modèle TESTS"]
-        page=st.sidebar.radio('Afficher', pages)
-        classifiers_sd = {"Random Forest": RandomForestClassifier(random_state=42),"Logistic Regression": LogisticRegression(random_state=42),"Decision Tree": DecisionTreeClassifier(random_state=42),"KNN" : neighbors.KNeighborsClassifier(),"AdaBoost": AdaBoostClassifier(random_state=42),"Bagging": BaggingClassifier(random_state=42),"SVM" : svm.SVC(random_state=42),"XGBOOST" : XGBClassifier(random_state=42)}
-        results_sd = {}  # Affichage des résultats dans results
-
-        for name, clf in classifiers_sd.items():
-            clf.fit(X_train_sd, y_train_sd)
-            y_pred_sd = clf.predict(X_test_sd)
-            accuracy_sd = accuracy_score(y_test_sd, y_pred_sd)
-            f1_sd = f1_score(y_test_sd, y_pred_sd)
-            precision_sd = precision_score(y_test_sd, y_pred_sd)
-            recall_sd = recall_score(y_test_sd, y_pred_sd)
-            results_sd[name] = {"Accuracy": accuracy_sd,"F1 Score": f1_sd,"Precision": precision_sd,"Recall": recall_sd}
-            
-        #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-        results_df_sd = pd.DataFrame(results_sd)
-        results_df_sd = results_df_sd.T
-        results_df_sd.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                
-        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_df_sd = results_df_sd.sort_values(by='Recall', ascending=False)
-
-        results_melted_sd = results_df_sd.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-        results_melted_sd.rename(columns={"index": "Classifier"}, inplace=True)
-
-        # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
-        classifiers_param_sd = {
-            "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth = None, max_features = 'sqrt', min_samples_leaf= 2, min_samples_split= 15, n_estimators = 200, random_state=42),
-            "Bagging": BaggingClassifier(random_state=42),
-            "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
-            "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
-        results_param_sd = {}  # Affichage des résultats dans results
-
-        for name, clf in classifiers_param_sd.items():
-            clf.fit(X_train_sd, y_train_sd)
-            y_pred_param_sd = clf.predict(X_test_sd)
-            accuracy_param_sd = accuracy_score(y_test_sd, y_pred_param_sd)
-            f1_param_sd = f1_score(y_test_sd, y_pred_param_sd)
-            precision_param_sd = precision_score(y_test_sd, y_pred_param_sd)
-            recall_param_sd = recall_score(y_test_sd, y_pred_param_sd)
-            results_param_sd[name] = {"Accuracy": accuracy_param_sd,"F1 Score": f1_param_sd,"Precision": precision_param_sd,"Recall": recall_param_sd}
-            
-        #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-        results_param_df_sd = pd.DataFrame(results_param_sd)
-        results_param_df_sd = results_param_df_sd.T
-        results_param_df_sd.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                
-        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_param_df_sd = results_param_df_sd.sort_values(by='Recall', ascending=False)
-
-        results_param_df_melted_sd = results_param_df_sd.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-        results_param_df_melted_sd.rename(columns={"index": "Classifier"}, inplace=True)
-
-
-
-        # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
-        classifiers_param_sd2 = {
-            "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
-            "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
-            "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
-            "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42),
-            "XGBOOST test_init" :  XGBClassifier(gamma=1.1,colsample_bytree=0.83, learning_rate=0.18, max_depth=5,  min_child_weight=1.2, n_estimators=33, reg_alpha=1.35, reg_lambda=1.8, scale_pos_weight=2.11, subsample=0.98, random_state=42),
-            "XGBOOST test" : XGBClassifier(colsample_bytree=0.84, learning_rate=0.185, max_depth=5,  min_child_weight=1.55, n_estimators=31, reg_alpha=1.347, reg_lambda=1.75, scale_pos_weight=2.09, subsample=0.877, random_state=42),
-            "XGBOOST test2" : XGBClassifier(colsample_bytree=0.85, learning_rate=0.187, max_depth=5,  min_child_weight=1.6, n_estimators=30, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.09, subsample=0.87, random_state=42),
-            "XGBOOST test3" : XGBClassifier(colsample_bytree=0.85, learning_rate=0.187, max_depth=5,  min_child_weight=1.6, n_estimators=30, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42),
-            "XGBOOST test4" : XGBClassifier(colsample_bytree=0.85, learning_rate=0.187, max_depth=5,  min_child_weight=1.6, n_estimators=30, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.18, subsample=0.87, random_state=42),
-            "XGBOOST test3bis" : XGBClassifier(colsample_bytree=0.82, learning_rate=0.18, max_depth=5,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42),
-            "XGBOOST test3ter" : XGBClassifier(gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=5,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42),
-            "XGBOOST test3q" : XGBClassifier(gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=6,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.20, subsample=0.87, random_state=42)}
-
-
-
-
-        results_param_sd_2 = {}  # Affichage des résultats dans results
-
-        for name, clf in classifiers_param_sd2.items():
-            clf.fit(X_train_sd, y_train_sd)
-            y_pred_param_sd2 = clf.predict(X_test_sd)
-            accuracy_param_sd2 = accuracy_score(y_test_sd, y_pred_param_sd2)
-            f1_param_sd2 = f1_score(y_test_sd, y_pred_param_sd2)
-            precision_param_sd2 = precision_score(y_test_sd, y_pred_param_sd2)
-            recall_param_sd2 = recall_score(y_test_sd, y_pred_param_sd2)
-            results_param_sd_2[name] = {"Accuracy": accuracy_param_sd2,"F1 Score": f1_param_sd2,"Precision": precision_param_sd2,"Recall": recall_param_sd2}
-            
-        #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-        results_param_df_sd2 = pd.DataFrame(results_param_sd_2)
-        results_param_df_sd2 = results_param_df_sd2.T
-        results_param_df_sd2.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                
-        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_param_df_sd2 = results_param_df_sd2.sort_values(by='Recall', ascending=False)
-
-        results_param_df_melted_sd2 = results_param_df_sd2.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-        results_param_df_melted_sd2.rename(columns={"index": "Classifier"}, inplace=True)
-
-
-
-        if page == pages[0] :
+        if submenu_modelisation2 == "Scores modèles sans paramètres" :
             st.subheader("Scores modèles sans paramètres")
             st.write("On affiche le tableau des résultats des modèles :")
+            
+            classifiers_sd = {"Random Forest": RandomForestClassifier(random_state=42),"Logistic Regression": LogisticRegression(random_state=42),"Decision Tree": DecisionTreeClassifier(random_state=42),"KNN" : neighbors.KNeighborsClassifier(),"AdaBoost": AdaBoostClassifier(random_state=42),"Bagging": BaggingClassifier(random_state=42),"SVM" : svm.SVC(random_state=42),"XGBOOST" : XGBClassifier(random_state=42)}
+            results_sd = {}  # Affichage des résultats dans results
+
+            for name, clf in classifiers_sd.items():
+                clf.fit(X_train_sd, y_train_sd)
+                y_pred_sd = clf.predict(X_test_sd)
+                accuracy_sd = accuracy_score(y_test_sd, y_pred_sd)
+                f1_sd = f1_score(y_test_sd, y_pred_sd)
+                precision_sd = precision_score(y_test_sd, y_pred_sd)
+                recall_sd = recall_score(y_test_sd, y_pred_sd)
+                results_sd[name] = {"Accuracy": accuracy_sd,"F1 Score": f1_sd,"Precision": precision_sd,"Recall": recall_sd}
+                
+            #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+            results_df_sd = pd.DataFrame(results_sd)
+            results_df_sd = results_df_sd.T
+            results_df_sd.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+                    
+            #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+            results_df_sd = results_df_sd.sort_values(by='Recall', ascending=False)
+
+            results_melted_sd = results_df_sd.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+            results_melted_sd.rename(columns={"index": "Classifier"}, inplace=True)
+
+            
             st.dataframe(results_df_sd)
                     
             st.write("Graphique :")
@@ -1717,10 +1576,40 @@ if selected == "Modélisation":
             plt.tight_layout()
             st.pyplot(fig)
 
-        if page == pages[1] :
+        if submenu_modelisation2 == "Hyperparamètres et choix du modèle" :
             st.write("Recherche d'hyperparamètres et choix du modèle")
             st.write("blabla GridSearchCV ....")
+            # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
+            classifiers_param_sd2 = {
+                "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
+                "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
+                "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
+                "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42),
+            }
+
+
+            results_param_sd_2 = {}  # Affichage des résultats dans results
+
+            for name, clf in classifiers_param_sd2.items():
+                clf.fit(X_train_sd, y_train_sd)
+                y_pred_param_sd2 = clf.predict(X_test_sd)
+                accuracy_param_sd2 = accuracy_score(y_test_sd, y_pred_param_sd2)
+                f1_param_sd2 = f1_score(y_test_sd, y_pred_param_sd2)
+                precision_param_sd2 = precision_score(y_test_sd, y_pred_param_sd2)
+                recall_param_sd2 = recall_score(y_test_sd, y_pred_param_sd2)
+                results_param_sd_2[name] = {"Accuracy": accuracy_param_sd2,"F1 Score": f1_param_sd2,"Precision": precision_param_sd2,"Recall": recall_param_sd2}
+                
+            #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+            results_param_df_sd2 = pd.DataFrame(results_param_sd_2)
+            results_param_df_sd2 = results_param_df_sd2.T
+            results_param_df_sd2.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
                     
+            #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+            results_param_df_sd2 = results_param_df_sd2.sort_values(by='Recall', ascending=False)
+
+            results_param_df_melted_sd2 = results_param_df_sd2.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+            results_param_df_melted_sd2.rename(columns={"index": "Classifier"}, inplace=True)
+                       
             st.write("On affiche le tableau des résultats des modèles :")
             st.dataframe(results_param_df_sd2)
                     
@@ -1738,29 +1627,12 @@ if selected == "Modélisation":
             plt.tight_layout()
             st.pyplot(fig)
                     
-            st.write("NB : ci-dessous résultats des hyper paramètres trouvés pour les 3 best modèles trouvés AVEC DURATION - test sur le dataset sans duration*****")
-            st.write("On affiche le tableau des résultats des modèles :")
-            st.dataframe(results_param_df_sd)
-                    
-            st.write("Graphique :")
-            # Visualisation des résultats des différents modèles :
-            fig = plt.figure(figsize=(12, 6))
-            sns.barplot(data=results_param_df_melted_sd,x="Classifier",y="Score",hue="Metric",palette="rainbow")
-            # Ajouter des titres et légendes
-            plt.title("Performance des modèles par métrique", fontsize=16)
-            plt.xlabel("Modèles", fontsize=14)
-            plt.ylabel("Scores", fontsize=14)
-            plt.xticks(rotation=45)
-            plt.legend(title="Métrique", fontsize=12)
-            plt.legend(loc='lower right')
-            plt.tight_layout()
-            st.pyplot(fig)
                     
             st.subheader("Modèle sélectionné")
             st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-            st.write("XGBClassifier 3ter(gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=5,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42)")
+            st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
             st.write("Affichons le rapport de classification de ce modèle")
-            xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=5,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42)
+            xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
             xgboost_best.fit(X_train_sd, y_train_sd)
             score_train = xgboost_best.score(X_train_sd, y_train_sd)
             score_test = xgboost_best.score(X_test_sd, y_test_sd)
@@ -1772,70 +1644,20 @@ if selected == "Modélisation":
             # Convertir le dictionnaire en DataFrame
             report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
             st.dataframe(report_df_xgboost)
-                    
-                    
-            st.subheader("Modèle sélectionné")
-            st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-            st.write("XGBClassifier INIT(seed=42, gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
-            st.write("Affichons le rapport de classification de ce modèle")
-            xgboost_best = XGBClassifier(seed=42, gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)
-            xgboost_best.fit(X_train_sd, y_train_sd)
-            score_train = xgboost_best.score(X_train_sd, y_train_sd)
-            score_test = xgboost_best.score(X_test_sd, y_test_sd)
-            y_pred = xgboost_best.predict(X_test_sd)
-            table_xgboost = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost)
-            st.write("Classification report :")
-            report_dict_xgboost = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-            st.dataframe(report_df_xgboost)
-                    
-            st.subheader("Modèle sélectionné")
-            st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-            st.write("XGBClassifier test3ter (gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=5,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42)")
-            st.write("Affichons le rapport de classification de ce modèle")
-            xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=5,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42)
-            xgboost_best.fit(X_train_sd, y_train_sd)
-            score_train = xgboost_best.score(X_train_sd, y_train_sd)
-            score_test = xgboost_best.score(X_test_sd, y_test_sd)
-            y_pred = xgboost_best.predict(X_test_sd)
-            table_xgboost = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost)
-            st.write("Classification report :")
-            report_dict_xgboost = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-            st.dataframe(report_df_xgboost)
-                    
-            ######test sur le shap pour vérifier classement OK 
-            st.write("test sur le XGBOOST INIT pour vérifier classement OK ")
-
-            XGBOOST_test_shap = XGBClassifier(seed=42, gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)
-            st.write("Modele testé ci-dessous = XGBClassifier(seed=42, gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
             
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
+            explainer = shap.TreeExplainer(xgboost_best)
+            shap_values_xgboost_best = explainer.shap_values(X_test_sd)
             
             fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
+            shap.summary_plot(shap_values_xgboost_best, X_test_sd)  
             st.pyplot(fig)
             
             fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
+            explanation = shap.Explanation(values=shap_values_xgboost_best,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
                                  feature_names=X_test_sd.columns)
             shap.plots.bar(explanation)
-            st.pyplot(fig)
+            st.pyplot(fig)                   
             
             ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
 
@@ -1847,7 +1669,7 @@ if selected == "Modélisation":
 
             #Étape 3 : Identifier les indices correspondants dans X_test_sd
             filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
+            shap_values_filtered = shap_values_xgboost_best[:, filtered_indices]
 
             # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
             explanation_filtered = shap.Explanation(values=shap_values_filtered,
@@ -1860,7 +1682,7 @@ if selected == "Modélisation":
             #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
             def get_mean_shap_values(column_names, shap_values_test_shap):
                 indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
+                values = shap_values_xgboost_best[:, indices]
                 return np.mean(np.abs(values), axis=0)
 
             #Étape 1 : On idenfie les colonnes que l'on recherche
@@ -1871,11 +1693,11 @@ if selected == "Modélisation":
             marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
 
             #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_best)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_best)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_best)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_best)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_best)
 
             #Étape 3 : On combine les différentes moyennes et on les nomme
             combined_values = [np.mean(mean_shap_month),
@@ -1892,883 +1714,6 @@ if selected == "Modélisation":
 
             #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
             explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("interpretation shap du modèle xgboost opti ici (XGBClassifier_test3ter)")
-            #APPEL du modèle xgboost_sans_duration sauvegardé
-            @st.cache_resource
-            def load_model():
-                return joblib.load("dilenesantos/xgboost_sd_opti.pkl")
-
-            # Charger le modèle
-            loaded_model_xgboost_sd = load_model()
-
-            #charger les shap values du modèle xgboost sauvegardé
-            shap_values_xgboost_sd = joblib.load("dilenesantos/shap_values_xgboost_sd.pkl") 
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_sd, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation_2 = shap.Explanation(values=shap_values_xgboost_sd,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation_2)
-            st.pyplot(fig)
-            
-            y_pred = loaded_model_xgboost_sd.predict(X_test_sd)
-            table_xgboost_ = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_)
-            st.write("Classification report :")
-            report_dict_xgboost_ = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_ = pd.DataFrame(report_dict_xgboost_).T
-            st.dataframe(report_df_xgboost_)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_xgboost_sd[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_xgboost_sd):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_xgboost_sd[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_sd)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_sd)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_sd)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_sd)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_sd)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            
-            st.write("____________________________")
-            
-            st.write("test sur le  XGBOOST test3q pour vérifier classement OK ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=6,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.20, subsample=0.87, random_state=42)
-            st.write("Modele testé ci-dessous = XGBClassifier(gamma=0.05,colsample_bytree=0.82, learning_rate=0.18, max_depth=6,  min_child_weight=1.4, n_estimators=32, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.20, subsample=0.87, random_state=42)")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-            
-            st.write("test sur le  XGBOOST test2 pour vérifier classement OK ")
-
-            XGBOOST_test_shap = XGBClassifier(colsample_bytree=0.85, learning_rate=0.187, max_depth=5,  min_child_weight=1.6, n_estimators=30, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.09, subsample=0.87, random_state=42)
-            st.write("Modele testé ci-dessous = XGBClassifier(colsample_bytree=0.85, learning_rate=0.187, max_depth=5,  min_child_weight=1.6, n_estimators=30, reg_alpha=1.343, reg_lambda=1.73, scale_pos_weight=2.09, subsample=0.87, random_state=42)")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            
-            st.write("____________________________")
-            
-            st.write("test sur le  XGBOOST test encore pour vérifier classement OK ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.05,colsample_bytree=0.87, learning_rate=0.37, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)
-            st.write("Modele testé ci-dessous = XGBClassifier(gamma=0.05,colsample_bytree=0.87, learning_rate=0.37, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            
-            st.write("____________________________")
-            
-            st.write("test sur le  XGBOOST test encore2 pour vérifier classement OK ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.05,colsample_bytree=0.87, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=33, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.56, subsample=0.99, random_state=42)
-            st.write("modif = learning_rate=0.39 vs 0.37 + reg_lambda=1.9 vs 1.7 + n_estimators=33 vs 30 + scale_pos_weight=2.56 vs 2.46")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            
-            st.write("____________________________")
-            
-            st.write("test sur le  XGBOOST test encore2 pour vérifier classement OK ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=32, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.56, subsample=0.99, random_state=42)
-            st.write("modif = learning_rate=0.39 vs 0.37 + reg_lambda=1.9 vs 1.7 + n_estimators=33 vs 30 + scale_pos_weight=2.59 vs 2.46")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-            
-            st.write("test sur le  XGBOOST test encore pour vérifier classement OK ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)
-            st.write("31 puis 30 et 1.8")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            
-            
-            
-            st.write("____________________________")
-            
-
-            # Charger le modèle sauvegardé
-            @st.cache_resource
-            def load_model():
-                return joblib.load("dilenesantos/xgboost_model_sd_OK.pkl")
-
-            # Charger les SHAP values sauvegardées
-            @st.cache_data
-            def load_shap_values():
-                return joblib.load("dilenesantos/shap_values_xgboost_model_sd_OK.pkl")
-
-            # Charger le modèle et les SHAP values
-            model_xgboost_sd_OK = load_model()
-            shap_values_xgboost_sd_ok = load_shap_values()
-
-            st.write("test sur le  XGBOOST OK !!!!!!!! ")
-
-
-
-            # Afficher un graphique SHAP sur Streamlit
-            st.subheader("SHAP Summary Plot")
-            fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_sd_ok, X_test_sd)  # X_test_sd est ton jeu de test standardisé
-            st.pyplot(fig)
-            
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_sd_ok, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation_ok = shap.Explanation(values=shap_values_xgboost_sd_ok,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation_ok)
-            st.pyplot(fig)
-            
-
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_xgboost_sd_ok[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_xgboost_sd_ok):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_xgboost_sd_ok[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_sd_ok)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_sd_ok)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_sd_ok)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_sd_ok)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_sd_ok)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
 
             ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
 
@@ -2789,908 +1734,30 @@ if selected == "Modélisation":
             shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
             st.pyplot(fig)
 
-
-            st.write("____________________________")
-            
-
-            
-            st.write("____________________________")
-            
-            st.write("test ENCORE !!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.08,colsample_bytree=0.87, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=32, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.56, subsample=0.99, random_state=42)
-            st.write("modif = 0.08 VS 0.05 + 0.87 VS 0.88")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-
-            
-            st.write("test ENCORE !!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.08,colsample_bytree=0.90, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=32, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.57, subsample=0.99, random_state=42)
-            st.write("modif = 0.09 VS 0.08 + 2.57 VS 2.56")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-
-        if page == pages[2] :
-                        
-            st.write("test ENCORE #1!!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.08,colsample_bytree=0.87, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=32, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.56, subsample=0.99, random_state=42)
-            st.write("modif = 0.08 VS 0.05 + 0.87 VS 0.88")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-
-            
-            st.write("test ENCORE #2!!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.09,colsample_bytree=0.90, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=32, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.57, subsample=0.99, random_state=42)
-            st.write("modif = 0.09 VS 0.08 + 2.57 VS 2.56, 0.90 vs 0.87")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-            
-            st.write("test ENCORE #3!!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.09,colsample_bytree=0.90, learning_rate=0.40, max_depth=6, min_child_weight=1.2, n_estimators=35, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.71, subsample=0.87, random_state=42)
-            st.write("modif = 0.09 VS 0.05 + 0.87 VS 0.88 + 2.6 vs 2.56 + 0.90 vs 0.87 + 0.40 vs 0.39 + 34 vs 32 ")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-
-            st.write("test ENCORE #4!!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=1,colsample_bytree=0.89, learning_rate=0.40, max_depth=6, min_child_weight=1.2, n_estimators=35, reg_alpha=1.2, reg_lambda=1.9, scale_pos_weight=2.75, subsample=0.87, random_state=42)
-            st.write("modif = 0.08 vs 0.09 + 0.89 vs 0.90 + 2.75 vs 2.71")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-            
-
-            st.write("test ENCORE #5!!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.1,colsample_bytree=0.7, learning_rate=0.45, max_depth=6,  min_child_weight=1.7, n_estimators=36, reg_alpha=1, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)
-            st.write("modif = 0.08 vs 0.09 + 0.89 vs 0.90 + 2.75 vs 2.71")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
-            st.write("____________________________")
-            st.write("test ENCORE #6!!!!! ")
-
-            XGBOOST_test_shap = XGBClassifier(gamma=0.1,colsample_bytree=0.90, learning_rate=0.3, max_delta_step =1, max_depth=6,  min_child_weight=1.7, n_estimators=50, scale_pos_weight=2.7, subsample=0.9, random_state=42)
-            st.write("modif = 0.08 vs 0.09 + 0.89 vs 0.90 + 2.75 vs 2.71")
-            XGBOOST_test_shap.fit(X_train_sd, y_train_sd)
-            y_pred = XGBOOST_test_shap.predict(X_test_sd)
-            table_xgboost_test_shap = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost_test_shap)
-            st.write("Classification report :")
-            report_dict_xgboost_test_shap = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost_test_shap = pd.DataFrame(report_dict_xgboost_test_shap).T
-            st.dataframe(report_df_xgboost_test_shap)
-            
-            explainer = shap.TreeExplainer(XGBOOST_test_shap)
-            shap_values_test_shap = explainer.shap_values(X_test_sd)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_test_shap, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_test_shap,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
-            st.pyplot(fig)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_test_shap[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_test_shap[:, indices]
-                return np.mean(np.abs(values), axis=0)
-
-            #Étape 1 : On idenfie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_test_shap)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_test_shap)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_test_shap)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_test_shap)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_test_shap)
-
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
-
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
-
-
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-            
 
 if selected == 'Interprétation':      
     st.title("INTERPRÉTATION")
     st.sidebar.title("MENU INTERPRÉTATION")
-    option_submenu4 = st.sidebar.selectbox('Sélection', ("INTERPRÉTATION AVEC DURATION", "INTERPRÉTATION SANS DURATION"))
-    if option_submenu4 == 'INTERPRÉTATION AVEC DURATION':
+    pages=["INTERPRÉTATION AVEC DURATION", "INTERPRÉTATION SANS DURATION"]
+    page=st.sidebar.radio('AVEC ou SANS Duration', pages)
+
+    if page == pages[0] : 
         st.subheader("Interpréation SHAP avec la colonne Duration")
-        pages=["Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"]
-        page=st.sidebar.radio('Afficher', pages)
+
+        submenu_interpretation = st.selectbox("Menu", ("Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"))
+        
+        if submenu_interpretation == "Summary plot" : 
     
-        if page == pages[0] :
-
-            # Modèle avec les hyperparamètres spécifiés
-            #rf_model_carolle = RandomForestClassifier(
-                #class_weight='balanced',
-                #max_depth=20,
-                #max_features='sqrt',
-                #min_samples_leaf=2,
-                #min_samples_split=10,
-                #n_estimators=200,
-                #random_state=42,
-            #)
-
-            # Entraîner et sauvegarder le modèle
-            #rf_model_carolle.fit(X_train, y_train)
-            #joblib.dump(rf_model_carolle, "dilenesantos/random_forest_model_carolle.pkl")
-
             # Cacher le modèle et les valeurs SHAP avec Streamlit
             @st.cache_resource
             def load_model():
-                return joblib.load("dilenesantos/random_forest_model_carolle.pkl")
+                return joblib.load("random_forest_model_carolle.pkl")
 
             #@st.cache_data
             #def compute_shap_values(_model, data):
                 #explainer = shap.TreeExplainer(_model)
                 #shap_values_carolle = explainer.shap_values(data)
-                #joblib.dump(shap_values_carolle, "dilenesantos/shap_values_carolle.pkl")
+                #joblib.dump(shap_values_carolle, "shap_values_carolle.pkl")
                 #return shap_values_carolle
 
             # Charger le modèle
@@ -3698,12 +1765,12 @@ if selected == 'Interprétation':
 
             # Calculer ou charger les SHAP values
             #try:
-                #shap_values_carolle = joblib.load("dilenesantos/shap_values_carolle.pkl")
+                #shap_values_carolle = joblib.load("shap_values_carolle.pkl")
             #except FileNotFoundError:
                 #shap_values_carolle = compute_shap_values(loaded_model_carolle, X_test)
 
             #modèle déjà chargé  auparavant,code a conserver
-            shap_values_carolle = joblib.load("dilenesantos/shap_values_carolle.pkl")
+            shap_values_carolle = joblib.load("shap_values_carolle.pkl")
 
             
             # Affichage des visualisations SHAP
@@ -3724,24 +1791,23 @@ if selected == 'Interprétation':
             report_df = pd.DataFrame(report_dict).T
             st.dataframe(report_df)
 
-        if page == pages[1] :
+        if submenu_interpretation == "Bar plot poids des variables" :
             st.subheader("Poids des variables dans le modèle")
             st.write("blablabla")
 
-        if page == pages[2] :
+        if submenu_interpretation == "Analyses des variables catégorielles" :
             st.subheader("Zoom sur les variables catégorielles")
             st.write("blablabla")
 
-        if page == pages[3] :
+        if submenu_interpretation == "Dependence plots" :
             st.subheader("Dépendences plots & Analyses")
             st.write("blablabla")
             
-    if option_submenu4 == 'INTERPRÉTATION SANS DURATION':
+    if page == pages[1] : 
         st.subheader("Interpréation SHAP sans la colonne Duration")
-        pages=["Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"]
-        page=st.sidebar.radio('Afficher', pages)
-    
-        if page == pages[0] :
+        submenu_interpretation_2 = st.selectbox("Menu", ("Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"))
+        
+        if submenu_interpretation_2 == "Summary plot" : 
             st.subheader("Summary plot")
             st.write("blablabla")
  
@@ -3761,592 +1827,338 @@ if selected == 'Interprétation':
             st.dataframe(report_df_xgboost)
            
          
-
-        if page == pages[1] :
+        if submenu_interpretation_2 == "Bar plot poids des variables" : 
             st.subheader("Poids des variables dans le modèle")
             st.write("blablabla")
 
-        if page == pages[2] :
+        if submenu_interpretation_2 == "Analyses des variables catégorielles" : 
             st.subheader("Zoom sur les variables catégorielles")
             st.write("blablabla")
 
-        if page == pages[3] :
+        if submenu_interpretation_2 == "Dependence plots" : 
             st.subheader("Dépendences plots & Analyses")
             st.write("blablabla")
            
-if selected == 'Conclusion':    
-    st.subheader("Conclusion & Recommandations") 
-    st.write("balblabla")
     
-if selected == 'Démo':    
-    st.subheader("Démonstration et application de notre modèle") 
+if selected == 'Outil Prédictif':    
+    #code python SANS DURATION
+    dff_TEST = df.copy()
+    dff_TEST = dff_TEST[dff_TEST['age'] < 75]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] > -2257]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] < 4087]
+    dff_TEST = dff_TEST.loc[dff_TEST["campaign"] < 6]
+    dff_TEST = dff_TEST.loc[dff_TEST["previous"] < 2.5]
+    dff_TEST = dff_TEST.drop('contact', axis = 1)
 
-    st.write(f'###Informations')
-    age = st.slider("Quel est l'âge du client ?", 18, 85, 1)
-    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
-    job = st.selectbox("Quel est sa profession ?", ('management', 'technician', 'entrepreneur', 'blue-collar', 'unknown', 'retired', 'admin.', 'services', 'self-employed', 'unemployed', 'housemaid', 'student'))
-    marital = st.selectbox("Quel est son statut marital ?", ('married', 'single', 'divorced'))
-    balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 80000, 1)
-    housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
-    loan = st.selectbox("As-t-il un crédit personnel en cours ?", ('yes', 'no'))
-    default = st.selectbox("As-t-il déjà été en défaut de paiement ?", ('yes', 'no'))
-    month = st.selectbox("Quand as-t-il été contacté par la banque, pour la dernière fois (mois) ?", ('jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'))
-    weekday = st.selectbox("Quand as-t-il été contacté par la banque, pour la dernière fois (jour de la semaine)  ?",('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'))
-    duration = st.slider("Quelle est la durée, en seconde, de son dernier contact avec la banque ?", 0, 600, step=1)
-    campaign = st.slider("Combien de fois as-t-il été contacté par la banque lors de la campagne?", 0,20,1)
-    Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,10,1)
-    poutcome = st.selectbox("Avez-vous souscris à l'offre lors de la dernière campagne marketing de votre banque ?", ('other', 'success', 'unknown', 'failure'))
-    
-    st.write(f'### Récapitulatif')
-    st.write("Votre âge est :", age)
-    st.write("Votre profession est :", job)
-    st.write("Votre niveau d'étude est:", education)
-    st.write("Votre statut marital est :", marital)
-    st.write("Le solde de votre compte en banque est :", balance)
-    st.write("Vous êtes propriétaire :", housing)
-    st.write("Vous avez un crédit en cours :", loan)
-    st.write("Avez-vous déjà eu un défaut de paiement :", default)
-    st.write("Vous avez été contacté par votre banque en :", month)
-    st.write("Vous avez été contacté par votre banque le :", weekday)
-    st.write('La durée de votre derner contact avec votre banque est de:', duration)
-    st.write("Le nombre d'appels que vous avez eu lors de la campagne est de :", campaign)
-    st.write("Le nombre de jour entre les deux derniers contacts avec votre banque est de :", Client_Category_M)
-    st.write("Le nombre de contact que vous avez eu lors de la dernière campagne est de :", previous)
-    st.write("Avez-vous souscris lors de la dernière campagne :", poutcome)
-    
-    # Créer un dataframe récapitulatif des données du prospect
-    infos_prospect = pd.DataFrame({
-        'age': [age], 
-        'job': [job], 
-        'marital': [marital], 
-        'education': [education], 
-        'default': [default],
-        'balance': [balance], 
-        'housing': [housing], 
-        'loan': [loan], 
-        'month': [month], 
-        'duration': [duration],
-        'campaign': [campaign],
-        'previous': [previous],
-        'poutcome': [poutcome],
-        'Client_Category_M': [Client_Category_M],
-        'weekday': [weekday]
-    }, index=[0]) 
-
-    # Affichage pour vérifier le nouvel index
-    st.write("Voici le tableau avec vos informations")
-    st.dataframe(infos_prospect)
-
-    # Préparation des données d'entraînement (hypothèse : dff est préalablement défini)
-    dff = df.copy()
-    dff = dff[dff['age'] < 75]
-    dff = dff.loc[dff["balance"] > -2257]
-    dff = dff.loc[dff["balance"] < 4087]
-    dff = dff.loc[dff["campaign"] < 6]
-    dff = dff.loc[dff["previous"] < 2.5]
     bins = [-2, -1, 180, 855]
     labels = ['Prospect', 'Reached-6M', 'Reached+6M']
-    dff['Client_Category_M'] = pd.cut(dff['pdays'], bins=bins, labels=labels)
-    dff['Client_Category_M'] = dff['Client_Category_M'].astype('object')
-    liste_annee =[]
-    for i in dff["month"] :
-        if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
-            liste_annee.append("2013")
-        elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
-            liste_annee.append("2014")
-    dff["year"] = liste_annee
-    dff['date'] = dff['day'].astype(str)+ '-'+ dff['month'].astype(str)+ '-'+ dff['year'].astype(str)
-    dff['date']= pd.to_datetime(dff['date'])
-    dff["weekday"] = dff["date"].dt.weekday
-    dic = {0 : "Lundi", 1 : "Mardi", 2 : "Mercredi", 3 : "Jeudi", 4 : "Vendredi", 5 : "Samedi", 6 : "Dimanche"}
-    dff["weekday"] = dff["weekday"].replace(dic)
+    dff_TEST['Client_Category_M'] = pd.cut(dff_TEST['pdays'], bins=bins, labels=labels)
+    dff_TEST['Client_Category_M'] = dff_TEST['Client_Category_M'].astype('object')
+    dff_TEST = dff_TEST.drop('pdays', axis = 1)
 
-    dff = dff.drop(['contact'], axis=1)
-    dff = dff.drop(['pdays'], axis=1)
-    dff = dff.drop(['day'], axis=1)
-    dff = dff.drop(['date'], axis=1)
-    dff = dff.drop(['year'], axis=1)
-    dff = dff.drop(['deposit'], axis=1)
-    dff['job'] = dff['job'].replace('unknown', np.nan)
-    dff['education'] = dff['education'].replace('unknown', np.nan)
-    dff['poutcome'] = dff['poutcome'].replace('unknown', np.nan)
+    dff_TEST = dff_TEST.drop(['day'], axis=1)
+    dff_TEST = dff_TEST.drop(['duration'], axis=1)
+    dff_TEST = dff_TEST.drop(['job'], axis=1)
+    dff_TEST = dff_TEST.drop(['default'], axis=1)
+    dff_TEST = dff_TEST.drop(['month'], axis=1)
+    dff_TEST = dff_TEST.drop(['poutcome'], axis=1)
+    dff_TEST = dff_TEST.drop(['marital'], axis=1)
+    dff_TEST = dff_TEST.drop(['loan'], axis=1)
+    dff_TEST = dff_TEST.drop(['campaign'], axis=1)   
+     
+    dff_TEST['education'] = dff_TEST['education'].replace('unknown', np.nan)
 
-    # Remplacement des NaNs par le mode:
-    imputer = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
-    dff.loc[:,['job']] = imputer.fit_transform(dff[['job']])
-
-    # On remplace les NaaN de 'poutcome' avec la méthode de remplissage par propagation où chaque valeur unknown est remplacée par la valeur de la ligne suivante (puis la dernière ligne par le Mode de cette variable).
-    # On l'applique au X_train et X_test :
-    dff['poutcome'] = dff['poutcome'].fillna(method ='bfill')
-    dff['poutcome'] = dff['poutcome'].fillna(dff['poutcome'].mode()[0])
-
-    # On fait de même pour les NaaN de 'education'
-    dff['education'] = dff['education'].fillna(method ='bfill')
-    dff['education'] = dff['education'].fillna(dff['education'].mode()[0])
-
-
-    # Encodage des variables explicatives de type 'objet'
-    oneh = OneHotEncoder(drop = 'first', sparse_output = False)
-    cat1 = ['default', 'housing','loan']
-    dff.loc[:, cat1] = oneh.fit_transform(dff[cat1])
-    dff[cat1] = dff[cat1].astype('int64')
-
-    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    dff['education'] = dff['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-
-    # 'Client_Category_M' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    dff['Client_Category_M'] = dff['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-
-    # Encoder les variables à plus de 2 modalités 'job', 'marital', 'poutome', 'month', 'weekday' 
-    dummies = pd.get_dummies(dff['job'], prefix='job').astype(int)
-    dff = pd.concat([dff.drop('job', axis=1), dummies], axis=1)
-
-    dummies = pd.get_dummies(dff['marital'], prefix='marital').astype(int)
-    dff = pd.concat([dff.drop('marital', axis=1), dummies], axis=1)
-
-    dummies = pd.get_dummies(dff['poutcome'], prefix='poutcome').astype(int)
-    dff = pd.concat([dff.drop('poutcome', axis=1), dummies], axis=1)
-
-    dummies = pd.get_dummies(dff['month'], prefix='month').astype(int)
-    dff = pd.concat([dff.drop('month', axis=1), dummies], axis=1)
-
-    dummies = pd.get_dummies(dff['weekday'], prefix='weekday').astype(int)
-    dff = pd.concat([dff.drop('weekday', axis=1), dummies], axis=1)
-
-    # Construction du DataFrame pour le prospect à partir de infos_prospect
-    pred_df = infos_prospect.copy()
-
-    # Remplacer 'unknown' par NaN uniquement pour les colonnes spécifiques
-    cols_to_check = ['job', 'education', 'poutcome']  # Colonnes à vérifier
-    for col in cols_to_check:
-        if (pred_df[col] == 'unknown').any():  # Vérifie si la valeur est "unknown"
-            pred_df[col] = np.nan  # Remplace "unknown" par NaN
-
-    # Imputation des valeurs manquantes dans 'job' avec SimpleImputer
-    if pred_df['job'].isna().any():
-        # Créer un imputer avec la stratégie 'most_frequent' (remplir par la valeur la plus fréquente)
-        imputer = SimpleImputer(strategy='most_frequent')
-        pred_df['job'] = imputer.fit_transform(pred_df[['job']]).flatten()
-
-    # Remplissage par le mode pour 'education' et 'poutcome' dans le cas où il y a des NaN
-    if pred_df['education'].isna().any():
-        # Utiliser le mode de 'education' dans dff
-        pred_df['education'] = dff['education'].mode()[0]
-
-    if pred_df['poutcome'].isna().any():
-        # Utiliser le mode de 'poutcome' dans dff
-        pred_df['poutcome'] = dff['poutcome'].mode()[0]
-
-    # Transformation de 'education' et 'Client_Category_M' pour respecter l'ordre ordinal
-    pred_df['education'] = pred_df['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-    pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-    
-
-    # Remplacer 'yes' par 1 et 'no' par 0 pour chaque colonne
-    cols_to_replace = ['housing', 'loan', 'default']
-    for col in cols_to_replace:
-        pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
-
-    # Liste des variables catégorielles multi-modales à traiter
-    cat_cols_multi_modal = ['job', 'marital', 'poutcome', 'month', 'weekday']
-
-
-    # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
-    for col in cat_cols_multi_modal:
-        # Vérifier que la colonne existe dans pred_df
-        if col in pred_df.columns:
-            # Effectuer un encodage des variables catégorielles multi-modales
-            dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
-            pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
-
-    # Réorganiser les colonnes pour correspondre exactement à celles de dff
-    pred_df = pred_df.reindex(columns=dff.columns, fill_value=0)
-    
-    # Affichage du DataFrame transformé avant la standardisation
-    st.write("Affichage du dataframe transformé (avant standardisation):")
-    st.dataframe(pred_df)
-
-    # Liste des colonnes numériques à standardiser
-    num_cols = ['age', 'balance', 'duration', 'campaign', 'previous']
-
-    # Étape 1 : Créer un index spécifique pour pred_df
-    # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-    pred_df.index = range(dff.shape[0], dff.shape[0] + len(pred_df))
-
-    # Étape 2 : Concaténer dff et pred_df
-    # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-    combined_df = pd.concat([dff[num_cols], pred_df[num_cols]], axis=0)
-
-    # Étape 3 : Standardisation des données numériques
-    scaler = StandardScaler()
-    combined_df[num_cols] = scaler.fit_transform(combined_df[num_cols])
-
-    # Étape 4 : Séparer à nouveau pred_df des autres données
-    # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-    pred_df[num_cols] = combined_df.loc[pred_df.index, num_cols]
-
-    # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-    pred_df = pred_df.reset_index(drop=True)
-
-    # Affichage du DataFrame après la standardisation
-    st.write("Affichage de pred_df prêt pour la prédiction :")
-    st.dataframe(pred_df)
-
-
-    # Bouton pour lancer la prédiction
-    prediction_button = st.button(label="Predict")
-
-
-    # Prédiction
-    if prediction_button:
-        prediction = loaded_model_carolle.predict(pred_df)
-        prediction_proba = loaded_model_carolle.predict_proba(pred_df)
-        max_proba = np.max(prediction_proba[0]) * 100
-        
-        # Résultats
-        if prediction[0] == 0:
-            st.write(f"Prediction Outcome: {prediction[0]}")
-            st.write(f"Confidence: {max_proba:.2f}%")
-            st.write("Summary:", "\nThe customer is less likely to subscribe to a term deposit")
-        else:
-            st.write(f"Prediction Outcome: {prediction[0]}")
-            st.write(f"Confidence: {max_proba:.2f}%")
-            st.write("Summary:", "\nThe customer is more likely to subscribe to a term deposit")
-
-if selected == 'DémoSD':    
-    st.subheader("Démonstration et application de notre modèle à votre cas") 
-
-    # Modèle avec les hyperparamètres spécifiés
-    #xgboost_sd_opti = XGBClassifier(gamma=0.05,
-                                     #colsample_bytree=0.82, 
-                                     #learning_rate=0.18, 
-                                     #max_depth=5,  
-                                     #min_child_weight=1.4, 
-                                     #n_estimators=32, reg_alpha=1.343, 
-                                     #reg_lambda=1.73, scale_pos_weight=2.21, subsample=0.87, random_state=42)
-
-    # Entraîner et sauvegarder le modèle
-    #xgboost_sd_opti.fit(X_train_sd, y_train_sd)
-    #joblib.dump(xgboost_sd_opti, "xgboost_sd_opti.pkl")
-
-    # Cacher le modèle et les valeurs SHAP avec Streamlit
-    @st.cache_resource
-    def load_model():
-        return joblib.load("xgboost_sd_opti.pkl")
-
-    #@st.cache_data
-    #def compute_shap_values(_model, data):
-        #explainer = shap.TreeExplainer(_model)
-        #shap_values_xgboost_sd = explainer.shap_values(data)
-        #joblib.dump(shap_values_xgboost_sd, "shap_values_xgboost_sd.pkl")
-        #return shap_values_xgboost_sd
-
-    # Charger le modèle
-    loaded_model_xgboost_sd = load_model()
-
-    ## Calculer ou charger les SHAP values
-    #try:
-        #shap_values_xgboost_sd = joblib.load("shap_values_xgboost_sd.pkl")
-    #except FileNotFoundError:
-        #shap_values_xgboost_sd = compute_shap_values(loaded_model_xgboost_sd, X_test_sd)
-
-                 
-
-    st.write(f'### Vos Informations')
-    age = st.slider("Quel est votre âge ?", 18, 85, 1)
-    education = st.selectbox("Quel est votre niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
-    job = st.selectbox("Quel est votre profession ?", ('management', 'technician', 'entrepreneur', 'blue-collar', 'unknown', 'retired', 'admin.', 'services', 'self-employed', 'unemployed', 'housemaid', 'student'))
-    marital = st.selectbox("Quel est votre statut marital ?", ('married', 'single', 'divorced'))
-    balance = st.slider('Quel est le solde de votre compte en banque ?', -3000, 80000, 1)
-    housing = st.selectbox("Etes-vous propriétaire ?", ('yes', 'no'))
-    loan = st.selectbox("Avez-vous un crédit en cours ?", ('yes', 'no'))
-    default = st.selectbox("Avez-vous déjà eu un défaut de paiement ?", ('yes', 'no'))
-    month = st.selectbox("Quel mois avez-vous été contacté par votre banque, pour la dernière fois ?", ('jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'))
-    weekday = st.selectbox("Quel jour avez-vous été contacté par votre banque, pour la dernière fois  ?",('Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'))
-    duration = st.slider("Quelle est la durée, en seconde, de votre dernier contact avec votre banque ?", 0, 600, step=1)
-    campaign = st.slider("Combien de fois avez-vous été contacté par votre banque lors de la campagne?", 0,20,1)
-    Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,10,1)
-    poutcome = st.selectbox("Avez-vous souscris à l'offre lors de la dernière campagne marketing de votre banque ?", ('other', 'success', 'unknown', 'failure'))
-    
-    st.write(f'### Récapitulatif')
-    st.write("Votre âge est :", age)
-    st.write("Votre profession est :", job)
-    st.write("Votre niveau d'étude est:", education)
-    st.write("Votre statut marital est :", marital)
-    st.write("Le solde de votre compte en banque est :", balance)
-    st.write("Vous êtes propriétaire :", housing)
-    st.write("Vous avez un crédit en cours :", loan)
-    st.write("Avez-vous déjà eu un défaut de paiement :", default)
-    st.write("Vous avez été contacté par votre banque en :", month)
-    st.write("Vous avez été contacté par votre banque le :", weekday)
-    st.write('La durée de votre derner contact avec votre banque est de:', duration)
-    st.write("Le nombre d'appels que vous avez eu lors de la campagne est de :", campaign)
-    st.write("Le nombre de jour entre les deux derniers contacts avec votre banque est de :", Client_Category_M)
-    st.write("Le nombre de contact que vous avez eu lors de la dernière campagne est de :", previous)
-    st.write("Avez-vous souscris lors de la dernière campagne :", poutcome)
-    
-    # Créer un dataframe récapitulatif des données du prospect
-    infos_prospect = pd.DataFrame({
-        'age': [age], 
-        'job': [job], 
-        'marital': [marital], 
-        'education': [education], 
-        'default': [default],
-        'balance': [balance], 
-        'housing': [housing], 
-        'loan': [loan], 
-        'month': [month], 
-        'duration': [duration],
-        'campaign': [campaign],
-        'previous': [previous],
-        'poutcome': [poutcome],
-        'Client_Category_M': [Client_Category_M],
-        'weekday': [weekday]
-    }, index=[0]) 
-
-    # Affichage pour vérifier le nouvel index
-    st.write("Voici le tableau avec vos informations")
-    st.dataframe(infos_prospect)
-
-    # Fonction pour charger le modèle
-    def load_model():
-        return joblib.load("random_forest_best_model.pkl")
-
-    # Charger le modèle et les SHAP values
-    joblib_random_forest_best_model = load_model()
-
-    # Préparation des données d'entraînement (hypothèse : dff est préalablement défini)
-    dff_sans_duration = df.copy()
-    dff_sans_duration = dff_sans_duration[dff_sans_duration['age'] < 75]
-    dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["balance"] > -2257]
-    dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["balance"] < 4087]
-    dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["campaign"] < 6]
-    dff_sans_duration = dff_sans_duration.loc[dff_sans_duration["previous"] < 2.5]
-    bins = [-2, -1, 180, 855]
-    labels = ['Prospect', 'Reached-6M', 'Reached+6M']
-    dff_sans_duration['Client_Category_M'] = pd.cut(dff_sans_duration['pdays'], bins=bins, labels=labels)
-    dff_sans_duration['Client_Category_M'] = dff_sans_duration['Client_Category_M'].astype('object')
-    liste_annee =[]
-    for i in dff_sans_duration["month"] :
-        if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
-            liste_annee.append("2013")
-        elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
-            liste_annee.append("2014")
-    dff_sans_duration["year"] = liste_annee
-    dff_sans_duration['date'] = dff_sans_duration['day'].astype(str)+ '-'+ dff_sans_duration['month'].astype(str)+ '-'+ dff_sans_duration['year'].astype(str)
-    dff_sans_duration['date']= pd.to_datetime(dff_sans_duration['date'])
-    dff_sans_duration["weekday"] = dff_sans_duration["date"].dt.weekday
-    dic = {0 : "Lundi", 1 : "Mardi", 2 : "Mercredi", 3 : "Jeudi", 4 : "Vendredi", 5 : "Samedi", 6 : "Dimanche"}
-    dff_sans_duration["weekday"] = dff_sans_duration["weekday"].replace(dic)
-    dff_sans_duration = dff_sans_duration.drop(['contact'], axis=1)
-    dff_sans_duration = dff_sans_duration.drop(['pdays'], axis=1)
-    dff_sans_duration = dff_sans_duration.drop(['day'], axis=1)
-    dff_sans_duration = dff_sans_duration.drop(['date'], axis=1)
-    dff_sans_duration = dff_sans_duration.drop(['year'], axis=1)
-    dff_sans_duration = dff_sans_duration.drop(['duration'], axis=1)
-    dff_sans_duration['job'] = dff_sans_duration['job'].replace('unknown', np.nan)
-    dff_sans_duration['education'] = dff_sans_duration['education'].replace('unknown', np.nan)
-    dff_sans_duration['poutcome'] = dff_sans_duration['poutcome'].replace('unknown', np.nan)
-
-    X_sans_duration = dff_sans_duration.drop('deposit', axis = 1)
-    y_sans_duration = dff_sans_duration['deposit']
+    X_dff_TEST = dff_TEST.drop('deposit', axis = 1)
+    y_dff_TEST = dff_TEST['deposit']
 
     # Séparation des données en un jeu d'entrainement et jeu de test
-    X_train_sd, X_test_sd, y_train_sd, y_test_sd = train_test_split(X_sans_duration, y_sans_duration, test_size = 0.20, random_state = 48)
+    X_train_o, X_test_o, y_train_o, y_test_o = train_test_split(X_dff_TEST, y_dff_TEST, test_size = 0.20, random_state = 48)
                     
-    # Remplacement des NaNs par le mode:
-    imputer = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
-    X_train_sd.loc[:,['job']] = imputer.fit_transform(X_train_sd[['job']])
-    X_test_sd.loc[:,['job']] = imputer.transform(X_test_sd[['job']])
-
-    # On remplace les NaaN de 'poutcome' avec la méthode de remplissage par propagation où chaque valeur unknown est remplacée par la valeur de la ligne suivante (puis la dernière ligne par le Mode de cette variable).
-    # On l'applique au X_train et X_test :
-    X_train_sd['poutcome'] = X_train_sd['poutcome'].fillna(method ='bfill')
-    X_train_sd['poutcome'] = X_train_sd['poutcome'].fillna(X_train_sd['poutcome'].mode()[0])
-
-    X_test_sd['poutcome'] = X_test_sd['poutcome'].fillna(method ='bfill')
-    X_test_sd['poutcome'] = X_test_sd['poutcome'].fillna(X_test_sd['poutcome'].mode()[0])
-
     # On fait de même pour les NaaN de 'education'
-    X_train_sd['education'] = X_train_sd['education'].fillna(method ='bfill')
-    X_train_sd['education'] = X_train_sd['education'].fillna(X_train_sd['education'].mode()[0])
+    X_train_o['education'] = X_train_o['education'].fillna(method ='bfill')
+    X_train_o['education'] = X_train_o['education'].fillna(X_train_o['education'].mode()[0])
 
-    X_test_sd['education'] = X_test_sd['education'].fillna(method ='bfill')
-    X_test_sd['education'] = X_test_sd['education'].fillna(X_test_sd['education'].mode()[0])
+    X_test_o['education'] = X_test_o['education'].fillna(method ='bfill')
+    X_test_o['education'] = X_test_o['education'].fillna(X_test_o['education'].mode()[0])
                 
     # Standardisation des variables quantitatives:
-    scaler_sd = StandardScaler()
-    cols_num_sd = ['age', 'balance', 'campaign', 'previous']
-    X_train_sd[cols_num_sd] = scaler_sd.fit_transform(X_train_sd[cols_num_sd])
-    X_test_sd[cols_num_sd] = scaler_sd.transform (X_test_sd[cols_num_sd])
+    scaler_o = StandardScaler()
+    cols_num_sd = ['age', 'balance', 'previous']
+    X_train_o[cols_num_sd] = scaler_o.fit_transform(X_train_o[cols_num_sd])
+    X_test_o[cols_num_sd] = scaler_o.transform (X_test_o[cols_num_sd])
 
     # Encodage de la variable Cible 'deposit':
-    le_sd = LabelEncoder()
-    y_train_sd = le_sd.fit_transform(y_train_sd)
-    y_test_sd = le_sd.transform(y_test_sd)
+    le_o = LabelEncoder()
+    y_train_o = le_o.fit_transform(y_train_o)
+    y_test_o = le_o.transform(y_test_o)
 
     # Encodage des variables explicatives de type 'objet'
-    oneh_sd = OneHotEncoder(drop = 'first', sparse_output = False)
-    cat1_sd = ['default', 'housing','loan']
-    X_train_sd.loc[:, cat1_sd] = oneh_sd.fit_transform(X_train_sd[cat1_sd])
-    X_test_sd.loc[:, cat1_sd] = oneh_sd.transform(X_test_sd[cat1_sd])
+    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+    cat1_o = ['housing']
+    X_train_o.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o[cat1_o])
+    X_test_o.loc[:, cat1_o] = oneh_o.transform(X_test_o[cat1_o])
 
-    X_train_sd[cat1_sd] = X_train_sd[cat1_sd].astype('int64')
-    X_test_sd[cat1_sd] = X_test_sd[cat1_sd].astype('int64')
-
-    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    X_train_sd['education'] = X_train_sd['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-    X_test_sd['education'] = X_test_sd['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-
-    # 'Client_Category_M' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    X_train_sd['Client_Category_M'] = X_train_sd['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-    X_test_sd['Client_Category_M'] = X_test_sd['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-
-
-    # Encoder les variables à plus de 2 modalités 'job', 'marital', 'poutome', 'month', 'weekday' pour X_train
-    dummies_sd = pd.get_dummies(X_train_sd['job'], prefix='job').astype(int)
-    X_train_sd = pd.concat([X_train_sd.drop('job', axis=1), dummies_sd], axis=1)
-    dummies_sd = pd.get_dummies(X_test_sd['job'], prefix='job').astype(int)
-    X_test_sd = pd.concat([X_test_sd.drop('job', axis=1), dummies_sd], axis=1)
-
-    dummies_sd = pd.get_dummies(X_train_sd['marital'], prefix='marital').astype(int)
-    X_train_sd = pd.concat([X_train_sd.drop('marital', axis=1), dummies_sd], axis=1)
-    dummies_sd = pd.get_dummies(X_test_sd['marital'], prefix='marital').astype(int)
-    X_test_sd = pd.concat([X_test_sd.drop('marital', axis=1), dummies_sd], axis=1)
-
-    dummies_sd = pd.get_dummies(X_train_sd['poutcome'], prefix='poutcome').astype(int)
-    X_train_sd = pd.concat([X_train_sd.drop('poutcome', axis=1), dummies_sd], axis=1)
-    dummies_sd = pd.get_dummies(X_test_sd['poutcome'], prefix='poutcome').astype(int)
-    X_test_sd = pd.concat([X_test_sd.drop('poutcome', axis=1), dummies_sd], axis=1)
-
-    dummies_sd = pd.get_dummies(X_train_sd['month'], prefix='month').astype(int)
-    X_train_sd = pd.concat([X_train_sd.drop('month', axis=1), dummies_sd], axis=1)
-    dummies_sd = pd.get_dummies(X_test_sd['month'], prefix='month').astype(int)
-    X_test_sd = pd.concat([X_test_sd.drop('month', axis=1), dummies_sd], axis=1)
-
-    dummies_sd = pd.get_dummies(X_train_sd['weekday'], prefix='weekday').astype(int)
-    X_train_sd = pd.concat([X_train_sd.drop('weekday', axis=1), dummies_sd], axis=1)
-    dummies_sd = pd.get_dummies(X_test_sd['weekday'], prefix='weekday').astype(int)
-    X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
-
-    st.dataframe(dff_sans_duration)
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    dff = df.copy()
-    dff = dff[dff['age'] < 75]
-    dff = dff.loc[dff["balance"] > -2257]
-    dff = dff.loc[dff["balance"] < 4087]
-    dff = dff.loc[dff["campaign"] < 6]
-    dff = dff.loc[dff["previous"] < 2.5]
-    bins = [-2, -1, 180, 855]
-    labels = ['Prospect', 'Reached-6M', 'Reached+6M']
-    dff['Client_Category_M'] = pd.cut(dff['pdays'], bins=bins, labels=labels)
-    dff['Client_Category_M'] = dff['Client_Category_M'].astype('object')
-    liste_annee =[]
-    for i in dff["month"] :
-        if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
-            liste_annee.append("2013")
-        elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
-            liste_annee.append("2014")
-    dff["year"] = liste_annee
-    dff['date'] = dff['day'].astype(str)+ '-'+ dff['month'].astype(str)+ '-'+ dff['year'].astype(str)
-    dff['date']= pd.to_datetime(dff['date'])
-    dff["weekday"] = dff["date"].dt.weekday
-    dic = {0 : "Lundi", 1 : "Mardi", 2 : "Mercredi", 3 : "Jeudi", 4 : "Vendredi", 5 : "Samedi", 6 : "Dimanche"}
-    dff["weekday"] = dff["weekday"].replace(dic)
-
-    dff = dff.drop(['contact'], axis=1)
-    dff = dff.drop(['pdays'], axis=1)
-    dff = dff.drop(['day'], axis=1)
-    dff = dff.drop(['date'], axis=1)
-    dff = dff.drop(['year'], axis=1)
-    dff = dff.drop(['deposit'], axis=1)
-    dff['job'] = dff['job'].replace('unknown', np.nan)
-    dff['education'] = dff['education'].replace('unknown', np.nan)
-    dff['poutcome'] = dff['poutcome'].replace('unknown', np.nan)
-
-    # Remplacement des NaNs par le mode:
-    imputer = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
-    dff.loc[:,['job']] = imputer.fit_transform(dff[['job']])
-
-    # On remplace les NaaN de 'poutcome' avec la méthode de remplissage par propagation où chaque valeur unknown est remplacée par la valeur de la ligne suivante (puis la dernière ligne par le Mode de cette variable).
-    # On l'applique au X_train et X_test :
-    dff['poutcome'] = dff['poutcome'].fillna(method ='bfill')
-    dff['poutcome'] = dff['poutcome'].fillna(dff['poutcome'].mode()[0])
-
-    # On fait de même pour les NaaN de 'education'
-    dff['education'] = dff['education'].fillna(method ='bfill')
-    dff['education'] = dff['education'].fillna(dff['education'].mode()[0])
-
-
-    # Encodage des variables explicatives de type 'objet'
-    oneh = OneHotEncoder(drop = 'first', sparse_output = False)
-    cat1 = ['default', 'housing','loan']
-    dff.loc[:, cat1] = oneh.fit_transform(dff[cat1])
-    dff[cat1] = dff[cat1].astype('int64')
+    X_train_o[cat1_o] = X_train_o[cat1_o].astype('int64')
+    X_test_o[cat1_o] = X_test_o[cat1_o].astype('int64')
 
     # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    dff['education'] = dff['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
 
     # 'Client_Category_M' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    dff['Client_Category_M'] = dff['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+    X_train_o['Client_Category_M'] = X_train_o['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+    X_test_o['Client_Category_M'] = X_test_o['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
 
-    # Encoder les variables à plus de 2 modalités 'job', 'marital', 'poutome', 'month', 'weekday' 
-    dummies = pd.get_dummies(dff['job'], prefix='job').astype(int)
-    dff = pd.concat([dff.drop('job', axis=1), dummies], axis=1)
+    st.dataframe(dff_TEST)
+    
 
-    dummies = pd.get_dummies(dff['marital'], prefix='marital').astype(int)
-    dff = pd.concat([dff.drop('marital', axis=1), dummies], axis=1)
+   
+    #RÉSULTAT DES MODÈLES SANS PARAMETRES
+    # Initialisation des classifiers
+    classifiers = {
+        "Random Forest": RandomForestClassifier(random_state=42),
+        "Logistic Regression": LogisticRegression(random_state=42),
+        "Decision Tree": DecisionTreeClassifier(random_state=42),
+        "KNN": KNeighborsClassifier(),
+        "AdaBoost": AdaBoostClassifier(random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM": svm.SVC(random_state=42),
+        "XGBOOST": XGBClassifier(random_state=42),
+    }
 
-    dummies = pd.get_dummies(dff['poutcome'], prefix='poutcome').astype(int)
-    dff = pd.concat([dff.drop('poutcome', axis=1), dummies], axis=1)
+    # Résultats des modèles
+    results_sans_parametres = {}  # Affichage des résultats dans results
 
-    dummies = pd.get_dummies(dff['month'], prefix='month').astype(int)
-    dff = pd.concat([dff.drop('month', axis=1), dummies], axis=1)
+    for name, clf in classifiers.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
 
-    dummies = pd.get_dummies(dff['weekday'], prefix='weekday').astype(int)
-    dff = pd.concat([dff.drop('weekday', axis=1), dummies], axis=1)
+        accuracy = accuracy_score(y_test_sd, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_sans_parametres[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+
+    # Conversion des résultats en DataFrame
+    results_sans_param = pd.DataFrame(results_sans_parametres).T
+    results_sans_param.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+    results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
+
+    st.subheader("Scores modèles sans paramètres")
+    st.write("On affiche le tableau des résultats des modèles :")
+    st.dataframe(results_sans_param)
+                
+    
+    # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
+    classifiers_param_DURATION = {
+        "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
+        "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
+
+    results_avec_parametres_avDuration = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers_param_DURATION.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_avec_parametres_avDuration[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+
+    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+    results_best_param_DURATION = pd.DataFrame(results_avec_parametres_avDuration)
+    results_best_param_DURATION = results_best_param_DURATION.T
+    results_best_param_DURATION.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+                        
+    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+    results_best_param_DURATION = results_best_param_DURATION.sort_values(by='Recall', ascending=False)
+
+      
+    st.write("On affiche le tableau des résultats des best modèles hyperamétrés avec Duration :")
+    st.dataframe(results_best_param_DURATION)
+                
+           
+    # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
+    classifiers_param_sans_DURATION = {
+        "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
+        "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
+        "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)}
+    results_avec_parametres_sansDuration = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers_param_sans_DURATION.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_avec_parametres_sansDuration[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+         
+    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+    results_param_sans_duration = pd.DataFrame(results_avec_parametres_sansDuration)
+    results_param_sans_duration = results_param_sans_duration.T
+    results_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+                        
+    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+    results_param_sans_duration = results_param_sans_duration.sort_values(by='Recall', ascending=False)
+
+     
+    st.write("On affiche le tableau des résultats des modèles des best modèles hyperparamétrés sans duration:")
+    st.dataframe(results_param_sans_duration)
+                
+
+    st.subheader("Modèle sélectionné")
+    st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+    st.write("Affichons le rapport de classification de ce modèle")
+    rf_best = RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)
+    rf_best.fit(X_train_o, y_train_o)
+    score_train = rf_best.score(X_train_o, y_train_o)
+    score_test = rf_best.score(X_test_o, y_test_o)
+    y_pred = rf_best.predict(X_test_o)
+    table_rf = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_rf)
+    st.write("Classification report :")
+    report_dict = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df = pd.DataFrame(report_dict).T
+    st.dataframe(report_df)
+
+                    
+    st.subheader("Modèle sélectionné")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)                   
+
+
+    st.subheader("Modèle XGBOOST 2")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)                   
+
+    
+    st.title("Démonstration et application de notre modèle à votre cas")               
+
+    st.subheader(f'### Vos Informations')
+    age = st.slider("Quel est l'âge du client ?", 18, 85, 1)
+    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
+    balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 80000, 1)
+    housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
+    Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,10,1)
+    
+    st.write(f'### Récapitulatif')
+    st.write("Votre âge est :", age)
+    st.write("Votre niveau d'étude est:", education)
+    st.write("Le solde de votre compte en banque est :", balance)
+    st.write("Vous êtes propriétaire :", housing)
+    st.write("Le nombre de jour entre les deux derniers contacts avec votre banque est de :", Client_Category_M)
+    st.write("Le nombre de contact que vous avez eu lors de la dernière campagne est de :", previous)
+    
+    # Créer un dataframe récapitulatif des données du prospect
+    infos_prospect = pd.DataFrame({
+        'age': [age], 
+        'education': [education], 
+        'balance': [balance], 
+        'housing': [housing], 
+        'previous': [previous],
+        'Client_Category_M': [Client_Category_M],
+    }, index=[0]) 
+
+    # Affichage pour vérifier le nouvel index
+    st.write("Voici le tableau avec vos informations")
+    st.dataframe(infos_prospect)
 
     # Construction du DataFrame pour le prospect à partir de infos_prospect
     pred_df = infos_prospect.copy()
 
     # Remplacer 'unknown' par NaN uniquement pour les colonnes spécifiques
-    cols_to_check = ['job', 'education', 'poutcome']  # Colonnes à vérifier
+    cols_to_check = ['education']  # Colonnes à vérifier
     for col in cols_to_check:
         if (pred_df[col] == 'unknown').any():  # Vérifie si la valeur est "unknown"
             pred_df[col] = np.nan  # Remplace "unknown" par NaN
-
-    # Imputation des valeurs manquantes dans 'job' avec SimpleImputer
-    if pred_df['job'].isna().any():
-        # Créer un imputer avec la stratégie 'most_frequent' (remplir par la valeur la plus fréquente)
-        imputer = SimpleImputer(strategy='most_frequent')
-        pred_df['job'] = imputer.fit_transform(pred_df[['job']]).flatten()
 
     # Remplissage par le mode pour 'education' et 'poutcome' dans le cas où il y a des NaN
     if pred_df['education'].isna().any():
         # Utiliser le mode de 'education' dans dff
         pred_df['education'] = dff['education'].mode()[0]
-
-    if pred_df['poutcome'].isna().any():
-        # Utiliser le mode de 'poutcome' dans dff
-        pred_df['poutcome'] = dff['poutcome'].mode()[0]
 
     # Transformation de 'education' et 'Client_Category_M' pour respecter l'ordre ordinal
     pred_df['education'] = pred_df['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
@@ -4354,39 +2166,28 @@ if selected == 'DémoSD':
     
 
     # Remplacer 'yes' par 1 et 'no' par 0 pour chaque colonne
-    cols_to_replace = ['housing', 'loan', 'default']
+    cols_to_replace = ['housing']
     for col in cols_to_replace:
         pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
 
-    # Liste des variables catégorielles multi-modales à traiter
-    cat_cols_multi_modal = ['job', 'marital', 'poutcome', 'month', 'weekday']
-
-
-    # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
-    for col in cat_cols_multi_modal:
-        # Vérifier que la colonne existe dans pred_df
-        if col in pred_df.columns:
-            # Effectuer un encodage des variables catégorielles multi-modales
-            dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
-            pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
 
     # Réorganiser les colonnes pour correspondre exactement à celles de dff
-    pred_df = pred_df.reindex(columns=dff.columns, fill_value=0)
+    pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
     
     # Affichage du DataFrame transformé avant la standardisation
     st.write("Affichage du dataframe transformé (avant standardisation):")
     st.dataframe(pred_df)
 
     # Liste des colonnes numériques à standardiser
-    num_cols = ['age', 'balance', 'duration', 'campaign', 'previous']
+    num_cols = ['age', 'balance','previous']
 
     # Étape 1 : Créer un index spécifique pour pred_df
     # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-    pred_df.index = range(dff.shape[0], dff.shape[0] + len(pred_df))
+    pred_df.index = range(dff_TEST.shape[0], dff_TEST.shape[0] + len(pred_df))
 
     # Étape 2 : Concaténer dff et pred_df
     # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-    combined_df = pd.concat([dff[num_cols], pred_df[num_cols]], axis=0)
+    combined_df = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
 
     # Étape 3 : Standardisation des données numériques
     scaler = StandardScaler()
@@ -4402,16 +2203,19 @@ if selected == 'DémoSD':
     # Affichage du DataFrame après la standardisation
     st.write("Affichage de pred_df prêt pour la prédiction :")
     st.dataframe(pred_df)
+    st.dataframe(dff_TEST)
 
 
     # Bouton pour lancer la prédiction
     prediction_button = st.button(label="Predict")
-
-
+    
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+          
     # Prédiction
     if prediction_button:
-        prediction = joblib_random_forest_best_model.predict(pred_df)
-        prediction_proba = joblib_random_forest_best_model.predict_proba(pred_df)
+        prediction = xgboost_best.predict(pred_df)
+        prediction_proba = xgboost_best.predict_proba(pred_df)
         max_proba = np.max(prediction_proba[0]) * 100
         
         # Résultats
@@ -4423,3 +2227,446 @@ if selected == 'DémoSD':
             st.write(f"Prediction Outcome: {prediction[0]}")
             st.write(f"Confidence: {max_proba:.2f}%")
             st.write("Summary:", "\nThe customer is more likely to subscribe to a term deposit")
+ 
+ 
+
+    
+if selected == 'Outil Prédictif_2':    
+    #code python SANS DURATION
+    dff_TEST = df.copy()
+    dff_TEST = dff_TEST[dff_TEST['age'] < 75]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] > -2257]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] < 4087]
+    dff_TEST = dff_TEST.loc[dff_TEST["campaign"] < 6]
+    dff_TEST = dff_TEST.loc[dff_TEST["previous"] < 2.5]
+    dff_TEST = dff_TEST.drop('contact', axis = 1)
+
+    dff_TEST = dff_TEST.drop('pdays', axis = 1)
+
+    dff_TEST = dff_TEST.drop(['day'], axis=1)
+    dff_TEST = dff_TEST.drop(['duration'], axis=1)
+    dff_TEST = dff_TEST.drop(['job'], axis=1)
+    dff_TEST = dff_TEST.drop(['default'], axis=1)
+    dff_TEST = dff_TEST.drop(['month'], axis=1)
+    dff_TEST = dff_TEST.drop(['poutcome'], axis=1)
+    dff_TEST = dff_TEST.drop(['marital'], axis=1)
+    dff_TEST = dff_TEST.drop(['loan'], axis=1)
+    dff_TEST = dff_TEST.drop(['campaign'], axis=1)   
+     
+    dff_TEST['education'] = dff_TEST['education'].replace('unknown', np.nan)
+
+    X_dff_TEST = dff_TEST.drop('deposit', axis = 1)
+    y_dff_TEST = dff_TEST['deposit']
+
+    # Séparation des données en un jeu d'entrainement et jeu de test
+    X_train_o, X_test_o, y_train_o, y_test_o = train_test_split(X_dff_TEST, y_dff_TEST, test_size = 0.20, random_state = 48)
+                    
+    # On fait de même pour les NaaN de 'education'
+    X_train_o['education'] = X_train_o['education'].fillna(method ='bfill')
+    X_train_o['education'] = X_train_o['education'].fillna(X_train_o['education'].mode()[0])
+
+    X_test_o['education'] = X_test_o['education'].fillna(method ='bfill')
+    X_test_o['education'] = X_test_o['education'].fillna(X_test_o['education'].mode()[0])
+                
+    # Standardisation des variables quantitatives:
+    scaler_o = StandardScaler()
+    cols_num_sd = ['age', 'balance', 'previous']
+    X_train_o[cols_num_sd] = scaler_o.fit_transform(X_train_o[cols_num_sd])
+    X_test_o[cols_num_sd] = scaler_o.transform (X_test_o[cols_num_sd])
+
+    # Encodage de la variable Cible 'deposit':
+    le_o = LabelEncoder()
+    y_train_o = le_o.fit_transform(y_train_o)
+    y_test_o = le_o.transform(y_test_o)
+
+    # Encodage des variables explicatives de type 'objet'
+    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+    cat1_o = ['housing']
+    X_train_o.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o[cat1_o])
+    X_test_o.loc[:, cat1_o] = oneh_o.transform(X_test_o[cat1_o])
+
+    X_train_o[cat1_o] = X_train_o[cat1_o].astype('int64')
+    X_test_o[cat1_o] = X_test_o[cat1_o].astype('int64')
+
+    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+
+    st.dataframe(dff_TEST)
+    
+
+   
+    #RÉSULTAT DES MODÈLES SANS PARAMETRES
+    # Initialisation des classifiers
+    classifiers = {
+        "Random Forest": RandomForestClassifier(random_state=42),
+        "Logistic Regression": LogisticRegression(random_state=42),
+        "Decision Tree": DecisionTreeClassifier(random_state=42),
+        "KNN": KNeighborsClassifier(),
+        "AdaBoost": AdaBoostClassifier(random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM": svm.SVC(random_state=42),
+        "XGBOOST": XGBClassifier(random_state=42),
+    }
+
+    # Résultats des modèles
+    results_sans_parametres = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_sd, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_sans_parametres[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+
+    # Conversion des résultats en DataFrame
+    results_sans_param = pd.DataFrame(results_sans_parametres).T
+    results_sans_param.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+    results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
+
+    st.subheader("Scores modèles sans paramètres")
+    st.write("On affiche le tableau des résultats des modèles :")
+    st.dataframe(results_sans_param)
+                
+    
+    # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
+    classifiers_param_DURATION = {
+        "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
+        "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
+
+    results_avec_parametres_avDuration = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers_param_DURATION.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_avec_parametres_avDuration[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+
+    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+    results_best_param_DURATION = pd.DataFrame(results_avec_parametres_avDuration)
+    results_best_param_DURATION = results_best_param_DURATION.T
+    results_best_param_DURATION.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+                        
+    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+    results_best_param_DURATION = results_best_param_DURATION.sort_values(by='Recall', ascending=False)
+
+      
+    st.write("On affiche le tableau des résultats des best modèles hyperamétrés avec Duration :")
+    st.dataframe(results_best_param_DURATION)
+                
+           
+    # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
+    classifiers_param_sans_DURATION = {
+        "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
+        "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
+        "Bagging": BaggingClassifier(random_state=42),
+        "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
+        "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)}
+    results_avec_parametres_sansDuration = {}  # Affichage des résultats dans results
+
+    for name, clf in classifiers_param_sans_DURATION.items():
+        clf.fit(X_train_o, y_train_o)
+        y_pred = clf.predict(X_test_o)
+
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        results_avec_parametres_sansDuration[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall
+        }
+         
+    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
+    results_param_sans_duration = pd.DataFrame(results_avec_parametres_sansDuration)
+    results_param_sans_duration = results_param_sans_duration.T
+    results_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+                        
+    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+    results_param_sans_duration = results_param_sans_duration.sort_values(by='Recall', ascending=False)
+
+     
+    st.write("On affiche le tableau des résultats des modèles des best modèles hyperparamétrés sans duration:")
+    st.dataframe(results_param_sans_duration)
+                
+
+    st.subheader("Modèle sélectionné")
+    st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+    st.write("Affichons le rapport de classification de ce modèle")
+    rf_best = RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)
+    rf_best.fit(X_train_o, y_train_o)
+    score_train = rf_best.score(X_train_o, y_train_o)
+    score_test = rf_best.score(X_test_o, y_test_o)
+    y_pred = rf_best.predict(X_test_o)
+    table_rf = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_rf)
+    st.write("Classification report :")
+    report_dict = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df = pd.DataFrame(report_dict).T
+    st.dataframe(report_df)
+
+                    
+    st.subheader("Modèle sélectionné")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)                   
+
+
+    st.subheader("Modèle XGBOOST 2")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)                   
+
+
+    st.subheader("RECHERCHE PARAMÈTRES XGBOOST 1")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=1.46, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)                   
+
+
+    st.subheader("RECHERCHE PARAMÈTRES XGBOOST 2")
+    st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+    st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+    st.write("Affichons le rapport de classification de ce modèle")
+    xgboost_best = XGBClassifier(gamma=0.2,colsample_bytree=0.43, learning_rate=0.27, max_depth=6,  n_estimators=20, reg_alpha=3.2, reg_lambda=3.7, subsample=0.8, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+    score_train = xgboost_best.score(X_train_o, y_train_o)
+    score_test = xgboost_best.score(X_test_o, y_test_o)
+    y_pred = xgboost_best.predict(X_test_o)
+    table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+    st.dataframe(table_xgboost)
+    st.write("Classification report :")
+    report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+    # Convertir le dictionnaire en DataFrame
+    report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+    st.dataframe(report_df_xgboost)
+            
+    explainer = shap.TreeExplainer(xgboost_best)
+    shap_values_xgboost_best = explainer.shap_values(X_test_o)
+            
+    fig = plt.figure()
+    shap.summary_plot(shap_values_xgboost_best, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation = shap.Explanation(values=shap_values_xgboost_best,
+                                 data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_o.columns)
+    shap.plots.bar(explanation)
+    st.pyplot(fig)   
+    
+    st.title("Démonstration et application de notre modèle à votre cas")               
+
+    st.subheader(f'### Vos Informations')
+    age = st.slider("Quel est l'âge du client ?", 18, 85, 1)
+    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
+    balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 80000, 1)
+    housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
+    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,10,1)
+    
+    st.write(f'### Récapitulatif')
+    st.write("Votre âge est :", age)
+    st.write("Votre niveau d'étude est:", education)
+    st.write("Le solde de votre compte en banque est :", balance)
+    st.write("Vous êtes propriétaire :", housing)
+    st.write("Le nombre de contact que vous avez eu lors de la dernière campagne est de :", previous)
+    
+    # Créer un dataframe récapitulatif des données du prospect
+    infos_prospect = pd.DataFrame({
+        'age': [age], 
+        'education': [education], 
+        'balance': [balance], 
+        'housing': [housing], 
+        'previous': [previous],
+    }, index=[0]) 
+
+    # Affichage pour vérifier le nouvel index
+    st.write("Voici le tableau avec vos informations")
+    st.dataframe(infos_prospect)
+
+    # Construction du DataFrame pour le prospect à partir de infos_prospect
+    pred_df = infos_prospect.copy()
+
+    # Remplacer 'unknown' par NaN uniquement pour les colonnes spécifiques
+    cols_to_check = ['education']  # Colonnes à vérifier
+    for col in cols_to_check:
+        if (pred_df[col] == 'unknown').any():  # Vérifie si la valeur est "unknown"
+            pred_df[col] = np.nan  # Remplace "unknown" par NaN
+
+    # Remplissage par le mode pour 'education' et 'poutcome' dans le cas où il y a des NaN
+    if pred_df['education'].isna().any():
+        # Utiliser le mode de 'education' dans dff
+        pred_df['education'] = dff['education'].mode()[0]
+
+    # Transformation de 'education' et 'Client_Category_M' pour respecter l'ordre ordinal
+    pred_df['education'] = pred_df['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    
+
+    # Remplacer 'yes' par 1 et 'no' par 0 pour chaque colonne
+    cols_to_replace = ['housing']
+    for col in cols_to_replace:
+        pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
+
+
+    # Réorganiser les colonnes pour correspondre exactement à celles de dff
+    pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
+    
+    # Affichage du DataFrame transformé avant la standardisation
+    st.write("Affichage du dataframe transformé (avant standardisation):")
+    st.dataframe(pred_df)
+
+    # Liste des colonnes numériques à standardiser
+    num_cols = ['age', 'balance','previous']
+
+    # Étape 1 : Créer un index spécifique pour pred_df
+    # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+    pred_df.index = range(dff_TEST.shape[0], dff_TEST.shape[0] + len(pred_df))
+
+    # Étape 2 : Concaténer dff et pred_df
+    # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+    combined_df = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
+
+    # Étape 3 : Standardisation des données numériques
+    scaler = StandardScaler()
+    combined_df[num_cols] = scaler.fit_transform(combined_df[num_cols])
+
+    # Étape 4 : Séparer à nouveau pred_df des autres données
+    # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+    pred_df[num_cols] = combined_df.loc[pred_df.index, num_cols]
+
+    # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+    pred_df = pred_df.reset_index(drop=True)
+
+    # Affichage du DataFrame après la standardisation
+    st.write("Affichage de pred_df prêt pour la prédiction :")
+    st.dataframe(pred_df)
+    st.dataframe(dff_TEST)
+
+
+    # Bouton pour lancer la prédiction
+    prediction_button = st.button(label="Predict")
+    
+    xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+    xgboost_best.fit(X_train_o, y_train_o)
+          
+    # Prédiction
+    if prediction_button:
+        prediction = xgboost_best.predict(pred_df)
+        prediction_proba = xgboost_best.predict_proba(pred_df)
+        max_proba = np.max(prediction_proba[0]) * 100
+        
+        # Résultats
+        if prediction[0] == 0:
+            st.write(f"Prediction Outcome: {prediction[0]}")
+            st.write(f"Confidence: {max_proba:.2f}%")
+            st.write("Summary:", "\nThe customer is less likely to subscribe to a term deposit")
+        else:
+            st.write(f"Prediction Outcome: {prediction[0]}")
+            st.write(f"Confidence: {max_proba:.2f}%")
+            st.write("Summary:", "\nThe customer is more likely to subscribe to a term deposit")
+ 
