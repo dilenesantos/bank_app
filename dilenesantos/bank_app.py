@@ -285,7 +285,8 @@ if selected == 'Introduction':
     st.write("- Identifier et analyser visuellement et statistiquement les caractéristiques des clients qui sont corrélées avec la souscription au 'dépôt à terme'.")
     st.write("- Utiliser des techniques de Machine Learning pour prédire si un client va souscrire au 'dépôt à terme'.")
     
-    st.write("st.write("hello Fatou")
+    st.write("BLABLABLA")
+    st.write("FATOU")
 
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
