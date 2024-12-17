@@ -1891,11 +1891,11 @@ if selected == 'Outil Prédictif':
         for name, clf in classifiers.items():
             # Entraîner ou charger le modèle
             trained_clf = train_and_save_model(name, clf, X_train_o, y_train_o)
-            y_pred = trained_clf.predict(X_test)
+            y_pred = trained_clf.predict(X_test_o)
                 
             # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test, y_pred)
+            f1 = f1_score(y_test_o, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
                 
@@ -1941,11 +1941,11 @@ if selected == 'Outil Prédictif':
         for name, clf in classifiers_2.items():
             # Entraîner ou charger le modèle
             trained_clf = train_and_save_model2(name, clf, X_train_o, y_train_o)
-            y_pred = trained_clf.predict(X_test)
+            y_pred = trained_clf.predict(X_test_o)
                 
             # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test, y_pred)
+            f1 = f1_score(y_test_o, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
                 
@@ -1996,11 +1996,11 @@ if selected == 'Outil Prédictif':
         for name, clf in classifiers_3.items():
             # Entraîner ou charger le modèle
             trained_clf = train_and_save_model3(name, clf, X_train_o, y_train_o)
-            y_pred = trained_clf.predict(X_test)
+            y_pred = trained_clf.predict(X_test_o)
                 
             # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test, y_pred)
+            f1 = f1_score(y_test_o, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
                 
