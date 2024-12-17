@@ -1873,7 +1873,7 @@ if selected == 'Outil Prédictif':
         results_sans_parametres = {}  # Affichage des résultats dans results
 
         # Fonction pour entraîner et sauvegarder un modèle
-        def train_and_save_model(model_name, clf, X_train, y_train):
+        def train_and_save_model(model_name, clf, X_train_o, y_train_o):
             filename = f"{model_name.replace(' ', '_')}_model_predictif_sans_parametres.pkl"  # Nom du fichier
             try:
                 # Charger le modèle si le fichier existe déjà
@@ -1888,7 +1888,7 @@ if selected == 'Outil Prédictif':
         # Boucle pour entraîner ou charger les modèles
         for name, clf in classifiers.items():
             # Entraîner ou charger le modèle
-            trained_clf = train_and_save_model(name, clf, X_train, y_train)
+            trained_clf = train_and_save_model(name, clf, X_train_o, y_train_o)
             y_pred = trained_clf.predict(X_test_o)
                 
             # Calculer les métriques
