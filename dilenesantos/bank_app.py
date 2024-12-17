@@ -1855,9 +1855,7 @@ if selected == 'Outil Prédictif':
     submenu_predictions = st.radio("", ("Scores modèles & Hyperparamètres", "Prédictions"), horizontal=True)
     
     if submenu_predictions == "Scores modèles & Hyperparamètres" :
-        st.subheader("Scores modèles sans paramètres")
- 
-    
+     
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
         classifiers = {
@@ -1913,7 +1911,9 @@ if selected == 'Outil Prédictif':
         results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
         #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
         results_sans_param = results_sans_param.sort_values(by='Recall', ascending=False)
-                 
+        
+        st.subheader("Scores modèles sans paramètres")
+        st.dataframe(results_sans_param)
         
         # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
         classifiers_2 = {
@@ -1965,7 +1965,7 @@ if selected == 'Outil Prédictif':
         results_avec_param_av_duration = results_avec_param_av_duration.sort_values(by='Recall', ascending=False)
      
         
-        st.write("On affiche le tableau des résultats des best modèles hyperamétrés avec Duration :")
+        st.subheader("Scores modèles hyperamétrés avD :")
         st.dataframe(results_avec_param_av_duration)
                     
             
@@ -2020,7 +2020,7 @@ if selected == 'Outil Prédictif':
         results_avec_param_sans_duration = results_avec_param_sans_duration.sort_values(by='Recall', ascending=False)
      
          
-        st.write("On affiche le tableau des résultats des modèles des best modèles hyperparamétrés sans duration:")
+        st.subheader("Scores modèles hyperparamétrés sans duration:")
         st.dataframe(results_avec_param_sans_duration)
                     
 
@@ -2060,20 +2060,6 @@ if selected == 'Outil Prédictif':
         report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
         st.dataframe(report_df_xgboost)
                 
-        explainer = shap.TreeExplainer(xgboost_best)
-        shap_values_xgboost_best = explainer.shap_values(X_test_o)
-                
-        fig = plt.figure()
-        shap.summary_plot(shap_values_xgboost_best, X_test_o)  
-        st.pyplot(fig)
-                
-        fig = plt.figure()
-        explanation = shap.Explanation(values=shap_values_xgboost_best,
-                                    data=X_test_o.values, # Assumant que  X_test est un DataFrame
-                                    feature_names=X_test_o.columns)
-        shap.plots.bar(explanation)
-        st.pyplot(fig)                   
-
 
         st.subheader("Modèle XGBOOST 2")
         st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
@@ -2090,21 +2076,7 @@ if selected == 'Outil Prédictif':
         report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
         # Convertir le dictionnaire en DataFrame
         report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-        st.dataframe(report_df_xgboost)
-                
-        explainer = shap.TreeExplainer(xgboost_best)
-        shap_values_xgboost_best = explainer.shap_values(X_test_o)
-                
-        fig = plt.figure()
-        shap.summary_plot(shap_values_xgboost_best, X_test_o)  
-        st.pyplot(fig)
-                
-        fig = plt.figure()
-        explanation = shap.Explanation(values=shap_values_xgboost_best,
-                                    data=X_test_o.values, # Assumant que  X_test est un DataFrame
-                                    feature_names=X_test_o.columns)
-        shap.plots.bar(explanation)
-        st.pyplot(fig)                   
+        st.dataframe(report_df_xgboost)                 
 
 
         st.subheader("RECHERCHE PARAMÈTRES XGBOOST 1")
@@ -2122,21 +2094,7 @@ if selected == 'Outil Prédictif':
         report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
         # Convertir le dictionnaire en DataFrame
         report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-        st.dataframe(report_df_xgboost)
-                
-        explainer = shap.TreeExplainer(xgboost_best)
-        shap_values_xgboost_best = explainer.shap_values(X_test_o)
-                
-        fig = plt.figure()
-        shap.summary_plot(shap_values_xgboost_best, X_test_o)  
-        st.pyplot(fig)
-                
-        fig = plt.figure()
-        explanation = shap.Explanation(values=shap_values_xgboost_best,
-                                    data=X_test_o.values, # Assumant que  X_test est un DataFrame
-                                    feature_names=X_test_o.columns)
-        shap.plots.bar(explanation)
-        st.pyplot(fig)                   
+        st.dataframe(report_df_xgboost)                
 
 
         st.subheader("RECHERCHE PARAMÈTRES XGBOOST 2")
@@ -2154,21 +2112,7 @@ if selected == 'Outil Prédictif':
         report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
         # Convertir le dictionnaire en DataFrame
         report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-        st.dataframe(report_df_xgboost)
-                
-        explainer = shap.TreeExplainer(xgboost_best)
-        shap_values_xgboost_best = explainer.shap_values(X_test_o)
-                
-        fig = plt.figure()
-        shap.summary_plot(shap_values_xgboost_best, X_test_o)  
-        st.pyplot(fig)
-                
-        fig = plt.figure()
-        explanation = shap.Explanation(values=shap_values_xgboost_best,
-                                    data=X_test_o.values, # Assumant que  X_test est un DataFrame
-                                    feature_names=X_test_o.columns)
-        shap.plots.bar(explanation)
-        st.pyplot(fig)   
+        st.dataframe(report_df_xgboost) 
 
 
     if submenu_predictions == "Prédictions" :
