@@ -1914,53 +1914,6 @@ if selected == 'Outil Prédictif':
         
         st.subheader("Scores modèles sans paramètres")
         st.dataframe(results_sans_param)
-
-
-    
-        #RÉSULTAT DES MODÈLES SANS PARAMETRES
-        # Initialisation des classifiers
-        classifiers_test = {
-            "Random Forest": RandomForestClassifier(random_state=42),
-            "Logistic Regression": LogisticRegression(random_state=42),
-            "Decision Tree": DecisionTreeClassifier(random_state=42),
-            "KNN": KNeighborsClassifier(),
-            "AdaBoost": AdaBoostClassifier(random_state=42),
-            "Bagging": BaggingClassifier(random_state=42),
-            "SVM": svm.SVC(random_state=42),
-            "XGBOOST": XGBClassifier(random_state=42),
-        }
-
-        # Résultats des modèles
-        results_sans_parametres_test = {}  # Affichage des résultats dans results
-
-        for name, clf in classifiers_test.items():
-            clf.fit(X_train_o, y_train_o)
-            y_pred = clf.predict(X_test_o)
-
-            accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test_o, y_pred)
-            precision = precision_score(y_test_o, y_pred)
-            recall = recall_score(y_test_o, y_pred)
-
-            results_sans_parametres_test[name] = {
-                "Accuracy": accuracy,
-                "F1 Score": f1,
-                "Precision": precision,
-                "Recall": recall
-            }
-
-        # Conversion des résultats en DataFrame
-        results_sans_param_test = pd.DataFrame(results_sans_parametres_test).T
-        results_sans_param_test.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-        results_sans_param_test = results_sans_param_test.sort_values(by="Recall", ascending=False)
-
-       #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_sans_param_test = results_sans_param_test.sort_values(by='Recall', ascending=False)
-
-        
-        st.write("Scores modèles sans paramètres pour vérif avec code à l'ancienne")
-        st.dataframe(results_sans_param_test)
-
         
         # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
         classifiers_2 = {
