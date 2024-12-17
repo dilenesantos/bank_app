@@ -266,6 +266,14 @@ X_train_sd = pd.concat([X_train_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 dummies_sd = pd.get_dummies(X_test_sd['weekday'], prefix='weekday').astype(int)
 X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
     
+@st.cache_resource
+def load_model():
+    return joblib.load("random_forest_model_carolle.pkl")
+            
+loaded_model_carolle = load_model()
+
+#appel des shap values du modèle sauvegardé rf_carolle
+shap_values_carolle = joblib.load("shap_values_carolle.pkl")
 
 with st.sidebar:
     selected = option_menu(
