@@ -1874,106 +1874,154 @@ if selected == 'Outil Prédictif':
         # Résultats des modèles
         results_sans_parametres = {}  # Affichage des résultats dans results
 
+        # Fonction pour entraîner et sauvegarder un modèle
+        def train_and_save_model(model_name, clf, X_train_o, y_train_o):
+            filename = f"{model_name.replace(' ', '_')}_model_predictif_sans_parametres.pkl"  # Nom du fichier
+            try:
+                # Charger le modèle si le fichier existe déjà
+                trained_clf = joblib.load(filename)
+            except FileNotFoundError:
+                # Entraîner et sauvegarder le modèle
+                clf.fit(X_train_o, y_train_o)
+                joblib.dump(clf, filename)
+                trained_clf = clf
+            return trained_clf
+    
+        # Boucle pour entraîner ou charger les modèles
         for name, clf in classifiers.items():
-            clf.fit(X_train_o, y_train_o)
-            y_pred = clf.predict(X_test_o)
-
-            accuracy = accuracy_score(y_test_sd, y_pred)
-            f1 = f1_score(y_test_o, y_pred)
+            # Entraîner ou charger le modèle
+            trained_clf = train_and_save_model(name, clf, X_train_o, y_train_o)
+            y_pred = trained_clf.predict(X_test)
+                
+            # Calculer les métriques
+            accuracy = accuracy_score(y_test_o, y_pred)
+            f1 = f1_score(y_test, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
-
+                
+            # Stocker les résultats
             results_sans_parametres[name] = {
                 "Accuracy": accuracy,
                 "F1 Score": f1,
                 "Precision": precision,
-                "Recall": recall
+                "Recall": recall,
             }
-
+    
         # Conversion des résultats en DataFrame
         results_sans_param = pd.DataFrame(results_sans_parametres).T
         results_sans_param.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
         results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
-
-        st.subheader("Scores modèles sans paramètres")
-        st.write("On affiche le tableau des résultats des modèles :")
-        st.dataframe(results_sans_param)
-                    
+        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+        results_sans_param = results_sans_param.sort_values(by='Recall', ascending=False)
+                 
         
         # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
-        classifiers_param_DURATION = {
+        classifiers_2 = {
             "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
             "Bagging": BaggingClassifier(random_state=42),
             "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
             "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
 
-        results_avec_parametres_avDuration = {}  # Affichage des résultats dans results
+        results_avec_parametres = {}  # Affichage des résultats dans results
 
-        for name, clf in classifiers_param_DURATION.items():
-            clf.fit(X_train_o, y_train_o)
-            y_pred = clf.predict(X_test_o)
-
+        # Fonction pour entraîner et sauvegarder un modèle
+        def train_and_save_model2(model_name, clf, X_train_o, y_train_o):
+            filename = f"{model_name.replace(' ', '_')}_model_predictif_avec_parametres.pkl"  # Nom du fichier
+            try:
+                # Charger le modèle si le fichier existe déjà
+                trained_clf = joblib.load(filename)
+            except FileNotFoundError:
+                # Entraîner et sauvegarder le modèle
+                clf.fit(X_train_o, y_train_o)
+                joblib.dump(clf, filename)
+                trained_clf = clf
+            return trained_clf
+    
+        # Boucle pour entraîner ou charger les modèles
+        for name, clf in classifiers_2.items():
+            # Entraîner ou charger le modèle
+            trained_clf = train_and_save_model2(name, clf, X_train_o, y_train_o)
+            y_pred = trained_clf.predict(X_test)
+                
+            # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test_o, y_pred)
+            f1 = f1_score(y_test, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
-
-            results_avec_parametres_avDuration[name] = {
+                
+            # Stocker les résultats
+            results_avec_parametres[name] = {
                 "Accuracy": accuracy,
                 "F1 Score": f1,
                 "Precision": precision,
-                "Recall": recall
+                "Recall": recall,
             }
-
-        #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-        results_best_param_DURATION = pd.DataFrame(results_avec_parametres_avDuration)
-        results_best_param_DURATION = results_best_param_DURATION.T
-        results_best_param_DURATION.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                            
+    
+        # Conversion des résultats en DataFrame
+        results_avec_param_av_duration = pd.DataFrame(results_avec_parametres).T
+        results_avec_param_av_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        results_avec_param_av_duration = results_avec_param_av_duration.sort_values(by="Recall", ascending=False)
         #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_best_param_DURATION = results_best_param_DURATION.sort_values(by='Recall', ascending=False)
-
+        results_avec_param_av_duration = results_avec_param_av_duration.sort_values(by='Recall', ascending=False)
+     
         
         st.write("On affiche le tableau des résultats des best modèles hyperamétrés avec Duration :")
-        st.dataframe(results_best_param_DURATION)
+        st.dataframe(results_avec_param_av_duration)
                     
             
         # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
-        classifiers_param_sans_DURATION = {
+        classifiers_3 = {
             "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
             "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
             "Bagging": BaggingClassifier(random_state=42),
             "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
             "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)}
+        
         results_avec_parametres_sansDuration = {}  # Affichage des résultats dans results
 
-        for name, clf in classifiers_param_sans_DURATION.items():
-            clf.fit(X_train_o, y_train_o)
-            y_pred = clf.predict(X_test_o)
-
+        # Fonction pour entraîner et sauvegarder un modèle
+        def train_and_save_model3(model_name, clf, X_train_o, y_train_o):
+            filename = f"{model_name.replace(' ', '_')}_model_predictif_avec_parametres_avD.pkl"  # Nom du fichier
+            try:
+                # Charger le modèle si le fichier existe déjà
+                trained_clf = joblib.load(filename)
+            except FileNotFoundError:
+                # Entraîner et sauvegarder le modèle
+                clf.fit(X_train_o, y_train_o)
+                joblib.dump(clf, filename)
+                trained_clf = clf
+            return trained_clf
+    
+        # Boucle pour entraîner ou charger les modèles
+        for name, clf in classifiers_3.items():
+            # Entraîner ou charger le modèle
+            trained_clf = train_and_save_model3(name, clf, X_train_o, y_train_o)
+            y_pred = trained_clf.predict(X_test)
+                
+            # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test_o, y_pred)
+            f1 = f1_score(y_test, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
-
+                
+            # Stocker les résultats
             results_avec_parametres_sansDuration[name] = {
                 "Accuracy": accuracy,
                 "F1 Score": f1,
                 "Precision": precision,
-                "Recall": recall
+                "Recall": recall,
             }
-            
-        #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-        results_param_sans_duration = pd.DataFrame(results_avec_parametres_sansDuration)
-        results_param_sans_duration = results_param_sans_duration.T
-        results_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                            
+    
+        # Conversion des résultats en DataFrame
+        results_avec_param_sans_duration = pd.DataFrame(results_avec_parametres_sansDuration).T
+        results_avec_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        results_avec_param_sans_duration = results_avec_param_sans_duration.sort_values(by="Recall", ascending=False)
         #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_param_sans_duration = results_param_sans_duration.sort_values(by='Recall', ascending=False)
-
-        
+        results_avec_param_sans_duration = results_avec_param_sans_duration.sort_values(by='Recall', ascending=False)
+     
+         
         st.write("On affiche le tableau des résultats des modèles des best modèles hyperparamétrés sans duration:")
-        st.dataframe(results_param_sans_duration)
+        st.dataframe(results_avec_param_sans_duration)
                     
 
         st.subheader("Modèle sélectionné")
