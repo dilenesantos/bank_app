@@ -692,7 +692,7 @@ if selected == 'DataVisualisation':
 
             
         if option_submenu2 == 'Deposit x month':
-            fig = plt.figure(figsize=(20,5))
+            fig = plt.figure(figsize=(25,10))
             sns.countplot(x='month_year', hue='deposit', data=df_order_month, palette =("g", "r"), legend=False)
             plt.title("Évolution de notre variable cible selon les mois")
             plt.legend()
