@@ -1475,24 +1475,6 @@ if selected == "Modélisation":
             st.pyplot(fig)
                 
                 
-            st.write("NB : ci-dessous résultats des hyper paramètres trouvés pour les 3 best modèles trouvés SANS DURATION - test sur le dataset avec duration*****")
-            st.write("On affiche le tableau des résultats des modèles :")
-            st.dataframe(results_param_sans_duration)
-                
-            st.write("Graphique :")
-            # Visualisation des résultats des différents modèles :
-            fig = plt.figure(figsize=(12, 6))
-            sns.barplot(data=results_param_sans_duration_melted,x="Classifier",y="Score",hue="Metric",palette="rainbow")
-            # Ajouter des titres et légendes
-            plt.title("Performance des modèles par métrique", fontsize=16)
-            plt.xlabel("Modèles", fontsize=14)
-            plt.ylabel("Scores", fontsize=14)
-            plt.xticks(rotation=45)
-            plt.legend(title="Métrique", fontsize=12)
-            plt.legend(loc='lower right')
-            plt.tight_layout()
-            st.pyplot(fig)
-                
             st.subheader("Modèle sélectionné")
             st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
