@@ -268,12 +268,12 @@ X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
     
 @st.cache_resource
 def load_model():
-    return joblib.load("random_forest_model_carolle.pkl")
+    return joblib.load("dilenesantos/random_forest_model_carolle.pkl")
             
 loaded_model_carolle = load_model()
 
 #appel des shap values du modèle sauvegardé rf_carolle
-shap_values_carolle = joblib.load("shap_values_carolle.pkl")
+shap_values_carolle = joblib.load("dilenesantos/shap_values_carolle.pkl")
 
 with st.sidebar:
     selected = option_menu(
