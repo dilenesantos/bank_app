@@ -1369,9 +1369,8 @@ if selected == "Modélisation":
     # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
     classifiers_param_DURATION = {
         "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
-        "Bagging": BaggingClassifier(random_state=42),
         "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
-        "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
+        "XGBOOST best" : XGBClassifier(colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
     results_best_param_DURATION = {}  # Affichage des résultats dans results
 
 
