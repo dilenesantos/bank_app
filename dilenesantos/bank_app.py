@@ -303,13 +303,6 @@ if selected == 'Introduction':
             st.write(f"Le fichier {file_path} est introuvable.")
 
 
-with st.sidebar:
-    selected = option_menu(
-        menu_title='Sections',
-        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil Prédictif"])
-
-
-
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
     st.sidebar.title("SOUS MENU DATAVISUALISATION")
