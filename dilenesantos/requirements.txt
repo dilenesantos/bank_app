@@ -10,6 +10,6 @@ matplotlib
 seaborn
 pyarrow
 scipy
-joblib==1.4.2
+joblib
 shap
 IPython
