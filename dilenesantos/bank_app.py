@@ -2485,6 +2485,129 @@ if selected == "Modélisation":
             fig = plt.figure(figsize=(10, 6))
             shap.plots.bar(explanation_combined_new_XGBOOST_TESTDIL, max_display=len(explanation_combined_new_XGBOOST_TESTDIL.feature_names))
             st.pyplot(fig)     
+
+            st.subheader("Modèle À L'ANCIENNE OK ???")
+            st.write("xgboost_model_sd_OK.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+            # Chargement du modèle enregistré
+            filename_XGBOOST_TEST = "dilenesantos/xgboost_model_sd_OK.pkl"
+            model_XGBOOST_TEST = joblib.load(filename_XGBOOST_TEST)
+
+            # Prédictions sur les données test
+            y_pred_test = model_XGBOOST_TEST.predict(X_test_sd)
+
+            # Calcul des métriques pour chaque classe
+            report_test = classification_report(y_test_sd, y_pred_test, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+            # Conversion du rapport en DataFrame pour affichage en tableau
+            report_df_test = pd.DataFrame(report_test).T
+
+            # Arrondi des valeurs à 4 décimales pour un affichage propre
+            report_df_test = report_df_test.round(4)
+
+            # Suppression des colonnes inutiles si besoin
+            report_df_test = report_df_test.drop(columns=["support"])
+
+            # Affichage global du rapport sous forme de tableau
+            st.write("Rapport de classification du modèle")
+            st.table(report_df_test)
+
+            # Création de la matrice de confusion sous forme de DataFrame
+            st.write("Matrice de confusion du modèle")
+            table_xgboost_test = pd.crosstab(y_test_sd, y_pred_test, rownames=["Réalité"], colnames=["Prédiction"])
+            st.dataframe(table_xgboost_test)
+            
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_XGBOOST_TEST = joblib.load("dilenesantos/shap_values_xgboost_model_sd_OK.pkl")
+
+            fig = plt.figure()
+            shap.summary_plot(shap_values_XGBOOST_TEST, X_test_sd)  
+            st.pyplot(fig)
+            
+            fig = plt.figure()
+            explanation_XGBOOST_TEST = shap.Explanation(values=shap_values_XGBOOST_TEST,
+                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_sd.columns)
+            shap.plots.bar(explanation_XGBOOST_TEST)
+            st.pyplot(fig)                   
+            
+            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
+
+            #Étape 1 : Créer une liste des termes à exclure
+            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
+
+            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
+            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
+
+            #Étape 3 : Identifier les indices correspondants dans X_test_sd
+            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
+            shap_values_filtered_XGBOOST_TEST = shap_values_XGBOOST_TEST[:, filtered_indices]
+
+            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
+            explanation_filtered_XGBOOST_TEST = shap.Explanation(values=shap_values_filtered_XGBOOST_TEST,
+                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
+                                            feature_names=filtered_columns)  # Les noms des features
+
+            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
+            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
+            def get_mean_shap_values(column_names, shap_values):
+                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
+                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
+                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
+                return np.mean(np.abs(values), axis=0)
+
+            # Étape 1 : On identifie les colonnes que l'on recherche
+            month_columns = [col for col in X_test_sd.columns if 'month' in col]
+            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
+            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
+            job_columns = [col for col in X_test_sd.columns if 'job' in col]
+            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
+
+            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_XGBOOST_TEST)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_XGBOOST_TEST)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_XGBOOST_TEST)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_XGBOOST_TEST)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_XGBOOST_TEST)
+
+            # Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values_XGBOOST_TEST = [np.mean(mean_shap_month),
+                                        np.mean(mean_shap_weekday),
+                                        np.mean(mean_shap_poutcome),
+                                        np.mean(mean_shap_job),
+                                        np.mean(mean_shap_marital)]
+
+            combined_feature_names_XGBOOSTTEST = ['Mean SHAP Value for Month Features',
+                                            'Mean SHAP Value for Weekday Features',
+                                            'Mean SHAP Value for Poutcome Features',
+                                            'Mean SHAP Value for Job Features',
+                                            'Mean SHAP Value for Marital Features']
+
+            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
+            explanation_combined_XGBOOST_TEST = shap.Explanation(values=combined_values_XGBOOST_TEST,
+                                                            data=np.array([[np.nan]] * len(combined_values_XGBOOST_TEST)),
+                                                            feature_names=combined_feature_names_XGBOOSTTEST)
+
+            
+            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
+
+            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
+            num_samples = explanation_filtered_XGBOOST_TEST.values.shape[0]
+            combined_values_reshaped__XGBOOST_TEST = np.repeat(np.array(explanation_combined_XGBOOST_TEST.values)[:, np.newaxis], num_samples, axis=1).T
+
+            #Étape 2: On concatenate les 2 explanations
+            combined_values_XGBOOST_TEST = np.concatenate([explanation_filtered_XGBOOST_TEST.values, combined_values_reshaped__XGBOOST_TEST], axis=1)
+
+            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
+            combined_feature_names_XGBOOST_TEST = (explanation_filtered_XGBOOST_TEST.feature_names + explanation_combined_XGBOOST_TEST.feature_names)
+
+            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
+            explanation_combined_new_XGBOOST_TEST = shap.Explanation(values=combined_values_XGBOOST_TEST,data=np.array([[np.nan]] * combined_values_XGBOOST_TEST.shape[0]),feature_names=combined_feature_names_XGBOOST_TEST)
+
+            fig = plt.figure(figsize=(10, 6))
+            shap.plots.bar(explanation_combined_new_XGBOOST_TEST, max_display=len(explanation_combined_new_XGBOOST_TEST.feature_names))
+            st.pyplot(fig)
         
 if selected == 'Interprétation':      
     st.title("INTERPRÉTATION")
