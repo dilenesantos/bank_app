@@ -1,16 +1,16 @@
 streamlit
 streamlit_option_menu
 streamlit_extras
-numpy
-pandas
+numpy==1.26.4
+pandas==2.2.3
+joblib==1.4.2
+scikit-learn==1.2.2
 plotly
-scikit-learn
 xgboost
 matplotlib
 seaborn
 pyarrow
 scipy
-joblib
 shap
 IPython
 
