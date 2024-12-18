@@ -2006,7 +2006,7 @@ if selected == "Modélisation":
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                 
             # Chargement du modèle enregistré
-            filename_XGBOOST_2 = "XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"
+            filename_XGBOOST_2 = "dilenesantos/XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"
             model_XGBOOST_2_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_2)
 
             # Prédictions sur les données test
