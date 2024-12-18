@@ -1312,6 +1312,8 @@ if selected == "Modélisation":
     
     #RÉSULTAT DES MODÈLES SANS PARAMÈTRES
     # ON A PRÉCÉDEMMENT FAIT TOURNER UN CODE POUR ENREGISTRER LES MODÈLES SANS PARAMÈTRES DANS JOBLIB
+    
+
     #Liste des modèles enregistrés et leurs noms
     model_files = {
         "Random Forest": "dilenesantos/Random_Forest_model_avec_duration_sans_parametres.pkl",
@@ -1324,6 +1326,11 @@ if selected == "Modélisation":
         "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
     }
 
+    import os
+    for name, file_path in model_files.items():
+        if not os.path.exists(file_path):
+            st.write(f"Le fichier {file_path} est introuvable.")
+        
     # Résultats des modèles
     results_sans_param = {}
 
