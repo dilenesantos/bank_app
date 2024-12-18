@@ -2487,11 +2487,11 @@ if selected == "Modélisation":
             st.pyplot(fig)     
 
             st.subheader("Modèle À L'ANCIENNE OK ???")
-            st.write("xgboost_model_sd_OK.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.write("xgboost_model_sd_OK2.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                 
             # Chargement du modèle enregistré
-            filename_XGBOOST_TEST = "dilenesantos/xgboost_model_sd_OK.pkl"
+            filename_XGBOOST_TEST = "dilenesantos/xgboost_model_sd_OK2.pkl"
             model_XGBOOST_TEST = joblib.load(filename_XGBOOST_TEST)
 
             # Prédictions sur les données test
@@ -2519,7 +2519,7 @@ if selected == "Modélisation":
             st.dataframe(table_xgboost_test)
             
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_TEST = joblib.load("dilenesantos/shap_values_xgboost_model_sd_OK.pkl")
+            shap_values_XGBOOST_TEST = joblib.load("dilenesantos/shap_values_xgboost_model_sd_OK2.pkl")
 
             fig = plt.figure()
             shap.summary_plot(shap_values_XGBOOST_TEST, X_test_sd)  
