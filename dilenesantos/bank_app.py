@@ -1599,9 +1599,9 @@ if selected == "Modélisation":
             st.write("Affichons le rapport de classification de ce modèle")
             st.write("xgboost_test_1 = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
             xgboost_test_1 = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
-            xgboost_best.fit(X_train_sd, y_train_sd)
-            score_train = xgboost_best.score(X_train_sd, y_train_sd)
-            score_test = xgboost_best.score(X_test_sd, y_test_sd)
+            xgboost_test_1.fit(X_train_sd, y_train_sd)
+            score_train = xgboost_test_1.score(X_train_sd, y_train_sd)
+            score_test = xgboost_test_1.score(X_test_sd, y_test_sd)
             y_pred = xgboost_best.predict(X_test_sd)
             table_xgboost = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
             st.dataframe(table_xgboost)
@@ -1611,7 +1611,7 @@ if selected == "Modélisation":
             report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
             st.dataframe(report_df_xgboost)
             
-            explainer = shap.TreeExplainer(xgboost_best)
+            explainer = shap.TreeExplainer(xgboost_test_1)
             shap_values_xgboost_best = explainer.shap_values(X_test_sd)
             
             fig = plt.figure()
