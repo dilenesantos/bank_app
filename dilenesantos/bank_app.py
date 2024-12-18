@@ -1602,7 +1602,7 @@ if selected == "Modélisation":
             xgboost_test_1.fit(X_train_sd, y_train_sd)
             score_train = xgboost_test_1.score(X_train_sd, y_train_sd)
             score_test = xgboost_test_1.score(X_test_sd, y_test_sd)
-            y_pred = xgboost_best.predict(X_test_sd)
+            y_pred = xgboost_test_1.predict(X_test_sd)
             table_xgboost = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
             st.dataframe(table_xgboost)
             st.write("Classification report :")
