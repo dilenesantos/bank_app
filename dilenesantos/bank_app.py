@@ -1597,7 +1597,8 @@ if selected == "Modélisation":
             st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
             st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
             st.write("Affichons le rapport de classification de ce modèle")
-            xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+            st.write("xgboost_test_1 = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
+            xgboost_test_1 = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
             xgboost_best.fit(X_train_sd, y_train_sd)
             score_train = xgboost_best.score(X_train_sd, y_train_sd)
             score_test = xgboost_best.score(X_test_sd, y_test_sd)
@@ -1663,6 +1664,214 @@ if selected == "Modélisation":
             mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_best)
             mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_best)
             mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_best)
+
+            #Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values = [np.mean(mean_shap_month),
+                np.mean(mean_shap_weekday),
+                np.mean(mean_shap_poutcome),
+                np.mean(mean_shap_job),
+                np.mean(mean_shap_marital)]
+
+            combined_feature_names = ['Mean SHAP Value for Month Features',
+                'Mean SHAP Value for Weekday Features',
+                'Mean SHAP Value for Poutcome Features',
+                'Mean SHAP Value for Job Features',
+                'Mean SHAP Value for Marital Features']
+
+            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
+            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
+
+            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
+
+            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
+            num_samples = explanation_filtered.values.shape[0]
+            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
+
+            #Étape 2: On concatenate les 2 explanations
+            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
+
+            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
+            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
+
+            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
+            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
+
+            fig = plt.figure(figsize=(10, 6))
+            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
+            st.pyplot(fig)
+
+
+            st.write("xgboost_test_2 = XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)")
+            xgboost_test_2 = XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)
+            xgboost_test_2.fit(X_train_sd, y_train_sd)
+            score_train_2 = xgboost_test_2.score(X_train_sd, y_train_sd)
+            score_test_2 = xgboost_test_2.score(X_test_sd, y_test_sd)
+            y_pred_2 = xgboost_test_2.predict(X_test_sd)
+            table_xgboost_2 = pd.crosstab(y_test_sd,y_pred_2, rownames=['Realité'], colnames=['Prédiction'])
+            st.dataframe(table_xgboost_2)
+            st.write("Classification report :")
+            report_dict_xgboost_2 = classification_report(y_test_sd, y_pred_2, output_dict=True)
+            # Convertir le dictionnaire en DataFrame
+            report_dict_xgboost_2 = pd.DataFrame(report_dict_xgboost_2).T
+            st.dataframe(report_dict_xgboost_2)
+
+            
+            explainer = shap.TreeExplainer(xgboost_test_2)
+            shap_values_xgboost_best_2 = explainer.shap_values(X_test_sd)
+            
+            fig = plt.figure()
+            shap.summary_plot(shap_values_xgboost_best_2, X_test_sd)  
+            st.pyplot(fig)
+            
+            fig = plt.figure()
+            explanation = shap.Explanation(values=shap_values_xgboost_best_2,
+                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_sd.columns)
+            shap.plots.bar(explanation)
+            st.pyplot(fig)                   
+            
+            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
+
+            #Étape 1 : Créer une liste des termes à exclure
+            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
+
+            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
+            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
+
+            #Étape 3 : Identifier les indices correspondants dans X_test_sd
+            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
+            shap_values_filtered = shap_values_xgboost_best_2[:, filtered_indices]
+
+            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
+            explanation_filtered = shap.Explanation(values=shap_values_filtered,
+                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
+                                            feature_names=filtered_columns)  # Les noms des features
+
+
+            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
+
+            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
+            def get_mean_shap_values(column_names, shap_values_test_shap):
+                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
+                values = shap_values_xgboost_best_2[:, indices]
+                return np.mean(np.abs(values), axis=0)
+
+            #Étape 1 : On idenfie les colonnes que l'on recherche
+            month_columns = [col for col in X_test_sd.columns if 'month' in col]
+            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
+            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
+            job_columns = [col for col in X_test_sd.columns if 'job' in col]
+            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
+
+            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_best_2)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_best_2)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_best_2)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_best_2)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_best_2)
+
+            #Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values = [np.mean(mean_shap_month),
+                np.mean(mean_shap_weekday),
+                np.mean(mean_shap_poutcome),
+                np.mean(mean_shap_job),
+                np.mean(mean_shap_marital)]
+
+            combined_feature_names = ['Mean SHAP Value for Month Features',
+                'Mean SHAP Value for Weekday Features',
+                'Mean SHAP Value for Poutcome Features',
+                'Mean SHAP Value for Job Features',
+                'Mean SHAP Value for Marital Features']
+
+            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
+            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
+
+            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
+
+            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
+            num_samples = explanation_filtered.values.shape[0]
+            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
+
+            #Étape 2: On concatenate les 2 explanations
+            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
+
+            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
+            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
+
+            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
+            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
+
+            fig = plt.figure(figsize=(10, 6))
+            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
+            st.pyplot(fig)
+
+            
+            xgboost_test_3 = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)
+            xgboost_test_3.fit(X_train_sd, y_train_sd)
+            score_train_3 = xgboost_test_3.score(X_train_sd, y_train_sd)
+            score_test_3 = xgboost_test_3.score(X_test_sd, y_test_sd)
+            y_pred_3 = xgboost_test_3.predict(X_test_sd)
+            table_xgboost_3 = pd.crosstab(y_test_sd,y_pred_3, rownames=['Realité'], colnames=['Prédiction'])
+            st.dataframe(table_xgboost_3)
+            st.write("Classification report :")
+            report_dict_xgboost_3 = classification_report(y_test_sd, y_pred_3, output_dict=True)
+            # Convertir le dictionnaire en DataFrame
+            report_dict_xgboost_3 = pd.DataFrame(report_dict_xgboost_3).T
+            st.dataframe(report_dict_xgboost_3)
+            
+            explainer = shap.TreeExplainer(xgboost_test_3)
+            shap_values_xgboost_best_3 = explainer.shap_values(X_test_sd)
+            
+            fig = plt.figure()
+            shap.summary_plot(shap_values_xgboost_best_3, X_test_sd)  
+            st.pyplot(fig)
+            
+            fig = plt.figure()
+            explanation_3 = shap.Explanation(values=shap_values_xgboost_best_3,
+                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_sd.columns)
+            shap.plots.bar(explanation_3)
+            st.pyplot(fig)                   
+            
+            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
+
+            #Étape 1 : Créer une liste des termes à exclure
+            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
+
+            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
+            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
+
+            #Étape 3 : Identifier les indices correspondants dans X_test_sd
+            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
+            shap_values_filtered = shap_values_xgboost_best_3[:, filtered_indices]
+
+            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
+            explanation_filtered = shap.Explanation(values=shap_values_filtered,
+                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
+                                            feature_names=filtered_columns)  # Les noms des features
+
+
+            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
+
+            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
+            def get_mean_shap_values(column_names, shap_values_test_shap):
+                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
+                values = shap_values_xgboost_best_3[:, indices]
+                return np.mean(np.abs(values), axis=0)
+
+            #Étape 1 : On idenfie les colonnes que l'on recherche
+            month_columns = [col for col in X_test_sd.columns if 'month' in col]
+            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
+            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
+            job_columns = [col for col in X_test_sd.columns if 'job' in col]
+            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
+
+            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_best_3)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_best_3)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_best_3)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_best_3)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_best_3)
 
             #Étape 3 : On combine les différentes moyennes et on les nomme
             combined_values = [np.mean(mean_shap_month),
