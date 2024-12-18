@@ -2440,6 +2440,23 @@ if selected == 'Interprétation':
     if page == pages[0] : 
         st.subheader("Interpréation SHAP avec la colonne Duration")
 
+    model_files = {
+        "Random Forest": "dilenesantos/Random_Forest_model_avec_duration_sans_parametres.pkl",
+        "Logistic Regression": "dilenesantos/Logistic_Regression_model_avec_duration_sans_parametres.pkl",
+        "Decision Tree": "dilenesantos/Decision_Tree_model_avec_duration_sans_parametres.pkl",
+        "KNN": "dilenesantos/KNN_model_avec_duration_sans_parametres.pkl",
+        "AdaBoost": "dilenesantos/AdaBoost_model_avec_duration_sans_parametres.pkl",
+        "Bagging": "dilenesantos/Bagging_model_avec_duration_sans_parametres.pkl",
+        "SVM": "dilenesantos/SVM_model_avec_duration_sans_parametres.pkl",
+        "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
+    }
+
+    import os
+    for name, file_path in model_files.items():
+        if not os.path.exists(file_path):
+            st.write(f"Le fichier {file_path} est introuvable.")
+        
+     
         submenu_interpretation = st.selectbox("Menu", ("Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"))
         
         if submenu_interpretation == "Summary plot" : 
