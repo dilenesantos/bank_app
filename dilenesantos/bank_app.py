@@ -304,8 +304,8 @@ if selected == 'Introduction':
     
     # Définir X_test et y_test avant la boucle
     try:
-        print(f"Dimensions de X_test: {X_test.shape}")
-        print(f"Dimensions de y_test: {len(y_test)}")
+        st.write(f"Dimensions de X_test: {X_test.shape}")
+        st.write(f"Dimensions de y_test: {len(y_test)}")
     except NameError:
         raise ValueError("Les variables X_test et y_test doivent être définies avant d'exécuter ce code.")
     
@@ -314,11 +314,11 @@ if selected == 'Introduction':
         try:
             # Vérifier l'existence du fichier
             if not os.path.exists(file_path):
-                print(f"Le fichier {file_path} est introuvable.")
+                st.write(f"Le fichier {file_path} est introuvable.")
                 continue
             
             # Charger le modèle sauvegardé
-            print(f"Chargement du modèle : {name}")
+            st.write(f"Chargement du modèle : {name}")
             trained_clf = joblib.load(file_path)
     
             # Faire des prédictions
@@ -339,10 +339,10 @@ if selected == 'Introduction':
             }
     
         except Exception as e:
-            print(f"Erreur avec le modèle {name}: {e}")
+            st.write(f"Erreur avec le modèle {name}: {e}")
     
     # Afficher les résultats finaux
-    print(results_sans_param)
+    st.dataframe(results_sans_param)
 
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
