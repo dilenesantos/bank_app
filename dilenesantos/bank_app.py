@@ -1314,14 +1314,14 @@ if selected == "Modélisation":
     # ON A PRÉCÉDEMMENT FAIT TOURNER UN CODE POUR ENREGISTRER LES MODÈLES SANS PARAMÈTRES DANS JOBLIB
     #Liste des modèles enregistrés et leurs noms
     model_files = {
-        "Random Forest": "Random_Forest_model_avec_duration_sans_parametres.pkl",
-        "Logistic Regression": "Logistic_Regression_model_avec_duration_sans_parametres.pkl",
-        "Decision Tree": "Decision_Tree_model_avec_duration_sans_parametres.pkl",
-        "KNN": "KNN_model_avec_duration_sans_parametres.pkl",
-        "AdaBoost": "AdaBoost_model_avec_duration_sans_parametres.pkl",
-        "Bagging": "Bagging_model_avec_duration_sans_parametres.pkl",
-        "SVM": "SVM_model_avec_duration_sans_parametres.pkl",
-        "XGBOOST": "XGBOOST_model_avec_duration_sans_parametres.pkl",
+        "Random Forest": "dilenesantos/Random_Forest_model_avec_duration_sans_parametres.pkl",
+        "Logistic Regression": "dilenesantos/Logistic_Regression_model_avec_duration_sans_parametres.pkl",
+        "Decision Tree": "dilenesantos/Decision_Tree_model_avec_duration_sans_parametres.pkl",
+        "KNN": "dilenesantos/KNN_model_avec_duration_sans_parametres.pkl",
+        "AdaBoost": "dilenesantos/AdaBoost_model_avec_duration_sans_parametres.pkl",
+        "Bagging": "dilenesantos/Bagging_model_avec_duration_sans_parametres.pkl",
+        "SVM": "dilenesantos/SVM_model_avec_duration_sans_parametres.pkl",
+        "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
     }
 
     # Résultats des modèles
@@ -1412,17 +1412,17 @@ if selected == "Modélisation":
     #COMME ON A ENREGISTRÉ LES MODÈLES, VOICI LE NOUVEAU CODE À UTILISER : 
     # Liste des modèles enregistrés et leurs fichiers correspondants
     model_files_team = {
-        "RF_dounia": "RF_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "RF_fatou": "RF_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "RF_carolle": "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "SVM_dounia": "SVM_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "SVM_dilene": "SVM_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "SVM_fatou": "SVM_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "SVM_carolle": "SVM_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "XGBOOST_dounia": "XGBOOST_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "XGBOOST_dilene": "XGBOOST_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "XGBOOST_carolle": "XGBOOST_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "XGBOOST_fatou": "XGBOOST_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "RF_dounia": "dilenesantos/RF_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "RF_fatou": "dilenesantos/RF_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "RF_carolle": "dilenesantos/RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_dounia": "dilenesantos/SVM_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_dilene": "dilenesantos/SVM_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_fatou": "dilenesantos/SVM_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_carolle": "dilenesantos/SVM_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_dounia": "dilenesantos/XGBOOST_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_dilene": "dilenesantos/XGBOOST_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_carolle": "dilenesantos/XGBOOST_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_fatou": "dilenesantos/XGBOOST_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
     }
 
 
@@ -1507,9 +1507,9 @@ if selected == "Modélisation":
     #LES MODÈLES PRÉCÉDENTS ONT ÉTÉ ENREGISTRÉS VIA JOBLIB donc nouveau code pour appeler ces modèles enregistrés
     # Liste des modèles enregistrés et leurs fichiers correspondants
     model_files_grid_2 = {
-        "Random Forest GridSearch2": "Random_Forest_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "SVM GridSearch2": "SVM_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        "XGBOOST GridSearch2": "XGBOOST_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "Random Forest GridSearch2": "dilenesantos/Random_Forest_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM GridSearch2": "dilenesantos/SVM_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST GridSearch2": "dilenesantos/XGBOOST_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
     }
 
     # Résultats des modèles
@@ -1597,7 +1597,7 @@ if selected == "Modélisation":
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                 
             # Chargement du modèle enregistré
-            filename = "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl"
+            filename = "dilenesantos/RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl"
             rf_carolle_model = joblib.load(filename)
 
             # Prédictions sur les données test
@@ -1684,21 +1684,21 @@ if selected == "Modélisation":
             #CODE À UTILISER PUISQUE MODÈLES SAUVEGARDÉS
             #Chargement des modèles préalablement enregistrés
             models_SD = {
-                "Random Forest": joblib.load("Random_Forest_model_sans_duration_sans_parametres.pkl"),
-                "Logistic Regression": joblib.load("Logistic_Regression_model_sans_duration_sans_parametres.pkl"),
-                "Decision Tree": joblib.load("Decision_Tree_model_sans_duration_sans_parametres.pkl"),
-                "KNN": joblib.load("KNN_model_sans_duration_sans_parametres.pkl"),
-                "AdaBoost": joblib.load("AdaBoost_model_sans_duration_sans_parametres.pkl"),
-                "Bagging": joblib.load("Bagging_model_sans_duration_sans_parametres.pkl"),
-                "SVM": joblib.load("SVM_model_sans_duration_sans_parametres.pkl"),
-                "XGBOOST": joblib.load("XGBOOST_model_sans_duration_sans_parametres.pkl")
+                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_sans_duration_sans_parametres.pkl"),
+                "Logistic Regression": joblib.load("dilenesantos/Logistic_Regression_model_sans_duration_sans_parametres.pkl"),
+                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_sans_duration_sans_parametres.pkl"),
+                "KNN": joblib.load("dilenesantos/KNN_model_sans_duration_sans_parametres.pkl"),
+                "AdaBoost": joblib.load("dilenesantos/AdaBoost_model_sans_duration_sans_parametres.pkl"),
+                "Bagging": joblib.load("dilenesantos/Bagging_model_sans_duration_sans_parametres.pkl"),
+                "SVM": joblib.load("dilenesantos/SVM_model_sans_duration_sans_parametres.pkl"),
+                "XGBOOST": joblib.load("dilenesantos/XGBOOST_model_sans_duration_sans_parametres.pkl")
             }
             # Charger votre modèle
-            filename = "Random_Forest_model_sans_duration_sans_parametres.pkl"
+            filename = "dilenesantos/Random_Forest_model_sans_duration_sans_parametres.pkl"
             model = joblib.load(filename)
 
             # Sauvegarder le modèle avec compression de niveau 9
-            joblib.dump(model, "Random_Forest_model_sans_duration_sans_parametres.pkl", compress=5)
+            joblib.dump(model, "dilenesantos/Random_Forest_model_sans_duration_sans_parametres.pkl", compress=5)
     
             # Résultats des modèles
             results_SD_sans_param = {}
@@ -1802,13 +1802,13 @@ if selected == "Modélisation":
             
             #Chargement des modèles préalablement enregistrés
             models_SD_hyperparam = {
-                "Random Forest": joblib.load("Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
-                "Decision Tree": joblib.load("Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
-                "SVM": joblib.load("SVM_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_1": joblib.load("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_2": joblib.load("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_3": joblib.load("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_TESTDIL": joblib.load("XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
+                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
+                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
+                "SVM": joblib.load("dilenesantos/SVM_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_1": joblib.load("dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_2": joblib.load("dilenesantos/XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_3": joblib.load("dilenesantos/XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_TESTDIL": joblib.load("dilenesantos/XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
             }
 
             # Résultats des modèles
@@ -1864,7 +1864,7 @@ if selected == "Modélisation":
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                 
             # Chargement du modèle enregistré
-            filename = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
+            filename = "dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
             model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename)
 
             # Prédictions sur les données test
@@ -1911,7 +1911,7 @@ if selected == "Modélisation":
             #joblib.dump(shap_values_XGBOOST_1, "shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
 
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_1 = joblib.load("shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+            shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
 
             fig = plt.figure()
             shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
@@ -2052,7 +2052,7 @@ if selected == "Modélisation":
             #joblib.dump(shap_values_XGBOOST_2, "shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
 
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_2 = joblib.load("shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
+            shap_values_XGBOOST_2 = joblib.load("dilenesantos/shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
 
             fig = plt.figure()
             shap.summary_plot(shap_values_XGBOOST_2, X_test_sd)  
@@ -2147,7 +2147,7 @@ if selected == "Modélisation":
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                 
             # Chargement du modèle enregistré
-            filename_XGBOOST_3 = "XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"
+            filename_XGBOOST_3 = "dilenesantos/XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"
             model_XGBOOST_3_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_3)
 
             # Prédictions sur les données test
@@ -2193,7 +2193,7 @@ if selected == "Modélisation":
             #joblib.dump(shap_values_XGBOOST_3, "shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
 
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_3 = joblib.load("shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
+            shap_values_XGBOOST_3 = joblib.load("dilenesantos/shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
 
             fig = plt.figure()
             shap.summary_plot(shap_values_XGBOOST_3, X_test_sd)  
@@ -2288,7 +2288,7 @@ if selected == "Modélisation":
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                 
             # Chargement du modèle enregistré
-            filename_XGBOOST_TESTDIL = "XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl"
+            filename_XGBOOST_TESTDIL = "dilenesantos/XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl"
             model_XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_TESTDIL)
 
             # Prédictions sur les données test
@@ -2334,7 +2334,7 @@ if selected == "Modélisation":
             #joblib.dump(shap_values_XGBOOST_TESTDIL, "shap_values_XGBOOST_TESTDIL_SD_TOP_4_hyperparam.pkl")
 
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_TESTDIL = joblib.load("shap_values_XGBOOST_TESTDIL_SD_TOP_4_hyperparam.pkl")
+            shap_values_XGBOOST_TESTDIL = joblib.load("dilenesantos/shap_values_XGBOOST_TESTDIL_SD_TOP_4_hyperparam.pkl")
 
             fig = plt.figure()
             shap.summary_plot(shap_values_XGBOOST_TESTDIL, X_test_sd)  
