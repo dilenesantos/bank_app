@@ -286,6 +286,8 @@ if selected == 'Introduction':
     st.write("FATOU")
     st.write("carolle")
 
+
+    # Liste des modèles enregistrés et leurs noms
     model_files = {
         "Random Forest": "dilenesantos/Random_Forest_model_avec_duration_sans_parametres.pkl",
         "Logistic Regression": "dilenesantos/Logistic_Regression_model_avec_duration_sans_parametres.pkl",
@@ -295,13 +297,52 @@ if selected == 'Introduction':
         "Bagging": "dilenesantos/Bagging_model_avec_duration_sans_parametres.pkl",
         "SVM": "dilenesantos/SVM_model_avec_duration_sans_parametres.pkl",
         "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
-        }
-
-    import os
+    }
+    
+    # Résultats des modèles
+    results_sans_param = {}
+    
+    # Définir X_test et y_test avant la boucle
+    try:
+        print(f"Dimensions de X_test: {X_test.shape}")
+        print(f"Dimensions de y_test: {len(y_test)}")
+    except NameError:
+        raise ValueError("Les variables X_test et y_test doivent être définies avant d'exécuter ce code.")
+    
+    # Boucle pour charger les modèles et calculer les métriques
     for name, file_path in model_files.items():
-        if not os.path.exists(file_path):
-            st.write(f"Le fichier {file_path} est introuvable.")
-
+        try:
+            # Vérifier l'existence du fichier
+            if not os.path.exists(file_path):
+                print(f"Le fichier {file_path} est introuvable.")
+                continue
+            
+            # Charger le modèle sauvegardé
+            print(f"Chargement du modèle : {name}")
+            trained_clf = joblib.load(file_path)
+    
+            # Faire des prédictions
+            y_pred = trained_clf.predict(X_test)
+    
+            # Calculer les métriques
+            accuracy = accuracy_score(y_test, y_pred)
+            f1 = f1_score(y_test, y_pred)
+            precision = precision_score(y_test, y_pred)
+            recall = recall_score(y_test, y_pred)
+    
+            # Stocker les résultats
+            results_sans_param[name] = {
+                "Accuracy": accuracy,
+                "F1 Score": f1,
+                "Precision": precision,
+                "Recall": recall,
+            }
+    
+        except Exception as e:
+            print(f"Erreur avec le modèle {name}: {e}")
+    
+    # Afficher les résultats finaux
+    print(results_sans_param)
 
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
