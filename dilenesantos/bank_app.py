@@ -283,22 +283,6 @@ if selected == 'Introduction':
     st.write("FATOU")
     st.write("carolle")
 
-    model_files = {
-        "Random Forest": "dilenesantos/Random_Forest_model_avec_duration_sans_parametres.pkl",
-        "Logistic Regression": "dilenesantos/Logistic_Regression_model_avec_duration_sans_parametres.pkl",
-        "Decision Tree": "dilenesantos/Decision_Tree_model_avec_duration_sans_parametres.pkl",
-        "KNN": "dilenesantos/KNN_model_avec_duration_sans_parametres.pkl",
-        "AdaBoost": "dilenesantos/AdaBoost_model_avec_duration_sans_parametres.pkl",
-        "Bagging": "dilenesantos/Bagging_model_avec_duration_sans_parametres.pkl",
-        "SVM": "dilenesantos/SVM_model_avec_duration_sans_parametres.pkl",
-        "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
-        }
-
-    import os
-    for name, file_path in model_files.items():
-        if not os.path.exists(file_path):
-            st.write(f"Le fichier {file_path} est introuvable.")
-
 
 with st.sidebar:
     selected = option_menu(
