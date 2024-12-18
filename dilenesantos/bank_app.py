@@ -1304,48 +1304,42 @@ if selected == "Pre-processing":
                 
 
 if selected == "Modélisation":
+    st.title("MODÉLISATION")
+    st.sidebar.title("SOUS MENU MODÉLISATION")  
+    pages=["Introduction", "Modélisation avec Duration", "Modélisation sans Duration"]
+    page=st.sidebar.radio('Afficher', pages)
+ 
     
-    #RÉSULTAT DES MODÈLES SANS PARAMETRES
-    # Initialisation des classifiers
-    classifiers = {
-        "Random Forest": RandomForestClassifier(random_state=42),
-        "Logistic Regression": LogisticRegression(random_state=42),
-        "Decision Tree": DecisionTreeClassifier(random_state=42),
-        "KNN": KNeighborsClassifier(),
-        "AdaBoost": AdaBoostClassifier(random_state=42),
-        "Bagging": BaggingClassifier(random_state=42),
-        "SVM": svm.SVC(random_state=42),
-        "XGBOOST": XGBClassifier(random_state=42),
+    #RÉSULTAT DES MODÈLES SANS PARAMÈTRES
+    # ON A PRÉCÉDEMMENT FAIT TOURNER UN CODE POUR ENREGISTRER LES MODÈLES SANS PARAMÈTRES DANS JOBLIB
+    #Liste des modèles enregistrés et leurs noms
+    model_files = {
+        "Random Forest": "Random_Forest_model_avec_duration_sans_parametres.pkl",
+        "Logistic Regression": "Logistic_Regression_model_avec_duration_sans_parametres.pkl",
+        "Decision Tree": "Decision_Tree_model_avec_duration_sans_parametres.pkl",
+        "KNN": "KNN_model_avec_duration_sans_parametres.pkl",
+        "AdaBoost": "AdaBoost_model_avec_duration_sans_parametres.pkl",
+        "Bagging": "Bagging_model_avec_duration_sans_parametres.pkl",
+        "SVM": "SVM_model_avec_duration_sans_parametres.pkl",
+        "XGBOOST": "XGBOOST_model_avec_duration_sans_parametres.pkl",
     }
 
     # Résultats des modèles
     results_sans_param = {}
 
-    # Fonction pour entraîner et sauvegarder un modèle
-    def train_and_save_model(model_name, clf, X_train, y_train):
-        filename = f"{model_name.replace(' ', '_')}_model_avec_duration_sans_parametres.pkl"  # Nom du fichier
-        try:
-            # Charger le modèle si le fichier existe déjà
-            trained_clf = joblib.load(filename)
-        except FileNotFoundError:
-            # Entraîner et sauvegarder le modèle
-            clf.fit(X_train, y_train)
-            joblib.dump(clf, filename)
-            trained_clf = clf
-        return trained_clf
-
-    # Boucle pour entraîner ou charger les modèles
-    for name, clf in classifiers.items():
-        # Entraîner ou charger le modèle
-        trained_clf = train_and_save_model(name, clf, X_train, y_train)
+    # Boucle pour charger les modèles et calculer les métriques
+    for name, file_path in model_files.items():
+        # Charger le modèle sauvegardé
+        trained_clf = joblib.load(file_path)
+        # Faire des prédictions
         y_pred = trained_clf.predict(X_test)
-            
+
         # Calculer les métriques
         accuracy = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
         precision = precision_score(y_test, y_pred)
         recall = recall_score(y_test, y_pred)
-            
+
         # Stocker les résultats
         results_sans_param[name] = {
             "Accuracy": accuracy,
@@ -1360,70 +1354,198 @@ if selected == "Modélisation":
     results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
 
     # Graphiques
-    results_melted = results_sans_param.reset_index().melt(
-        id_vars="index", var_name="Metric", value_name="Score"
-    )
+    results_melted = results_sans_param.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
     results_melted.rename(columns={"index": "Classifier"}, inplace=True)
 
+    #HYPERPARAMÈTRES : ÉTAPE 1 - RECHERCHES TEAM POUR LES 3 TOPS MODÈLES (RANDOM FOREST / SVM / XGBOOST)
+    # Initialisation des classifiers
+    #classifiers_AD_TEAM = {
+    #"RF_dounia": RandomForestClassifier(max_depth=None, max_features='log2',min_samples_leaf=2, min_samples_split=2, n_estimators=200, random_state=42),
+    #"RF_dilene": RandomForestClassifier(class_weight='balanced', max_depth=25, max_features='sqrt',min_samples_leaf=1, min_samples_split=15, n_estimators=1500, random_state=42),
+    #"RF_fatou": RandomForestClassifier(max_depth= None,max_features='log2',min_samples_leaf=2,min_samples_split=2,n_estimators=200,random_state=42),
+    #"RF_carolle": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
+    #"SVM_dounia": svm.SVC(C = 1, class_weight = "balanced", gamma = 'scale', kernel = 'rbf', random_state=42),
+    #"SVM_dilene": svm.SVC(C=0.1, class_weight='balanced', gamma=0.1, kernel='rbf', random_state=42),
+    #"SVM_fatou": svm.SVC(kernel='rbf',gamma='scale', C=1, random_state=42),
+    #"SVM_carolle": svm.SVC(C=0.1, class_weight='balanced', gamma='scale', kernel='rbf', random_state=42),
+    #"XGBOOST_dounia": XGBClassifier(colsample_bytree=1.0, learning_rate=0.05,max_depth=7,min_child_weight=1,n_estimators=200,subsample=0.8,random_state=42),
+    #"XGBOOST_dilene": XGBClassifier(base_score=0.3, gamma=14, learning_rate=0.6, max_delta_step=1, max_depth=27,min_child_weight=2, n_estimators=900,random_state=42),
+    #"XGBOOST_carolle": XGBClassifier(colsample_bytree=0.8, gamma=10, max_depth=17,min_child_weight=1,n_estimators=1000, reg_lambda=0.89, random_state=42),
+    #"XGBOOST_fatou": XGBClassifier(colsample_bytree=0.8, gamma= 5, learning_rate= 0.1, max_depth= 5, n_estimators= 100, subsample= 0.8, random_state=42)
+    #}
 
-    # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
-    classifiers_param_DURATION = {
-        "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
-        "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
-        "XGBOOST best" : XGBClassifier(colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
-    results_best_param_DURATION = {}  # Affichage des résultats dans results
+    # Résultats des modèles
+    #results_AD_top_3_hyperparam_TEAM = {}
 
-
-    # Fonction pour entraîner et sauvegarder un modèle
-    def train_and_save_model_avec_param(model_name, clf, X_train, y_train):
-        filename = f"{model_name.replace(' ', '_')}_model_avec_duration_hyperparam.pkl"  # Nom du fichier
-        try:
+    #Fonction pour entraîner et sauvegarder un modèle
+    #def train_and_save_model_team(model_name, clf, X_train, y_train):
+        #filename = f"{model_name.replace(' ', '_')}_model_AD_TOP_3_hyperparam_TEAM.pkl"  # Nom du fichier
+        #try:
             # Charger le modèle si le fichier existe déjà
-            trained_clf = joblib.load(filename)
-        except FileNotFoundError:
+            #trained_clf = joblib.load(filename)
+        #except FileNotFoundError:
             # Entraîner et sauvegarder le modèle
-            clf.fit(X_train, y_train)
-            joblib.dump(clf, filename)
-            trained_clf = clf
-        return trained_clf
+            #clf.fit(X_train, y_train)
+            #joblib.dump(clf, filename)
+            #trained_clf = clf
+        #return trained_clf
 
     # Boucle pour entraîner ou charger les modèles
-    for name, clf in classifiers_param_DURATION.items():
+    #for name, clf in classifiers_AD_TEAM.items():
         # Entraîner ou charger le modèle
-        trained_clf = train_and_save_model_avec_param(name, clf, X_train, y_train)
-        y_pred = trained_clf.predict(X_test)       
+        #trained_clf = train_and_save_model_team(name, clf, X_train, y_train)
+        #y_pred = trained_clf.predict(X_test)
+            
+        # Calculer les métriques
+        #accuracy = accuracy_score(y_test, y_pred)
+        #f1 = f1_score(y_test, y_pred)
+        #precision = precision_score(y_test, y_pred)
+        #recall = recall_score(y_test, y_pred)
+            
+        # Stocker les résultats
+        #results_AD_top_3_hyperparam_TEAM[name] = {
+            #"Accuracy": accuracy,
+            #"F1 Score": f1,
+            #"Precision": precision,
+            #"Recall": recall,
+        #}
+    #COMME ON A ENREGISTRÉ LES MODÈLES, VOICI LE NOUVEAU CODE À UTILISER : 
+    # Liste des modèles enregistrés et leurs fichiers correspondants
+    model_files_team = {
+        "RF_dounia": "RF_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "RF_fatou": "RF_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "RF_carolle": "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_dounia": "SVM_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_dilene": "SVM_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_fatou": "SVM_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM_carolle": "SVM_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_dounia": "XGBOOST_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_dilene": "XGBOOST_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_carolle": "XGBOOST_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST_fatou": "XGBOOST_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+    }
+
+
+    # Résultats des modèles
+    results_AD_top_3_hyperparam_TEAM = {}
+
+    # Boucle pour charger les modèles et calculer les métriques
+    for name, file_path in model_files_team.items():
+        # Charger le modèle sauvegardé
+        trained_clf = joblib.load(file_path)
+        
+        # Faire des prédictions
+        y_pred = trained_clf.predict(X_test)
 
         # Calculer les métriques
         accuracy = accuracy_score(y_test, y_pred)
         f1 = f1_score(y_test, y_pred)
         precision = precision_score(y_test, y_pred)
         recall = recall_score(y_test, y_pred)
-            
+
         # Stocker les résultats
-        results_best_param_DURATION[name] = {
-             "Accuracy": accuracy,
-             "F1 Score": f1,
-             "Precision": precision,
-             "Recall": recall,
+        results_AD_top_3_hyperparam_TEAM[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall,
         }
 
-    #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-    results_best_param_DURATION = pd.DataFrame(results_best_param_DURATION)
-    results_best_param_DURATION = results_best_param_DURATION.T
-    results_best_param_DURATION.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                        
-    #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-    results_best_param_DURATION = results_best_param_DURATION.sort_values(by='Recall', ascending=False)
+    # Conversion des résultats en DataFrame
+    df_results_AD_top_3_hyperparam_TEAM = pd.DataFrame(results_AD_top_3_hyperparam_TEAM).T
+    df_results_AD_top_3_hyperparam_TEAM.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+    df_results_AD_top_3_hyperparam_TEAM = df_results_AD_top_3_hyperparam_TEAM.sort_values(by="Recall", ascending=False)
     
-    results_param_df_melted_DURATION = results_best_param_DURATION.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-    results_param_df_melted_DURATION.rename(columns={"index": "Classifier"}, inplace=True)
+    melted_df_results_AD_top_3_hyperparam_TEAM = df_results_AD_top_3_hyperparam_TEAM.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+    melted_df_results_AD_top_3_hyperparam_TEAM.rename(columns={"index": "Classifier"}, inplace=True)    
 
 
-    st.title("MODÉLISATION")
-    st.sidebar.title("MENU MODÉLISATION")  
-    pages=["Introduction", "Modélisation avec Duration", "Modélisation sans Duration"]
-    page=st.sidebar.radio('Afficher', pages)
- 
+    #HYPERPARAMÈTRES : ÉTAPE 2 - 
+    # Initialisation des classifiers
+    #classifiers_grid_2 = {
+    #"Random Forest GridSearch2": RandomForestClassifier(class_weight= 'balanced', max_depth = None, max_features = 'sqrt', min_samples_leaf= 2, min_samples_split= 15, n_estimators = 200, random_state=42),
+    #"SVM GridSearch2": svm.SVC (C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
+    #"XGBOOST GridSearch2": XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)
+    #}
+
+    # Résultats des modèles
+    #results_hyperparam_gridsearch2 = {}
+
+    #Fonction pour entraîner et sauvegarder un modèle
+    #def train_and_save_model_team(model_name, clf, X_train, y_train):
+        #filename = f"{model_name.replace(' ', '_')}_model_AD_TOP_3_hyperparam_TEAM.pkl"  # Nom du fichier
+        #try:
+            # Charger le modèle si le fichier existe déjà
+            #trained_clf = joblib.load(filename)
+        #except FileNotFoundError:
+            # Entraîner et sauvegarder le modèle
+            #clf.fit(X_train, y_train)
+            #joblib.dump(clf, filename)
+            #trained_clf = clf
+        #return trained_clf
+
+    # Boucle pour entraîner ou charger les modèles
+    #for name, clf in classifiers_grid_2.items():
+        # Entraîner ou charger le modèle
+        #trained_clf = train_and_save_model_team(name, clf, X_train, y_train)
+        #y_pred = trained_clf.predict(X_test)
+            
+        # Calculer les métriques
+        #accuracy = accuracy_score(y_test, y_pred)
+        #f1 = f1_score(y_test, y_pred)
+        #precision = precision_score(y_test, y_pred)
+        #recall = recall_score(y_test, y_pred)
+            
+        # Stocker les résultats
+        #results_hyperparam_gridsearch2[name] = {
+            #"Accuracy": accuracy,
+            #"F1 Score": f1,
+            #"Precision": precision,
+            #"Recall": recall
+        #}
+    
+    #LES MODÈLES PRÉCÉDENTS ONT ÉTÉ ENREGISTRÉS VIA JOBLIB donc nouveau code pour appeler ces modèles enregistrés
+    # Liste des modèles enregistrés et leurs fichiers correspondants
+    model_files_grid_2 = {
+        "Random Forest GridSearch2": "Random_Forest_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "SVM GridSearch2": "SVM_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        "XGBOOST GridSearch2": "XGBOOST_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+    }
+
+    # Résultats des modèles
+    results_hyperparam_gridsearch2 = {}
+
+    # Boucle pour charger les modèles et calculer les métriques
+    for name, file_path in model_files_grid_2.items():
+        # Charger le modèle sauvegardé
+        trained_clf = joblib.load(file_path)
+        
+        # Faire des prédictions
+        y_pred = trained_clf.predict(X_test)
+
+        # Calculer les métriques
+        accuracy = accuracy_score(y_test, y_pred)
+        f1 = f1_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred)
+        recall = recall_score(y_test, y_pred)
+
+        # Stocker les résultats
+        results_hyperparam_gridsearch2[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall,
+        }
+
+    # Conversion des résultats en DataFrame
+    df_results_hyperparam_gridsearch2 = pd.DataFrame(results_hyperparam_gridsearch2).T
+    df_results_hyperparam_gridsearch2.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+    df_results_hyperparam_gridsearch2 = df_results_hyperparam_gridsearch2.sort_values(by="Recall", ascending=False)
+    
+    melted_df_results_hyperparam_gridsearch2 = df_results_hyperparam_gridsearch2.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+    melted_df_results_hyperparam_gridsearch2.rename(columns={"index": "Classifier"}, inplace=True)    
+
+
 
     if page == pages[0] : 
         st.subheader("Méthodologie")
@@ -1432,7 +1554,8 @@ if selected == "Modélisation":
         st.write("Enfin sur le meilleur modèle trouvé, nous effectuons une analyse SHAP afin d'interpréter les décisions prises par le modèle dans la détection des clients susceptibles de Deposit YES")
                 
     if page == pages[1] : 
-        submenu_modelisation = st.selectbox("Menu", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"))
+        #AVEC DURATION
+        submenu_modelisation = st.radio("", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"), horizontal=True)
         if submenu_modelisation == "Scores modèles sans paramètres" :
             st.subheader("Scores modèles sans paramètres")
             st.write("On affiche le tableau des résultats des modèles :")
@@ -1456,81 +1579,164 @@ if selected == "Modélisation":
         if submenu_modelisation == "Hyperparamètres et choix du modèle" :
             st.subheader("Hyperparamètres et choix du modèle")
             st.write("blabla GridSearchCV ....")
-                
-            st.write("On affiche le tableau des résultats des modèles :")
-            st.dataframe(results_best_param_DURATION)
-                
-            st.write("Graphique :")
-            # Visualisation des résultats des différents modèles :
-            fig = plt.figure(figsize=(12, 6))
-            sns.barplot(data=results_param_df_melted_DURATION,x="Classifier",y="Score",hue="Metric",palette="rainbow")
-            # Ajouter des titres et légendes
-            plt.title("Performance des modèles par métrique", fontsize=16)
-            plt.xlabel("Modèles", fontsize=14)
-            plt.ylabel("Scores", fontsize=14)
-            plt.xticks(rotation=45)
-            plt.legend(title="Métrique", fontsize=12)
-            plt.legend(loc='lower right')
-            plt.tight_layout()
-            st.pyplot(fig)
-                
-                
-            st.subheader("Modèle sélectionné")
-            st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            
+            st.subheader("Étape 1 : Team GridSearch top 3 modèles")
+            st.write("Recherches Gridsearch des 4 membres de la Team sur les top 3 modèles ressortis sans paramètres")
+            st.write("Tableau des résultats des modèles hyperparamétrés")
+            st.dataframe(df_results_AD_top_3_hyperparam_TEAM)
+            
+            
+            st.subheader("Étape 2 : Nouvelles recherches GridSeach ")
+            st.write("Melting de nos différents hyperparamètres trouvés pour chaque modèle pour une nouvelle recherche GridSearch")
+            st.write("Tableau des résultats des modèles :")
+            st.dataframe(df_results_hyperparam_gridsearch2)
+            
+            
+            st.subheader("Étape 3 : Modèle sélectionné")
+            st.write("Le modèle Random Forest 'RF_carolle' avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
             st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                 
-            st.write("Affichons le rapport de classification de ce modèle")
-            rf_best = RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)
-            rf_best.fit(X_train, y_train)
-            score_train = rf_best.score(X_train, y_train)
-            score_test = rf_best.score(X_test, y_test)
-            y_pred = rf_best.predict(X_test)
-            table_rf = pd.crosstab(y_test,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+            # Chargement du modèle enregistré
+            filename = "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl"
+            rf_carolle_model = joblib.load(filename)
+
+            # Prédictions sur les données test
+            y_pred = rf_carolle_model.predict(X_test)
+
+            # Calcul des métriques pour chaque classe
+            report = classification_report(y_test, y_pred, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+            # Conversion du rapport en DataFrame pour affichage en tableau
+            report_df = pd.DataFrame(report).T
+
+            # Arrondi des valeurs à 4 décimales pour un affichage propre
+            report_df = report_df.round(4)
+
+            # Suppression des colonnes inutiles si besoin
+            report_df = report_df.drop(columns=["support"])
+
+            # Affichage global du rapport sous forme de tableau
+            st.write("Rapport de classification du modèle")
+            st.table(report_df)
+
+            # Création de la matrice de confusion sous forme de DataFrame
+            st.write("Matrice de confusion du modèle")
+            table_rf = pd.crosstab(y_test, y_pred, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_rf)
-            st.write("Classification report :")
-            report_dict = classification_report(y_test, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df = pd.DataFrame(report_dict).T
-            st.dataframe(report_df)
 
 
     if page == pages[2] :
+        #SANS DURATION
         submenu_modelisation2 = st.selectbox("Menu", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"))
     
         if submenu_modelisation2 == "Scores modèles sans paramètres" :
             st.subheader("Scores modèles sans paramètres")
-            st.write("On affiche le tableau des résultats des modèles :")
             
-            classifiers_sd = {"Random Forest": RandomForestClassifier(random_state=42),"Logistic Regression": LogisticRegression(random_state=42),"Decision Tree": DecisionTreeClassifier(random_state=42),"KNN" : neighbors.KNeighborsClassifier(),"AdaBoost": AdaBoostClassifier(random_state=42),"Bagging": BaggingClassifier(random_state=42),"SVM" : svm.SVC(random_state=42),"XGBOOST" : XGBClassifier(random_state=42)}
-            results_sd = {}  # Affichage des résultats dans results
+            #RÉSULTAT DES MODÈLES SANS PARAMETRES (CODE UTILISÉ UNE FOIS POUR CHARGER LES MODÈLES)
+            # Initialisation des classifiers
+            #classifiers_SD= {
+                #"Random Forest": RandomForestClassifier(random_state=42),
+                #"Logistic Regression": LogisticRegression(random_state=42),
+                #"Decision Tree": DecisionTreeClassifier(random_state=42),
+                #"KNN": KNeighborsClassifier(),
+                #"AdaBoost": AdaBoostClassifier(random_state=42),
+                #"Bagging": BaggingClassifier(random_state=42),
+                #"SVM": svm.SVC(random_state=42),
+                #"XGBOOST": XGBClassifier(random_state=42),
+            #}
 
-            for name, clf in classifiers_sd.items():
-                clf.fit(X_train_sd, y_train_sd)
-                y_pred_sd = clf.predict(X_test_sd)
-                accuracy_sd = accuracy_score(y_test_sd, y_pred_sd)
-                f1_sd = f1_score(y_test_sd, y_pred_sd)
-                precision_sd = precision_score(y_test_sd, y_pred_sd)
-                recall_sd = recall_score(y_test_sd, y_pred_sd)
-                results_sd[name] = {"Accuracy": accuracy_sd,"F1 Score": f1_sd,"Precision": precision_sd,"Recall": recall_sd}
-                
-            #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-            results_df_sd = pd.DataFrame(results_sd)
-            results_df_sd = results_df_sd.T
-            results_df_sd.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+            # Résultats des modèles
+            #results_SD_sans_param = {}
+
+            #Fonction pour entraîner et sauvegarder un modèle
+            #def train_and_save_model_SD_sans_param(model_name, clf, X_train_sd, y_train_sd):
+                #filename = f"{model_name.replace(' ', '_')}_model_sans_duration_sans_parametres.pkl"  # Nom du fichier
+                #try:
+                    # Charger le modèle si le fichier existe déjà
+                    #trained_clf = joblib.load(filename)
+                #except FileNotFoundError:
+                    # Entraîner et sauvegarder le modèle
+                    #clf.fit(X_train_sd, y_train_sd)
+                    #joblib.dump(clf, filename)
+                    #trained_clf = clf
+                #return trained_clf
+
+            # Boucle pour entraîner ou charger les modèles
+            #for name, clf in classifiers_SD.items():
+                # Entraîner ou charger le modèle
+                #trained_clf = train_and_save_model_SD_sans_param(name, clf, X_train_sd, y_train_sd)
+                #y_pred = trained_clf.predict(X_test_sd)
                     
-            #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-            results_df_sd = results_df_sd.sort_values(by='Recall', ascending=False)
+                # Calculer les métriques
+                #accuracy = accuracy_score(y_test_sd, y_pred)
+                #f1 = f1_score(y_test_sd, y_pred)
+                #precision = precision_score(y_test_sd, y_pred)
+                #recall = recall_score(y_test_sd, y_pred)
+                    
+                # Stocker les résultats
+                #results_SD_sans_param[name] = {
+                    #"Accuracy": accuracy,
+                    #"F1 Score": f1,
+                    #"Precision": precision,
+                    #"Recall": recall
+                #}
 
-            results_melted_sd = results_df_sd.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-            results_melted_sd.rename(columns={"index": "Classifier"}, inplace=True)
+            #CODE À UTILISER PUISQUE MODÈLES SAUVEGARDÉS
+            #Chargement des modèles préalablement enregistrés
+            models_SD = {
+                "Random Forest": joblib.load("Random_Forest_model_sans_duration_sans_parametres.pkl"),
+                "Logistic Regression": joblib.load("Logistic_Regression_model_sans_duration_sans_parametres.pkl"),
+                "Decision Tree": joblib.load("Decision_Tree_model_sans_duration_sans_parametres.pkl"),
+                "KNN": joblib.load("KNN_model_sans_duration_sans_parametres.pkl"),
+                "AdaBoost": joblib.load("AdaBoost_model_sans_duration_sans_parametres.pkl"),
+                "Bagging": joblib.load("Bagging_model_sans_duration_sans_parametres.pkl"),
+                "SVM": joblib.load("SVM_model_sans_duration_sans_parametres.pkl"),
+                "XGBOOST": joblib.load("XGBOOST_model_sans_duration_sans_parametres.pkl")
+            }
+            # Charger votre modèle
+            filename = "Random_Forest_model_sans_duration_sans_parametres.pkl"
+            model = joblib.load(filename)
 
+            # Sauvegarder le modèle avec compression de niveau 9
+            joblib.dump(model, "Random_Forest_model_sans_duration_sans_parametres.pkl", compress=5)
+    
+            # Résultats des modèles
+            results_SD_sans_param = {}
+
+            # Boucle pour charger les modèles et calculer les résultats
+            for name, trained_clf in models_SD.items():
+                # Prédictions sur les données test
+                y_pred = trained_clf.predict(X_test_sd)
+
+                # Calculer les métriques
+                accuracy = accuracy_score(y_test_sd, y_pred)
+                f1 = f1_score(y_test_sd, y_pred)
+                precision = precision_score(y_test_sd, y_pred)
+                recall = recall_score(y_test_sd, y_pred)
+
+                # Stocker les résultats
+                results_SD_sans_param[name] = {
+                    "Accuracy": accuracy,
+                    "F1 Score": f1,
+                    "Precision": precision,
+                    "Recall": recall
+                }
+
+            # Conversion des résultats en DataFrame
+            df_results_SD_sans_param = pd.DataFrame(results_SD_sans_param).T
+            df_results_SD_sans_param.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+            df_results_SD_sans_param = df_results_SD_sans_param.sort_values(by="Recall", ascending=False)
             
-            st.dataframe(results_df_sd)
-                    
+            melted_df_results_SD_sans_param = df_results_SD_sans_param.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+            melted_df_results_SD_sans_param.rename(columns={"index": "Classifier"}, inplace=True)
+
+            st.write("On affiche le tableau des résultats des modèles sans paramètres avec load modèles :")
+            st.dataframe(df_results_SD_sans_param)
+            
             st.write("Graphique :")
             # Visualisation des résultats des différents modèles :
             fig = plt.figure(figsize=(12, 6))
-            sns.barplot(data=results_melted_sd,x="Classifier",y="Score",hue="Metric",palette="rainbow")
+            sns.barplot(data=melted_df_results_SD_sans_param,x="Classifier",y="Score",hue="Metric",palette="rainbow")
             # Ajouter des titres et légendes
             plt.title("Performance des modèles par métrique", fontsize=16)
             plt.xlabel("Modèles", fontsize=14)
@@ -1540,48 +1746,108 @@ if selected == "Modélisation":
             plt.legend(loc='lower right')
             plt.tight_layout()
             st.pyplot(fig)
+    
 
         if submenu_modelisation2 == "Hyperparamètres et choix du modèle" :
             st.write("Recherche d'hyperparamètres et choix du modèle")
             st.write("blabla GridSearchCV ....")
-            # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
-            classifiers_param_sd2 = {
-                "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
-                "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
-                "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
-                "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42),
+            
+            #CODE CHARGÉ UNE FOIS POUR LOAD PUIS RETIRÉ
+            # Initialisation des classifiers
+            #classifiers_SD_hyperparam= {
+                #"Random Forest": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
+                #"Decision Tree": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
+                #"SVM" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
+                #"XGBOOST_1" : XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42),
+                #"XGBOOST_2" : XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42),
+                #"XGBOOST_3" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42),
+                #"XGBOOST_TESTDIL" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42),
+            #}
+
+            # Résultats des modèles
+            #results_SD_TOP_4_hyperparam = {}
+
+            #Fonction pour entraîner et sauvegarder un modèle
+            #def train_and_save_model_SD_hyperparam(model_name, clf, X_train_sd, y_train_sd):
+                #filename = f"{model_name.replace(' ', '_')}_model_SD_TOP_4_hyperparam.pkl"  # Nom du fichier
+                #try:
+                    # Charger le modèle si le fichier existe déjà
+                    #trained_clf = joblib.load(filename)
+                #except FileNotFoundError:
+                    # Entraîner et sauvegarder le modèle
+                    #clf.fit(X_train_sd, y_train_sd)
+                    #joblib.dump(clf, filename)
+                    #trained_clf = clf
+                #return trained_clf
+
+            # Boucle pour entraîner ou charger les modèles
+            #for name, clf in classifiers_SD_hyperparam.items():
+                # Entraîner ou charger le modèle
+                #trained_clf = train_and_save_model_SD_hyperparam(name, clf, X_train_sd, y_train_sd)
+                #y_pred = trained_clf.predict(X_test_sd)
+                    
+                # Calculer les métriques
+                #accuracy = accuracy_score(y_test_sd, y_pred)
+                #f1 = f1_score(y_test_sd, y_pred)
+                #precision = precision_score(y_test_sd, y_pred)
+                #recall = recall_score(y_test_sd, y_pred)
+                    
+                # Stocker les résultats
+                #results_SD_TOP_4_hyperparam[name] = {
+                    #"Accuracy": accuracy,
+                    #"F1 Score": f1,
+                    #"Precision": precision,
+                    #"Recall": recall
+                #}
+            
+            #Chargement des modèles préalablement enregistrés
+            models_SD_hyperparam = {
+                "Random Forest": joblib.load("Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
+                "Decision Tree": joblib.load("Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
+                "SVM": joblib.load("SVM_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_1": joblib.load("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_2": joblib.load("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_3": joblib.load("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_TESTDIL": joblib.load("XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
             }
 
+            # Résultats des modèles
+            results_SD_TOP_4_hyperparam = {}
 
-            results_param_sd_2 = {}  # Affichage des résultats dans results
+            # Boucle pour charger les modèles et calculer les résultats
+            for name, trained_clf in models_SD_hyperparam.items():
+                # Prédictions sur les données test
+                y_pred = trained_clf.predict(X_test_sd)
 
-            for name, clf in classifiers_param_sd2.items():
-                clf.fit(X_train_sd, y_train_sd)
-                y_pred_param_sd2 = clf.predict(X_test_sd)
-                accuracy_param_sd2 = accuracy_score(y_test_sd, y_pred_param_sd2)
-                f1_param_sd2 = f1_score(y_test_sd, y_pred_param_sd2)
-                precision_param_sd2 = precision_score(y_test_sd, y_pred_param_sd2)
-                recall_param_sd2 = recall_score(y_test_sd, y_pred_param_sd2)
-                results_param_sd_2[name] = {"Accuracy": accuracy_param_sd2,"F1 Score": f1_param_sd2,"Precision": precision_param_sd2,"Recall": recall_param_sd2}
-                
-            #créer un dataframe avec tous les résultats obtenus précédemment et pour tous les classifier
-            results_param_df_sd2 = pd.DataFrame(results_param_sd_2)
-            results_param_df_sd2 = results_param_df_sd2.T
-            results_param_df_sd2.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-                    
-            #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-            results_param_df_sd2 = results_param_df_sd2.sort_values(by='Recall', ascending=False)
+                # Calculer les métriques
+                accuracy = accuracy_score(y_test_sd, y_pred)
+                f1 = f1_score(y_test_sd, y_pred)
+                precision = precision_score(y_test_sd, y_pred)
+                recall = recall_score(y_test_sd, y_pred)
 
-            results_param_df_melted_sd2 = results_param_df_sd2.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-            results_param_df_melted_sd2.rename(columns={"index": "Classifier"}, inplace=True)
-                       
-            st.write("On affiche le tableau des résultats des modèles :")
-            st.dataframe(results_param_df_sd2)
-                    
-            st.write("Graphique :")
+                # Stocker les résultats
+                results_SD_TOP_4_hyperparam[name] = {
+                    "Accuracy": accuracy,
+                    "F1 Score": f1,
+                    "Precision": precision,
+                    "Recall": recall
+                }
+            
+            # Conversion des résultats en DataFrame
+            df_results_SD_TOP_4_hyperparam = pd.DataFrame(results_SD_TOP_4_hyperparam).T
+            df_results_SD_TOP_4_hyperparam.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+            df_results_SD_TOP_4_hyperparam = df_results_SD_TOP_4_hyperparam.sort_values(by="Recall", ascending=False)
+            
+            melted_df_results_SD_TOP_4_hyperparam = df_results_SD_TOP_4_hyperparam.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+            melted_df_results_SD_TOP_4_hyperparam.rename(columns={"index": "Classifier"}, inplace=True)
+            
+            st.write("On affiche le tableau des résultats des modèles hyper paramétrés loadés Joblib :")
+            st.dataframe(df_results_SD_TOP_4_hyperparam)
+            
+            st.write("Graphique avec load:")
             # Visualisation des résultats des différents modèles :
             fig = plt.figure(figsize=(12, 6))
-            sns.barplot(data=results_param_df_melted_sd2,x="Classifier",y="Score",hue="Metric",palette="rainbow")
+            sns.barplot(data=melted_df_results_SD_TOP_4_hyperparam,x="Classifier",y="Score",hue="Metric",palette="rainbow")
             # Ajouter des titres et légendes
             plt.title("Performance des modèles par métrique", fontsize=16)
             plt.xlabel("Modèles", fontsize=14)
@@ -1590,39 +1856,72 @@ if selected == "Modélisation":
             plt.legend(title="Métrique", fontsize=12)
             plt.legend(loc='lower right')
             plt.tight_layout()
-            st.pyplot(fig)
+            st.pyplot(fig)        
+     
                     
-                    
-            st.subheader("Modèle sélectionné")
-            st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-            st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
-            st.write("Affichons le rapport de classification de ce modèle")
-            st.write("xgboost_test_1 = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
-            xgboost_test_1 = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
-            xgboost_test_1.fit(X_train_sd, y_train_sd)
-            score_train = xgboost_test_1.score(X_train_sd, y_train_sd)
-            score_test = xgboost_test_1.score(X_test_sd, y_test_sd)
-            y_pred = xgboost_test_1.predict(X_test_sd)
-            table_xgboost = pd.crosstab(y_test_sd,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-            st.dataframe(table_xgboost)
-            st.write("Classification report :")
-            report_dict_xgboost = classification_report(y_test_sd, y_pred, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-            st.dataframe(report_df_xgboost)
+            st.subheader("Modèle sélectionné 1")
+            st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+            # Chargement du modèle enregistré
+            filename = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
+            model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename)
+
+            # Prédictions sur les données test
+            y_pred_1 = model_XGBOOST_1_model_SD_TOP_4_hyperparam.predict(X_test_sd)
+
+            # Calcul des métriques pour chaque classe
+            report_1 = classification_report(y_test_sd, y_pred_1, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+            # Conversion du rapport en DataFrame pour affichage en tableau
+            report_df_1 = pd.DataFrame(report_1).T
+
+            # Arrondi des valeurs à 4 décimales pour un affichage propre
+            report_df_1 = report_df_1.round(4)
+
+            # Suppression des colonnes inutiles si besoin
+            report_df_1 = report_df_1.drop(columns=["support"])
+
+            # Affichage global du rapport sous forme de tableau
+            st.write("Rapport de classification du modèle")
+            st.table(report_df_1)
+
+            # Création de la matrice de confusion sous forme de DataFrame
+            st.write("Matrice de confusion du modèle")
+            table_xgboost_1 = pd.crosstab(y_test_sd, y_pred_1, rownames=["Réalité"], colnames=["Prédiction"])
+            st.dataframe(table_xgboost_1)
             
-            explainer = shap.TreeExplainer(xgboost_test_1)
-            shap_values_xgboost_best = explainer.shap_values(X_test_sd)
+            
+            #SHAP
+            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+            #Chargement du modèle XGBOOST_1 déjà enregistré
+            #filename_XGBOOST_1 = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
+            #model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_1)
+
+            #Chargement des données pour shap 
+            #data_to_explain_XGBOOST_1 = X_test_sd  # Remplacez par vos données
+
+            #Création de l'explainer SHAP pour XGBOOST_1
+            #explainer_XGBOOST_1 = shap.TreeExplainer(model_XGBOOST_1_model_SD_TOP_4_hyperparam)
+
+            #Calcul des shap values
+            #shap_values_XGBOOST_1 = explainer_XGBOOST_1(data_to_explain_XGBOOST_1)
+
+            #Sauvegarder des shap values avec joblib
+            #joblib.dump(shap_values_XGBOOST_1, "shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_XGBOOST_1 = joblib.load("shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+
+            fig = plt.figure()
+            shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
+            st.pyplot(fig)
             
             fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_best, X_test_sd)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_xgboost_best,
+            explanation_XGBOOST_1 = shap.Explanation(values=shap_values_XGBOOST_1,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
                                  feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
+            shap.plots.bar(explanation_XGBOOST_1)
             st.pyplot(fig)                   
             
             ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
@@ -1635,99 +1934,135 @@ if selected == "Modélisation":
 
             #Étape 3 : Identifier les indices correspondants dans X_test_sd
             filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_xgboost_best[:, filtered_indices]
+            shap_values_filtered_XGBOOST_1 = shap_values_XGBOOST_1[:, filtered_indices]
 
             # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
+            explanation_filtered_XGBOOST_1 = shap.Explanation(values=shap_values_filtered_XGBOOST_1,
                                             data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
                                             feature_names=filtered_columns)  # Les noms des features
 
-
             ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
             #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
+            def get_mean_shap_values(column_names, shap_values):
+                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
                 indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_xgboost_best[:, indices]
+                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
                 return np.mean(np.abs(values), axis=0)
 
-            #Étape 1 : On idenfie les colonnes que l'on recherche
+            # Étape 1 : On identifie les colonnes que l'on recherche
             month_columns = [col for col in X_test_sd.columns if 'month' in col]
             weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
             poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
             job_columns = [col for col in X_test_sd.columns if 'job' in col]
             marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
 
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_best)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_best)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_best)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_best)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_best)
+            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_XGBOOST_1)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_XGBOOST_1)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_XGBOOST_1)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_XGBOOST_1)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_XGBOOST_1)
 
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
+            # Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values_XGBOOST_1 = [np.mean(mean_shap_month),
+                                        np.mean(mean_shap_weekday),
+                                        np.mean(mean_shap_poutcome),
+                                        np.mean(mean_shap_job),
+                                        np.mean(mean_shap_marital)]
 
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
+            combined_feature_names_XGBOOST1 = ['Mean SHAP Value for Month Features',
+                                            'Mean SHAP Value for Weekday Features',
+                                            'Mean SHAP Value for Poutcome Features',
+                                            'Mean SHAP Value for Job Features',
+                                            'Mean SHAP Value for Marital Features']
 
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
+            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
+            explanation_combined_XGBOOST_1 = shap.Explanation(values=combined_values_XGBOOST_1,
+                                                            data=np.array([[np.nan]] * len(combined_values_XGBOOST_1)),
+                                                            feature_names=combined_feature_names_XGBOOST1)
 
             ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
 
             #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
+            num_samples = explanation_filtered_XGBOOST_1.values.shape[0]
+            combined_values_reshaped__XGBOOST_1 = np.repeat(np.array(explanation_combined_XGBOOST_1.values)[:, np.newaxis], num_samples, axis=1).T
 
             #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
+            combined_values_XGBOOST_1 = np.concatenate([explanation_filtered_XGBOOST_1.values, combined_values_reshaped__XGBOOST_1], axis=1)
 
             #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
+            combined_feature_names_XGBOOST_1 = (explanation_filtered_XGBOOST_1.feature_names + explanation_combined_XGBOOST_1.feature_names)
 
             #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
+            explanation_combined_new_XGBOOST_1 = shap.Explanation(values=combined_values_XGBOOST_1,data=np.array([[np.nan]] * combined_values_XGBOOST_1.shape[0]),feature_names=combined_feature_names_XGBOOST_1)
 
             fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
+            shap.plots.bar(explanation_combined_new_XGBOOST_1, max_display=len(explanation_combined_new_XGBOOST_1.feature_names))
             st.pyplot(fig)
+            
 
+            st.subheader("Modèle sélectionné 2")
+            st.write("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+            # Chargement du modèle enregistré
+            filename_XGBOOST_2 = "XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"
+            model_XGBOOST_2_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_2)
 
-            st.write("xgboost_test_2 = XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)")
-            xgboost_test_2 = XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)
-            xgboost_test_2.fit(X_train_sd, y_train_sd)
-            score_train_2 = xgboost_test_2.score(X_train_sd, y_train_sd)
-            score_test_2 = xgboost_test_2.score(X_test_sd, y_test_sd)
-            y_pred_2 = xgboost_test_2.predict(X_test_sd)
-            table_xgboost_2 = pd.crosstab(y_test_sd,y_pred_2, rownames=['Realité'], colnames=['Prédiction'])
+            # Prédictions sur les données test
+            y_pred_2 = model_XGBOOST_2_model_SD_TOP_4_hyperparam.predict(X_test_sd)
+
+            # Calcul des métriques pour chaque classe
+            report_2 = classification_report(y_test_sd, y_pred_2, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+            # Conversion du rapport en DataFrame pour affichage en tableau
+            report_df_2 = pd.DataFrame(report_2).T
+
+            # Arrondi des valeurs à 4 décimales pour un affichage propre
+            report_df_2 = report_df_2.round(4)
+
+            # Suppression des colonnes inutiles si besoin
+            report_df_2 = report_df_2.drop(columns=["support"])
+
+            # Affichage global du rapport sous forme de tableau
+            st.write("Rapport de classification du modèle")
+            st.table(report_df_2)
+
+            # Création de la matrice de confusion sous forme de DataFrame
+            st.write("Matrice de confusion du modèle")
+            table_xgboost_2 = pd.crosstab(y_test_sd, y_pred_2, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_xgboost_2)
-            st.write("Classification report :")
-            report_dict_xgboost_2 = classification_report(y_test_sd, y_pred_2, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_dict_xgboost_2 = pd.DataFrame(report_dict_xgboost_2).T
-            st.dataframe(report_dict_xgboost_2)
+            
+            #SHAP
+            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+            #Chargement du modèle XGBOOST_2 déjà enregistré
+            #filename_XGBOOST_2 = "XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"
+            #model_XGBOOST_2_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_2)
 
-            
-            explainer = shap.TreeExplainer(xgboost_test_2)
-            shap_values_xgboost_best_2 = explainer.shap_values(X_test_sd)
-            
+            #Chargement des données pour shap 
+            #data_to_explain_XGBOOST_2 = X_test_sd  # Remplacez par vos données
+
+            #Création de l'explainer SHAP pour XGBOOST_2
+            #explainer_XGBOOST_2 = shap.TreeExplainer(model_XGBOOST_2_model_SD_TOP_4_hyperparam)
+
+            #Calcul des shap values
+            #shap_values_XGBOOST_2 = explainer_XGBOOST_2(data_to_explain_XGBOOST_2)
+
+            #Sauvegarder des shap values avec joblib
+            #joblib.dump(shap_values_XGBOOST_2, "shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
+
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_XGBOOST_2 = joblib.load("shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
+
             fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_best_2, X_test_sd)  
+            shap.summary_plot(shap_values_XGBOOST_2, X_test_sd)  
             st.pyplot(fig)
             
             fig = plt.figure()
-            explanation = shap.Explanation(values=shap_values_xgboost_best_2,
+            explanation_XGBOOST_2 = shap.Explanation(values=shap_values_XGBOOST_2,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
                                  feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation)
+            shap.plots.bar(explanation_XGBOOST_2)
             st.pyplot(fig)                   
             
             ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
@@ -1740,97 +2075,135 @@ if selected == "Modélisation":
 
             #Étape 3 : Identifier les indices correspondants dans X_test_sd
             filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_xgboost_best_2[:, filtered_indices]
+            shap_values_filtered_XGBOOST_2 = shap_values_XGBOOST_2[:, filtered_indices]
 
             # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
+            explanation_filtered_XGBOOST_2 = shap.Explanation(values=shap_values_filtered_XGBOOST_2,
                                             data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
                                             feature_names=filtered_columns)  # Les noms des features
 
-
             ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
             #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
+            def get_mean_shap_values(column_names, shap_values):
+                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
                 indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_xgboost_best_2[:, indices]
+                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
                 return np.mean(np.abs(values), axis=0)
 
-            #Étape 1 : On idenfie les colonnes que l'on recherche
+            # Étape 1 : On identifie les colonnes que l'on recherche
             month_columns = [col for col in X_test_sd.columns if 'month' in col]
             weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
             poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
             job_columns = [col for col in X_test_sd.columns if 'job' in col]
             marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
 
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_best_2)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_best_2)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_best_2)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_best_2)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_best_2)
+            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_XGBOOST_2)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_XGBOOST_2)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_XGBOOST_2)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_XGBOOST_2)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_XGBOOST_2)
 
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
+            # Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values_XGBOOST_2 = [np.mean(mean_shap_month),
+                                        np.mean(mean_shap_weekday),
+                                        np.mean(mean_shap_poutcome),
+                                        np.mean(mean_shap_job),
+                                        np.mean(mean_shap_marital)]
 
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
+            combined_feature_names_XGBOOST2 = ['Mean SHAP Value for Month Features',
+                                            'Mean SHAP Value for Weekday Features',
+                                            'Mean SHAP Value for Poutcome Features',
+                                            'Mean SHAP Value for Job Features',
+                                            'Mean SHAP Value for Marital Features']
 
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
+            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
+            explanation_combined_XGBOOST_2 = shap.Explanation(values=combined_values_XGBOOST_2,
+                                                            data=np.array([[np.nan]] * len(combined_values_XGBOOST_2)),
+                                                            feature_names=combined_feature_names_XGBOOST2)
 
+            
             ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
 
             #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
+            num_samples = explanation_filtered_XGBOOST_2.values.shape[0]
+            combined_values_reshaped__XGBOOST_2 = np.repeat(np.array(explanation_combined_XGBOOST_2.values)[:, np.newaxis], num_samples, axis=1).T
 
             #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
+            combined_values_XGBOOST_2 = np.concatenate([explanation_filtered_XGBOOST_2.values, combined_values_reshaped__XGBOOST_2], axis=1)
 
             #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
+            combined_feature_names_XGBOOST_2 = (explanation_filtered_XGBOOST_2.feature_names + explanation_combined_XGBOOST_2.feature_names)
 
             #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
+            explanation_combined_new_XGBOOST_2 = shap.Explanation(values=combined_values_XGBOOST_2,data=np.array([[np.nan]] * combined_values_XGBOOST_2.shape[0]),feature_names=combined_feature_names_XGBOOST_2)
 
             fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
+            shap.plots.bar(explanation_combined_new_XGBOOST_2, max_display=len(explanation_combined_new_XGBOOST_2.feature_names))
             st.pyplot(fig)
-
             
-            xgboost_test_3 = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)
-            xgboost_test_3.fit(X_train_sd, y_train_sd)
-            score_train_3 = xgboost_test_3.score(X_train_sd, y_train_sd)
-            score_test_3 = xgboost_test_3.score(X_test_sd, y_test_sd)
-            y_pred_3 = xgboost_test_3.predict(X_test_sd)
-            table_xgboost_3 = pd.crosstab(y_test_sd,y_pred_3, rownames=['Realité'], colnames=['Prédiction'])
+            st.subheader("Modèle sélectionné 3")
+            st.write("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+            # Chargement du modèle enregistré
+            filename_XGBOOST_3 = "XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"
+            model_XGBOOST_3_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_3)
+
+            # Prédictions sur les données test
+            y_pred_3 = model_XGBOOST_3_model_SD_TOP_4_hyperparam.predict(X_test_sd)
+
+            # Calcul des métriques pour chaque classe
+            report_3 = classification_report(y_test_sd, y_pred_3, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+            # Conversion du rapport en DataFrame pour affichage en tableau
+            report_df_3 = pd.DataFrame(report_3).T
+
+            # Arrondi des valeurs à 4 décimales pour un affichage propre
+            report_df_3 = report_df_3.round(4)
+
+            # Suppression des colonnes inutiles si besoin
+            report_df_3 = report_df_3.drop(columns=["support"])
+
+            # Affichage global du rapport sous forme de tableau
+            st.write("Rapport de classification du modèle")
+            st.table(report_df_3)
+
+            # Création de la matrice de confusion sous forme de DataFrame
+            st.write("Matrice de confusion du modèle")
+            table_xgboost_3 = pd.crosstab(y_test_sd, y_pred_3, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_xgboost_3)
-            st.write("Classification report :")
-            report_dict_xgboost_3 = classification_report(y_test_sd, y_pred_3, output_dict=True)
-            # Convertir le dictionnaire en DataFrame
-            report_dict_xgboost_3 = pd.DataFrame(report_dict_xgboost_3).T
-            st.dataframe(report_dict_xgboost_3)
             
-            explainer = shap.TreeExplainer(xgboost_test_3)
-            shap_values_xgboost_best_3 = explainer.shap_values(X_test_sd)
-            
+            #SHAP
+            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+            #Chargement du modèle XGBOOST_3 déjà enregistré
+            #filename_XGBOOST_3 = "XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"
+            #model_XGBOOST_3_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_3)
+
+            #Chargement des données pour shap 
+            #data_to_explain_XGBOOST_3 = X_test_sd  # Remplacez par vos données
+
+            #Création de l'explainer SHAP pour XGBOOST_3
+            #explainer_XGBOOST_3 = shap.TreeExplainer(model_XGBOOST_3_model_SD_TOP_4_hyperparam)
+
+            #Calcul des shap values
+            #shap_values_XGBOOST_3 = explainer_XGBOOST_3(data_to_explain_XGBOOST_3)
+
+            #Sauvegarder des shap values avec joblib
+            #joblib.dump(shap_values_XGBOOST_3, "shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
+
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_XGBOOST_3 = joblib.load("shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
+
             fig = plt.figure()
-            shap.summary_plot(shap_values_xgboost_best_3, X_test_sd)  
+            shap.summary_plot(shap_values_XGBOOST_3, X_test_sd)  
             st.pyplot(fig)
             
             fig = plt.figure()
-            explanation_3 = shap.Explanation(values=shap_values_xgboost_best_3,
+            explanation_XGBOOST_3 = shap.Explanation(values=shap_values_XGBOOST_3,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
                                  feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation_3)
+            shap.plots.bar(explanation_XGBOOST_3)
             st.pyplot(fig)                   
             
             ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
@@ -1843,72 +2216,214 @@ if selected == "Modélisation":
 
             #Étape 3 : Identifier les indices correspondants dans X_test_sd
             filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_xgboost_best_3[:, filtered_indices]
+            shap_values_filtered_XGBOOST_3 = shap_values_XGBOOST_3[:, filtered_indices]
 
             # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
+            explanation_filtered_XGBOOST_3 = shap.Explanation(values=shap_values_filtered_XGBOOST_3,
                                             data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
                                             feature_names=filtered_columns)  # Les noms des features
 
-
             ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-
             #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values_test_shap):
+            def get_mean_shap_values(column_names, shap_values):
+                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
                 indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values_xgboost_best_3[:, indices]
+                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
                 return np.mean(np.abs(values), axis=0)
 
-            #Étape 1 : On idenfie les colonnes que l'on recherche
+            # Étape 1 : On identifie les colonnes que l'on recherche
             month_columns = [col for col in X_test_sd.columns if 'month' in col]
             weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
             poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
             job_columns = [col for col in X_test_sd.columns if 'job' in col]
             marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
 
-            #Étape 2 : On utiliser notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_xgboost_best_3)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_xgboost_best_3)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_xgboost_best_3)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_xgboost_best_3)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_xgboost_best_3)
+            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_XGBOOST_3)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_XGBOOST_3)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_XGBOOST_3)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_XGBOOST_3)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_XGBOOST_3)
 
-            #Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)]
+            # Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values_XGBOOST_3 = [np.mean(mean_shap_month),
+                                        np.mean(mean_shap_weekday),
+                                        np.mean(mean_shap_poutcome),
+                                        np.mean(mean_shap_job),
+                                        np.mean(mean_shap_marital)]
 
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features']
+            combined_feature_names_XGBOOST3 = ['Mean SHAP Value for Month Features',
+                                            'Mean SHAP Value for Weekday Features',
+                                            'Mean SHAP Value for Poutcome Features',
+                                            'Mean SHAP Value for Job Features',
+                                            'Mean SHAP Value for Marital Features']
 
-            #Étape 4 : On créé un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values, data=np.array([[np.nan]] * len(combined_values)), feature_names=combined_feature_names)
+            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
+            explanation_combined_XGBOOST_3 = shap.Explanation(values=combined_values_XGBOOST_3,
+                                                            data=np.array([[np.nan]] * len(combined_values_XGBOOST_3)),
+                                                            feature_names=combined_feature_names_XGBOOST3)
 
+            
             ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
 
             #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
+            num_samples = explanation_filtered_XGBOOST_3.values.shape[0]
+            combined_values_reshaped__XGBOOST_3 = np.repeat(np.array(explanation_combined_XGBOOST_3.values)[:, np.newaxis], num_samples, axis=1).T
 
             #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
+            combined_values_XGBOOST_3 = np.concatenate([explanation_filtered_XGBOOST_3.values, combined_values_reshaped__XGBOOST_3], axis=1)
 
             #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
+            combined_feature_names_XGBOOST_3 = (explanation_filtered_XGBOOST_3.feature_names + explanation_combined_XGBOOST_3.feature_names)
 
             #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names,)
+            explanation_combined_new_XGBOOST_3 = shap.Explanation(values=combined_values_XGBOOST_3,data=np.array([[np.nan]] * combined_values_XGBOOST_3.shape[0]),feature_names=combined_feature_names_XGBOOST_3)
 
             fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
+            shap.plots.bar(explanation_combined_new_XGBOOST_3, max_display=len(explanation_combined_new_XGBOOST_3.feature_names))
             st.pyplot(fig)
+            
+            st.subheader("Modèle sélectionné testdil")
+            st.write("XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                
+            # Chargement du modèle enregistré
+            filename_XGBOOST_TESTDIL = "XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl"
+            model_XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_TESTDIL)
 
+            # Prédictions sur les données test
+            y_pred_testdil = model_XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.predict(X_test_sd)
 
+            # Calcul des métriques pour chaque classe
+            report_testdil = classification_report(y_test_sd, y_pred_testdil, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+            # Conversion du rapport en DataFrame pour affichage en tableau
+            report_df_testdil = pd.DataFrame(report_testdil).T
+
+            # Arrondi des valeurs à 4 décimales pour un affichage propre
+            report_df_testdil = report_df_testdil.round(4)
+
+            # Suppression des colonnes inutiles si besoin
+            report_df_testdil = report_df_testdil.drop(columns=["support"])
+
+            # Affichage global du rapport sous forme de tableau
+            st.write("Rapport de classification du modèle")
+            st.table(report_df_testdil)
+
+            # Création de la matrice de confusion sous forme de DataFrame
+            st.write("Matrice de confusion du modèle")
+            table_xgboost_testdil = pd.crosstab(y_test_sd, y_pred_testdil, rownames=["Réalité"], colnames=["Prédiction"])
+            st.dataframe(table_xgboost_testdil)
+            
+            #SHAP
+            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+            #Chargement du modèle _XGBOOST_TESTDIL déjà enregistré
+            #filename__XGBOOST_TESTDIL = "XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl"
+            #model_XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_TESTDIL)
+
+            #Chargement des données pour shap 
+            #data_to_explain_XGBOOST_TESTDIL = X_test_sd  # Remplacez par vos données
+
+            #Création de l'explainer SHAP pour XGBOOST_TESTDIL
+            #explainer_XGBOOST_TESTDIL = shap.TreeExplainer(model_XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam)
+
+            #Calcul des shap values
+            #shap_values_XGBOOST_TESTDIL = explainer_XGBOOST_TESTDIL(data_to_explain_XGBOOST_TESTDIL)
+
+            #Sauvegarder des shap values avec joblib
+            #joblib.dump(shap_values_XGBOOST_TESTDIL, "shap_values_XGBOOST_TESTDIL_SD_TOP_4_hyperparam.pkl")
+
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_XGBOOST_TESTDIL = joblib.load("shap_values_XGBOOST_TESTDIL_SD_TOP_4_hyperparam.pkl")
+
+            fig = plt.figure()
+            shap.summary_plot(shap_values_XGBOOST_TESTDIL, X_test_sd)  
+            st.pyplot(fig)
+            
+            fig = plt.figure()
+            explanation_XGBOOST_TESTDIL = shap.Explanation(values=shap_values_XGBOOST_TESTDIL,
+                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test_sd.columns)
+            shap.plots.bar(explanation_XGBOOST_TESTDIL)
+            st.pyplot(fig)                   
+            
+            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
+
+            #Étape 1 : Créer une liste des termes à exclure
+            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
+
+            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
+            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
+
+            #Étape 3 : Identifier les indices correspondants dans X_test_sd
+            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
+            shap_values_filtered_XGBOOST_TESTDIL = shap_values_XGBOOST_TESTDIL[:, filtered_indices]
+
+            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
+            explanation_filtered_XGBOOST_TESTDIL = shap.Explanation(values=shap_values_filtered_XGBOOST_TESTDIL,
+                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
+                                            feature_names=filtered_columns)  # Les noms des features
+
+            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
+            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
+            def get_mean_shap_values(column_names, shap_values):
+                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
+                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
+                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
+                return np.mean(np.abs(values), axis=0)
+
+            # Étape 1 : On identifie les colonnes que l'on recherche
+            month_columns = [col for col in X_test_sd.columns if 'month' in col]
+            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
+            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
+            job_columns = [col for col in X_test_sd.columns if 'job' in col]
+            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
+
+            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_XGBOOST_TESTDIL)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_XGBOOST_TESTDIL)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_XGBOOST_TESTDIL)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_XGBOOST_TESTDIL)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_XGBOOST_TESTDIL)
+
+            # Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values_XGBOOST_TESTDIL = [np.mean(mean_shap_month),
+                                        np.mean(mean_shap_weekday),
+                                        np.mean(mean_shap_poutcome),
+                                        np.mean(mean_shap_job),
+                                        np.mean(mean_shap_marital)]
+
+            combined_feature_names_XGBOOSTTESTDIL = ['Mean SHAP Value for Month Features',
+                                            'Mean SHAP Value for Weekday Features',
+                                            'Mean SHAP Value for Poutcome Features',
+                                            'Mean SHAP Value for Job Features',
+                                            'Mean SHAP Value for Marital Features']
+
+            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
+            explanation_combined_XGBOOST_TESTDIL = shap.Explanation(values=combined_values_XGBOOST_TESTDIL,
+                                                            data=np.array([[np.nan]] * len(combined_values_XGBOOST_TESTDIL)),
+                                                            feature_names=combined_feature_names_XGBOOSTTESTDIL)
+
+            
+            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
+
+            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
+            num_samples = explanation_filtered_XGBOOST_TESTDIL.values.shape[0]
+            combined_values_reshaped__XGBOOST_TESTDIL = np.repeat(np.array(explanation_combined_XGBOOST_TESTDIL.values)[:, np.newaxis], num_samples, axis=1).T
+
+            #Étape 2: On concatenate les 2 explanations
+            combined_values_XGBOOST_TESTDIL = np.concatenate([explanation_filtered_XGBOOST_TESTDIL.values, combined_values_reshaped__XGBOOST_TESTDIL], axis=1)
+
+            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
+            combined_feature_names_XGBOOST_TESTDIL = (explanation_filtered_XGBOOST_TESTDIL.feature_names + explanation_combined_XGBOOST_TESTDIL.feature_names)
+
+            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
+            explanation_combined_new_XGBOOST_TESTDIL = shap.Explanation(values=combined_values_XGBOOST_TESTDIL,data=np.array([[np.nan]] * combined_values_XGBOOST_TESTDIL.shape[0]),feature_names=combined_feature_names_XGBOOST_TESTDIL)
+
+            fig = plt.figure(figsize=(10, 6))
+            shap.plots.bar(explanation_combined_new_XGBOOST_TESTDIL, max_display=len(explanation_combined_new_XGBOOST_TESTDIL.feature_names))
+            st.pyplot(fig)     
+        
 if selected == 'Interprétation':      
     st.title("INTERPRÉTATION")
     st.sidebar.title("MENU INTERPRÉTATION")
