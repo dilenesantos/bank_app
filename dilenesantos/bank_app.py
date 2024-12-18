@@ -267,29 +267,6 @@ dummies_sd = pd.get_dummies(X_test_sd['weekday'], prefix='weekday').astype(int)
 X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
     
 
-model_files = {
-        "Random Forest": "dilenesantos/Random_Forest_model_avec_duration_sans_parametres.pkl",
-        "Logistic Regression": "dilenesantos/Logistic_Regression_model_avec_duration_sans_parametres.pkl",
-        "Decision Tree": "dilenesantos/Decision_Tree_model_avec_duration_sans_parametres.pkl",
-        "KNN": "dilenesantos/KNN_model_avec_duration_sans_parametres.pkl",
-        "AdaBoost": "dilenesantos/AdaBoost_model_avec_duration_sans_parametres.pkl",
-        "Bagging": "dilenesantos/Bagging_model_avec_duration_sans_parametres.pkl",
-        "SVM": "dilenesantos/SVM_model_avec_duration_sans_parametres.pkl",
-        "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
-}
-
-import os
-for name, file_path in model_files.items():
-    if not os.path.exists(file_path):
-        st.write(f"Le fichier {file_path} est introuvable.")
-
-
-with st.sidebar:
-    selected = option_menu(
-        menu_title='Sections',
-        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil Prédictif"])
-
-
 
 if selected == 'Introduction':  
     st.subheader("Contexte du projet")
@@ -305,6 +282,30 @@ if selected == 'Introduction':
     st.write("BLABLABLA")
     st.write("FATOU")
     st.write("carolle")
+
+    model_files = {
+        "Random Forest": "dilenesantos/Random_Forest_model_avec_duration_sans_parametres.pkl",
+        "Logistic Regression": "dilenesantos/Logistic_Regression_model_avec_duration_sans_parametres.pkl",
+        "Decision Tree": "dilenesantos/Decision_Tree_model_avec_duration_sans_parametres.pkl",
+        "KNN": "dilenesantos/KNN_model_avec_duration_sans_parametres.pkl",
+        "AdaBoost": "dilenesantos/AdaBoost_model_avec_duration_sans_parametres.pkl",
+        "Bagging": "dilenesantos/Bagging_model_avec_duration_sans_parametres.pkl",
+        "SVM": "dilenesantos/SVM_model_avec_duration_sans_parametres.pkl",
+        "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
+        }
+
+    import os
+    for name, file_path in model_files.items():
+        if not os.path.exists(file_path):
+            st.write(f"Le fichier {file_path} est introuvable.")
+
+
+with st.sidebar:
+    selected = option_menu(
+        menu_title='Sections',
+        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil Prédictif"])
+
+
 
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
