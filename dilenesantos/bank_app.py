@@ -2269,13 +2269,14 @@ if selected == 'Outil Prédictif':
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
         models_pred_df = {
-                "Logistic Regression": joblib.load("dilenesantos/Logistic_Regression_model_PRED_DF_sans_param.pkl"),
-                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_PRED_DF_sans_param.pkl"),
-                "KNN": joblib.load("dilenesantos/KNN_model_PRED_DF_sans_param.pkl"),
-                "AdaBoost": joblib.load("dilenesantos/AdaBoost_model_PRED_DF_sans_param.pkl"),
-                "Bagging": joblib.load("dilenesantos/Bagging_model_PRED_DF_sans_param.pkl"),
-                "SVM": joblib.load("dilenesantos/SVM_model_PRED_DF_sans_param.pkl"),
-                "XGBOOST": joblib.load("dilenesantos/XGBOOST_model_PRED_DF_sans_param.pkl")
+                "Random Forest" : ("dilenesantos/Random_Forest_model_PRED_DF_sans_param.pkl"),
+                "Logistic Regression": ("dilenesantos/Logistic_Regression_model_PRED_DF_sans_param.pkl"),
+                "Decision Tree": ("dilenesantos/Decision_Tree_model_PRED_DF_sans_param.pkl"),
+                "KNN": ("dilenesantos/KNN_model_PRED_DF_sans_param.pkl"),
+                "AdaBoost": ("dilenesantos/AdaBoost_model_PRED_DF_sans_param.pkl"),
+                "Bagging": ("dilenesantos/Bagging_model_PRED_DF_sans_param.pkl"),
+                "SVM": ("dilenesantos/SVM_model_PRED_DF_sans_param.pkl"),
+                "XGBOOST": ("dilenesantos/XGBOOST_model_PRED_DF_sans_param.pkl")
             }
 
         # Résultats des modèles
@@ -2285,7 +2286,6 @@ if selected == 'Outil Prédictif':
         for name, file_path in models_pred_df.items():
             #Charger le modèle sauvegardé
             trained_clf = joblib.load(file_path)
-        
             # Faire des prédictions
             y_pred = trained_clf.predict(X_test_o)
 
