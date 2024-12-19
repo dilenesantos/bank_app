@@ -2027,10 +2027,6 @@ if selected == 'Interprétation':
             
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
             shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
-
-            fig = plt.figure()
-            shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
-            st.pyplot(fig)
             
             
             fig = plt.figure()
