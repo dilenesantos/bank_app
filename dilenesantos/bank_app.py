@@ -2180,9 +2180,9 @@ if selected == 'Outil Prédictif':
     X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
 
     st.title("Outils de prédiction")
-    submenu_predictions = st.radio("", ("Scores modèles & Hyperparamètres", "Prédictions"), horizontal=True)
+    submenu_predictions = st.radio("", ("Scores test", "Scores modèles & Hyperparamètres", "Prédictions"), horizontal=True)
     
-    if submenu_predictions == "Scores modèles & Hyperparamètres" :
+    if submenu_predictions == "Scores test" :
     
         dff_TEST = df.copy()
         dff_TEST = dff_TEST[dff_TEST['age'] < 75]
@@ -2249,14 +2249,14 @@ if selected == 'Outil Prédictif':
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
         models_SD = {
-                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_sans_duration_sans_parametres.pkl"),
-                "Logistic Regression": joblib.load("dilenesantos/Logistic_Regression_model_sans_duration_sans_parametres.pkl"),
-                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_sans_duration_sans_parametres.pkl"),
-                "KNN": joblib.load("dilenesantos/KNN_model_sans_duration_sans_parametres.pkl"),
-                "AdaBoost": joblib.load("dilenesantos/AdaBoost_model_sans_duration_sans_parametres.pkl"),
-                "Bagging": joblib.load("dilenesantos/Bagging_model_sans_duration_sans_parametres.pkl"),
-                "SVM": joblib.load("dilenesantos/SVM_model_sans_duration_sans_parametres.pkl"),
-                "XGBOOST": joblib.load("dilenesantos/XGBOOST_model_sans_duration_sans_parametres.pkl")
+                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_PRED_DF_sans_param.pkl"),
+                "Logistic Regression": joblib.load("dilenesantos/Logistic_Regression_model_PRED_DF_sans_param.pkl"),
+                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_PRED_DF_sans_param.pkl"),
+                "KNN": joblib.load("dilenesantos/KNN_model_PRED_DF_sans_param.pkl"),
+                "AdaBoost": joblib.load("dilenesantos/AdaBoost_model_PRED_DF_sans_param.pkl"),
+                "Bagging": joblib.load("dilenesantos/Bagging_model_PRED_DF_sans_param.pkl"),
+                "SVM": joblib.load("dilenesantos/SVM_model_PRED_DF_sans_param.pkl"),
+                "XGBOOST": joblib.load("dilenesantos/XGBOOST_model_PRED_DF_sans_param.pkl")
             }
 
         # Résultats des modèles
@@ -2290,7 +2290,9 @@ if selected == 'Outil Prédictif':
         melted_df_results_sans_param_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
 
         st.dataframe(df_results_sans_param_df_pred)
-
+        
+    if submenu_predictions == "Scores modèles & Hyperparamètres" :
+        
         st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
         #Initialisation des classifiers
         model_hyperparam_AD = {
