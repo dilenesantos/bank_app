@@ -2024,7 +2024,15 @@ if selected == 'Interprétation':
             st.write("blablabla")
 
             st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
+            
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
 
+            fig = plt.figure()
+            shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
+            st.pyplot(fig)
+            
+            
             fig = plt.figure()
             explanation_XGBOOST_1 = shap.Explanation(values=shap_values_XGBOOST_1,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
