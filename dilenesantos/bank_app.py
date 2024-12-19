@@ -2183,177 +2183,157 @@ if selected == 'Outil Prédictif':
     submenu_predictions = st.radio("", ("Scores modèles & Hyperparamètres", "Prédictions"), horizontal=True)
     
     if submenu_predictions == "Scores modèles & Hyperparamètres" :
-     
+        
+        st.subheader("Résultat des modèles sans paramètres sur le dataframe de prédiction (colonnes AGE / BALANCE / PREVIOUS / EDUCATION")" 
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
-        classifiers = {
-            "Random Forest": RandomForestClassifier(random_state=42),
-            "Logistic Regression": LogisticRegression(random_state=42),
-            "Decision Tree": DecisionTreeClassifier(random_state=42),
-            "KNN": KNeighborsClassifier(),
-            "AdaBoost": AdaBoostClassifier(random_state=42),
-            "Bagging": BaggingClassifier(random_state=42),
-            "SVM": svm.SVC(random_state=42),
-            "XGBOOST": XGBClassifier(random_state=42),
-        }
+        models_SD = {
+                "Random Forest": joblib.load("Random_Forest_model_sans_duration_sans_parametres.pkl"),
+                "Logistic Regression": joblib.load("Logistic_Regression_model_sans_duration_sans_parametres.pkl"),
+                "Decision Tree": joblib.load("Decision_Tree_model_sans_duration_sans_parametres.pkl"),
+                "KNN": joblib.load("KNN_model_sans_duration_sans_parametres.pkl"),
+                "AdaBoost": joblib.load("AdaBoost_model_sans_duration_sans_parametres.pkl"),
+                "Bagging": joblib.load("Bagging_model_sans_duration_sans_parametres.pkl"),
+                "SVM": joblib.load("SVM_model_sans_duration_sans_parametres.pkl"),
+                "XGBOOST": joblib.load("XGBOOST_model_sans_duration_sans_parametres.pkl")
+            }
 
         # Résultats des modèles
-        results_sans_parametres = {}  # Affichage des résultats dans results
+        results_sans_param_df_pred = {}
 
-        # Fonction pour entraîner et sauvegarder un modèle
-        def train_and_save_model(model_name, clf, X_train_o, y_train_o):
-            filename = f"{model_name.replace(' ', '_')}_model_predictif_sans_parametres.pkl"  # Nom du fichier
-            try:
-                # Charger le modèle si le fichier existe déjà
-                trained_clf = joblib.load(filename)
-            except FileNotFoundError:
-                # Entraîner et sauvegarder le modèle
-                clf.fit(X_train_o, y_train_o)
-                joblib.dump(clf, filename)
-                trained_clf = clf
-            return trained_clf
-    
-        # Boucle pour entraîner ou charger les modèles
-        for name, clf in classifiers.items():
-            # Entraîner ou charger le modèle
-            trained_clf = train_and_save_model(name, clf, X_train_o, y_train_o)
+        #Boucle pour charger les modèles et calculer les résultats
+        for name, trained_clf in models_SD.items():
+            # Prédictions sur les données test
             y_pred = trained_clf.predict(X_test_o)
-                
+
             # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
             f1 = f1_score(y_test_o, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
-                
+
             # Stocker les résultats
-            results_sans_parametres[name] = {
+            results_sans_param_df_pred[name] = {
                 "Accuracy": accuracy,
                 "F1 Score": f1,
                 "Precision": precision,
-                "Recall": recall,
+                "Recall": recall
             }
-    
-        # Conversion des résultats en DataFrame
-        results_sans_param = pd.DataFrame(results_sans_parametres).T
-        results_sans_param.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-        results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
-        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_sans_param = results_sans_param.sort_values(by='Recall', ascending=False)
-        
-        st.subheader("Scores modèles sans paramètres")
-        st.dataframe(results_sans_param)
-        
-        # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
-        classifiers_2 = {
-            "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
-            "Bagging": BaggingClassifier(random_state=42),
-            "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
-            "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
 
-        results_avec_parametres = {}  # Affichage des résultats dans results
-
-        # Fonction pour entraîner et sauvegarder un modèle
-        def train_and_save_model2(model_name, clf, X_train_o, y_train_o):
-            filename = f"{model_name.replace(' ', '_')}_model_predictif_avec_parametres.pkl"  # Nom du fichier
-            try:
-                # Charger le modèle si le fichier existe déjà
-                trained_clf = joblib.load(filename)
-            except FileNotFoundError:
-                # Entraîner et sauvegarder le modèle
-                clf.fit(X_train_o, y_train_o)
-                joblib.dump(clf, filename)
-                trained_clf = clf
-            return trained_clf
-    
-        # Boucle pour entraîner ou charger les modèles
-        for name, clf in classifiers_2.items():
-            # Entraîner ou charger le modèle
-            trained_clf = train_and_save_model2(name, clf, X_train_o, y_train_o)
-            y_pred = trained_clf.predict(X_test_o)
-                
-            # Calculer les métriques
-            accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test_o, y_pred)
-            precision = precision_score(y_test_o, y_pred)
-            recall = recall_score(y_test_o, y_pred)
-                
-            # Stocker les résultats
-            results_avec_parametres[name] = {
-                "Accuracy": accuracy,
-                "F1 Score": f1,
-                "Precision": precision,
-                "Recall": recall,
-            }
-    
         # Conversion des résultats en DataFrame
-        results_avec_param_av_duration = pd.DataFrame(results_avec_parametres).T
-        results_avec_param_av_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-        results_avec_param_av_duration = results_avec_param_av_duration.sort_values(by="Recall", ascending=False)
-        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_avec_param_av_duration = results_avec_param_av_duration.sort_values(by='Recall', ascending=False)
-     
-        
-        st.subheader("Scores modèles hyperamétrés avD :")
-        st.dataframe(results_avec_param_av_duration)
-                    
+        df_results_sans_param_df_pred = pd.DataFrame(results_sans_param_df_pred).T
+        df_results_sans_param_df_pred.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        df_results_sans_param_df_pred = df_results_sans_param_df_pred.sort_values(by="Recall", ascending=False)
             
-        # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
-        classifiers_3 = {
-            "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
-            "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
-            "Bagging": BaggingClassifier(random_state=42),
-            "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
-            "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)}
-        
-        results_avec_parametres_sansDuration = {}  # Affichage des résultats dans results
+        melted_df_results_sans_param_df_pred = df_results_sans_param_df_pred.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+        melted_df_results_sans_param_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
 
-        # Fonction pour entraîner et sauvegarder un modèle
-        def train_and_save_model3(model_name, clf, X_train_o, y_train_o):
-            filename = f"{model_name.replace(' ', '_')}_model_predictif_avec_parametres_avD.pkl"  # Nom du fichier
-            try:
-                # Charger le modèle si le fichier existe déjà
-                trained_clf = joblib.load(filename)
-            except FileNotFoundError:
-                # Entraîner et sauvegarder le modèle
-                clf.fit(X_train_o, y_train_o)
-                joblib.dump(clf, filename)
-                trained_clf = clf
-            return trained_clf
-    
-        # Boucle pour entraîner ou charger les modèles
-        for name, clf in classifiers_3.items():
-            # Entraîner ou charger le modèle
-            trained_clf = train_and_save_model3(name, clf, X_train_o, y_train_o)
+        st.dataframe(df_results_sans_param_df_pred)
+
+        st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
+        #Initialisation des classifiers
+        model_hyperparam_AD = {
+            "RF_dounia": "RF_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "RF_fatou": "RF_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "RF_carolle": "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_dounia": "SVM_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_dilene": "SVM_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_fatou": "SVM_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_carolle": "SVM_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_dounia": "XGBOOST_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_dilene": "XGBOOST_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_carolle": "XGBOOST_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_fatou": "XGBOOST_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "Random Forest GridSearch2": "Random_Forest_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM GridSearch2": "SVM_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST GridSearch2": "XGBOOST_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+        }
+
+        #Résultats des modèles
+        results_param_AD_df_pred = {}
+
+        #Boucle pour charger les modèles et calculer les résultats
+        for name, trained_clf in model_hyperparam_AD.items():
+            #Prédictions sur les données test
             y_pred = trained_clf.predict(X_test_o)
-                
+
             # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
             f1 = f1_score(y_test_o, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
-                
+
             # Stocker les résultats
-            results_avec_parametres_sansDuration[name] = {
+            results_param_AD_df_pred[name] = {
                 "Accuracy": accuracy,
                 "F1 Score": f1,
                 "Precision": precision,
-                "Recall": recall,
+                "Recall": recall
             }
-    
+
         # Conversion des résultats en DataFrame
-        results_avec_param_sans_duration = pd.DataFrame(results_avec_parametres_sansDuration).T
-        results_avec_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-        results_avec_param_sans_duration = results_avec_param_sans_duration.sort_values(by="Recall", ascending=False)
-        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
-        results_avec_param_sans_duration = results_avec_param_sans_duration.sort_values(by='Recall', ascending=False)
-     
+        df_results_param_AD_df_pred = pd.DataFrame(results_param_AD_df_pred).T
+        df_results_param_AD_df_pred.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        df_results_param_AD_df_pred = df_results_param_AD_df_pred.sort_values(by="Recall", ascending=False)
+            
+        melted_df_results_param_AD_df_pred = df_results_param_AD_df_pred.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+        melted_df_results_param_AD_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
+
+        st.dataframe(df_results_param_AD_df_pred)
+
+
+        st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
+        #Initialisation des classifiers
+        model_hyperparam_SD = {
+                "Random Forest": joblib.load("Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
+                "Decision Tree": joblib.load("Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
+                "SVM": joblib.load("SVM_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_1": joblib.load("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_2": joblib.load("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_3": joblib.load("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_TESTDIL": joblib.load("XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
+            }
+
+        #Résultats des modèles
+        results_param_SD_df_pred = {}
+
+        #Boucle pour charger les modèles et calculer les résultats
+        for name, trained_clf in model_hyperparam_SD.items():
+            #Prédictions sur les données test
+            y_pred = trained_clf.predict(X_test_o)
+
+            # Calculer les métriques
+            accuracy = accuracy_score(y_test_o, y_pred)
+            f1 = f1_score(y_test_o, y_pred)
+            precision = precision_score(y_test_o, y_pred)
+            recall = recall_score(y_test_o, y_pred)
+
+            # Stocker les résultats
+            results_param_SD_df_pred[name] = {
+                "Accuracy": accuracy,
+                "F1 Score": f1,
+                "Precision": precision,
+                "Recall": recall
+            }
+
+        # Conversion des résultats en DataFrame
+        df_results_param_SD_df_pred = pd.DataFrame(results_param_SD_df_pred).T
+        df_results_param_SD_df_pred.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        df_results_param_SD_df_pred = df_results_param_SD_df_pred.sort_values(by="Recall", ascending=False)
+            
+        melted_df_results_param_SD_df_pred = df_results_param_SD_df_pred.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+        melted_df_results_param_AD_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
+
+        st.dataframe(df_results_param_SD_df_pred)
+
+  
          
         st.subheader("Scores modèles hyperparamétrés sans duration:")
         st.dataframe(results_avec_param_sans_duration)
                     
 
         st.subheader("Modèle sélectionné")
-        st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.write("Le modèle XXXX avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
         st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                     
         st.write("Affichons le rapport de classification de ce modèle")
