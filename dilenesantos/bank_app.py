@@ -2184,7 +2184,7 @@ if selected == 'Outil Prédictif':
     
     if submenu_predictions == "Scores modèles & Hyperparamètres" :
         
-        st.subheader("Résultat des modèles sans paramètres sur le dataframe de prédiction (colonnes AGE / BALANCE / PREVIOUS / EDUCATION")" 
+        st.subheader("Résultat des modèles sans paramètres sur le dataframe de prédiction (colonnes AGE / BALANCE / PREVIOUS / EDUCATION")
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
         models_SD = {
