@@ -2879,7 +2879,7 @@ if selected == 'Outil Prédictif':
         st.dataframe(report_df_xgboost) 
 
 
-    if submenu_predictions == "Outil Prédictif" :
+    if submenu_predictions == "Prédictions" :
         
         st.title("Démonstration et application de notre modèle à votre cas")               
 
