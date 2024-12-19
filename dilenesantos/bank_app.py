@@ -1610,7 +1610,8 @@ if selected == "Modélisation":
         st.write("On va effectuer deux modélisations, l'une en conservant la variable Duration et l'autre sans la variable Duration : on explique pourquoi blablabla.")
         st.write("Pour chaque modélisation, avec ou sans Duration, nous analysons les scores des principaux modèles de classification d'abord dans paramètres afin de sélectionner les 3 meilleurs modèles, puis sur ces 3 modèles nous effectuons des recherches d'hyperparamètres à l'aide de la fonction GridSearchCV afin de sélectionner le modèle le plus performant possible.")
         st.write("Enfin sur le meilleur modèle trouvé, nous effectuons une analyse SHAP afin d'interpréter les décisions prises par le modèle dans la détection des clients susceptibles de Deposit YES")
-                
+        st.write("Lister les modèles de Classification testés..."
+                 
     if page == pages[1] : 
         #AVEC DURATION
         submenu_modelisation = st.radio("", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"), horizontal=True)
