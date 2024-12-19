@@ -2115,26 +2115,6 @@ if selected == 'Interprétation':
             st.subheader("Dépendences plots & Analyses")
             st.write("blablabla")
            
-
-if selected == "Pre-processing":  
-    st.title("PRÉ-PROCESSING")
-    st.sidebar.title("MENU PRÉ-PROCESSING")  
-    option_submenu3 = st.sidebar.selectbox('Sélection', ("TRAITEMENT AVANT TRAIN-TEST-SPLIT", "TRAITEMENT APRÈS TRAIN-TEST-SPLIT"))
-
-    
-    if option_submenu3 == 'TRAITEMENT AVANT TRAIN-TEST-SPLIT':
-        pages=["Suppression de lignes", "Création de colonnes", "Suppression de colonnes", "Gestion des Unknowns"]
-        page=st.sidebar.radio('Afficher', pages)        
-
-        dffpre_pros = df.copy()
-        dffpre_pros2 = df.copy()
-   
-        if page == pages[0] :            
-            st.subheader("Filtre sur la colonne 'age'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes au dessus de 75 ans, aussi nous retirons ces lignes de notre dataset")
-            dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
-
-
     
 if selected == 'Outil Prédictif':    
     #code python SANS DURATION
@@ -2219,15 +2199,10 @@ if selected == 'Outil Prédictif':
         st.dataframe(X_train_sd)
     
         st.write("Afficher df X_train_o")
-        st.dataframe(X_train_o)    
-
-        st.subheader("Scores modèles hyperamétrés avD :")
-                    
-
-        st.subheader("Scores modèles hyperparamétrés sans duration:")
-                    
-
-        st.subheader("Modèle sélectionné")
+        st.dataframe(X_train_o)             
+        
+        st.title("SCORES DE CERTAINS MODÈLES SUR LE DATAFRAME FILTRE 4 COLONNES AGE EDUCATION BALANCE HOUSING PREVIOUS")
+        st.write("Random Forest")
         st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
         st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
                     
@@ -2246,7 +2221,7 @@ if selected == 'Outil Prédictif':
         st.dataframe(report_df)
 
                         
-        st.subheader("Modèle sélectionné")
+        st.subheader("XGBOOST")
         st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
         st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
         st.write("Affichons le rapport de classification de ce modèle")
@@ -2317,6 +2292,55 @@ if selected == 'Outil Prédictif':
         report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
         st.dataframe(report_df_xgboost) 
 
+
+        st.title("Scores modèles sans param sur PRED DF avec joblib test")
+
+       #RÉSULTAT DES MODÈLES SANS PARAMETRES
+        models_pred_df = {
+                "Random Forest": ("dilenesantos/Random_Forest_model_PRED_DF_sans_param.pkl"),
+                "Logistic Regression": ("dilenesantos/Logistic_Regression_model_PRED_DF_sans_param.pkl"),
+                "Decision Tree": ("dilenesantos/Decision_Tree_model_PRED_DF_sans_param.pkl"),
+                "KNN": ("dilenesantos/KNN_model_PRED_DF_sans_param.pkl"),
+                "AdaBoost": ("dilenesantos/AdaBoost_model_PRED_DF_sans_param.pkl"),
+                "Bagging": ("dilenesantos/Bagging_model_PRED_DF_sans_param.pkl"),
+                "SVM": ("dilenesantos/SVM_model_PRED_DF_sans_param.pkl"),
+                "XGBOOST": ("dilenesantos/XGBOOST_model_PRED_DF_sans_param.pkl")
+        }
+
+        #Résultats des modèles
+        results_sans_param_df_pred = {}
+
+        #Boucle pour charger les modèles et calculer les métriques
+        for name, file_path in models_pred_df.items():
+            #Charger le modèle sauvegardé
+            trained_clf = joblib.load(file_path)
+            # Faire des prédictions
+            y_pred = trained_clf.predict(X_test_o)
+    
+            # Calculer les métriques
+            accuracy = accuracy_score(y_test_o, y_pred)
+            f1 = f1_score(y_test_o, y_pred)
+            precision = precision_score(y_test_o, y_pred)
+            recall = recall_score(y_test_o, y_pred)
+    
+            # Stocker les résultats
+            results_sans_param_df_pred[name] = {
+                "Accuracy": accuracy,
+                "F1 Score": f1,
+                "Precision": precision,
+                "Recall": recall,
+            }
+
+        # Conversion des résultats en DataFrame
+        df_results_sans_param_df_pred = pd.DataFrame(results_sans_param_df_pred).T
+        df_results_sans_param_df_pred.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        df_results_sans_param_df_pred = df_results_sans_param_df_pred.sort_values(by="Recall", ascending=False)
+            
+        melted_df_results_sans_param_df_pred = df_results_sans_param_df_pred.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+        melted_df_results_sans_param_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
+
+        st.dataframe(df_results_sans_param_df_pred)
+        
 
     if submenu_predictions == "Prédictions" :
         
