@@ -2028,13 +2028,11 @@ if selected == 'Interprétation':
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
             shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
             
-            
-            fig = plt.figure()
+        
             explanation_XGBOOST_1 = shap.Explanation(values=shap_values_XGBOOST_1,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
                                  feature_names=X_test_sd.columns)
             shap.plots.bar(explanation_XGBOOST_1)
-            st.pyplot(fig)                   
             
             ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
 
