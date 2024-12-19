@@ -1923,7 +1923,7 @@ if selected == "Modélisation":
                     
             st.subheader("Modèle sélectionné 1")
             st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-            st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+            st.write("XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
                 
             # Chargement du modèle enregistré
             filename = "dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
