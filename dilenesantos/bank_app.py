@@ -1381,10 +1381,6 @@ if selected == "Modélisation":
         "XGBOOST": "dilenesantos/XGBOOST_model_avec_duration_sans_parametres.pkl",
     }
 
-    import os
-    for name, file_path in model_files.items():
-        if not os.path.exists(file_path):
-            st.write(f"Le fichier {file_path} est introuvable.")
         
     # Résultats des modèles
     results_sans_param = {}
