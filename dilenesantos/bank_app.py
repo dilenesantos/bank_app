@@ -270,7 +270,7 @@ X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 with st.sidebar:
     selected = option_menu(
         menu_title='Sections',
-        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil Prédictif", "Outil Prédictif_2"])
+        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil Prédictif"])
 
 if selected == 'Introduction':  
     st.subheader("Contexte du projet")
@@ -2879,7 +2879,7 @@ if selected == 'Outil Prédictif':
         st.dataframe(report_df_xgboost) 
 
 
-    if submenu_predictions == "Prédictions" :
+    if submenu_predictions == "Outil Prédictif" :
         
         st.title("Démonstration et application de notre modèle à votre cas")               
 
