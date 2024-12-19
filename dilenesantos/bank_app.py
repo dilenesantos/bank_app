@@ -2202,7 +2202,69 @@ if selected == 'Outil Prédictif':
 
     
     if submenu_predictions == "Scores test" :
+        #code python SANS DURATION
+        dff_TEST = df.copy()
+        dff_TEST = dff_TEST[dff_TEST['age'] < 75]
+        dff_TEST = dff_TEST.loc[dff_TEST["balance"] > -2257]
+        dff_TEST = dff_TEST.loc[dff_TEST["balance"] < 4087]
+        dff_TEST = dff_TEST.loc[dff_TEST["campaign"] < 6]
+        dff_TEST = dff_TEST.loc[dff_TEST["previous"] < 2.5]
+        dff_TEST = dff_TEST.drop('contact', axis = 1)
+    
+        dff_TEST = dff_TEST.drop('pdays', axis = 1)
+    
+        dff_TEST = dff_TEST.drop(['day'], axis=1)
+        dff_TEST = dff_TEST.drop(['duration'], axis=1)
+        dff_TEST = dff_TEST.drop(['job'], axis=1)
+        dff_TEST = dff_TEST.drop(['default'], axis=1)
+        dff_TEST = dff_TEST.drop(['month'], axis=1)
+        dff_TEST = dff_TEST.drop(['poutcome'], axis=1)
+        dff_TEST = dff_TEST.drop(['marital'], axis=1)
+        dff_TEST = dff_TEST.drop(['loan'], axis=1)
+        dff_TEST = dff_TEST.drop(['campaign'], axis=1)   
+         
+        dff_TEST['education'] = dff_TEST['education'].replace('unknown', np.nan)
+    
+        X_dff_TEST = dff_TEST.drop('deposit', axis = 1)
+        y_dff_TEST = dff_TEST['deposit']
         
+        dff_TEST = dff_TEST.drop(['deposit'], axis=1)   
+    
+        # Séparation des données en un jeu d'entrainement et jeu de test
+        X_train_o, X_test_o, y_train_o, y_test_o = train_test_split(X_dff_TEST, y_dff_TEST, test_size = 0.20, random_state = 48)
+                        
+        # On fait de même pour les NaaN de 'education'
+        X_train_o['education'] = X_train_o['education'].fillna(method ='bfill')
+        X_train_o['education'] = X_train_o['education'].fillna(X_train_o['education'].mode()[0])
+    
+        X_test_o['education'] = X_test_o['education'].fillna(method ='bfill')
+        X_test_o['education'] = X_test_o['education'].fillna(X_test_o['education'].mode()[0])
+                    
+        # Standardisation des variables quantitatives:
+        scaler_o = StandardScaler()
+        cols_num_sd = ['age', 'balance', 'previous']
+        X_train_o[cols_num_sd] = scaler_o.fit_transform(X_train_o[cols_num_sd])
+        X_test_o[cols_num_sd] = scaler_o.transform (X_test_o[cols_num_sd])
+    
+        # Encodage de la variable Cible 'deposit':
+        le_o = LabelEncoder()
+        y_train_o = le_o.fit_transform(y_train_o)
+        y_test_o = le_o.transform(y_test_o)
+    
+        # Encodage des variables explicatives de type 'objet'
+        oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+        cat1_o = ['housing']
+        X_train_o.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o[cat1_o])
+        X_test_o.loc[:, cat1_o] = oneh_o.transform(X_test_o[cat1_o])
+    
+        X_train_o[cat1_o] = X_train_o[cat1_o].astype('int64')
+        X_test_o[cat1_o] = X_test_o[cat1_o].astype('int64')
+    
+        # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+        X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+        X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+
+
         st.subheader("Résultat des modèles sans paramètres sur le dataframe de prédiction (colonnes AGE / BALANCE / PREVIOUS / EDUCATION")
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
@@ -2220,7 +2282,7 @@ if selected == 'Outil Prédictif':
         # Résultats des modèles
         results_sans_param_df_pred = {}
 
-        # Boucle pour charger les modèles et calculer les métriques
+        #Boucle pour charger les modèles et calculer les métriques
         for name, file_path in models_pred_df.items():
             #Charger le modèle sauvegardé
             trained_clf = joblib.load(file_path)
