@@ -2222,11 +2222,9 @@ if selected == 'Outil Prédictif':
         st.dataframe(X_train_o)    
 
         st.subheader("Scores modèles hyperamétrés avD :")
-        st.dataframe(results_avec_param_av_duration)
                     
 
         st.subheader("Scores modèles hyperparamétrés sans duration:")
-        st.dataframe(results_avec_param_sans_duration)
                     
 
         st.subheader("Modèle sélectionné")
