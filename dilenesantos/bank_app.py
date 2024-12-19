@@ -2203,7 +2203,23 @@ if selected == 'Outil Prédictif':
     submenu_predictions = st.radio("", ("Scores modèles & Hyperparamètres", "Prédictions"), horizontal=True)
     
     if submenu_predictions == "Scores modèles & Hyperparamètres" :
-     
+        st.write("Afficher df X_test")
+        st.dataframe(X_test)
+    
+        st.write("Afficher df X_test_sd")
+        st.dataframe(X_test_sd)
+    
+        st.write("Afficher df X_test_o")
+        st.dataframe(X_test_o)    
+    
+        st.write("Afficher df X_train")
+        st.dataframe(X_train)
+    
+        st.write("Afficher df X_train_sd")
+        st.dataframe(X_train_sd)
+    
+        st.write("Afficher df X_train_o")
+        st.dataframe(X_train_o)    
 
         st.subheader("Scores modèles hyperamétrés avD :")
         st.dataframe(results_avec_param_av_duration)
