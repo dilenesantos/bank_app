@@ -2269,7 +2269,6 @@ if selected == 'Outil Prédictif':
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
         models_pred_df = {
-                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_PRED_DF_sans_param.pkl"),
                 "Logistic Regression": joblib.load("dilenesantos/Logistic_Regression_model_PRED_DF_sans_param.pkl"),
                 "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_PRED_DF_sans_param.pkl"),
                 "KNN": joblib.load("dilenesantos/KNN_model_PRED_DF_sans_param.pkl"),
