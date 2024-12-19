@@ -2135,9 +2135,8 @@ if selected == "Pre-processing":
             dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
 
 
-if selected == 'Outil Prédictif': 
-    submenu_predictions = st.radio("", ("Scores test", "Scores modèles & Hyperparamètres", "Prédictions"), horizontal=True)
-
+    
+if selected == 'Outil Prédictif':    
     #code python SANS DURATION
     dff_TEST = df.copy()
     dff_TEST = dff_TEST[dff_TEST['age'] < 75]
@@ -2200,124 +2199,270 @@ if selected == 'Outil Prédictif':
     X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
     X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
 
+    st.title("Outils de prédiction")
+    submenu_predictions = st.radio("", ("Scores modèles & Hyperparamètres", "Prédictions"), horizontal=True)
     
-    if submenu_predictions == "Scores test" :
-        #code python SANS DURATION
-        dff_TEST = df.copy()
-        dff_TEST = dff_TEST[dff_TEST['age'] < 75]
-        dff_TEST = dff_TEST.loc[dff_TEST["balance"] > -2257]
-        dff_TEST = dff_TEST.loc[dff_TEST["balance"] < 4087]
-        dff_TEST = dff_TEST.loc[dff_TEST["campaign"] < 6]
-        dff_TEST = dff_TEST.loc[dff_TEST["previous"] < 2.5]
-        dff_TEST = dff_TEST.drop('contact', axis = 1)
-    
-        dff_TEST = dff_TEST.drop('pdays', axis = 1)
-    
-        dff_TEST = dff_TEST.drop(['day'], axis=1)
-        dff_TEST = dff_TEST.drop(['duration'], axis=1)
-        dff_TEST = dff_TEST.drop(['job'], axis=1)
-        dff_TEST = dff_TEST.drop(['default'], axis=1)
-        dff_TEST = dff_TEST.drop(['month'], axis=1)
-        dff_TEST = dff_TEST.drop(['poutcome'], axis=1)
-        dff_TEST = dff_TEST.drop(['marital'], axis=1)
-        dff_TEST = dff_TEST.drop(['loan'], axis=1)
-        dff_TEST = dff_TEST.drop(['campaign'], axis=1)   
-         
-        dff_TEST['education'] = dff_TEST['education'].replace('unknown', np.nan)
-    
-        X_dff_TEST = dff_TEST.drop('deposit', axis = 1)
-        y_dff_TEST = dff_TEST['deposit']
-        
-        dff_TEST = dff_TEST.drop(['deposit'], axis=1)   
-    
-        # Séparation des données en un jeu d'entrainement et jeu de test
-        X_train_o, X_test_o, y_train_o, y_test_o = train_test_split(X_dff_TEST, y_dff_TEST, test_size = 0.20, random_state = 48)
-                        
-        # On fait de même pour les NaaN de 'education'
-        X_train_o['education'] = X_train_o['education'].fillna(method ='bfill')
-        X_train_o['education'] = X_train_o['education'].fillna(X_train_o['education'].mode()[0])
-    
-        X_test_o['education'] = X_test_o['education'].fillna(method ='bfill')
-        X_test_o['education'] = X_test_o['education'].fillna(X_test_o['education'].mode()[0])
-                    
-        # Standardisation des variables quantitatives:
-        scaler_o = StandardScaler()
-        cols_num_sd = ['age', 'balance', 'previous']
-        X_train_o[cols_num_sd] = scaler_o.fit_transform(X_train_o[cols_num_sd])
-        X_test_o[cols_num_sd] = scaler_o.transform (X_test_o[cols_num_sd])
-    
-        # Encodage de la variable Cible 'deposit':
-        le_o = LabelEncoder()
-        y_train_o = le_o.fit_transform(y_train_o)
-        y_test_o = le_o.transform(y_test_o)
-    
-        # Encodage des variables explicatives de type 'objet'
-        oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
-        cat1_o = ['housing']
-        X_train_o.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o[cat1_o])
-        X_test_o.loc[:, cat1_o] = oneh_o.transform(X_test_o[cat1_o])
-    
-        X_train_o[cat1_o] = X_train_o[cat1_o].astype('int64')
-        X_test_o[cat1_o] = X_test_o[cat1_o].astype('int64')
-    
-        # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-        X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-        X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-
-        st.dataframe(X_test_o)
-
-        st.subheader("Résultat des modèles sans paramètres sur le dataframe de prédiction (colonnes AGE / BALANCE / PREVIOUS / EDUCATION")
+    if submenu_predictions == "Scores modèles & Hyperparamètres" :
+     
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
-        models_pred_df = {
-                "Random Forest" : ("dilenesantos/Random_Forest_model_PRED_DF_sans_param.pkl"),
-                "Logistic Regression": ("dilenesantos/Logistic_Regression_model_PRED_DF_sans_param.pkl"),
-                "Decision Tree": ("dilenesantos/Decision_Tree_model_PRED_DF_sans_param.pkl"),
-                "KNN": ("dilenesantos/KNN_model_PRED_DF_sans_param.pkl"),
-                "AdaBoost": ("dilenesantos/AdaBoost_model_PRED_DF_sans_param.pkl"),
-                "Bagging": ("dilenesantos/Bagging_model_PRED_DF_sans_param.pkl"),
-                "SVM": ("dilenesantos/SVM_model_PRED_DF_sans_param.pkl"),
-                "XGBOOST": ("dilenesantos/XGBOOST_model_PRED_DF_sans_param.pkl")
-            }
+        classifiers = {
+            "Random Forest": RandomForestClassifier(random_state=42),
+            "Logistic Regression": LogisticRegression(random_state=42),
+            "Decision Tree": DecisionTreeClassifier(random_state=42),
+            "KNN": KNeighborsClassifier(),
+            "AdaBoost": AdaBoostClassifier(random_state=42),
+            "Bagging": BaggingClassifier(random_state=42),
+            "SVM": svm.SVC(random_state=42),
+            "XGBOOST": XGBClassifier(random_state=42),
+        }
 
         # Résultats des modèles
-        results_sans_param_df_pred = {}
+        results_sans_parametres = {}  # Affichage des résultats dans results
 
-        #Boucle pour charger les modèles et calculer les métriques
-        for name, file_path in models_pred_df.items():
-            #Charger le modèle sauvegardé
-            trained_clf = joblib.load(file_path)
-            # Faire des prédictions
-            y_pred = trained_clf.predict(X_test_o)
+        # Fonction pour entraîner et sauvegarder un modèle
+        def train_and_save_model(model_name, clf, X_train_o, y_train_o):
+            filename = f"{model_name.replace(' ', '_')}_model_predictif_sans_parametres.pkl"  # Nom du fichier
+            try:
+                # Charger le modèle si le fichier existe déjà
+                trained_clf = joblib.load(filename)
+            except FileNotFoundError:
+                # Entraîner et sauvegarder le modèle
+                clf.fit(X_train_o, y_train_o)
+                joblib.dump(clf, filename)
+                trained_clf = clf
+            return trained_clf
     
+        # Boucle pour entraîner ou charger les modèles
+        for name, clf in classifiers.items():
+            # Entraîner ou charger le modèle
+            trained_clf = train_and_save_model(name, clf, X_train_o, y_train_o)
+            y_pred = trained_clf.predict(X_test_o)
+                
             # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
             f1 = f1_score(y_test_o, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
-    
+                
             # Stocker les résultats
-            results_sans_param_df_pred[name] = {
+            results_sans_parametres[name] = {
                 "Accuracy": accuracy,
                 "F1 Score": f1,
                 "Precision": precision,
                 "Recall": recall,
             }
-
+    
         # Conversion des résultats en DataFrame
-        df_results_sans_param_df_pred = pd.DataFrame(results_sans_param_df_pred).T
-        df_results_sans_param_df_pred.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-        df_results_sans_param_df_pred = df_results_sans_param_df_pred.sort_values(by="Recall", ascending=False)
-            
-        melted_df_results_sans_param_df_pred = df_results_sans_param_df_pred.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-        melted_df_results_sans_param_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
+        results_sans_param = pd.DataFrame(results_sans_parametres).T
+        results_sans_param.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        results_sans_param = results_sans_param.sort_values(by="Recall", ascending=False)
+        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+        results_sans_param = results_sans_param.sort_values(by='Recall', ascending=False)
+        
+        st.subheader("Scores modèles sans paramètres")
+        st.dataframe(results_sans_param)
+        
+        # dictionnaire avec les best modèles avec hyper paramètres trouvés AVEC DURATION !!!!
+        classifiers_2 = {
+            "Random Forest best": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
+            "Bagging": BaggingClassifier(random_state=42),
+            "SVM best" : svm.SVC(C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
+            "XGBOOST best" : XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42)}
 
-        st.dataframe(df_results_sans_param_df_pred)
+        results_avec_parametres = {}  # Affichage des résultats dans results
+
+        # Fonction pour entraîner et sauvegarder un modèle
+        def train_and_save_model2(model_name, clf, X_train_o, y_train_o):
+            filename = f"{model_name.replace(' ', '_')}_model_predictif_avec_parametres.pkl"  # Nom du fichier
+            try:
+                # Charger le modèle si le fichier existe déjà
+                trained_clf = joblib.load(filename)
+            except FileNotFoundError:
+                # Entraîner et sauvegarder le modèle
+                clf.fit(X_train_o, y_train_o)
+                joblib.dump(clf, filename)
+                trained_clf = clf
+            return trained_clf
+    
+        # Boucle pour entraîner ou charger les modèles
+        for name, clf in classifiers_2.items():
+            # Entraîner ou charger le modèle
+            trained_clf = train_and_save_model2(name, clf, X_train_o, y_train_o)
+            y_pred = trained_clf.predict(X_test_o)
+                
+            # Calculer les métriques
+            accuracy = accuracy_score(y_test_o, y_pred)
+            f1 = f1_score(y_test_o, y_pred)
+            precision = precision_score(y_test_o, y_pred)
+            recall = recall_score(y_test_o, y_pred)
+                
+            # Stocker les résultats
+            results_avec_parametres[name] = {
+                "Accuracy": accuracy,
+                "F1 Score": f1,
+                "Precision": precision,
+                "Recall": recall,
+            }
+    
+        # Conversion des résultats en DataFrame
+        results_avec_param_av_duration = pd.DataFrame(results_avec_parametres).T
+        results_avec_param_av_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        results_avec_param_av_duration = results_avec_param_av_duration.sort_values(by="Recall", ascending=False)
+        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+        results_avec_param_av_duration = results_avec_param_av_duration.sort_values(by='Recall', ascending=False)
+     
         
-    if submenu_predictions == "Scores modèles & Hyperparamètres" :
+        st.subheader("Scores modèles hyperamétrés avD :")
+        st.dataframe(results_avec_param_av_duration)
+                    
+            
+        # dictionnaire avec les best modèles avec hyper paramètres trouvés SANS DURATION !!!!
+        classifiers_3 = {
+            "Random Forest best param": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
+            "Decision Tree best param": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
+            "Bagging": BaggingClassifier(random_state=42),
+            "SVM best param" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
+            "XGBOOST best param" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)}
         
-        st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
- 
+        results_avec_parametres_sansDuration = {}  # Affichage des résultats dans results
+
+        # Fonction pour entraîner et sauvegarder un modèle
+        def train_and_save_model3(model_name, clf, X_train_o, y_train_o):
+            filename = f"{model_name.replace(' ', '_')}_model_predictif_avec_parametres_avD.pkl"  # Nom du fichier
+            try:
+                # Charger le modèle si le fichier existe déjà
+                trained_clf = joblib.load(filename)
+            except FileNotFoundError:
+                # Entraîner et sauvegarder le modèle
+                clf.fit(X_train_o, y_train_o)
+                joblib.dump(clf, filename)
+                trained_clf = clf
+            return trained_clf
+    
+        # Boucle pour entraîner ou charger les modèles
+        for name, clf in classifiers_3.items():
+            # Entraîner ou charger le modèle
+            trained_clf = train_and_save_model3(name, clf, X_train_o, y_train_o)
+            y_pred = trained_clf.predict(X_test_o)
+                
+            # Calculer les métriques
+            accuracy = accuracy_score(y_test_o, y_pred)
+            f1 = f1_score(y_test_o, y_pred)
+            precision = precision_score(y_test_o, y_pred)
+            recall = recall_score(y_test_o, y_pred)
+                
+            # Stocker les résultats
+            results_avec_parametres_sansDuration[name] = {
+                "Accuracy": accuracy,
+                "F1 Score": f1,
+                "Precision": precision,
+                "Recall": recall,
+            }
+    
+        # Conversion des résultats en DataFrame
+        results_avec_param_sans_duration = pd.DataFrame(results_avec_parametres_sansDuration).T
+        results_avec_param_sans_duration.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+        results_avec_param_sans_duration = results_avec_param_sans_duration.sort_values(by="Recall", ascending=False)
+        #CLASSER LES RESULTATS DANS L'ORDRE DÉCROISSANT SELON LA COLONNE "Recall"
+        results_avec_param_sans_duration = results_avec_param_sans_duration.sort_values(by='Recall', ascending=False)
+     
+         
+        st.subheader("Scores modèles hyperparamétrés sans duration:")
+        st.dataframe(results_avec_param_sans_duration)
+                    
+
+        st.subheader("Modèle sélectionné")
+        st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+                    
+        st.write("Affichons le rapport de classification de ce modèle")
+        rf_best = RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)
+        rf_best.fit(X_train_o, y_train_o)
+        score_train = rf_best.score(X_train_o, y_train_o)
+        score_test = rf_best.score(X_test_o, y_test_o)
+        y_pred = rf_best.predict(X_test_o)
+        table_rf = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+        st.dataframe(table_rf)
+        st.write("Classification report :")
+        report_dict = classification_report(y_test_o, y_pred, output_dict=True)
+        # Convertir le dictionnaire en DataFrame
+        report_df = pd.DataFrame(report_dict).T
+        st.dataframe(report_df)
+
+                        
+        st.subheader("Modèle sélectionné")
+        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
+        st.write("Affichons le rapport de classification de ce modèle")
+        xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
+        xgboost_best.fit(X_train_o, y_train_o)
+        score_train = xgboost_best.score(X_train_o, y_train_o)
+        score_test = xgboost_best.score(X_test_o, y_test_o)
+        y_pred = xgboost_best.predict(X_test_o)
+        table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+        st.dataframe(table_xgboost)
+        st.write("Classification report :")
+        report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+        # Convertir le dictionnaire en DataFrame
+        report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+        st.dataframe(report_df_xgboost)
+                
+
+        st.subheader("Modèle XGBOOST 2")
+        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+        st.write("Affichons le rapport de classification de ce modèle")
+        xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)            
+        xgboost_best.fit(X_train_o, y_train_o)
+        score_train = xgboost_best.score(X_train_o, y_train_o)
+        score_test = xgboost_best.score(X_test_o, y_test_o)
+        y_pred = xgboost_best.predict(X_test_o)
+        table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+        st.dataframe(table_xgboost)
+        st.write("Classification report :")
+        report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+        # Convertir le dictionnaire en DataFrame
+        report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+        st.dataframe(report_df_xgboost)                 
+
+
+        st.subheader("RECHERCHE PARAMÈTRES XGBOOST 1")
+        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+        st.write("Affichons le rapport de classification de ce modèle")
+        xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=1.46, subsample=0.99, random_state=42)            
+        xgboost_best.fit(X_train_o, y_train_o)
+        score_train = xgboost_best.score(X_train_o, y_train_o)
+        score_test = xgboost_best.score(X_test_o, y_test_o)
+        y_pred = xgboost_best.predict(X_test_o)
+        table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+        st.dataframe(table_xgboost)
+        st.write("Classification report :")
+        report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+        # Convertir le dictionnaire en DataFrame
+        report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+        st.dataframe(report_df_xgboost)                
+
+
+        st.subheader("RECHERCHE PARAMÈTRES XGBOOST 2")
+        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+        st.write("Affichons le rapport de classification de ce modèle")
+        xgboost_best_def = XGBClassifier(gamma=0.2,colsample_bytree=0.43, learning_rate=0.27, max_depth=6,  n_estimators=20, reg_alpha=3.2, reg_lambda=3.7, subsample=0.8, random_state=42)            
+        xgboost_best_def.fit(X_train_o, y_train_o)
+        score_train = xgboost_best_def.score(X_train_o, y_train_o)
+        score_test = xgboost_best_def.score(X_test_o, y_test_o)
+        y_pred = xgboost_best_def.predict(X_test_o)
+        table_xgboost_best_def = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+        st.dataframe(table_xgboost_best_def)
+        st.write("Classification report :")
+        report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+        # Convertir le dictionnaire en DataFrame
+        report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+        st.dataframe(report_df_xgboost) 
+
+
     if submenu_predictions == "Prédictions" :
         
         st.title("Démonstration et application de notre modèle à votre cas")               
