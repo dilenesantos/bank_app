@@ -2206,7 +2206,7 @@ if selected == 'Outil Prédictif':
         st.subheader("Résultat des modèles sans paramètres sur le dataframe de prédiction (colonnes AGE / BALANCE / PREVIOUS / EDUCATION")
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
-        models_SD = {
+        models_pred_df = {
                 "Random Forest": joblib.load("dilenesantos/Random_Forest_model_PRED_DF_sans_param.pkl"),
                 "Logistic Regression": joblib.load("dilenesantos/Logistic_Regression_model_PRED_DF_sans_param.pkl"),
                 "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_PRED_DF_sans_param.pkl"),
@@ -2220,9 +2220,12 @@ if selected == 'Outil Prédictif':
         # Résultats des modèles
         results_sans_param_df_pred = {}
 
-        #Boucle pour charger les modèles et calculer les résultats
-        for name, trained_clf in models_SD.items():
-            #Prédictions sur les données test
+        # Boucle pour charger les modèles et calculer les métriques
+        for name, file_path in models_pred_df.items():
+            # Charger le modèle sauvegardé
+            trained_clf = joblib.load(file_path)
+        
+            # Faire des prédictions
             y_pred = trained_clf.predict(X_test_o)
 
             # Calculer les métriques
@@ -2236,7 +2239,7 @@ if selected == 'Outil Prédictif':
                 "Accuracy": accuracy,
                 "F1 Score": f1,
                 "Precision": precision,
-                "Recall": recall
+                "Recall": recall,
             }
 
         # Conversion des résultats en DataFrame
