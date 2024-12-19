@@ -2222,7 +2222,7 @@ if selected == 'Outil Prédictif':
 
         # Boucle pour charger les modèles et calculer les métriques
         for name, file_path in models_pred_df.items():
-            # Charger le modèle sauvegardé
+            #Charger le modèle sauvegardé
             trained_clf = joblib.load(file_path)
         
             # Faire des prédictions
@@ -2255,102 +2255,7 @@ if selected == 'Outil Prédictif':
     if submenu_predictions == "Scores modèles & Hyperparamètres" :
         
         st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
-        #Initialisation des classifiers
-        model_hyperparam_AD = {
-            "RF_dounia": "dilenesantos/RF_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "RF_fatou": "dilenesantos/RF_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "RF_carolle": "dilenesantos/RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_dounia": "dilenesantos/SVM_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_dilene": "dilenesantos/SVM_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_fatou": "dilenesantos/SVM_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_carolle": "dilenesantos/SVM_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_dounia": "dilenesantos/XGBOOST_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_dilene": "dilenesantos/XGBOOST_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_carolle": "dilenesantos/XGBOOST_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_fatou": "dilenesantos/XGBOOST_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "Random Forest GridSearch2": "dilenesantos/Random_Forest_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM GridSearch2": "dilenesantos/SVM_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST GridSearch2": "dilenesantos/XGBOOST_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
-        }
-
-        #Résultats des modèles
-        results_param_AD_df_pred = {}
-
-        #Boucle pour charger les modèles et calculer les résultats
-        for name, trained_clf in model_hyperparam_AD.items():
-            #Prédictions sur les données test
-            y_pred = trained_clf.predict(X_test_o)
-
-            # Calculer les métriques
-            accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test_o, y_pred)
-            precision = precision_score(y_test_o, y_pred)
-            recall = recall_score(y_test_o, y_pred)
-
-            # Stocker les résultats
-            results_param_AD_df_pred[name] = {
-                "Accuracy": accuracy,
-                "F1 Score": f1,
-                "Precision": precision,
-                "Recall": recall
-            }
-
-        # Conversion des résultats en DataFrame
-        df_results_param_AD_df_pred = pd.DataFrame(results_param_AD_df_pred).T
-        df_results_param_AD_df_pred.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-        df_results_param_AD_df_pred = df_results_param_AD_df_pred.sort_values(by="Recall", ascending=False)
-            
-        melted_df_results_param_AD_df_pred = df_results_param_AD_df_pred.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-        melted_df_results_param_AD_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
-
-        st.dataframe(df_results_param_AD_df_pred)
-
-
-        st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
-        #Initialisation des classifiers
-        model_hyperparam_SD = {
-                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
-                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
-                "SVM": joblib.load("dilenesantos/SVM_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_1": joblib.load("dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_2": joblib.load("dilenesantos/XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_3": joblib.load("dilenesantos/XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_TESTDIL": joblib.load("dilenesantos/XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
-            }
-
-        #Résultats des modèles
-        results_param_SD_df_pred = {}
-
-        #Boucle pour charger les modèles et calculer les résultats
-        for name, trained_clf in model_hyperparam_SD.items():
-            #Prédictions sur les données test
-            y_pred = trained_clf.predict(X_test_o)
-
-            # Calculer les métriques
-            accuracy = accuracy_score(y_test_o, y_pred)
-            f1 = f1_score(y_test_o, y_pred)
-            precision = precision_score(y_test_o, y_pred)
-            recall = recall_score(y_test_o, y_pred)
-
-            # Stocker les résultats
-            results_param_SD_df_pred[name] = {
-                "Accuracy": accuracy,
-                "F1 Score": f1,
-                "Precision": precision,
-                "Recall": recall
-            }
-
-        # Conversion des résultats en DataFrame
-        df_results_param_SD_df_pred = pd.DataFrame(results_param_SD_df_pred).T
-        df_results_param_SD_df_pred.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
-        df_results_param_SD_df_pred = df_results_param_SD_df_pred.sort_values(by="Recall", ascending=False)
-            
-        melted_df_results_param_SD_df_pred = df_results_param_SD_df_pred.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
-        melted_df_results_param_AD_df_pred.rename(columns={"index": "Classifier"}, inplace=True)
-
-        st.dataframe(df_results_param_SD_df_pred)
-
-    
+ 
     if submenu_predictions == "Prédictions" :
         
         st.title("Démonstration et application de notre modèle à votre cas")               
