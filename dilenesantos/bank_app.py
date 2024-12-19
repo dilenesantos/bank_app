@@ -2188,14 +2188,14 @@ if selected == 'Outil Prédictif':
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
         # Initialisation des classifiers
         models_SD = {
-                "Random Forest": joblib.load("Random_Forest_model_sans_duration_sans_parametres.pkl"),
-                "Logistic Regression": joblib.load("Logistic_Regression_model_sans_duration_sans_parametres.pkl"),
-                "Decision Tree": joblib.load("Decision_Tree_model_sans_duration_sans_parametres.pkl"),
-                "KNN": joblib.load("KNN_model_sans_duration_sans_parametres.pkl"),
-                "AdaBoost": joblib.load("AdaBoost_model_sans_duration_sans_parametres.pkl"),
-                "Bagging": joblib.load("Bagging_model_sans_duration_sans_parametres.pkl"),
-                "SVM": joblib.load("SVM_model_sans_duration_sans_parametres.pkl"),
-                "XGBOOST": joblib.load("XGBOOST_model_sans_duration_sans_parametres.pkl")
+                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_sans_duration_sans_parametres.pkl"),
+                "Logistic Regression": joblib.load("dilenesantos/Logistic_Regression_model_sans_duration_sans_parametres.pkl"),
+                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_sans_duration_sans_parametres.pkl"),
+                "KNN": joblib.load("dilenesantos/KNN_model_sans_duration_sans_parametres.pkl"),
+                "AdaBoost": joblib.load("dilenesantos/AdaBoost_model_sans_duration_sans_parametres.pkl"),
+                "Bagging": joblib.load("dilenesantos/Bagging_model_sans_duration_sans_parametres.pkl"),
+                "SVM": joblib.load("dilenesantos/SVM_model_sans_duration_sans_parametres.pkl"),
+                "XGBOOST": joblib.load("dilenesantos/XGBOOST_model_sans_duration_sans_parametres.pkl")
             }
 
         # Résultats des modèles
@@ -2233,20 +2233,20 @@ if selected == 'Outil Prédictif':
         st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
         #Initialisation des classifiers
         model_hyperparam_AD = {
-            "RF_dounia": "RF_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "RF_fatou": "RF_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "RF_carolle": "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_dounia": "SVM_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_dilene": "SVM_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_fatou": "SVM_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM_carolle": "SVM_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_dounia": "XGBOOST_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_dilene": "XGBOOST_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_carolle": "XGBOOST_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST_fatou": "XGBOOST_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "Random Forest GridSearch2": "Random_Forest_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "SVM GridSearch2": "SVM_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
-            "XGBOOST GridSearch2": "XGBOOST_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "RF_dounia": "dilenesantos/RF_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "RF_fatou": "dilenesantos/RF_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "RF_carolle": "dilenesantos/RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_dounia": "dilenesantos/SVM_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_dilene": "dilenesantos/SVM_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_fatou": "dilenesantos/SVM_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM_carolle": "dilenesantos/SVM_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_dounia": "dilenesantos/XGBOOST_dounia_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_dilene": "dilenesantos/XGBOOST_dilene_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_carolle": "dilenesantos/XGBOOST_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST_fatou": "dilenesantos/XGBOOST_fatou_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "Random Forest GridSearch2": "dilenesantos/Random_Forest_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "SVM GridSearch2": "dilenesantos/SVM_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
+            "XGBOOST GridSearch2": "dilenesantos/XGBOOST_GridSearch2_model_AD_TOP_3_hyperparam_TEAM.pkl",
         }
 
         #Résultats des modèles
@@ -2285,13 +2285,13 @@ if selected == 'Outil Prédictif':
         st.subheader("Résultats du dataframe pred avec les hyper paramètres trouvés pour Duration")
         #Initialisation des classifiers
         model_hyperparam_SD = {
-                "Random Forest": joblib.load("Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
-                "Decision Tree": joblib.load("Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
-                "SVM": joblib.load("SVM_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_1": joblib.load("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_2": joblib.load("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_3": joblib.load("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_TESTDIL": joblib.load("XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
+                "Random Forest": joblib.load("dilenesantos/Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
+                "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
+                "SVM": joblib.load("dilenesantos/SVM_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_1": joblib.load("dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_2": joblib.load("dilenesantos/XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_3": joblib.load("dilenesantos/XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST_TESTDIL": joblib.load("dilenesantos/XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
             }
 
         #Résultats des modèles
