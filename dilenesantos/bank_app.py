@@ -2264,6 +2264,7 @@ if selected == 'Outil Prédictif':
         X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
         X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
 
+        st.dataframe(X_test_o)
 
         st.subheader("Résultat des modèles sans paramètres sur le dataframe de prédiction (colonnes AGE / BALANCE / PREVIOUS / EDUCATION")
         #RÉSULTAT DES MODÈLES SANS PARAMETRES
@@ -2288,13 +2289,13 @@ if selected == 'Outil Prédictif':
             trained_clf = joblib.load(file_path)
             # Faire des prédictions
             y_pred = trained_clf.predict(X_test_o)
-
+    
             # Calculer les métriques
             accuracy = accuracy_score(y_test_o, y_pred)
             f1 = f1_score(y_test_o, y_pred)
             precision = precision_score(y_test_o, y_pred)
             recall = recall_score(y_test_o, y_pred)
-
+    
             # Stocker les résultats
             results_sans_param_df_pred[name] = {
                 "Accuracy": accuracy,
