@@ -1897,8 +1897,7 @@ if selected == "Modélisation":
 
         
 if selected == 'Interprétation':      
-    st.title("INTERPRÉTATION")
-    st.sidebar.title("MENU INTERPRÉTATION")
+    st.sidebar.title("SOUS MENU INTERPRÉTATION")
     pages=["INTERPRÉTATION AVEC DURATION", "INTERPRÉTATION SANS DURATION"]
     page=st.sidebar.radio('AVEC ou SANS Duration', pages)
 
@@ -1944,10 +1943,10 @@ if selected == 'Interprétation':
         #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
         shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
 
-        st.subheader("Interprétation du modèle XGBOOST sans la colonne Duration")
+        st.subheader("Interprétation du modèle XGBOOST")
         st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
 
-        submenu_interpretation = st.selectbox("", ("ANALYSE GLOBALE", "ANALYSE DES 5 VARIABLES LES PLUS IMPORTANTES", "TESTS"))
+        submenu_interpretation = st.selectbox("", ("ANALYSE GLOBALE", "ANALYSE DES VARIABLES LES PLUS IMPORTANTES", "TESTS"))
 
         if submenu_interpretation == "ANALYSE GLOBALE" :
             submenu_global = st.radio("", ("Summary plot", "Bar plot"), horizontal=True)
@@ -2049,7 +2048,7 @@ if selected == 'Interprétation':
                 st.write("5. CAMPAIGN : nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
                 
 
-        if submenu_interpretation == "ANALYSE DES 6 VARIABLES LES PLUS IMPORTANTES" :
+        if submenu_interpretation == "ANALYSE DES VARIABLES LES PLUS IMPORTANTES" :
             submenu_local = st.radio("", ("HOUSING", "ÂGE", "BALANCE", "PREVIOUS", "CAMPAIGN", "EDUCATION"), horizontal=True)
             
             if submenu_local == "HOUSING" :
