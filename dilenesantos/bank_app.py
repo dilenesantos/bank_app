@@ -1923,26 +1923,26 @@ if selected == 'Interprétation':
             st.write("blablabla")
             
     if page == pages[1] : 
-    #SHAP
-    #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
-    #Chargement du modèle XGBOOST_1 déjà enregistré
-    #filename_XGBOOST_1 = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
-    #model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_1)
-
-    #Chargement des données pour shap 
-    #data_to_explain_XGBOOST_1 = X_test_sd  # Remplacez par vos données
-
-    #Création de l'explainer SHAP pour XGBOOST_1
-    #explainer_XGBOOST_1 = shap.TreeExplainer(model_XGBOOST_1_model_SD_TOP_4_hyperparam)
-
-    #Calcul des shap values
-    #shap_values_XGBOOST_1 = explainer_XGBOOST_1(data_to_explain_XGBOOST_1)
-
-    #Sauvegarder des shap values avec joblib
-    #joblib.dump(shap_values_XGBOOST_1, "shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
-
-    #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-    shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+        #SHAP
+        #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+        #Chargement du modèle XGBOOST_1 déjà enregistré
+        #filename_XGBOOST_1 = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
+        #model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_1)
+    
+        #Chargement des données pour shap 
+        #data_to_explain_XGBOOST_1 = X_test_sd  # Remplacez par vos données
+    
+        #Création de l'explainer SHAP pour XGBOOST_1
+        #explainer_XGBOOST_1 = shap.TreeExplainer(model_XGBOOST_1_model_SD_TOP_4_hyperparam)
+    
+        #Calcul des shap values
+        #shap_values_XGBOOST_1 = explainer_XGBOOST_1(data_to_explain_XGBOOST_1)
+    
+        #Sauvegarder des shap values avec joblib
+        #joblib.dump(shap_values_XGBOOST_1, "shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+    
+        #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+        shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
 
         st.subheader("Interprétation du modèle XGBOOST sans la colonne Duration")
         st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
