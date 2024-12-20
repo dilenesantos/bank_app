@@ -2238,13 +2238,13 @@ if selected == "TEST PRED SCORES":
     #COMME ON A ENREGISTRÉ LES MODÈLES, VOICI LE NOUVEAU CODE À UTILISER : 
     # Liste des modèles enregistrés et leurs fichiers correspondants
     model_files_pred = {
-        "Logistic Regression": "Logistic_Regression_model_PRED_sans_parametres.pkl",
-        "Decision Tree": "Decision_Tree_model_PRED_sans_parametres.pkl",
-        "KNN": "KNN_model_PRED_sans_parametres.pkl",
-        "AdaBoost": "AdaBoost_model_PRED_sans_parametres.pkl",
-        "Bagging": "Bagging_model_PRED_sans_parametres.pkl",
-        "SVM": "SVM_model_PRED_sans_parametres.pkl",
-        "XGBOOST": "XGBOOST_model_PRED_sans_parametres.pkl",
+        "Logistic Regression": "dilenesantos/Logistic_Regression_model_PRED_sans_parametres.pkl",
+        "Decision Tree": "dilenesantos/Decision_Tree_model_PRED_sans_parametres.pkl",
+        "KNN": "dilenesantos/KNN_model_PRED_sans_parametres.pkl",
+        "AdaBoost": "dilenesantos/AdaBoost_model_PRED_sans_parametres.pkl",
+        "Bagging": "dilenesantos/Bagging_model_PRED_sans_parametres.pkl",
+        "SVM": "dilenesantos/SVM_model_PRED_sans_parametres.pkl",
+        "XGBOOST": "dilenesantos/XGBOOST_model_PRED_sans_parametres.pkl",
     }
 
 
