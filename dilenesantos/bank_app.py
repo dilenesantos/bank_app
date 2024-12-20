@@ -1685,7 +1685,53 @@ if selected == "Modélisation":
             st.pyplot(fig) 
 
             
-
+            def get_mean_shap_values(column_names, shap_values):
+                indices = [X_test.columns.get_loc(col) for col in column_names]
+                values = shap_values[:, indices, 1]  # Filter for class "Deposit Yes"
+                return np.mean(np.abs(values), axis=0)  # Calculate absolute mean
+            
+            # Étape 1 : Trouver les colonnes de chaque groupe
+            month_columns = [col for col in X_test.columns if 'month' in col]
+            weekday_columns = [col for col in X_test.columns if 'weekday' in col]
+            poutcome_columns = [col for col in X_test.columns if 'poutcome' in col]
+            job_columns = [col for col in X_test.columns if 'job' in col]
+            marital_columns = [col for col in X_test.columns if 'marital' in col]
+            
+            # Étape 2 : Calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values)
+            
+            # Étape 3 : Établir une liste des moyennes combinées et leurs noms
+            combined_values = [
+                np.mean(mean_shap_month),
+                np.mean(mean_shap_weekday),
+                np.mean(mean_shap_poutcome),
+                np.mean(mean_shap_job),
+                np.mean(mean_shap_marital)
+            ]
+            combined_feature_names = [
+                'Mean SHAP Value for Month Features',
+                'Mean SHAP Value for Weekday Features',
+                'Mean SHAP Value for Poutcome Features',
+                'Mean SHAP Value for Job Features',
+                'Mean SHAP Value for Marital Features'
+            ]
+            
+            # Étape 4 : Créer un nouvel objet Explanation avec les valeurs combinées
+            explanation_combined = shap.Explanation(
+                values=combined_values,
+                # The data attribute should have the same number of rows as feature_names
+                data=np.array([[np.nan]] * len(combined_values)),  # Creating an array with 5 rows and 1 column
+                feature_names=combined_feature_names
+            )
+            
+            # Étape 5 : Générer le graphique à barres avec toutes les valeurs
+            fig = plt.figure()
+            shap.plots.bar(explanation_combined)
+            st.pyplot(fig)
         
             #fig = plt.figure()
             #shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
