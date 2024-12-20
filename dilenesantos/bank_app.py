@@ -2203,7 +2203,15 @@ if selected == "TEST PRED SCORES":
         #"SVM": svm.SVC(random_state=42),
         #"XGBOOST": XGBClassifier(random_state=42),
     #}
+    
+    #FICHIER RANDOM FOREST DE +25MO, on doit le compresser pour streamlit
+    #Charger votre modèle
+    #filename = "Random_Forest_model_PRED_sans_parametres.pkl"
+    #model = joblib.load(filename)
 
+    # Sauvegarder le modèle avec compression de niveau 9
+    #joblib.dump(model, "Random_Forest_model_PRED_sans_parametres_compressed.pkl", compress=5)
+  
 
     #Résultats des modèles
     #results_DF_PRED_sans_parametres = {}
@@ -2245,6 +2253,7 @@ if selected == "TEST PRED SCORES":
     #COMME ON A ENREGISTRÉ LES MODÈLES, VOICI LE NOUVEAU CODE À UTILISER : 
     # Liste des modèles enregistrés et leurs fichiers correspondants
     model_files_pred = {
+        "Random Forest": "dilenesantos/Random_Forest_model_PRED_sans_parametres_compressed.pkl",
         "Logistic Regression": "dilenesantos/Logistic_Regression_model_PRED_sans_parametres.pkl",
         "Decision Tree": "dilenesantos/Decision_Tree_model_PRED_sans_parametres.pkl",
         "KNN": "dilenesantos/KNN_model_PRED_sans_parametres.pkl",
