@@ -270,7 +270,7 @@ X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 with st.sidebar:
     selected = option_menu(
         menu_title='Sections',
-        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil Prédictif", "TEST PRÉDICTIF"]) 
+        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "TEST PRED SCORES", "Outil Prédictif", "TEST PRÉDICTIF"]) 
 
 if selected == 'Introduction':  
     st.subheader("Contexte du projet")
@@ -2115,7 +2115,176 @@ if selected == 'Interprétation':
             st.subheader("Dépendences plots & Analyses")
             st.write("blablabla")
            
+
+
+
+if selected == 'TEST PRED SCORES" : 
+        
+    #code python SANS DURATION
+    dff_TEST = df.copy()
+    dff_TEST = dff_TEST[dff_TEST['age'] < 75]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] > -2257]
+    dff_TEST = dff_TEST.loc[dff_TEST["balance"] < 4087]
+    dff_TEST = dff_TEST.loc[dff_TEST["campaign"] < 6]
+    dff_TEST = dff_TEST.loc[dff_TEST["previous"] < 2.5]
+    dff_TEST = dff_TEST.drop('contact', axis = 1)
     
+    dff_TEST = dff_TEST.drop('pdays', axis = 1)
+    
+    dff_TEST = dff_TEST.drop(['day'], axis=1)
+    dff_TEST = dff_TEST.drop(['duration'], axis=1)
+    dff_TEST = dff_TEST.drop(['job'], axis=1)
+    dff_TEST = dff_TEST.drop(['default'], axis=1)
+    dff_TEST = dff_TEST.drop(['month'], axis=1)
+    dff_TEST = dff_TEST.drop(['poutcome'], axis=1)
+    dff_TEST = dff_TEST.drop(['marital'], axis=1)
+    dff_TEST = dff_TEST.drop(['loan'], axis=1)
+    dff_TEST = dff_TEST.drop(['campaign'], axis=1)   
+     
+    dff_TEST['education'] = dff_TEST['education'].replace('unknown', np.nan)
+    X_dff_TEST = dff_TEST.drop('deposit', axis = 1)
+    y_dff_TEST = dff_TEST['deposit']
+        
+    dff_TEST = dff_TEST.drop(['deposit'], axis=1)   
+    
+    # Séparation des données en un jeu d'entrainement et jeu de test
+    X_train_o, X_test_o, y_train_o, y_test_o = train_test_split(X_dff_TEST, y_dff_TEST, test_size = 0.20, random_state = 48)
+                        
+    # On fait de même pour les NaaN de 'education'
+    X_train_o['education'] = X_train_o['education'].fillna(method ='bfill')
+    X_train_o['education'] = X_train_o['education'].fillna(X_train_o['education'].mode()[0])
+    
+    X_test_o['education'] = X_test_o['education'].fillna(method ='bfill')
+    X_test_o['education'] = X_test_o['education'].fillna(X_test_o['education'].mode()[0])
+                    
+    # Standardisation des variables quantitatives:
+    scaler_o = StandardScaler()
+    cols_num_sd = ['age', 'balance', 'previous']
+    X_train_o[cols_num_sd] = scaler_o.fit_transform(X_train_o[cols_num_sd])
+    X_test_o[cols_num_sd] = scaler_o.transform (X_test_o[cols_num_sd])
+    
+    # Encodage de la variable Cible 'deposit':
+    le_o = LabelEncoder()
+    y_train_o = le_o.fit_transform(y_train_o)
+    y_test_o = le_o.transform(y_test_o)
+    
+    # Encodage des variables explicatives de type 'objet'
+    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+    cat1_o = ['housing']
+    X_train_o.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o[cat1_o])
+    X_test_o.loc[:, cat1_o] = oneh_o.transform(X_test_o[cat1_o])
+    
+    X_train_o[cat1_o] = X_train_o[cat1_o].astype('int64')
+    X_test_o[cat1_o] = X_test_o[cat1_o].astype('int64')
+        
+    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    
+
+    #RÉSULTAT DES MODÈLES SANS PARAMÈTRES
+ 
+    #CODE CHARGÉ UNE FOIS POUR SAUVEGARDE DES MODÈLES SUR JOBLIB
+    # Initialisation des classifiers
+    #classifiers_pred_df =  classifiers = {
+        #"Random Forest": RandomForestClassifier(random_state=42),
+        #"Logistic Regression": LogisticRegression(random_state=42),
+        #"Decision Tree": DecisionTreeClassifier(random_state=42),
+        #"KNN": KNeighborsClassifier(),
+        #"AdaBoost": AdaBoostClassifier(random_state=42),
+        #"Bagging": BaggingClassifier(random_state=42),
+        #"SVM": svm.SVC(random_state=42),
+        #"XGBOOST": XGBClassifier(random_state=42),
+    #}
+
+
+    #Résultats des modèles
+    #results_DF_PRED_sans_parametres = {}
+
+    #Fonction pour entraîner et sauvegarder un modèle
+    #def train_and_save_model_pred(model_name, clf, X_train_o, y_train_o):
+        #filename = f"{model_name.replace(' ', '_')}_model_PRED_sans_parametres.pkl"  # Nom du fichier
+        #try:
+            #Charger le modèle si le fichier existe déjà
+            #trained_clf = joblib.load(filename)
+        #except FileNotFoundError:
+            #Entraîner et sauvegarder le modèle
+            #clf.fit(X_train_o, y_train_o)
+            #joblib.dump(clf, filename)
+            #trained_clf = clf
+        #return trained_clf
+
+    #Boucle pour entraîner ou charger les modèles
+    #for name, clf in classifiers_pred_df.items():
+        #Entraîner ou charger le modèle
+        #trained_clf = train_and_save_model_pred(name, clf, X_train_o, y_train_o)
+        #y_pred = trained_clf.predict(X_test_o)
+            
+        #Calculer les métriques
+        #accuracy = accuracy_score(y_test_o, y_pred)
+        #f1 = f1_score(y_test_o, y_pred)
+        #precision = precision_score(y_test_o, y_pred)
+        #recall = recall_score(y_test_o, y_pred)
+            
+        #Stocker les résultats
+        #results_DF_PRED_sans_parametres[name] = {
+            #"Accuracy": accuracy,
+            #"F1 Score": f1,
+            #"Precision": precision,
+            #"Recall": recall,
+        #}
+        
+  
+    #COMME ON A ENREGISTRÉ LES MODÈLES, VOICI LE NOUVEAU CODE À UTILISER : 
+    # Liste des modèles enregistrés et leurs fichiers correspondants
+    model_files_pred = {
+        "Random Forest": "Random_Forest_model_PRED_sans_parametres.pkl",
+        "Logistic Regression": "Logistic_Regression_model_PRED_sans_parametres.pkl",
+        "Decision Tree": "Decision_Tree_model_PRED_sans_parametres.pkl",
+        "KNN": "KNN_model_PRED_sans_parametres.pkl",
+        "AdaBoost": "AdaBoost_model_PRED_sans_parametres.pkl",
+        "Bagging": "Bagging_model_PRED_sans_parametres.pkl",
+        "SVM": "SVM_model_PRED_sans_parametres.pkl",
+        "XGBOOST": "XGBOOST_model_PRED_sans_parametres.pkl",
+    }
+
+
+    # Résultats des modèles
+    results_DF_PRED_sans_parametres = {}
+
+    # Boucle pour charger les modèles et calculer les métriques
+    for name, file_path in model_files_pred.items():
+        # Charger le modèle sauvegardé
+        trained_clf = joblib.load(file_path)
+        
+        # Faire des prédictions
+        y_pred = trained_clf.predict(X_test_o)
+
+        # Calculer les métriques
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        # Stocker les résultats
+        results_DF_PRED_sans_parametres[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall,
+        }
+
+    #Conversion des résultats en DataFrame
+    df_results_DF_PRED_sans_parametres = pd.DataFrame(results_DF_PRED_sans_parametres).T
+    df_results_DF_PRED_sans_parametres.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+    df_results_DF_PRED_sans_parametres = df_results_DF_PRED_sans_parametres.sort_values(by="Recall", ascending=False)
+    
+    melted_df_results_DF_PRED_sans_parametres = df_results_DF_PRED_sans_parametres.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+    melted_df_results_DF_PRED_sans_parametres.rename(columns={"index": "Classifier"}, inplace=True)    
+
+    st.dataframe(df_results_DF_PRED_sans_parametres)
+    
+
 if selected == 'Outil Prédictif':    
     #code python SANS DURATION
     dff_TEST = df.copy()
