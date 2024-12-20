@@ -1646,7 +1646,8 @@ if selected == "Modélisation":
 
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
             shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
-
+            st.write(shap_values_RF_carolle.shape)
+            
             fig = plt.figure()
             shap.summary_plot(shap_values_RF_carolle[:,:,1], X_test)  
             st.pyplot(fig)
