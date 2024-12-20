@@ -2476,7 +2476,7 @@ if selected == "TEST PRED SCORES":
     model_XGBOOST_1_SD = joblib.load(filename_2)
 
     # Prédictions sur les données test
-    y_pred_2 = model_XGBOOST_2.predict(X_test_o)
+    y_pred_2 = model_XGBOOST_1_SD.predict(X_test_o)
 
     # Calcul des métriques pour chaque classe
     report_2 = classification_report(y_test_o, y_pred_2, target_names=["Classe 0", "Classe 1"], output_dict=True)
