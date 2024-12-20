@@ -1923,57 +1923,206 @@ if selected == 'Interprétation':
             st.write("blablabla")
             
     if page == pages[1] : 
-        st.subheader("Interpréation SHAP sans la colonne Duration")
-        submenu_interpretation_2 = st.selectbox("Menu", ("Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"))
+    #SHAP
+    #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+    #Chargement du modèle XGBOOST_1 déjà enregistré
+    #filename_XGBOOST_1 = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
+    #model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_1)
+
+    #Chargement des données pour shap 
+    #data_to_explain_XGBOOST_1 = X_test_sd  # Remplacez par vos données
+
+    #Création de l'explainer SHAP pour XGBOOST_1
+    #explainer_XGBOOST_1 = shap.TreeExplainer(model_XGBOOST_1_model_SD_TOP_4_hyperparam)
+
+    #Calcul des shap values
+    #shap_values_XGBOOST_1 = explainer_XGBOOST_1(data_to_explain_XGBOOST_1)
+
+    #Sauvegarder des shap values avec joblib
+    #joblib.dump(shap_values_XGBOOST_1, "shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+
+    #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+    shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+
+        st.subheader("Interprétation du modèle XGBOOST sans la colonne Duration")
+        st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
+
+        submenu_interpretation = st.selectbox("", ("ANALYSE GLOBALE", "ANALYSE DES 5 VARIABLES LES PLUS IMPORTANTES", "TESTS")
+
+        if submenu_interpretation == "ANALYSE GLOBALE" :
+            submenu_global = st.radio("", ("Summary plot", "Bar plot"), horizontal=True)
         
-        if submenu_interpretation_2 == "Summary plot" : 
-            st.subheader("Summary plot")
-            st.write("blablabla")
+            if submenu_global == "Summary plot" :
+                st.subheader("Summary plot")
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
+                st.pyplot(fig)
+                
+            if submenu_global == "Bar plot" :
+                st.subheader("Bar plot")
+                explanation_XGBOOST_1 = shap.Explanation(values=shap_values_XGBOOST_1,
+                                     data=X_test_sd.values, # Assumant que  X_test est un DataFrame
+                                     feature_names=X_test_sd.columns)
+                shap.plots.bar(explanation_XGBOOST_1)
+            
+                ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
+    
+                #Étape 1 : Créer une liste des termes à exclure
+                terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
+    
+                #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
+                filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
+    
+                #Étape 3 : Identifier les indices correspondants dans X_test_sd
+                filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
+                shap_values_filtered_XGBOOST_1 = shap_values_XGBOOST_1[:, filtered_indices]
+    
+                # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
+                explanation_filtered_XGBOOST_1 = shap.Explanation(values=shap_values_filtered_XGBOOST_1,
+                                                data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
+                                                feature_names=filtered_columns)  # Les noms des features
+    
+                ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
+                #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
+                def get_mean_shap_values(column_names, shap_values):
+                    # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
+                    indices = [X_test_sd.columns.get_loc(col) for col in column_names]
+                    values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
+                    return np.mean(np.abs(values), axis=0)
+    
+                # Étape 1 : On identifie les colonnes que l'on recherche
+                month_columns = [col for col in X_test_sd.columns if 'month' in col]
+                weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
+                poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
+                job_columns = [col for col in X_test_sd.columns if 'job' in col]
+                marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
+    
+                # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
+                mean_shap_month = get_mean_shap_values(month_columns, shap_values_XGBOOST_1)
+                mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_XGBOOST_1)
+                mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_XGBOOST_1)
+                mean_shap_job = get_mean_shap_values(job_columns, shap_values_XGBOOST_1)
+                mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_XGBOOST_1)
+    
+                # Étape 3 : On combine les différentes moyennes et on les nomme
+                combined_values_XGBOOST_1 = [np.mean(mean_shap_month),
+                                            np.mean(mean_shap_weekday),
+                                            np.mean(mean_shap_poutcome),
+                                            np.mean(mean_shap_job),
+                                            np.mean(mean_shap_marital)]
+    
+                combined_feature_names_XGBOOST1 = ['Mean SHAP Value for Month Features',
+                                                'Mean SHAP Value for Weekday Features',
+                                                'Mean SHAP Value for Poutcome Features',
+                                                'Mean SHAP Value for Job Features',
+                                                'Mean SHAP Value for Marital Features']
+    
+                # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
+                explanation_combined_XGBOOST_1 = shap.Explanation(values=combined_values_XGBOOST_1,
+                                                                data=np.array([[np.nan]] * len(combined_values_XGBOOST_1)),
+                                                                feature_names=combined_feature_names_XGBOOST1)
+    
+                ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
+    
+                #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
+                num_samples = explanation_filtered_XGBOOST_1.values.shape[0]
+                combined_values_reshaped__XGBOOST_1 = np.repeat(np.array(explanation_combined_XGBOOST_1.values)[:, np.newaxis], num_samples, axis=1).T
+    
+                #Étape 2: On concatenate les 2 explanations
+                combined_values_XGBOOST_1 = np.concatenate([explanation_filtered_XGBOOST_1.values, combined_values_reshaped__XGBOOST_1], axis=1)
+    
+                #Étape 3: On combine le nom des colonnes provenant des 2 explanations
+                combined_feature_names_XGBOOST_1 = (explanation_filtered_XGBOOST_1.feature_names + explanation_combined_XGBOOST_1.feature_names)
+    
+                #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
+                explanation_combined_new_XGBOOST_1 = shap.Explanation(values=combined_values_XGBOOST_1,data=np.array([[np.nan]] * combined_values_XGBOOST_1.shape[0]),feature_names=combined_feature_names_XGBOOST_1)
+    
+                fig = plt.figure(figsize=(10, 6))
+                shap.plots.bar(explanation_combined_new_XGBOOST_1, max_display=len(explanation_combined_new_XGBOOST_1.feature_names))
+                st.pyplot(fig)
+                
+                st.subheader("Choix des 5 variables les plus importantes")
+                st.write("1. HOUSING : détention ou non d’un prêt immobilier")
+                st.write("2. ÂGE")
+                st.write("3. BALANCE : solde bancaire du client")
+                st.write("4. PREVIOUS : nombre de contacts effectués avant la campagne avec le client")
+                st.write("5. CAMPAIGN : nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
+                
 
-            st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
-            #SHAP
-            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
-            #Chargement du modèle XGBOOST_1 déjà enregistré
-            #filename_XGBOOST_1 = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
-            #model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_1)
+        if submenu_interpretation == "ANALYSE DES 6 VARIABLES LES PLUS IMPORTANTES" :
+            submenu_local = st.radio("", ("HOUSING", "ÂGE", "BALANCE", "PREVIOUS", "CAMPAIGN", "EDUCATION"), horizontal=True)
+            
+            if submenu_local == "HOUSING" :
+                st.title("HOUSING : POIDS +0.27")
+                st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
+                st.write("Summary plot :")
 
-            #Chargement des données pour shap 
-            #data_to_explain_XGBOOST_1 = X_test_sd  # Remplacez par vos données
+                #GRAPHIQUE SUMMARY PLOT
 
-            #Création de l'explainer SHAP pour XGBOOST_1
-            #explainer_XGBOOST_1 = shap.TreeExplainer(model_XGBOOST_1_model_SD_TOP_4_hyperparam)
+                st.write("blabla")
 
-            #Calcul des shap values
-            #shap_values_XGBOOST_1 = explainer_XGBOOST_1(data_to_explain_XGBOOST_1)
+            if submenu_local == "ÂGE" :
+                st.title("HOUSING : POIDS +0.25")
+                st.subheader("IMPACT POSITIF DES TRANCHES D’ÂGES BASSES OU ÉLEVÉES")
+                st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
+                st.write("Summary plot :")
+                #GRAPHIQUE SUMMARY PLOT
 
-            #Sauvegarder des shap values avec joblib
-            #joblib.dump(shap_values_XGBOOST_1, "shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
+                st.write("blabla")         
 
+                st.write("Dependence plot :")
+                #GRAPHIQUE DEPENDENCE PLOT
+                
+                st.write("blabla")              
+
+            if submenu_local == "BALANCE" :
+                st.title("BALANCE : POIDS +0.20")
+                st.subheader("IMPACT POSITIF DE BALANCE SUR LA CLASSE 1")
+                st.write("Summary plot :")
+                #GRAPHIQUE SUMMARY PLOT
+
+                st.write("blabla")         
+
+                #GRAPHIQUE DEPENDENCE PLOT
+                st.write("blabla")         
+
+                st.write("Recherche d'autres dépendances")
+                #GRAPHIQUE DEPENDENCE PLOT 
+                
+                st.write("ICI il faudrait  peut  être que je tente d'afficher balance x jobs, peut être avec 2 colonnes liste déroulante > dependence plot")
+
+
+            if submenu_local == "PREVIOUS" :
+                st.title("PREVIOUS : POIDS +0.14")
+                st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
+                st.write("Summary plot :")
+                #GRAPHIQUE SUMMARY PLOT
+
+                st.write("blabla")         
+
+            if submenu_local == "CAMPAIGN" :
+                st.title("PREVIOUS : POIDS +0.14")
+                st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
+                st.write("Summary plot :")
+                #GRAPHIQUE SUMMARY PLOT
+
+                st.write("blabla")         
+
+            if submenu_local == "EDUCATION" :
+                st.title("PREVIOUS : POIDS +0.14")
+                st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
+                st.write("Summary plot :")
+                #GRAPHIQUE SUMMARY PLOT
+
+                st.write("blabla")         
+
+            
+        
+        if submenu_interpretation == "TESTS" :
+
+            st.subheader("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl")           
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
-
-            fig = plt.figure()
-            shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
-            st.pyplot(fig)
-
-            st.write("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl")           
-            #SHAP
-            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
-            #Chargement du modèle XGBOOST_2 déjà enregistré
-            #filename_XGBOOST_2 = "XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"
-            #model_XGBOOST_2_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_2)
-
-            #Chargement des données pour shap 
-            #data_to_explain_XGBOOST_2 = X_test_sd  # Remplacez par vos données
-
-            #Création de l'explainer SHAP pour XGBOOST_2
-            #explainer_XGBOOST_2 = shap.TreeExplainer(model_XGBOOST_2_model_SD_TOP_4_hyperparam)
-
-            #Calcul des shap values
-            #shap_values_XGBOOST_2 = explainer_XGBOOST_2(data_to_explain_XGBOOST_2)
-
-            #Sauvegarder des shap values avec joblib
-            #joblib.dump(shap_values_XGBOOST_2, "shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
+            shap_values_XGBOOST_2 = joblib.load("dilenesantos/shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
 
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
             shap_values_XGBOOST_2 = joblib.load("dilenesantos/shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
@@ -1981,131 +2130,6 @@ if selected == 'Interprétation':
             fig = plt.figure()
             shap.summary_plot(shap_values_XGBOOST_2, X_test_sd)  
             st.pyplot(fig)
-            
-            st.write("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl")           
-            #SHAP
-            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
-            #Chargement du modèle XGBOOST_3 déjà enregistré
-            #filename_XGBOOST_3 = "XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"
-            #model_XGBOOST_3_model_SD_TOP_4_hyperparam = joblib.load(filename_XGBOOST_3)
-
-            #Chargement des données pour shap 
-            #data_to_explain_XGBOOST_3 = X_test_sd  # Remplacez par vos données
-
-            #Création de l'explainer SHAP pour XGBOOST_3
-            #explainer_XGBOOST_3 = shap.TreeExplainer(model_XGBOOST_3_model_SD_TOP_4_hyperparam)
-
-            #Calcul des shap values
-            #shap_values_XGBOOST_3 = explainer_XGBOOST_3(data_to_explain_XGBOOST_3)
-
-            #Sauvegarder des shap values avec joblib
-            #joblib.dump(shap_values_XGBOOST_3, "shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
-
-            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_3 = joblib.load("dilenesantos/shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
-
-            fig = plt.figure()
-            shap.summary_plot(shap_values_XGBOOST_3, X_test_sd)  
-            st.pyplot(fig)
-            
-                     
-         
-        if submenu_interpretation_2 == "Bar plot poids des variables" : 
-            st.subheader("Poids des variables dans le modèle")
-            st.write("blablabla")
-
-            st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
-            
-            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
-            
-        
-            explanation_XGBOOST_1 = shap.Explanation(values=shap_values_XGBOOST_1,
-                                 data=X_test_sd.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test_sd.columns)
-            shap.plots.bar(explanation_XGBOOST_1)
-            
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test_sd.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test_sd.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered_XGBOOST_1 = shap_values_XGBOOST_1[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered_XGBOOST_1 = shap.Explanation(values=shap_values_filtered_XGBOOST_1,
-                                            data=X_test_sd.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values):
-                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
-                indices = [X_test_sd.columns.get_loc(col) for col in column_names]
-                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
-                return np.mean(np.abs(values), axis=0)
-
-            # Étape 1 : On identifie les colonnes que l'on recherche
-            month_columns = [col for col in X_test_sd.columns if 'month' in col]
-            weekday_columns = [col for col in X_test_sd.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test_sd.columns if 'job' in col]
-            marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
-
-            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_XGBOOST_1)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_XGBOOST_1)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_XGBOOST_1)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_XGBOOST_1)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_XGBOOST_1)
-
-            # Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values_XGBOOST_1 = [np.mean(mean_shap_month),
-                                        np.mean(mean_shap_weekday),
-                                        np.mean(mean_shap_poutcome),
-                                        np.mean(mean_shap_job),
-                                        np.mean(mean_shap_marital)]
-
-            combined_feature_names_XGBOOST1 = ['Mean SHAP Value for Month Features',
-                                            'Mean SHAP Value for Weekday Features',
-                                            'Mean SHAP Value for Poutcome Features',
-                                            'Mean SHAP Value for Job Features',
-                                            'Mean SHAP Value for Marital Features']
-
-            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
-            explanation_combined_XGBOOST_1 = shap.Explanation(values=combined_values_XGBOOST_1,
-                                                            data=np.array([[np.nan]] * len(combined_values_XGBOOST_1)),
-                                                            feature_names=combined_feature_names_XGBOOST1)
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered_XGBOOST_1.values.shape[0]
-            combined_values_reshaped__XGBOOST_1 = np.repeat(np.array(explanation_combined_XGBOOST_1.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values_XGBOOST_1 = np.concatenate([explanation_filtered_XGBOOST_1.values, combined_values_reshaped__XGBOOST_1], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names_XGBOOST_1 = (explanation_filtered_XGBOOST_1.feature_names + explanation_combined_XGBOOST_1.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new_XGBOOST_1 = shap.Explanation(values=combined_values_XGBOOST_1,data=np.array([[np.nan]] * combined_values_XGBOOST_1.shape[0]),feature_names=combined_feature_names_XGBOOST_1)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new_XGBOOST_1, max_display=len(explanation_combined_new_XGBOOST_1.feature_names))
-            st.pyplot(fig)
-
-            st.write("XGBOOST_2_model_SD_TOP_4_hyperparam.pkl")           
-            
-            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_XGBOOST_2 = joblib.load("dilenesantos/shap_values_XGBOOST_2_SD_TOP_4_hyperparam.pkl")
-            
         
             explanation_XGBOOST_2 = shap.Explanation(values=shap_values_XGBOOST_2,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
@@ -2187,12 +2211,15 @@ if selected == 'Interprétation':
             fig = plt.figure(figsize=(10, 6))
             shap.plots.bar(explanation_combined_new_XGBOOST_2, max_display=len(explanation_combined_new_XGBOOST_2.feature_names))
             st.pyplot(fig)
-
-            st.write("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl")           
+        
             
+            st.subheader("XGBOOST_3_model_SD_TOP_4_hyperparam.pkl")           
             #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
             shap_values_XGBOOST_3 = joblib.load("dilenesantos/shap_values_XGBOOST_3_SD_TOP_4_hyperparam.pkl")
-            
+
+            fig = plt.figure()
+            shap.summary_plot(shap_values_XGBOOST_3, X_test_sd)  
+            st.pyplot(fig)    
         
             explanation_XGBOOST_3 = shap.Explanation(values=shap_values_XGBOOST_3,
                                  data=X_test_sd.values, # Assumant que  X_test est un DataFrame
@@ -2274,17 +2301,8 @@ if selected == 'Interprétation':
             fig = plt.figure(figsize=(10, 6))
             shap.plots.bar(explanation_combined_new_XGBOOST_3, max_display=len(explanation_combined_new_XGBOOST_3.feature_names))
             st.pyplot(fig)
-            
-        if submenu_interpretation_2 == "Analyses des variables catégorielles" : 
-            st.subheader("Zoom sur les variables catégorielles")
-            st.write("blablabla")
 
-        if submenu_interpretation_2 == "Dependence plots" : 
-            st.subheader("Dépendences plots & Analyses")
-            st.write("blablabla")
            
-
-
 
 if selected == "TEST PRED SCORES": 
         
