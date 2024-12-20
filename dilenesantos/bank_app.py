@@ -1662,7 +1662,7 @@ if selected == "Modélisation":
             #FATOUMATA J'AI DONC VIRER LES 2 CODES PRÉCÉDENTS POUR NE GARDER QUE CELUI-CI QUI COMBINE LES 2 QUE J'AI RETIRÉ
             shap_values = shap_values_RF_carolle
 
-            
+
             
             # Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
             def get_mean_shap_values(column_names, shap_values, X_test, class_index=1):
@@ -1684,7 +1684,7 @@ if selected == "Modélisation":
                 
                 # Vérification de la forme des valeurs SHAP
                 print(f"Shape of SHAP values for {column_names}: {values.shape}")
-                if values.size == 0:
+                if values is None or values.size == 0:
                     print(f"No SHAP values found for columns {column_names}")
                     return np.nan  # Retourner NaN si aucune valeur n'est trouvée
                 
@@ -1753,7 +1753,9 @@ if selected == "Modélisation":
             # Étape 5 : Générer le graphique à barres avec toutes les valeurs
             fig = plt.figure()
             shap.plots.bar(explanation_combined)
-            st.pyplot(fig) 
+            st.pyplot(fig)      
+
+
 
             #fig = plt.figure()
             #shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
