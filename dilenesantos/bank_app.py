@@ -1625,6 +1625,39 @@ if selected == "Modélisation":
             table_rf = pd.crosstab(y_test, y_pred, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_rf)
 
+            st.write("PARTIE SHAP SUR MODÈLE SÉLECTIONNÉ")
+            #SHAP
+            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+            #Chargement du modèle XGBOOST_1 déjà enregistré
+            #filename_RF_carolle = "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl"
+            #model_RF_carolle_model_AD_TOP_3_hyperparam_TEAM = joblib.load(filename_RF_carolle)
+
+            #Chargement des données pour shap 
+            #data_to_explain_RF_carolle = X_test  
+
+            #Création de l'explainer SHAP pour XGBOOST_1
+            #explainer_RF_carolle = shap.TreeExplainer(model_RF_carolle_model_AD_TOP_3_hyperparam_TEAM)
+
+            #Calcul des shap values
+            #shap_values_RF_carolle = explainer_RF_carolle(data_to_explain_RF_carolle)
+
+            #Sauvegarder des shap values avec joblib
+            #joblib.dump(shap_values_RF_carolle, "shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
+
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
+
+            fig = plt.figure()
+            shap.summary_plot(shap_values_RF_carolle[:,:,1], X_test)  
+            st.pyplot(fig)
+            
+            fig = plt.figure()
+            explanation_RF_carolle = shap.Explanation(values=shap_values_RF_carolle,
+                                 data=X_test.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test.columns)
+            shap.plots.bar(explanation_RF_carolle[:,:,1])
+            st.pyplot(fig)
+
 
     if page == pages[2] :
         #SANS DURATION
