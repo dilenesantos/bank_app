@@ -1662,23 +1662,30 @@ if selected == "Modélisation":
             #FATOUMATA J'AI DONC VIRER LES 2 CODES PRÉCÉDENTS POUR NE GARDER QUE CELUI-CI QUI COMBINE LES 2 QUE J'AI RETIRÉ
             shap_values = shap_values_RF_carolle
             
-
+    
             
             # Fonction pour obtenir les moyennes SHAP
             def get_mean_shap_values(shap_values, X_test, terms_to_include=['month', 'weekday', 'job', 'poutcome', 'marital'], class_index=1):
                 # Étape 1 : Sélectionner les colonnes contenant les termes spécifiés
                 column_names = [col for col in X_test.columns if any(term in col for term in terms_to_include)]
+                print(f"Colonnes sélectionnées: {column_names}")  # Débogage : afficher les colonnes sélectionnées
                 
                 # Étape 2 : Obtenir les indices des colonnes correspondantes dans X_test
                 indices = [X_test.columns.get_loc(col) for col in column_names]
+                print(f"Indices des colonnes: {indices}")  # Débogage : afficher les indices des colonnes
                 
                 # Étape 3 : Extraire les valeurs SHAP pour la classe spécifiée (class_index)
                 values = shap_values[:, indices, class_index]
+                print(f"Valeurs SHAP extraites: {values}")  # Débogage : afficher les valeurs SHAP extraites
                 
                 # Vérification des valeurs SHAP extraites
-                if values is None or values.size == 0:
-                    print("Erreur: Aucune valeur SHAP disponible pour les colonnes.")
-                    return np.zeros(len(column_names))  # Retourne un tableau de zéros si aucune valeur SHAP n'est présente
+                if values is None:
+                    print("Erreur: Aucune valeur SHAP disponible pour ces colonnes.")
+                    return np.zeros(len(column_names))  # Retourner un tableau de zéros si aucune valeur SHAP n'est présente
+                
+                if values.size == 0:
+                    print("Erreur: Les valeurs SHAP extraites sont vides.")
+                    return np.zeros(len(column_names))  # Retourner un tableau de zéros si les valeurs SHAP sont vides
                 
                 # Retourner la moyenne absolue des valeurs SHAP pour chaque colonne
                 return np.mean(np.abs(values), axis=0)
@@ -1711,7 +1718,8 @@ if selected == "Modélisation":
                 plt.show()
             except Exception as e:
                 print("Erreur lors de la génération du graphique:", e)
-
+            
+                
 
             #fig = plt.figure()
             #shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
