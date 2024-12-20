@@ -1662,27 +1662,6 @@ if selected == "Modélisation":
             #FATOUMATA J'AI DONC VIRER LES 2 CODES PRÉCÉDENTS POUR NE GARDER QUE CELUI-CI QUI COMBINE LES 2 QUE J'AI RETIRÉ
             shap_values = shap_values_RF_carolle
 
-            # Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-            
-            # Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test.columns if not any(term in col for term in terms_to_exclude)]
-            
-            # Étape 3 : Identifier les indices correspondants dans X_train
-            filtered_indices = [X_test.columns.get_loc(col) for col in filtered_columns]
-            
-            # Filtrer les valeurs SHAP pour la classe "Deposit Yes" (index 1)
-            shap_values_filtered = shap_values[:, filtered_indices, 1]  # Garder les dimensions (n_samples, n_filtered_features)
-            
-            # Étape 4 : Créer le nouvel objet Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-            
-            # Étape 5 : Générer le graphique à barres
-            fig = plt.figure()
-            shap.plots.bar(explanation_filtered)
-            st.pyplot(fig) 
 
             
             # Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
@@ -1705,7 +1684,11 @@ if selected == "Modélisation":
                     return np.nan  # Retourner NaN en cas d'erreur
                 
                 # Vérification de l'extraction des valeurs
-                if values is None or values.size == 0:
+                if not isinstance(values, np.ndarray):
+                    print(f"Unexpected type for SHAP values: {type(values)}")
+                    return np.nan  # Retourner NaN si les valeurs ne sont pas un tableau NumPy
+                
+                if values.size == 0:
                     print(f"No SHAP values found for columns {column_names}")
                     return np.nan  # Retourner NaN si aucune valeur n'est trouvée
                 
@@ -1758,8 +1741,7 @@ if selected == "Modélisation":
             )
             
             # Étape 5 : Générer le graphique à barres avec toutes les valeurs
-            fig = plt.figure()
-            shap.plots.bar(explanation_combined)
+            fig = plt.figure()shap.plots.bar(explanation_combined)
             st.pyplot(fig)  
 
 
