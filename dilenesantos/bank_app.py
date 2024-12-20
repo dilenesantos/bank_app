@@ -2618,27 +2618,9 @@ if selected == 'Outil Prédictif':
         st.dataframe(X_train_o)             
         
         st.title("SCORES DE CERTAINS MODÈLES SUR LE DATAFRAME FILTRE 4 COLONNES AGE EDUCATION BALANCE HOUSING PREVIOUS")
-        st.write("Random Forest")
-        st.write("Le modèle Random Forest avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-        st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
-                    
-        st.write("Affichons le rapport de classification de ce modèle")
-        rf_best = RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)
-        rf_best.fit(X_train_o, y_train_o)
-        score_train = rf_best.score(X_train_o, y_train_o)
-        score_test = rf_best.score(X_test_o, y_test_o)
-        y_pred = rf_best.predict(X_test_o)
-        table_rf = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-        st.dataframe(table_rf)
-        st.write("Classification report :")
-        report_dict = classification_report(y_test_o, y_pred, output_dict=True)
-        # Convertir le dictionnaire en DataFrame
-        report_df = pd.DataFrame(report_dict).T
-        st.dataframe(report_df)
-
                         
-        st.subheader("XGBOOST")
-        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.subheader("XGBOOST_1")
+        st.write("Le modèle XGBOOST_1 avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
         st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
         st.write("Affichons le rapport de classification de ce modèle")
         xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)            
@@ -2655,8 +2637,25 @@ if selected == 'Outil Prédictif':
         st.dataframe(report_df_xgboost)
                 
 
-        st.subheader("Modèle XGBOOST 2")
-        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.subheader("Modèle XGBOOST_2")
+        st.write("Le modèle XGBOOST_2 avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+        st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)")
+        st.write("Affichons le rapport de classification de ce modèle")
+        xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)           
+        xgboost_best.fit(X_train_o, y_train_o)
+        score_train = xgboost_best.score(X_train_o, y_train_o)
+        score_test = xgboost_best.score(X_test_o, y_test_o)
+        y_pred = xgboost_best.predict(X_test_o)
+        table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
+        st.dataframe(table_xgboost)
+        st.write("Classification report :")
+        report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
+        # Convertir le dictionnaire en DataFrame
+        report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
+        st.dataframe(report_df_xgboost)                 
+
+        st.subheader("Modèle XGBOOST_3")
+        st.write("Le modèle XGBOOST_3 avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
         st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
         st.write("Affichons le rapport de classification de ce modèle")
         xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)            
@@ -2670,43 +2669,7 @@ if selected == 'Outil Prédictif':
         report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
         # Convertir le dictionnaire en DataFrame
         report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-        st.dataframe(report_df_xgboost)                 
-
-
-        st.subheader("RECHERCHE PARAMÈTRES XGBOOST 1")
-        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-        st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
-        st.write("Affichons le rapport de classification de ce modèle")
-        xgboost_best = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=1.46, subsample=0.99, random_state=42)            
-        xgboost_best.fit(X_train_o, y_train_o)
-        score_train = xgboost_best.score(X_train_o, y_train_o)
-        score_test = xgboost_best.score(X_test_o, y_test_o)
-        y_pred = xgboost_best.predict(X_test_o)
-        table_xgboost = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-        st.dataframe(table_xgboost)
-        st.write("Classification report :")
-        report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
-        # Convertir le dictionnaire en DataFrame
-        report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-        st.dataframe(report_df_xgboost)                
-
-
-        st.subheader("RECHERCHE PARAMÈTRES XGBOOST 2")
-        st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-        st.write("autre test= XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
-        st.write("Affichons le rapport de classification de ce modèle")
-        xgboost_best_def = XGBClassifier(gamma=0.2,colsample_bytree=0.43, learning_rate=0.27, max_depth=6,  n_estimators=20, reg_alpha=3.2, reg_lambda=3.7, subsample=0.8, random_state=42)            
-        xgboost_best_def.fit(X_train_o, y_train_o)
-        score_train = xgboost_best_def.score(X_train_o, y_train_o)
-        score_test = xgboost_best_def.score(X_test_o, y_test_o)
-        y_pred = xgboost_best_def.predict(X_test_o)
-        table_xgboost_best_def = pd.crosstab(y_test_o,y_pred, rownames=['Realité'], colnames=['Prédiction'])
-        st.dataframe(table_xgboost_best_def)
-        st.write("Classification report :")
-        report_dict_xgboost = classification_report(y_test_o, y_pred, output_dict=True)
-        # Convertir le dictionnaire en DataFrame
-        report_df_xgboost = pd.DataFrame(report_dict_xgboost).T
-        st.dataframe(report_df_xgboost) 
+        st.dataframe(report_df_xgboost)   
 
 
         st.title("Scores modèles sans param sur PRED DF avec joblib test")
