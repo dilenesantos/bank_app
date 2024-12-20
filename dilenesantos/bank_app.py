@@ -2185,6 +2185,7 @@ if selected == "TEST PRED SCORES":
     st.header("Structure du nouveau dataframe") 
     st.write("Explications pourquoi utiliser ce dataframe avec uniquement les colonnes AGE / BALANCE / HOUSING / EDUCATION / PREVIOUS")
     st.write("BALBLABLA")
+    st.dataframe(dff_TEST)
 
 
     st.subheader("Scores sans paramètres") 
