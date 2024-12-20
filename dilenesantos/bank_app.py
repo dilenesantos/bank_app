@@ -2108,8 +2108,8 @@ if selected == 'Interprétation':
                 st.write("blabla")         
 
             if submenu_local == "EDUCATION" :
-                st.title("PREVIOUS : POIDS +0.14")
-                st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
+                st.title("EDUCATION : POIDS +0.09")
+                st.subheader("IMPACT POSITIF OU NÉGATIF DE ÉDUCATION SUR LA CLASSE 1 ????")
                 st.write("Summary plot :")
                 #GRAPHIQUE SUMMARY PLOT
 
