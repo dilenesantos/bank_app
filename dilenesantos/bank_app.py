@@ -1662,7 +1662,6 @@ if selected == "Modélisation":
             #FATOUMATA J'AI DONC VIRER LES 2 CODES PRÉCÉDENTS POUR NE GARDER QUE CELUI-CI QUI COMBINE LES 2 QUE J'AI RETIRÉ
             shap_values = shap_values_RF_carolle
 
-
             
             # Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
             def get_mean_shap_values(column_names, shap_values, X_test, class_index=1):
@@ -1678,7 +1677,7 @@ if selected == "Modélisation":
                 try:
                     # Accéder aux valeurs SHAP pour ces indices et pour la classe spécifiée (classe 1)
                     values = shap_values[:, indices, class_index]  # On accède à la classe spécifiée (par défaut 1)
-                    print(f"Values shape (class {class_index}): {values.shape}")
+                    print(f"Values for {column_names}: {values.shape}")
                 except IndexError as e:
                     print(f"Error accessing SHAP values: {e}")
                     return np.nan  # Retourner NaN en cas d'erreur
@@ -1691,6 +1690,9 @@ if selected == "Modélisation":
                 if values.size == 0:
                     print(f"No SHAP values found for columns {column_names}")
                     return np.nan  # Retourner NaN si aucune valeur n'est trouvée
+                
+                # Imprimer les premières valeurs pour vérifier
+                print(f"Sample SHAP values for {column_names}: {values[:5]}")  # Afficher les 5 premières valeurs pour déboguer
                 
                 # Calculer la moyenne des valeurs SHAP absolues
                 return np.mean(np.abs(values), axis=0)
@@ -1725,6 +1727,9 @@ if selected == "Modélisation":
                 np.mean(mean_shap_marital) if isinstance(mean_shap_marital, np.ndarray) else np.nan
             ]
             
+            # Vérification des valeurs combinées
+            print(f"Combined values for SHAP means: {combined_values}")
+            
             combined_feature_names = [
                 'Mean SHAP Value for Month Features',
                 'Mean SHAP Value for Weekday Features',
@@ -1744,7 +1749,6 @@ if selected == "Modélisation":
             fig = plt.figure()
             shap.plots.bar(explanation_combined)
             st.pyplot(fig)  
-
 
             #fig = plt.figure()
             #shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
