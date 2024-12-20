@@ -1732,10 +1732,84 @@ if selected == "Modélisation":
             fig = plt.figure()
             shap.plots.bar(explanation_combined)
             st.pyplot(fig)
-        
+
+
+            # Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
+            def get_mean_shap_values(column_names, shap_values, X_test, class_index=1):
+                # Vérification des colonnes et indices
+                indices = [X_test.columns.get_loc(col) for col in column_names]
+                print(f"Indices for columns {column_names}: {indices}")
+                
+                # Accéder aux valeurs SHAP pour ces indices et pour la classe spécifiée (classe 1)
+                try:
+                    values = shap_values[:, indices, class_index]  # On accède à la classe spécifiée (par défaut 1)
+                    print(f"Values shape (class {class_index}): {values.shape}")
+                except IndexError as e:
+                    print(f"Error accessing SHAP values: {e}")
+                    return np.nan  # Retourner NaN en cas d'erreur
+                
+                # Vérification de l'extraction des valeurs
+                if values.size == 0:
+                    print(f"No SHAP values found for columns {column_names}")
+                    return np.nan  # Retourner NaN si aucune valeur n'est trouvée
+                
+                # Calculer la moyenne des valeurs SHAP absolues
+                return np.mean(np.abs(values), axis=0)
+            
+            # Étape 1 : Trouver les colonnes de chaque groupe
+            month_columns = [col for col in X_test.columns if 'month' in col]
+            weekday_columns = [col for col in X_test.columns if 'weekday' in col]
+            poutcome_columns = [col for col in X_test.columns if 'poutcome' in col]
+            job_columns = [col for col in X_test.columns if 'job' in col]
+            marital_columns = [col for col in X_test.columns if 'marital' in col]
+            
+            # Étape 2 : Calculer les moyennes des valeurs SHAP absolues pour la classe 1
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values, X_test, class_index=1)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values, X_test, class_index=1)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values, X_test, class_index=1)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values, X_test, class_index=1)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values, X_test, class_index=1)
+            
+            # Vérification des résultats calculés
+            print(f"Mean SHAP for month: {mean_shap_month}")
+            print(f"Mean SHAP for weekday: {mean_shap_weekday}")
+            print(f"Mean SHAP for poutcome: {mean_shap_poutcome}")
+            print(f"Mean SHAP for job: {mean_shap_job}")
+            print(f"Mean SHAP for marital: {mean_shap_marital}")
+            
+            # Étape 3 : Établir une liste des moyennes combinées et leurs noms
+            combined_values = [
+                np.mean(mean_shap_month) if isinstance(mean_shap_month, np.ndarray) else np.nan,
+                np.mean(mean_shap_weekday) if isinstance(mean_shap_weekday, np.ndarray) else np.nan,
+                np.mean(mean_shap_poutcome) if isinstance(mean_shap_poutcome, np.ndarray) else np.nan,
+                np.mean(mean_shap_job) if isinstance(mean_shap_job, np.ndarray) else np.nan,
+                np.mean(mean_shap_marital) if isinstance(mean_shap_marital, np.ndarray) else np.nan
+            ]
+            
+            combined_feature_names = [
+                'Mean SHAP Value for Month Features',
+                'Mean SHAP Value for Weekday Features',
+                'Mean SHAP Value for Poutcome Features',
+                'Mean SHAP Value for Job Features',
+                'Mean SHAP Value for Marital Features'
+            ]
+            
+            # Étape 4 : Créer un nouvel objet Explanation avec les valeurs combinées
+            explanation_combined = shap.Explanation(
+                values=combined_values,
+                data=np.array([[np.nan]] * len(combined_values)),  # Création d'un tableau avec 5 lignes et 1 colonne
+                feature_names=combined_feature_names
+            )
+            
+            # Étape 5 : Générer le graphique à barres avec toutes les valeurs
+            fig = plt.figure()
+            shap.plots.bar(explanation_combined)
+            st.pyplot(fig)
+
             #fig = plt.figure()
             #shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
             #st.pyplot(fig)                   
+
 
 
     if page == pages[2] :
