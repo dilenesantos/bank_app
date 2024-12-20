@@ -1741,7 +1741,8 @@ if selected == "Modélisation":
             )
             
             # Étape 5 : Générer le graphique à barres avec toutes les valeurs
-            fig = plt.figure()shap.plots.bar(explanation_combined)
+            fig = plt.figure()
+            shap.plots.bar(explanation_combined)
             st.pyplot(fig)  
 
 
