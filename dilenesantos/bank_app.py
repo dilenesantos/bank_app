@@ -2302,7 +2302,72 @@ if selected == "TEST PRED SCORES":
 
     st.subheader("Scores avec paramètres") 
     st.write("À faire via VS code pour sauvegarde - fichier bank_copie")
+    #RÉSULTATS DES MODÈLES AVEC PARAMÈTRES
+    #COMME ON A ENREGISTRÉ LES MODÈLES, VOICI LE NOUVEAU CODE À UTILISER : 
+    # Liste des modèles enregistrés et leurs fichiers correspondants
+    model_files_pred_param = {
+        "RF_dounia": "dilenesantos/RF_dounia_model_PRED_AVEC_parametres.pkl",
+        "RF_fatou": "dilenesantos/RF_fatou_model_PRED_AVEC_parametres.pkl",
+        "RF_carolle": "dilenesantos/RF_carolle_model_PRED_AVEC_parametres.pkl",
+        "SVM_dounia": "dilenesantos/SVM_dounia_model_PRED_AVEC_parametres.pkl",
+        "SVM_dilene": "dilenesantos/SVM_dilene_model_PRED_AVEC_parametres.pkl",
+        "SVM_fatou": "dilenesantos/SVM_fatou_model_PRED_AVEC_parametres.pkl",
+        "SVM_carolle": "dilenesantos/SVM_carolle_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_dounia": "dilenesantos/XGBOOST_dounia_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_dilene": "dilenesantos/XGBOOST_dilene_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_carolle": "dilenesantos/XGBOOST_carolle_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_fatou": "dilenesantos/XGBOOST_fatou_model_PRED_AVEC_parametres.pkl",
+        
+        "Random Forest GridSearch2": "dilenesantos/Random_Forest_GridSearch2_model_PRED_AVEC_parametres.pkl",
+        "SVM GridSearch2": "dilenesantos/SVM_GridSearch2_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST GridSearch2": "dilenesantos/XGBOOST_GridSearch2_model_PRED_AVEC_parametres.pkl",
 
+        "Random Forest SD": "dilenesantos/Random_Forest_SD_model_PRED_AVEC_parametres.pkl",
+        "Decision Tree SD": "dilenesantos/Decision_Tree_SD_model_PRED_AVEC_parametres.pkl",
+        "SVM SD" : "dilenesantos/SVM_SD_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_1 SD" : "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_2 SD" : "dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_3 SD" : "dilenesantos/XGBOOST_3_SD_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST_TESTDIL SD" : "dilenesantos/XGBOOST_TESTDIL_SD_model_PRED_AVEC_parametres.pkl"
+
+    }
+
+    # Résultats des modèles
+    results_DF_PRED_avec_parametres = {}
+
+    # Boucle pour charger les modèles et calculer les métriques
+    for name, file_path in model_files_pred_param.items():
+        # Charger le modèle sauvegardé
+        trained_clf = joblib.load(file_path)
+        
+        # Faire des prédictions
+        y_pred = trained_clf.predict(X_test_o)
+
+        # Calculer les métriques
+        accuracy = accuracy_score(y_test_o, y_pred)
+        f1 = f1_score(y_test_o, y_pred)
+        precision = precision_score(y_test_o, y_pred)
+        recall = recall_score(y_test_o, y_pred)
+
+        # Stocker les résultats
+        results_DF_PRED_avec_parametres[name] = {
+            "Accuracy": accuracy,
+            "F1 Score": f1,
+            "Precision": precision,
+            "Recall": recall,
+        }
+
+    #Conversion des résultats en DataFrame
+    df_results_DF_PRED_avec_parametres = pd.DataFrame(results_DF_PRED_avec_parametres).T
+    df_results_DF_PRED_avec_parametres.columns = ['Accuracy', 'F1 Score', 'Precision', 'Recall']
+    df_results_DF_PRED_avec_parametres = df_results_DF_PRED_avec_parametres.sort_values(by="Recall", ascending=False)
+    
+    melted_df_results_DF_PRED_avec_parametres = df_results_DF_PRED_avec_parametres.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
+    melted_df_results_DF_PRED_avec_parametres.rename(columns={"index": "Classifier"}, inplace=True)    
+
+    st.dataframe(df_results_DF_PRED_avec_parametres)
+    
+        
 
 if selected == 'Outil Prédictif':    
     #code python SANS DURATION
