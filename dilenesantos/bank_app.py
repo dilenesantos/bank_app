@@ -1947,7 +1947,7 @@ if selected == 'Interprétation':
         st.subheader("Interprétation du modèle XGBOOST sans la colonne Duration")
         st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
 
-        submenu_interpretation = st.selectbox("", ("ANALYSE GLOBALE", "ANALYSE DES 5 VARIABLES LES PLUS IMPORTANTES", "TESTS")
+        submenu_interpretation = st.selectbox("", ("ANALYSE GLOBALE", "ANALYSE DES 5 VARIABLES LES PLUS IMPORTANTES", "TESTS"))
 
         if submenu_interpretation == "ANALYSE GLOBALE" :
             submenu_global = st.radio("", ("Summary plot", "Bar plot"), horizontal=True)
