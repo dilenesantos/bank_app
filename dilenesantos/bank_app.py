@@ -2181,7 +2181,14 @@ if selected == "TEST PRED SCORES":
     X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
     X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
     
+    st.title("NOUVEAU DATAFRAME DÉDIÉ À L'OUTIL DE PRÉDICTIONS ")
+    st.header("Structure du nouveau dataframe") 
+    st.write("Explications pourquoi utiliser ce dataframe avec uniquement les colonnes AGE / BALANCE / HOUSING / EDUCATION / PREVIOUS")
+    st.write("BALBLABLA")
 
+
+    st.subheader("Scores sans paramètres") 
+    
     #RÉSULTAT DES MODÈLES SANS PARAMÈTRES
  
     #CODE CHARGÉ UNE FOIS POUR SAUVEGARDE DES MODÈLES SUR JOBLIB
@@ -2282,7 +2289,10 @@ if selected == "TEST PRED SCORES":
     melted_df_results_DF_PRED_sans_parametres.rename(columns={"index": "Classifier"}, inplace=True)    
 
     st.dataframe(df_results_DF_PRED_sans_parametres)
-    
+
+    st.subheader("Scores avec paramètres") 
+    st.write("À faire via VS code pour sauvegarde - fichier bank_copie")
+
 
 if selected == 'Outil Prédictif':    
     #code python SANS DURATION
