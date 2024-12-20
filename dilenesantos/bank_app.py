@@ -2303,6 +2303,74 @@ if selected == "TEST PRED SCORES":
     st.subheader("Scores avec paramètres") 
     st.write("À faire via VS code pour sauvegarde - fichier bank_copie")
     #RÉSULTATS DES MODÈLES AVEC PARAMÈTRES
+
+    #CODE CHARGÉ UNE FOIS POUR SAUVEGARDE DES MODÈLES SUR JOBLIB
+    # Initialisation des classifiers
+    #classifiers_pred_df =  classifiers = {
+        #"RF_dounia": RandomForestClassifier(max_depth=None, max_features='log2',min_samples_leaf=2, min_samples_split=2, n_estimators=200, random_state=42),
+        #"RF_dilene": RandomForestClassifier(class_weight='balanced', max_depth=25, max_features='sqrt',min_samples_leaf=1, min_samples_split=15, n_estimators=1500, random_state=42),
+        #"RF_fatou": RandomForestClassifier(max_depth= None,max_features='log2',min_samples_leaf=2,min_samples_split=2,n_estimators=200,random_state=42),
+        #"RF_carolle": RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42),
+        #"SVM_dounia": svm.SVC(C = 1, class_weight = "balanced", gamma = 'scale', kernel = 'rbf', random_state=42),
+        #"SVM_dilene": svm.SVC(C=0.1, class_weight='balanced', gamma=0.1, kernel='rbf', random_state=42),
+        #"SVM_fatou": svm.SVC(kernel='rbf',gamma='scale', C=1, random_state=42),
+        #"SVM_carolle": svm.SVC(C=0.1, class_weight='balanced', gamma='scale', kernel='rbf', random_state=42),
+        #"XGBOOST_dounia": XGBClassifier(colsample_bytree=1.0, learning_rate=0.05,max_depth=7,min_child_weight=1,n_estimators=200,subsample=0.8,random_state=42),
+        #"XGBOOST_dilene": XGBClassifier(base_score=0.3, gamma=14, learning_rate=0.6, max_delta_step=1, max_depth=27,min_child_weight=2, n_estimators=900,random_state=42),
+        #"XGBOOST_carolle": XGBClassifier(colsample_bytree=0.8, gamma=10, max_depth=17,min_child_weight=1,n_estimators=1000, reg_lambda=0.89, random_state=42),
+        #"XGBOOST_fatou": XGBClassifier(colsample_bytree=0.8, gamma= 5, learning_rate= 0.1, max_depth= 5, n_estimators= 100, subsample= 0.8, random_state=42),
+        
+        #"Random Forest GridSearch2": RandomForestClassifier(class_weight= 'balanced', max_depth = None, max_features = 'sqrt', min_samples_leaf= 2, min_samples_split= 15, n_estimators = 200, random_state=42),
+        #"SVM GridSearch2": svm.SVC (C = 1, class_weight = 'balanced', gamma = 'scale', kernel ='rbf', random_state=42),
+        #"XGBOOST GridSearch2": XGBClassifier (colsample_bytree = 0.8, gamma = 5, learning_rate = 0.05, max_depth = 17, min_child_weight = 1, n_estimators = 200, subsample = 0.8, random_state=42),
+
+        #"Random Forest SD": RandomForestClassifier(class_weight='balanced', max_depth=8,  max_features='log2', min_samples_leaf=250, min_samples_split=300, n_estimators=400, random_state=42),
+        #"Decision Tree SD": DecisionTreeClassifier(class_weight='balanced', criterion='entropy', max_depth=5,  max_features=None, min_samples_leaf=100, min_samples_split=2, random_state=42),
+        #"SVM SD" : svm.SVC(C=0.01, class_weight='balanced', gamma='scale', kernel='linear',random_state=42),
+        #"XGBOOST_1 SD" : XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42),
+        #"XGBOOST_2 SD" : XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42),
+        #"XGBOOST_3 SD" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42),
+        #"XGBOOST_TESTDIL SD" : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)
+
+    #}
+
+
+    #Résultats des modèles
+    #results_DF_PRED_avec_parametres = {}
+
+    #Fonction pour entraîner et sauvegarder un modèle
+    #def train_and_save_model_pred(model_name, clf, X_train_o, y_train_o):
+        #filename = f"{model_name.replace(' ', '_')}_model_PRED_AVEC_parametres.pkl"  # Nom du fichier
+        #try:
+            #Charger le modèle si le fichier existe déjà
+            #trained_clf = joblib.load(filename)
+        #except FileNotFoundError:
+            #Entraîner et sauvegarder le modèle
+            #clf.fit(X_train_o, y_train_o)
+            #joblib.dump(clf, filename)
+            #trained_clf = clf
+        #return trained_clf
+
+    #Boucle pour entraîner et charger les modèles
+    #for name, clf in classifiers_pred_df.items():
+        #Entraîner ou charger le modèle
+        #trained_clf = train_and_save_model_pred(name, clf, X_train_o, y_train_o)
+        #y_pred = trained_clf.predict(X_test_o)
+            
+        #Calculer les métriques
+        #accuracy = accuracy_score(y_test_o, y_pred)
+        #f1 = f1_score(y_test_o, y_pred)
+        #precision = precision_score(y_test_o, y_pred)
+        #recall = recall_score(y_test_o, y_pred)
+            
+        #Stocker les résultats
+        #results_DF_PRED_avec_parametres[name] = {
+            #"Accuracy": accuracy,
+            #"F1 Score": f1,
+            #"Precision": precision,
+            #"Recall": recall,
+        #}
+        
     #COMME ON A ENREGISTRÉ LES MODÈLES, VOICI LE NOUVEAU CODE À UTILISER : 
     # Liste des modèles enregistrés et leurs fichiers correspondants
     model_files_pred_param = {
@@ -2367,7 +2435,102 @@ if selected == "TEST PRED SCORES":
 
     st.dataframe(df_results_DF_PRED_avec_parametres)
     
-        
+    st.title("Scores des top 3 modèles") 
+    st.subheader("Modèle top score 1 = XGBOOST_2 SD")
+    st.write("dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl")
+    st.write("XGBOOST_2 SD : XGBClassifier(gamma=0.05,colsample_bytree=0.88, learning_rate=0.39, max_depth=6, min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.8, scale_pos_weight=2.56, subsample=0.99, random_state=42)")
+    # Chargement du modèle enregistré
+    filename_1 = "dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl"
+    model_XGBOOST_2_SD = joblib.load(filename_1)
+
+    # Prédictions sur les données test
+    y_pred_1 = model_XGBOOST_2_SD.predict(X_test_o)
+
+    # Calcul des métriques pour chaque classe
+    report_1 = classification_report(y_test_o, y_pred_1, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+    # Conversion du rapport en DataFrame pour affichage en tableau
+    report_df_1 = pd.DataFrame(report_1).T
+
+    # Arrondi des valeurs à 4 décimales pour un affichage propre
+    report_df_1 = report_df_1.round(4)
+
+    # Suppression des colonnes inutiles si besoin
+    report_df_1 = report_df_1.drop(columns=["support"])
+
+    # Affichage global du rapport sous forme de tableau
+    st.write("Rapport de classification du modèle")
+    st.table(report_df_1)
+
+    # Création de la matrice de confusion sous forme de DataFrame
+    st.write("Matrice de confusion du modèle")
+    table_xgboost_1 = pd.crosstab(y_test_o, y_pred_1, rownames=["Réalité"], colnames=["Prédiction"])
+    st.dataframe(table_xgboost_1)
+
+    
+    st.subheader("Modèle top score 2 = XGBOOST_1 SD")
+    st.write("dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl")
+    st.write("XGBOOST_1 SD : XGBClassifier(gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42)")
+    # Chargement du modèle enregistré
+    filename_2 = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
+    model_XGBOOST_1_SD = joblib.load(filename_2)
+
+    # Prédictions sur les données test
+    y_pred_2 = model_XGBOOST_2.predict(X_test_o)
+
+    # Calcul des métriques pour chaque classe
+    report_2 = classification_report(y_test_o, y_pred_2, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+    # Conversion du rapport en DataFrame pour affichage en tableau
+    report_df_2 = pd.DataFrame(report_2).T
+
+    # Arrondi des valeurs à 4 décimales pour un affichage propre
+    report_df_2 = report_df_2.round(4)
+
+    # Suppression des colonnes inutiles si besoin
+    report_df_2 = report_df_2.drop(columns=["support"])
+
+    # Affichage global du rapport sous forme de tableau
+    st.write("Rapport de classification du modèle")
+    st.table(report_df_2)
+
+    # Création de la matrice de confusion sous forme de DataFrame
+    st.write("Matrice de confusion du modèle")
+    table_xgboost_2 = pd.crosstab(y_test_o, y_pred_2, rownames=["Réalité"], colnames=["Prédiction"])
+    st.dataframe(table_xgboost_2)
+            
+    st.subheader("Modèle top score 3 = XGBOOST_TESTDIL SD")
+    st.write("dilenesantos/XGBOOST_TESTDIL_SD_model_PRED_AVEC_parametres.pkl")
+    st.write("XGBOOST_TESTDIL SD : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
+    # Chargement du modèle enregistré
+    filename_3 = "dilenesantos/XGBOOST_TESTDIL_SD_model_PRED_AVEC_parametres.pkl"
+    model_XGBOOST_TESTDIL_SD = joblib.load(filename_3)
+
+    # Prédictions sur les données test
+    y_pred_3 = model_XGBOOST_TESTDIL_SD.predict(X_test_o)
+
+    # Calcul des métriques pour chaque classe
+    report_3 = classification_report(y_test_o, y_pred_3, target_names=["Classe 0", "Classe 1"], output_dict=True)
+
+    # Conversion du rapport en DataFrame pour affichage en tableau
+    report_df_3 = pd.DataFrame(report_3).T
+
+    # Arrondi des valeurs à 4 décimales pour un affichage propre
+    report_df_3 = report_df_3.round(4)
+
+    # Suppression des colonnes inutiles si besoin
+    report_df_3 = report_df_3.drop(columns=["support"])
+
+    # Affichage global du rapport sous forme de tableau
+    st.write("Rapport de classification du modèle")
+    st.table(report_df_3)
+
+    # Création de la matrice de confusion sous forme de DataFrame
+    st.write("Matrice de confusion du modèle")
+    table_xgboost_3 = pd.crosstab(y_test_o, y_pred_3, rownames=["Réalité"], colnames=["Prédiction"])
+    st.dataframe(table_xgboost_3)
+            
+
 
 if selected == 'Outil Prédictif':    
     #code python SANS DURATION
