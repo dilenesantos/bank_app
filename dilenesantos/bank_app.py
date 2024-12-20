@@ -1664,42 +1664,33 @@ if selected == "Modélisation":
             
 
             
-            # Fonction pour vérifier les valeurs SHAP
-            def get_mean_shap_values(column_names, shap_values, X_test, class_index=1):
+            # Fonction pour obtenir les moyennes SHAP
+            def get_mean_shap_values(shap_values, X_test, terms_to_include=['month', 'weekday', 'job', 'poutcome', 'marital'], class_index=1):
+                # Étape 1 : Sélectionner les colonnes contenant les termes spécifiés
+                column_names = [col for col in X_test.columns if any(term in col for term in terms_to_include)]
+                
+                # Étape 2 : Obtenir les indices des colonnes correspondantes dans X_test
                 indices = [X_test.columns.get_loc(col) for col in column_names]
+                
+                # Étape 3 : Extraire les valeurs SHAP pour la classe spécifiée (class_index)
                 values = shap_values[:, indices, class_index]
-                # Vérification des valeurs récupérées
-                print("Valeurs SHAP pour les colonnes:", column_names)
-                print("Valeurs SHAP:", values)
+                
+                # Vérification des valeurs SHAP extraites
                 if values is None or values.size == 0:
-                    print("Erreur: Aucune valeur SHAP disponible.")
+                    print("Erreur: Aucune valeur SHAP disponible pour les colonnes.")
                     return np.zeros(len(column_names))  # Retourne un tableau de zéros si aucune valeur SHAP n'est présente
+                
+                # Retourner la moyenne absolue des valeurs SHAP pour chaque colonne
                 return np.mean(np.abs(values), axis=0)
             
-            # Récupérer les moyennes SHAP pour chaque groupe de colonnes
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values, X_test, class_index=1)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values, X_test, class_index=1)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values, X_test, class_index=1)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values, X_test, class_index=1)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values, X_test, class_index=1)
+            # Récupérer les moyennes SHAP pour les groupes de colonnes
+            mean_shap_values = get_mean_shap_values(shap_values, X_test, class_index=1)
             
-            # Créer une liste des moyennes combinées et de leurs noms
-            combined_values = [
-                np.mean(mean_shap_month),
-                np.mean(mean_shap_weekday),
-                np.mean(mean_shap_poutcome),
-                np.mean(mean_shap_job),
-                np.mean(mean_shap_marital)
-            ]
-            combined_feature_names = [
-                'Mean SHAP Value for Month Features',
-                'Mean SHAP Value for Weekday Features',
-                'Mean SHAP Value for Poutcome Features',
-                'Mean SHAP Value for Job Features',
-                'Mean SHAP Value for Marital Features'
-            ]
+            # Créer une liste des noms de colonnes et de leurs moyennes SHAP
+            combined_values = mean_shap_values
+            combined_feature_names = [f"Mean SHAP Value for {col}" for col in X_test.columns if any(term in col for term in ['month', 'weekday', 'job', 'poutcome', 'marital'])]
             
-            # Vérification des données avant de créer l'Explanation
+            # Vérification avant de créer l'objet Explanation
             print("Valeurs combinées:", combined_values)
             print("Noms des caractéristiques:", combined_feature_names)
             
@@ -1720,7 +1711,7 @@ if selected == "Modélisation":
                 plt.show()
             except Exception as e:
                 print("Erreur lors de la génération du graphique:", e)
-             
+
 
             #fig = plt.figure()
             #shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
