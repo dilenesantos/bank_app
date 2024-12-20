@@ -2118,7 +2118,7 @@ if selected == 'Interprétation':
 
 
 
-if selected == 'TEST PRED SCORES" : 
+if selected == "TEST PRED SCORES": 
         
     #code python SANS DURATION
     dff_TEST = df.copy()
