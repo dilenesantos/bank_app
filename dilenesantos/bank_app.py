@@ -1944,7 +1944,7 @@ if selected == 'Interprétation':
         shap_values_XGBOOST_1 = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_TOP_4_hyperparam.pkl")
 
         st.subheader("Interprétation du modèle XGBOOST")
-        st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl")           
+        #MODÈLE UTILISÉ : XGBOOST_1_model_SD_TOP_4_hyperparam.pkl         
 
         submenu_interpretation = st.selectbox("", ("ANALYSE GLOBALE", "ANALYSE DES VARIABLES LES PLUS IMPORTANTES", "TESTS"))
 
