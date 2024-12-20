@@ -2467,6 +2467,39 @@ if selected == "TEST PRED SCORES":
     table_xgboost_1 = pd.crosstab(y_test_o, y_pred_1, rownames=["Réalité"], colnames=["Prédiction"])
     st.dataframe(table_xgboost_1)
 
+    #SHAP
+    #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+    st.write("Shap XGBOOST_2")
+
+    #Chargement du modèle XGBOOST_2 déjà enregistré
+    #filename_XGBOOST_2 = "XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl"
+    #model_XGBOOST_2_SD_model_PRED_AVEC_parametres = joblib.load(filename_XGBOOST_2)
+
+    #Chargement des données pour shap 
+    #data_to_explain_XGBOOST_2 = X_test_o  # Remplacez par vos données
+
+    #Création de l'explainer SHAP pour XGBOOST_2
+    #explainer_XGBOOST_2 = shap.TreeExplainer(model_XGBOOST_2_SD_model_PRED_AVEC_parametres)
+
+    #Calcul des shap values
+    #shap_values_XGBOOST_2_SD_model_PRED_AVEC_parametres = explainer_XGBOOST_2(data_to_explain_XGBOOST_2)
+
+    #Sauvegarder des shap values avec joblib
+    #joblib.dump(shap_values_XGBOOST_2_SD_model_PRED_AVEC_parametres, "shap_values_XGBOOST_2_SD_model_PRED_AVEC_parametres")
+
+    #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+    shap_values_XGBOOST_2_PRED = joblib.load("dilenesantos/shap_values_XGBOOST_2_SD_model_PRED_AVEC_parametres")
+
+    fig = plt.figure()
+    shap.summary_plot(shap_values_XGBOOST_2_PRED, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation_XGBOOST_2_PRED = shap.Explanation(values=shap_values_XGBOOST_2_PRED,
+                            data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                            feature_names=X_test_o.columns)
+    shap.plots.bar(explanation_XGBOOST_2_PRED)
+    st.pyplot(fig)    
     
     st.subheader("Modèle top score 2 = XGBOOST_1 SD")
     st.write("dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl")
@@ -2498,7 +2531,37 @@ if selected == "TEST PRED SCORES":
     st.write("Matrice de confusion du modèle")
     table_xgboost_2 = pd.crosstab(y_test_o, y_pred_2, rownames=["Réalité"], colnames=["Prédiction"])
     st.dataframe(table_xgboost_2)
+    
+    st.write("Shap XGBOOST_1")
+    #filename_XGBOOST_1 = "XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
+    #model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename_XGBOOST_1)
+
+    #Chargement des données pour shap 
+    #data_to_explain_XGBOOST_1 = X_test_o  # Remplacez par vos données
+
+    #Création de l'explainer SHAP pour XGBOOST_1
+    #explainer_XGBOOST_1 = shap.TreeExplainer(model_XGBOOST_1_SD_model_PRED_AVEC_parametres)
+
+    #Calcul des shap values
+    #shap_values_XGBOOST_1_SD_model_PRED_AVEC_parametres = explainer_XGBOOST_1(data_to_explain_XGBOOST_1)
+
+    #Sauvegarder des shap values avec joblib
+    #joblib.dump(shap_values_XGBOOST_1_SD_model_PRED_AVEC_parametres, "shap_values_XGBOOST_1_SD_model_PRED_AVEC_parametres")
+
+    #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+    shap_values_XGBOOST_1_PRED = joblib.load("dilenesantos/shap_values_XGBOOST_1_SD_model_PRED_AVEC_parametres")
+
+    fig = plt.figure()
+    shap.summary_plot(shap_values_XGBOOST_1_PRED, X_test_o)  
+    st.pyplot(fig)
             
+    fig = plt.figure()
+    explanation_XGBOOST_1_PRED = shap.Explanation(values=shap_values_XGBOOST_1_PRED,
+                            data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                            feature_names=X_test_o.columns)
+    shap.plots.bar(explanation_XGBOOST_1_PRED)
+    st.pyplot(fig) 
+    
     st.subheader("Modèle top score 3 = XGBOOST_TESTDIL SD")
     st.write("dilenesantos/XGBOOST_TESTDIL_SD_model_PRED_AVEC_parametres.pkl")
     st.write("XGBOOST_TESTDIL SD : XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=2.46, subsample=0.99, random_state=42)")
@@ -2530,7 +2593,39 @@ if selected == "TEST PRED SCORES":
     table_xgboost_3 = pd.crosstab(y_test_o, y_pred_3, rownames=["Réalité"], colnames=["Prédiction"])
     st.dataframe(table_xgboost_3)
             
+    #SHAP
+    #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+    st.write("Shap XGBOOST_3")
 
+    #Chargement du modèle XGBOOST_3 déjà enregistré
+    #filename_XGBOOST_3 = "XGBOOST_3_SD_model_PRED_AVEC_parametres.pkl"
+    #model_XGBOOST_3_SD_model_PRED_AVEC_parametres = joblib.load(filename_XGBOOST_3)
+
+    #Chargement des données pour shap 
+    #data_to_explain_XGBOOST_3 = X_test_o  # Remplacez par vos données
+
+    #Création de l'explainer SHAP pour XGBOOST_3
+    #explainer_XGBOOST_3 = shap.TreeExplainer(model_XGBOOST_3_SD_model_PRED_AVEC_parametres)
+
+    #Calcul des shap values
+    #shap_values_XGBOOST_3_SD_model_PRED_AVEC_parametres = explainer_XGBOOST_3(data_to_explain_XGBOOST_3)
+
+    #Sauvegarder des shap values avec joblib
+    #joblib.dump(shap_values_XGBOOST_3_SD_model_PRED_AVEC_parametres, "shap_values_XGBOOST_3_SD_model_PRED_AVEC_parametres")
+
+    #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+    shap_values_XGBOOST_3_PRED = joblib.load("dilenesantos/shap_values_XGBOOST_3_SD_model_PRED_AVEC_parametres")
+
+    fig = plt.figure()
+    shap.summary_plot(shap_values_XGBOOST_3_PRED, X_test_o)  
+    st.pyplot(fig)
+            
+    fig = plt.figure()
+    explanation_XGBOOST_3_PRED = shap.Explanation(values=shap_values_XGBOOST_3_PRED,
+                            data=X_test_o.values, # Assumant que  X_test est un DataFrame
+                            feature_names=X_test_o.columns)
+    shap.plots.bar(explanation_XGBOOST_3_PRED)
+    st.pyplot(fig)   
 
 if selected == 'Outil Prédictif':    
     #code python SANS DURATION
