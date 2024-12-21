@@ -2278,7 +2278,7 @@ if selected == 'Interprétation':
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
                 fig = plt.figure()
                 shap.dependence_plot("previous", shap_values_XGBOOST_1_numpy, 
-                                  X_test_sd], 
+                                  X_test_sd, 
                                   interaction_index="previous", 
                                   show=True)
                 st.pyplot(fig)
