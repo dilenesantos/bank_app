@@ -2253,11 +2253,14 @@ if selected == 'Interprétation':
                                   feature_names=["previous"], 
                                   show=True)
                 st.pyplot(fig)
-
+                st.write("format de shap_values_XGBOOST_1", shap_values_XGBOOST_1)
                 st.write("test")
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
-                st.write("shap_values_XGBOOST_1_numpy", shap_values_XGBOOST_1_numpy)
+                st.write("format de shap_values_XGBOOST_1_numpy", shap_values_XGBOOST_1_numpy)
+                shap_values_XGBOOST_1_numpy_0 = np.array(shap_values_XGBOOST_1.values[0])
+                st.write("format de shap_values_XGBOOST_1_numpy_0", shap_values_XGBOOST_1_numpy_0)
 
+                
                 shap_values_XGBOOST_1_explanation = shap.Explanation(
                         values=shap_values_XGBOOST_1_numpy,  # Valeurs SHAP sous forme de tableau 2D
                         base_values=shap_values_XGBOOST_1.base_values,  # Valeurs de base
@@ -2265,9 +2268,15 @@ if selected == 'Interprétation':
                         feature_names=X_test_sd.columns.tolist(),  # Noms des features
                     )
 
-                st.write("shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
-                
-                shap_values_array = shap_values_XGBOOST_1_explanation.values.flatten()
+                shap_values_XGBOOST_1_explanation_test = shap.Explanation(
+                        values=shap_values_XGBOOST_1,
+                        data=X_test_sd.values,  
+                        feature_names=X_test_sd.columns.tolist()
+                      )
+                st.write("format shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
+                st.write("format shap_values_XGBOOST_1_explanation_test", shap_values_XGBOOST_1_explanation_test)
+
+                shap_values_array = shap_values_XGBOOST_1_explanation.values
                 
                 st.write("shap_values_array", shap_values_array)
                 
