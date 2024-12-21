@@ -2184,6 +2184,7 @@ if selected == 'Interprétation':
                 st.title("HOUSING : POIDS +0.27")
                 st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
                 st.write("Summary plot :")
+                st.write("Shape of shap_values_XGBOOST_1:", shap_values_XGBOOST_1.shape)
 
                 housing_index = X_test_sd.columns.get_loc("housing")  # Obtenir l'indice de la colonne "housing"
                 shap_values_housing = shap_values_XGBOOST_1[:, housing_index].reshape(-1, 1)  # (n_samples, 1)
