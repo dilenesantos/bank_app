@@ -2258,7 +2258,7 @@ if selected == 'Interprétation':
                 # Sélectionnez la caractéristique pour le graphique de dépendance
                 feature_name = "previous"  # ou toute autre caractéristique d'intérêt
             
-                st.shap(shap.dependence_plot(
+                st_shap(shap.dependence_plot(
                     "previous",  # Nom de la caractéristique
                     shap_values_XGBOOST_1, 
                     X_test_sd,  
