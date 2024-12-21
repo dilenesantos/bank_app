@@ -2248,8 +2248,51 @@ if selected == 'Interprétation':
                 st.pyplot(fig)       
                 plt.close() 
                 
-                st.write("Recherche d'autres dépendances")
-                #GRAPHIQUE DEPENDENCE PLOT 
+                st.subheader("Recherche d'autres dépendances")
+                                
+                # Créer une figure avec 2 lignes et 3 colonnes
+                fig, axes = plt.subplots(2, 3, figsize=(25, 15))
+                
+                # Créer les dépendances avec des lignes horizontales rouges pour chaque graphique
+                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, interaction_index="housing", show=False, ax=axes[0,0])
+                axes[0,0].set_title('Balance x Housing', fontsize=14)
+                axes[0,0].set_xlim(200, 800)
+                axes[0,0].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, interaction_index="age", show=False, ax=axes[0,1])
+                axes[0,1].set_title('Balance x Age', fontsize=14)
+                axes[0,1].set_xlim(200, 800)
+                axes[0,1].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, interaction_index="education", show=False, ax=axes[0,2])
+                axes[0,2].set_title('Balance x Education', fontsize=14)
+                axes[0,2].set_xlim(0, 800)
+                axes[0,2].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, interaction_index="marital_married", show=False, ax=axes[1,0])
+                axes[1,0].set_title('Balance x Marital_married', fontsize=14)
+                axes[1,0].set_xlim(0, 800)
+                axes[1,0].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, interaction_index="marital_single", show=False, ax=axes[1,1])
+                axes[1,1].set_title('Balance x Marital_single', fontsize=14)
+                axes[1,1].set_xlim(0, 800)
+                axes[1,1].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                shap.dependence_plot("balance", shap_values, X_test_original_figures, interaction_index="marital_divorced", show=False, ax=axes[1,2])
+                axes[1,2].set_title('Balance x Marital_divorced', fontsize=14)
+                axes[1,2].set_xlim(0, 800)
+                axes[1,2].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                # Ajuster l'espacement entre les sous-graphiques
+                plt.tight_layout()
+                
+                # Afficher le graphique dans Streamlit
+                st.pyplot(fig)
+                
+                # Fermer le graphique pour libérer les ressources
+                plt.close()
+
         
                 st.write("ICI il faudrait  peut  être que je tente d'afficher balance x jobs, peut être avec 2 colonnes liste déroulante > dependence plot")
 
