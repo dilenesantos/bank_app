@@ -2279,6 +2279,18 @@ if selected == 'Interprétation':
                 
                 # Liste des variables pour interaction_index
                 interaction_variables = ["housing", "age", "education"]
+                #radio
+                selected_variable = st.radio("Choix de la variable", interaction_variables, horizontal=True)
+                
+                fig, ax = plt.subplots(figsize=(10, 6))
+                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
+                                     interaction_index=selected_variable, show=False, ax=ax)
+                
+                #Titre et axe horizontal rouge
+                ax.axhline(0, color='red', linewidth=1, linestyle='--')
+                plt.tight_layout()
+                st.pyplot(fig)
+                plt.close()
                 
                 # Créer un radio pour sélectionner la variable d'interaction
                 selected_variable = st.radio(
