@@ -2279,7 +2279,7 @@ if selected == 'Interprétation':
                 axes[1,1].set_xlim(0, 800)
                 axes[1,1].axhline(0, color='red', linewidth=1, linestyle='--')
                 
-                shap.dependence_plot("balance", shap_values, X_test_original_figures, interaction_index="marital_divorced", show=False, ax=axes[1,2])
+                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, interaction_index="marital_divorced", show=False, ax=axes[1,2])
                 axes[1,2].set_title('Balance x Marital_divorced', fontsize=14)
                 axes[1,2].set_xlim(0, 800)
                 axes[1,2].axhline(0, color='red', linewidth=1, linestyle='--')
