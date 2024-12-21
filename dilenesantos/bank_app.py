@@ -2256,9 +2256,9 @@ if selected == 'Interprétation':
 
                 st.write("test")
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
-
+                st.write(shap_values_XGBOOST_1_numpy)
                 fig = plt.figure()
-                shap.dependence_plot("previous", shap_values_XGBOOST_1_numpy, X_test_sd,interaction_index="previous", show=True)
+                shap.dependence_plot("previous", shap_values_XGBOOST_1_numpy, X_test_sd,interaction_index="previous", show=False)
                 st.pyplot(fig)
                 
                 st.write("Dependence plot :")
