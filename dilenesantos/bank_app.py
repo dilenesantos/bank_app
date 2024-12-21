@@ -2269,6 +2269,62 @@ if selected == 'Interprétation':
                 plt.close()
         
                 st.write("ICI il faudrait  peut  être que je tente d'afficher balance x jobs, peut être avec 2 colonnes liste déroulante > dependence plot")
+                st.title("AUTRE FAÇON D'AFFICHER")
+
+                # Supposons que 'shap_XGBOOST_1_VALUES' et 'X_test_original_figures' sont déjà définis
+                
+                # Extraction des valeurs SHAP
+                shap_values = shap_XGBOOST_1_VALUES
+                X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
+                
+                # Liste des variables pour interaction_index
+                interaction_variables = ["housing", "age", "education"]
+                
+                # Créer un radio pour sélectionner la variable d'interaction
+                selected_variable = st.radio(
+                    "Choisissez une variable pour afficher le graphique de dépendance",
+                    interaction_variables,
+                    horizontal=True  # Cette option affiche les choix horizontalement
+                )
+                
+                # Créer un radio pour sélectionner le statut marital
+                marital_status = st.radio(
+                    "Choisissez un statut marital",
+                    ["None", "marital_married", "marital_single", "marital_divorced"],
+                    horizontal=True
+                )
+                
+                # Fonction pour afficher les graphiques associés aux variables de marital status
+                def display_marital_graphs(status):
+                    # Liste des variables associées à marital status
+                    marital_variables = ["marital_married", "marital_single", "marital_divorced"]
+                    
+                    # Si un statut marital est sélectionné, afficher les 3 graphiques associés
+                    if status in marital_variables:
+                        # Créer un graphique pour chaque variable associée à marital status
+                        fig, axes = plt.subplots(3, 1, figsize=(10, 18))
+                
+                        # Afficher les graphiques pour marital status
+                        for i, variable in enumerate(marital_variables):
+                            shap.dependence_plot(
+                                "balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
+                                interaction_index=variable, show=False, ax=axes[i]
+                            )
+                            axes[i].set_title(f'Balance x {variable}', fontsize=14)
+                            axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                        # Ajuster l'affichage
+                        plt.tight_layout()
+                
+                        # Afficher le graphique dans Streamlit
+                        st.pyplot(fig)
+                
+                        # Fermer le graphique pour libérer les ressources
+                        plt.close()
+                
+                # Appeler la fonction pour afficher les graphiques du statut marital
+                if marital_status != "None":
+                    display_marital_graphs(marital_status)
 
 
             if submenu_local == "PREVIOUS" :
