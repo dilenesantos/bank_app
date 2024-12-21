@@ -2275,10 +2275,7 @@ if selected == 'Interprétation':
                         scatter = plt.scatter(
                             X_data[feature_name],
                             shap_values[:, X_data.columns.get_loc(feature_name)],
-                            c=color_values,
                             cmap='viridis',  # Choisissez une palette de couleurs, vous pouvez la changer
-                            edgecolor="k",
-                            alpha=0.7
                         )
                 
                         # Ajouter une barre de couleur
