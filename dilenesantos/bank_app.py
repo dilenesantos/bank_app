@@ -2258,9 +2258,16 @@ if selected == 'Interprétation':
                 # Sélectionnez la caractéristique pour le graphique de dépendance
                 feature_name = "previous"  # ou toute autre caractéristique d'intérêt
             
-                fig, ax = plt.subplots(figsize=(10, 6)) 
-                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd, ax=ax, show=True)  # Ajustez `interaction_index` si nécessaire.
-                st.pyplot(fig)
+                fig_dep = plt.figure()
+                shap.dependence_plot(
+                    "previous",  # Nom de la caractéristique
+                    shap_values_XGBOOST_1,  # Valeurs SHAP complètes
+                    X_test_sd,  # DataFrame avec les données
+                    interaction_index="previous",  # Colonne d'interaction à utiliser
+                    show=False,  # Ne pas afficher immédiatement
+                    ax=fig_dep.add_subplot(111)  # Ajouter le subplot au graphique
+                )
+                st.pyplot(fig_dep)
 
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
