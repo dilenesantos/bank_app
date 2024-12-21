@@ -2277,7 +2277,7 @@ if selected == 'Interprétation':
                         feature_name,
                         shap_values=shap_values,
                         features=X_data,
-                        interaction_index=None,  # Si vous voulez spécifier un index d'interaction, changez-le ici
+                        interaction_index=feature_name,  # Si vous voulez spécifier un index d'interaction, changez-le ici
                         show=False  # Empêche l'affichage automatique
                     )
                 
