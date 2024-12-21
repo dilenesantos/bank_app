@@ -2260,7 +2260,7 @@ if selected == 'Interprétation':
                 shap_values_XGBOOST_1_numpy_0 = np.array(shap_values_XGBOOST_1.values[0])
                 st.write("format de shap_values_XGBOOST_1_numpy_0", shap_values_XGBOOST_1_numpy_0)
 
-                values_ndarray = shap_values_XGBOOST_1_explanation.values
+                values_ndarray = shap_values_XGBOOST_1.values
 
                 # Convertir en liste de listes
                 values_custom_array = [[float(v) for v in row] for row in values_ndarray]
