@@ -2262,7 +2262,7 @@ if selected == 'Interprétation':
                     "previous",  # Nom de la caractéristique
                     shap_values_XGBOOST_1, 
                     X_test_sd,  
-                    interaction_index="previous")
+                    interaction_index="previous"))
         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
