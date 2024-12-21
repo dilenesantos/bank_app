@@ -2194,7 +2194,7 @@ if selected == 'Interprétation':
                 
                 fig = plt.figure()
                 shap.summary_plot(
-                    shap_values_housing_matrix, 
+                    shap_values_housing, 
                     np.array(X_test_sd[["housing"]]),  # Convertir en array 2D
                     feature_names=["housing"], 
                     show=False
