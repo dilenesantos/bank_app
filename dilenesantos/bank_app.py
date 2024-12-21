@@ -2277,7 +2277,7 @@ if selected == 'Interprétation':
                         shap_values=shap_values_XGBOOST_1,  # SHAP values
                         features=X_test_sd,  # DataFrame des features
                         feature_names=X_test_sd.columns.tolist(),  # Noms des features
-                        interaction_index=None  # Désactiver les interactions pour éviter les erreurs
+                        interaction_index=index_previous  # Désactiver les interactions pour éviter les erreurs
                     )
                     st.pyplot(fig)  # Afficher dans Streamlit
                 
