@@ -2265,24 +2265,13 @@ if selected == 'Interprétation':
                 
                 # Créer le dependence plot pour la colonne "previous"
                 st.write("### Dependence Plot pour la variable 'previous'")
+
+                # Création du graphique
+                fig = plt.figure()
+                shap.dependence_plot("previous", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
+                        interaction_index="previous"  )
+                st.pyplot(fig)  # Afficher dans Streamlit
                 
-                try:
-                    # Index de la colonne "previous"
-                    index_previous = X_test_sd.columns.get_loc("previous")
-                    
-                    # Création du graphique
-                    fig = plt.figure()
-                    shap.dependence_plot(
-                        ind=index_previous,  # Index ou nom de la colonne
-                        shap_values=shap_values_XGBOOST_1,  # SHAP values
-                        features=X_test_sd,  # DataFrame des features
-                        feature_names=X_test_sd.columns.tolist(),  # Noms des features
-                        interaction_index=index_previous  # Désactiver les interactions pour éviter les erreurs
-                    )
-                    st.pyplot(fig)  # Afficher dans Streamlit
-                
-                except Exception as e:
-                    st.error(f"Erreur lors de la génération du dependence plot : {e}")
 
                         
             if submenu_local == "CAMPAIGN" :
