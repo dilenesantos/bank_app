@@ -2265,28 +2265,15 @@ if selected == 'Interprétation':
                 
                 # Titre de l'application
                 st.title("SHAP Dependence Plot")
+                shap_values = shap_values_XGBOOST_1.values
+                X_data = X_test_sd_original  
+                feature_name = "previous"
                 
-                # Créer le graphique de dépendance
-                def create_dependence_plot(feature_name):
-                    # Créer le graphique de dépendance
-                    shap.dependence_plot(
-                        feature_name,
-                        shap_values=shap_values,
-                        features=X_data,
-                        interaction_index=feature_name,  # Si vous voulez spécifier un index d'interaction, changez-le ici
-                        show=False  # Empêche l'affichage automatique
-                    )
-                
-                    # Établir le graphique dans un objet pyplot
-                    plt.savefig('dependence_plot.png')  # Sauvegarder le graphique
-                    plt.close()  # Fermer le graphique
-                
-                # Générer le plot pour la variable "previous"
-                create_dependence_plot("previous")
-                
-                # Afficher le graphique dans Streamlit
-                st.image('dependence_plot.png', caption='Dependence Plot for "previous"')
-
+                shap.dependence_plot(feature_name, shap_values=shap_values, features=X_data, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()          
+                st.pyplot(fig)       
+                plt.close() 
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
@@ -2299,9 +2286,10 @@ if selected == 'Interprétation':
                                   feature_names=["campaign"], 
                                   show=True)
                 st.pyplot(fig)
-    
-                st.write("Dependence plot") 
 
+                
+                st.write("Dependence plot") 
+                
                 shap_values = shap_values_XGBOOST_1.values
                 X_data = X_test_sd_original  
                 feature_name = "campaign"
