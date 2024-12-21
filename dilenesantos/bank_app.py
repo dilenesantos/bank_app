@@ -2262,33 +2262,38 @@ if selected == 'Interprétation':
                 
                 shap_values = shap_values_XGBOOST_1.values
                 X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelles
-                
+
                 # Titre de l'application
                 st.title("SHAP Dependence Plot")
                 
                 # Créer le graphique de dépendance
                 def create_dependence_plot(feature_name, color_feature):
-                    # Créer le graphique de dépendance
-                    shap.dependence_plot(
-                        feature_name,
-                        shap_values=shap_values,
-                        features=X_data,
-                        interaction_index=None,  # Si vous voulez spécifier un index d'interaction, changez-le ici
-                        show=False,
-                        color= X_data[color_feature]
-                    )
+                    try:
+                        # Créer le graphique de dépendance
+                        shap.dependence_plot(
+                            feature_name,
+                            shap_values=shap_values,
+                            features=X_data,
+                            interaction_index=None,  # ou spécifiez une autre variable d'interaction si besoin
+                            show=False,  # Empêche l'affichage automatique
+                            color= X_data[color_feature]  # Utilisation de la colonne de couleur
+                        )
                 
-                    # Établir le graphique dans un objet pyplot
-                    plt.colorbar(label=color_feature)
-                    plt.savefig('dependence_plot.png')  # Sauvegarder le graphique
-                    plt.close()  # Fermer le graphique
+                        # Établir le graphique dans un objet pyplot
+                        plt.colorbar(label=color_feature)  # Ajoute une barre de couleur
+                        plt.savefig('dependence_plot.png')
+                        plt.close()
+                    except Exception as e:
+                        st.error(f"Error while creating dependence plot: {e}")
                 
-                # Générer le plot pour la variable "previous"
+                # Générer le plot pour la variable "previous" et colorer selon "previous"
                 create_dependence_plot("previous", "previous")
                 
                 # Afficher le graphique dans Streamlit
-                st.image('dependence_plot.png', caption='Dependence Plot for "previous"')
-
+                if 'dependence_plot.png' in locals():
+                    st.image('dependence_plot.png', caption='Dependence Plot for "previous" with Colors')
+                else:
+                    st.error("No plot generated.")
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
