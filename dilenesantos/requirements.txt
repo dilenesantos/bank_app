@@ -13,4 +13,5 @@ pyarrow
 scipy
 shap
 IPython
+array
 
