@@ -2291,7 +2291,7 @@ if selected == 'Interprétation':
                     st.pyplot(fig)
                     plt.close()
                 
-                elif selected_variable == "marital status"
+                elif selected_variable == "marital status" :
                     # Fonction pour afficher les graphiques associés aux variables de marital status
                     def display_marital_graphs(status):
                         # Liste des variables associées à marital status
@@ -2315,7 +2315,7 @@ if selected == 'Interprétation':
                             st.pyplot(fig)
                             plt.close()
 
-                elif selected_variable == "job"
+                elif selected_variable == "job" :
                     # Fonction pour afficher les graphiques associés aux variables de marital status
                     def display_marital_graphs(status):
                         # Liste des variables associées à marital status
