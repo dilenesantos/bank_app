@@ -2284,7 +2284,7 @@ if selected == 'Interprétation':
                     plt.close()  # Fermer le graphique
                 
                 # Générer le plot pour la variable "previous"
-                create_dependence_plot("previous")
+                create_dependence_plot("previous", "previous")
                 
                 # Afficher le graphique dans Streamlit
                 st.image('dependence_plot.png', caption='Dependence Plot for "previous"')
