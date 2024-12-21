@@ -2261,11 +2261,7 @@ if selected == 'Interprétation':
                 st.write("format de shap_values_XGBOOST_1_numpy_0", shap_values_XGBOOST_1_numpy_0)
                 
                 shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelles
-
-                
-                shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelles
+                X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelle
                 
                 # Titre de l'application
                 st.title("SHAP Dependence Plot")
@@ -2303,7 +2299,30 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
 
-                st.write("blabla")         
+                
+                st.write("Dependence plot") 
+
+                shap_values = shap_values_XGBOOST_1.values
+                X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelle
+                
+                # Titre de l'application
+                st.title("SHAP Dependence Plot")
+                
+                # Créer le graphique de dépendance pour la variable "previous"
+                feature_name = "previous"
+                
+                # Créer le graphique de dépendance
+                fig = plt.figure()
+                shap.dependence_plot(
+                    feature_name,
+                    shap_values=shap_values,
+                    features=X_data,
+                    interaction_index=feature_name,  
+                    show=True  
+                )
+                
+                st.pyplot(fig)
+
 
             if submenu_local == "EDUCATION" :
                 st.title("EDUCATION : POIDS +0.09")
