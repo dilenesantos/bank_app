@@ -2317,7 +2317,7 @@ if selected == 'Interprétation':
                     feature_name,
                     shap_values=shap_values,
                     features=X_data,
-                    interaction_index=feature_name, 
+                    interaction_index=feature_name, show=True
                 )
                 
                 st.pyplot(fig)       
