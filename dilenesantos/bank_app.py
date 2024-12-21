@@ -2269,6 +2269,25 @@ if selected == 'Interprétation':
                 print(type(values_custom_array))  # Cela affichera <class 'list'>
                 print(values_custom_array)  # Montre le contenu
 
+                # Supposons que shap_values_XGBOOST_1_explanation est votre objet
+                # On extrait les valeurs
+                values_ndarray = shap_values_XGBOOST_1_explanation.values
+                
+                # Vérifiez le type - cela devrait être <class 'numpy.ndarray'>
+                print(type(values_ndarray))
+                
+                # Assurez-vous que c'est un ndarray
+                if isinstance(values_ndarray, np.ndarray):
+                    # Si oui, tout fonctionne
+                    print("La structure est bien un ndarray.")
+                else:
+                    # Sinon, tentons de créer un ndarray à partir des données
+                    values_ndarray = np.array(values_ndarray)  # Cela devrait fonctionner comme une conversion
+                
+                # Confirmez la conversion
+                print(type(values_ndarray))  # Cela devrait retourner <class 'numpy.ndarray'>
+
+
                 shap_values_XGBOOST_1_explanation = shap.Explanation(
                         values=shap_values_XGBOOST_1_numpy,  # Valeurs SHAP sous forme de tableau 2D
                         base_values=shap_values_XGBOOST_1.base_values,  # Valeurs de base
