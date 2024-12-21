@@ -2255,7 +2255,6 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
 
                 st.write("Shape de shap_values :", shap_values_XGBOOST_1.shape)
-                st.write("Nombre de dimensions de shap_values :", shap_values_XGBOOST_1.ndim)
                 st.write("Type de shap_values :", type(shap_values_XGBOOST_1))
                 st.write("Premières lignes de shap_values :", shap_values_XGBOOST_1[:5]) 
                 
