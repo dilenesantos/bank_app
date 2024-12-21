@@ -2079,7 +2079,7 @@ if selected == 'Interprétation':
 
         if submenu_interpretation == "ANALYSE GLOBALE" :
             submenu_global = st.radio("", ("Summary plot", "Bar plot"), horizontal=True)
-        
+            
             if submenu_global == "Summary plot" :
                 st.subheader("Summary plot")
                 fig = plt.figure()
@@ -2302,25 +2302,13 @@ if selected == 'Interprétation':
                 
                 st.write("Dependence plot") 
 
-                shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd_original  
                 
-                # Titre de l'application
-                st.title("SHAP Dependence Plot")
+                st.write("Dependence plot") 
                 
-                # Créer le graphique de dépendance pour la variable "previous"
-                feature_name = "campaign"
-                
-                # Créer le graphique de dépendance
-                fig = plt.figure()    
-                shap.dependence_plot(
-                    feature_name,
-                    shap_values=shap_values,
-                    features=X_data,
-                    interaction_index=feature_name, show=True
-                )
-                
+                shap.dependence_plot(feature_name="campaign", shap_values=shap_values_XGBOOST_1.values, features=X_test_sd_original, interaction_index="campaign", show=False)
+                fig = plt.gcf()          
                 st.pyplot(fig)       
+                plt.close()      
 
 
             if submenu_local == "EDUCATION" :
