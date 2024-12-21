@@ -2192,8 +2192,16 @@ if selected == 'Interprétation':
                 #valeurs SHAP pour la colonne "housing"
                 shap_values_housing = shap_values_XGBOOST_1[:, housing_index]
                 
+                # Pour le summary plot, convertir cela en 2D
+                shap_values_housing_matrix = shap_values_housing.reshape(-1, 1)  # (1626, 1)
+
                 fig = plt.figure()
-                shap.summary_plot(shap_values_housing, X_test_sd[["housing"]], feature_names=["housing"])
+                shap.summary_plot(
+                    shap_values_housing_matrix, 
+                    np.array(X_test_sd[["housing"]]),  # Convertir en array 2D
+                    feature_names=["housing"], 
+                    show=False
+                )
                 st.pyplot(fig)
 
                 st.write("blabla")
