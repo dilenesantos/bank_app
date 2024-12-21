@@ -2254,33 +2254,15 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
 
-                st.write("Shape de shap_values :", shap_values_XGBOOST_1.shape)
-                st.write("Type de shap_values :", type(shap_values_XGBOOST_1))
-                st.write("Premières lignes de shap_values :", shap_values_XGBOOST_1[:5]) 
-                
                 st.write("Dependence plot :")
-                st.write("### Diagnostic des données")
-                st.write("Shape des SHAP values :", shap_values_XGBOOST_1.shape)
-                st.write("Shape des features :", X_test_sd.shape)
-                st.write("Premières lignes de la colonne 'previous' :", X_test_sd["previous"].head())
-                st.write("SHAP values pour la première ligne :", shap_values_XGBOOST_1[0])
-                
-                # Créer le dependence plot pour la colonne "previous"
-                st.write("### Dependence Plot pour la variable 'previous'")
-                st.write("Shape de shap_values :", shap_values_XGBOOST_1.shape)
-                st.write("Type de shap_values :", type(shap_values_XGBOOST_1))
-                
+
                 # Création du graphique
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
                 fig = plt.figure()
                 shap.dependence_plot("previous", shap_values_XGBOOST_1_numpy, 
                                   X_test_sd, 
-                                  interaction_index="previous", 
-                                  show=True)
+                                  interaction_index="previous")
                 st.pyplot(fig)
-
-            
-
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
