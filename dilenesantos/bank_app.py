@@ -2255,15 +2255,21 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("blabla")    
                 st.write("Dependence plot")
-                # Sélectionnez la caractéristique pour le graphique de dépendance
-                feature_name = "previous"  # ou toute autre caractéristique d'intérêt
-            
-                st_shap(shap.dependence_plot(
-                    "previous",  # Nom de la caractéristique
-                    shap_values_XGBOOST_1, 
-                    X_test_sd,  
-                    interaction_index="previous"))
-        
+
+                fig = plt.figure()
+                
+                # Afficher le dependence plot pour la variable "previous"
+                shap.dependence_plot(
+                    ind="previous",  # Indice ou nom de la variable cible
+                    shap_values=shap_values_XGBOOST_1[:, :],  # SHAP values, en entier pour inclure toutes les variables
+                    features=X_test_sd,  # Les données d'entrée utilisées pour expliquer le modèle
+                    feature_names=X_test_sd.columns.tolist(),  # Les noms des colonnes
+                    show=False  # Important pour éviter que le plot s'affiche immédiatement dans un environnement Jupyter
+                )
+                
+                # Rendre le plot compatible avec Streamlit
+                st.pyplot(fig)
+                        
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
