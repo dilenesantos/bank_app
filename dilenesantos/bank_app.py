@@ -2259,63 +2259,33 @@ if selected == 'Interprétation':
                 st.write("format de shap_values_XGBOOST_1_numpy", shap_values_XGBOOST_1_numpy)
                 shap_values_XGBOOST_1_numpy_0 = np.array(shap_values_XGBOOST_1.values[0])
                 st.write("format de shap_values_XGBOOST_1_numpy_0", shap_values_XGBOOST_1_numpy_0)
-
-                values_ndarray = shap_values_XGBOOST_1.values
-
-                # Convertir en liste de listes
-                values_custom_array = [[float(v) for v in row] for row in values_ndarray]
                 
-                # Vérifiez le type
-                print(type(values_custom_array))  # Cela affichera <class 'list'>
-                print(values_custom_array)  # Montre le contenu
-
-                # Supposons que shap_values_XGBOOST_1_explanation est votre objet
-                # On extrait les valeurs
-                values_ndarray = shap_values_XGBOOST_1.values
+                shap_values = shap_values_XGBOOST_1.values
+                X_data = X_test  # Remplacez-le par vos données d'entrée réelles
                 
-                # Vérifiez le type - cela devrait être <class 'numpy.ndarray'>
-                print(type(values_ndarray))
+                # Titre de l'application
+                st.title("SHAP Dependence Plot")
                 
-                # Assurez-vous que c'est un ndarray
-                if isinstance(values_ndarray, np.ndarray):
-                    # Si oui, tout fonctionne
-                    print("La structure est bien un ndarray.")
-                else:
-                    # Sinon, tentons de créer un ndarray à partir des données
-                    values_ndarray = np.array(values_ndarray)  # Cela devrait fonctionner comme une conversion
-                
-                # Confirmez la conversion
-                print(type(values_ndarray))  # Cela devrait retourner <class 'numpy.ndarray'>
-
-
-                shap_values_XGBOOST_1_explanation = shap.Explanation(
-                        values=shap_values_XGBOOST_1_numpy,  # Valeurs SHAP sous forme de tableau 2D
-                        base_values=shap_values_XGBOOST_1.base_values,  # Valeurs de base
-                        data=X_test_sd.values,  # Données d'entrée sous forme de tableau NumPy
-                        feature_names=X_test_sd.columns.tolist(),  # Noms des features
+                # Créer le graphique de dépendance
+                def create_dependence_plot(feature_name):
+                    # Créer le graphique de dépendance
+                    shap.dependence_plot(
+                        feature_name,
+                        shap_values=shap_values,
+                        features=X_data,
+                        interaction_index=None,  # Si vous voulez spécifier un index d'interaction, changez-le ici
+                        show=False  # Empêche l'affichage automatique
                     )
-
-                shap_values_XGBOOST_1_explanation_test = shap.Explanation(
-                        values=shap_values_XGBOOST_1,
-                        data=X_test_sd.values,  
-                        feature_names=X_test_sd.columns.tolist()
-                      )
-                st.write("format shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
-                st.write("format shap_values_XGBOOST_1_explanation_test", shap_values_XGBOOST_1_explanation_test)
-
-                shap_values_array = shap_values_XGBOOST_1.values
-
-
                 
-                st.write("shap_values_array", shap_values_array)
-
-
-                index_previous = X_test_sd.columns.get_loc("previous")
+                    # Établir le graphique dans un objet pyplot
+                    plt.savefig('dependence_plot.png')  # Sauvegarder le graphique
+                    plt.close()  # Fermer le graphique
                 
-                fig = plt.figure()
-                shap.dependence_plot(ind=index_previous, shap_values=values_custom_array, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
-                st.pyplot(fig)
+                # Générer le plot pour la variable "previous"
+                create_dependence_plot("previous")
                 
+                # Afficher le graphique dans Streamlit
+                st.image('dependence_plot.png', caption='Dependence Plot for "previous"')
 
                         
             if submenu_local == "CAMPAIGN" :
