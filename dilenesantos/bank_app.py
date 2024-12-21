@@ -2254,6 +2254,13 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
 
+                st.write("test")
+                shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
+
+                fig = plt.figure()
+                shap.dependence_plot("previous", shap_values_XGBOOST_1_numpy, X_test_sd,interaction_index="previous", show=True)
+                st.pyplot(fig)
+                
                 st.write("Dependence plot :")
                 # Conversion des valeurs SHAP en tableau NumPy
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
@@ -2286,6 +2293,9 @@ if selected == 'Interprétation':
                 
                 # Affichage du graphique dans Streamlit
                 st.pyplot(fig)
+
+
+                
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
