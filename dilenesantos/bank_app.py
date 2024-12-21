@@ -2247,37 +2247,16 @@ if selected == 'Interprétation':
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Summary plot :")
-                
-            st.write("Shape des SHAP values :", shap_values_XGBOOST_1.shape)
-            st.write("Shape des features :", X_test_sd.shape)
-            st.write("Index de la colonne 'previous' :", X_test_sd.columns.get_loc("previous"))
-            
-            if "previous" in X_test_sd.columns:
-                # Index de la colonne
-                index_previous = X_test_sd.columns.get_loc("previous")
-                
-                # Plot de dépendance
                 fig = plt.figure()
-                shap.dependence_plot(
-                    ind=index_previous,  # Index de la colonne
-                    shap_values=shap_values_XGBOOST_1,  # SHAP values
-                    features=X_test_sd,  # DataFrame des features
-                    feature_names=X_test_sd.columns.tolist(),  # Liste des noms de colonnes
-                    show=False  # Ne pas afficher directement
-                )
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
+                                  X_test_sd[["previous"]], 
+                                  feature_names=["previous"], 
+                                  show=True)
                 st.pyplot(fig)
-            else:
-                st.error("La colonne 'previous' n'existe pas dans X_test_sd.")
                 
-                shap.dependence_plot(
-                    ind="previous",  # Nom de la variable d'intérêt
-                    shap_values=shap_values_XGBOOST_1,  # SHAP values (1646, 45)
-                    features=X_test_sd,  # DataFrame des features (1646, 45)
-                    feature_names=X_test_sd.columns.tolist(),  # Liste des noms des colonnes
-                    show=False  # Pour éviter l'affichage automatique en dehors de Streamlit
-                )
-                
-                # Afficher le plot dans Streamlit
+                st.write("Dependence plot :")
+                fig = plt.figure()
+                shap.dependence_plot("balance", shap_values_XGBOOST_1, X_test_sd,interaction_index="marital_married")
                 st.pyplot(fig)
                         
             if submenu_local == "CAMPAIGN" :
