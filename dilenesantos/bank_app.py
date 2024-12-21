@@ -2271,7 +2271,7 @@ if selected == 'Interprétation':
 
                 # Supposons que shap_values_XGBOOST_1_explanation est votre objet
                 # On extrait les valeurs
-                values_ndarray = shap_values_XGBOOST_1_explanation.values
+                values_ndarray = shap_values_XGBOOST_1.values
                 
                 # Vérifiez le type - cela devrait être <class 'numpy.ndarray'>
                 print(type(values_ndarray))
