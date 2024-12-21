@@ -2194,6 +2194,7 @@ if selected == 'Interprétation':
                                   feature_names=["housing"], 
                                   show=True)
                 st.pyplot(fig)
+                
 
                 st.write("blabla")
 
@@ -2211,9 +2212,21 @@ if selected == 'Interprétation':
                 st.write("blabla")         
 
                 st.write("Dependence plot :")
-                fig = plt.figure() 
-                shap.dependence_plot("age", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")]], X_test_sd["age"])
-                st.pyplot(fig)
+
+                # Sélectionnez la caractéristique pour le graphique de dépendance
+                feature_name = "age"  # ou toute autre caractéristique d'intérêt
+                
+                # Créer un graphique de dépendance
+                st.write(f"Dependence plot for {feature_name}")
+                
+                # Exécuter le graphique de dépendance
+                fig, ax = plt.subplots(figsize=(10, 6))  # Créer une figure
+                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd_original, ax=ax, interaction_index="age")  # Ajustez `interaction_index` si nécessaire.
+                plt.title(f'Dependence Plot for {feature_name}')  # Titre pour le graphique
+                
+                # Afficher le graphique dans Streamlit
+                st.pyplot(fig)  # Utilisation de st.pyplot() pour afficher le graphique généré
+                
                 st.write("blabla") 
 
 
