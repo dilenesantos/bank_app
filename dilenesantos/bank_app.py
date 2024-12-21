@@ -2260,7 +2260,15 @@ if selected == 'Interprétation':
                 shap_values_XGBOOST_1_numpy_0 = np.array(shap_values_XGBOOST_1.values[0])
                 st.write("format de shap_values_XGBOOST_1_numpy_0", shap_values_XGBOOST_1_numpy_0)
 
+                values_ndarray = shap_values_XGBOOST_1_explanation.values
+
+                # Convertir en liste de listes
+                values_custom_array = [[float(v) for v in row] for row in values_ndarray]
                 
+                # Vérifiez le type
+                print(type(values_custom_array))  # Cela affichera <class 'list'>
+                print(values_custom_array)  # Montre le contenu
+
                 shap_values_XGBOOST_1_explanation = shap.Explanation(
                         values=shap_values_XGBOOST_1_numpy,  # Valeurs SHAP sous forme de tableau 2D
                         base_values=shap_values_XGBOOST_1.base_values,  # Valeurs de base
@@ -2286,7 +2294,7 @@ if selected == 'Interprétation':
                 index_previous = X_test_sd.columns.get_loc("previous")
                 
                 fig = plt.figure()
-                shap.dependence_plot(ind=index_previous, shap_values=shap_values_array, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
+                shap.dependence_plot(ind=index_previous, shap_values=values_custom_array, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
                 st.pyplot(fig)
                 
 
