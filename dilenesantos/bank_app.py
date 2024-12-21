@@ -4,7 +4,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
-import array
 
 import scipy.stats as stats
 from sklearn.model_selection import train_test_split
@@ -2284,17 +2283,12 @@ if selected == 'Interprétation':
                 st.write("shap_values_array", shap_values_array)
 
 
-                values_ndarray = shap_values_XGBOOST_1_explanation.values
-
-                # Convertir les données en une liste avant de les mettre dans un objet array
-                values_array = array.array('f', values_ndarray.flatten())  # 'f' pour float
-                st.write("format de values_array", values_array)
-
                 index_previous = X_test_sd.columns.get_loc("previous")
                 
                 fig = plt.figure()
-                shap.dependence_plot(ind=index_previous, shap_values=values_array, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
+                shap.dependence_plot(ind=index_previous, shap_values=shap_values_XGBOOST_1, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
                 st.pyplot(fig)
+                
 
                         
             if submenu_local == "CAMPAIGN" :
