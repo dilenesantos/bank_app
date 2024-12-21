@@ -2221,7 +2221,7 @@ if selected == 'Interprétation':
                 
                 # Exécuter le graphique de dépendance
                 fig, ax = plt.subplots(figsize=(10, 6))  # Créer une figure
-                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd_original, ax=ax, interaction_index="age")  # Ajustez `interaction_index` si nécessaire.
+                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd, ax=ax, interaction_index="balance")  # Ajustez `interaction_index` si nécessaire.
                 plt.title(f'Dependence Plot for {feature_name}')  # Titre pour le graphique
                 
                 # Afficher le graphique dans Streamlit
