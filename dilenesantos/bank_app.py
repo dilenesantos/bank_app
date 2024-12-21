@@ -2255,6 +2255,26 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
 
                 st.write("Dependence plot :")
+                # Recréer l'objet Explanation à partir du tableau NumPy
+                shap_values_XGBOOST_1_explanation = shap.Explanation(
+                    values=shap_values_XGBOOST_1_numpy,  # Tableau NumPy des valeurs SHAP
+                    base_values=shap_values_XGBOOST_1.base_values,  # Valeurs de base
+                    data=X_test_sd.values,  # Données d'entrée sous forme de tableau NumPy
+                    feature_names=X_test_sd.columns.tolist(),  # Noms des features
+                )
+                
+                # Créer le graphique de dépendance
+                fig = plt.figure()
+                shap.dependence_plot(
+                    "previous",  # Nom de la colonne à analyser
+                    shap_values_XGBOOST_1_explanation,  # L'objet SHAP recréé
+                    X_test_sd,  # DataFrame des features
+                    interaction_index="previous",  # Interaction à analyser
+                    show=False  # Ne pas afficher directement
+                )
+                
+                # Afficher le graphique dans Streamlit
+                st.pyplot(fig)
 
                 # Création du graphique
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
@@ -2263,17 +2283,6 @@ if selected == 'Interprétation':
                                   X_test_sd, interaction_index="previous", show=True)
                 st.pyplot(fig)
 
-                fig = plt.figure()
-                shap.dependence_plot(
-                    "previous",  # Nom de la colonne (ou son index)
-                    shap_values_XGBOOST_1,  # L'objet SHAP d'origine (pas le tableau NumPy)
-                    X_test_sd,  # Données d'entrée (les features)
-                    interaction_index="previous",  # Interaction avec "previous"
-                    show=False  # Ne pas afficher tout de suite
-                )
-                
-                # Affichage du graphique dans Streamlit
-                st.pyplot(fig)
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
