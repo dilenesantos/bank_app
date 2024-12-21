@@ -2276,7 +2276,7 @@ if selected == 'Interprétation':
                             features=X_data,
                             interaction_index=None,  # ou spécifiez une autre variable d'interaction si besoin
                             show=False,  # Empêche l'affichage automatique
-                            color= X_data[color_feature]  # Utilisation de la colonne de couleur
+                            c= X_data[color_feature]  # Utilisation de la colonne de couleur
                         )
                 
                         # Établir le graphique dans un objet pyplot
