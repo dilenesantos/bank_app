@@ -2227,7 +2227,7 @@ if selected == 'Interprétation':
                 st.write("Summary plot :")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("balance")]], 
-                                  X_test_sd["balance"], 
+                                  X_test_sd[["balance"]], 
                                   feature_names=["balance"], 
                                   show=True)
                 st.pyplot(fig)
@@ -2249,7 +2249,7 @@ if selected == 'Interprétation':
                 st.write("Summary plot :")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
-                                  X_test_sd["previous"], 
+                                  X_test_sd[["previous"]], 
                                   feature_names=["previous"], 
                                   show=True)
                 st.pyplot(fig)
@@ -2259,7 +2259,7 @@ if selected == 'Interprétation':
                 feature_name = "previous"  # ou toute autre caractéristique d'intérêt
             
                 fig, ax = plt.subplots(figsize=(10, 6)) 
-                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd, ax=ax, interaction_index="previous",show=True)  # Ajustez `interaction_index` si nécessaire.
+                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd, ax=ax, show=True)  # Ajustez `interaction_index` si nécessaire.
                 st.pyplot(fig)
 
             if submenu_local == "CAMPAIGN" :
