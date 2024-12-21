@@ -2189,18 +2189,13 @@ if selected == 'Interprétation':
                 #indice de la colonne "housing"
                 housing_index = X_test_sd.columns.get_loc("housing")
                 
-                #valeurs SHAP pour la colonne "housing"
-                shap_values_housing = shap_values_XGBOOST_1[:, housing_index]
+                shap_values_housing = shap_values_XGBOOST_1[:, housing_index].reshape(-1, 1)  # (1626, 1)
 
-                shap_values_housing_matrix = shap_values_housing.reshape(-1, 1)  # (1626, 1)
-
+                housing_data = pd.DataFrame(X_test_sd["housing"])
+                
+                # Créer le graphique de résumé pour "housing"
                 fig = plt.figure()
-                shap.summary_plot(
-                    shap_values_housing_matrix, 
-                    np.array(X_test_sd[["housing"]]),  # Convertir en array 2D
-                    feature_names=["housing"], 
-                    show=False
-                )
+                shap.summary_plot(shap_values_housing, housing_data, feature_names=["housing"], show=True)
                 st.pyplot(fig)
 
                 st.write("blabla")
