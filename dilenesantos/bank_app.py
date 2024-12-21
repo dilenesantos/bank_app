@@ -2261,7 +2261,7 @@ if selected == 'Interprétation':
                 st.write("format de shap_values_XGBOOST_1_numpy_0", shap_values_XGBOOST_1_numpy_0)
                 
                 shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd  # Remplacez-le par vos données d'entrée réelles
+                X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelles
                 
                 # Titre de l'application
                 st.title("SHAP Dependence Plot")
