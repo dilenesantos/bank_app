@@ -2255,9 +2255,35 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 
                 st.write("Dependence plot :")
-                fig = plt.figure()
-                shap.dependence_plot("balance", shap_values_XGBOOST_1, X_test_sd,interaction_index="marital_married")
-                st.pyplot(fig)
+                st.write("### Diagnostic des données")
+                st.write("Shape des SHAP values :", shap_values_XGBOOST_1.shape)
+                st.write("Shape des features :", X_test_sd.shape)
+                st.write("Colonnes des features :", X_test_sd.columns.tolist())
+                st.write("Index de la colonne 'previous' :", X_test_sd.columns.get_loc("previous"))
+                st.write("Premières lignes de la colonne 'previous' :", X_test_sd["previous"].head())
+                st.write("SHAP values pour la première ligne :", shap_values_XGBOOST_1[0])
+                
+                # Créer le dependence plot pour la colonne "previous"
+                st.write("### Dependence Plot pour la variable 'previous'")
+                
+                try:
+                    # Index de la colonne "previous"
+                    index_previous = X_test_sd.columns.get_loc("previous")
+                    
+                    # Création du graphique
+                    fig = plt.figure()
+                    shap.dependence_plot(
+                        ind=index_previous,  # Index ou nom de la colonne
+                        shap_values=shap_values_XGBOOST_1,  # SHAP values
+                        features=X_test_sd,  # DataFrame des features
+                        feature_names=X_test_sd.columns.tolist(),  # Noms des features
+                        interaction_index=None  # Désactiver les interactions pour éviter les erreurs
+                    )
+                    st.pyplot(fig)  # Afficher dans Streamlit
+                
+                except Exception as e:
+                    st.error(f"Erreur lors de la génération du dependence plot : {e}")
+
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
