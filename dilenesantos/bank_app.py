@@ -2256,18 +2256,21 @@ if selected == 'Interprétation':
                 st.write("blabla")    
                 st.write("Dependence plot")
 
+                st.write("Shape de shap_values_XGBOOST_1 :", shap_values_XGBOOST_1.shape)
+                st.write("Colonnes de X_test_sd :", X_test_sd.columns.tolist())
+                
+                # Plot de dépendance pour la variable "previous"
                 fig = plt.figure()
                 
-                # Afficher le dependence plot pour la variable "previous"
                 shap.dependence_plot(
-                    ind="previous",  # Indice ou nom de la variable cible
-                    shap_values=shap_values_XGBOOST_1[:, :],  # SHAP values, en entier pour inclure toutes les variables
-                    features=X_test_sd,  # Les données d'entrée utilisées pour expliquer le modèle
-                    feature_names=X_test_sd.columns.tolist(),  # Les noms des colonnes
-                    show=False  # Important pour éviter que le plot s'affiche immédiatement dans un environnement Jupyter
+                    ind="previous",  # Nom de la variable d'intérêt
+                    shap_values=shap_values_XGBOOST_1,  # SHAP values (1646, 45)
+                    features=X_test_sd,  # DataFrame des features (1646, 45)
+                    feature_names=X_test_sd.columns.tolist(),  # Liste des noms des colonnes
+                    show=False  # Pour éviter l'affichage automatique en dehors de Streamlit
                 )
                 
-                # Rendre le plot compatible avec Streamlit
+                # Afficher le plot dans Streamlit
                 st.pyplot(fig)
                         
             if submenu_local == "CAMPAIGN" :
