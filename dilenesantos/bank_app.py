@@ -2247,20 +2247,28 @@ if selected == 'Interprétation':
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Summary plot :")
-                fig = plt.figure()
-                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
-                                  X_test_sd[["previous"]], 
-                                  feature_names=["previous"], 
-                                  show=True)
-                st.pyplot(fig)
-                st.write("blabla")    
-                st.write("Dependence plot")
-
-                st.write("Shape de shap_values_XGBOOST_1 :", shap_values_XGBOOST_1.shape)
-                st.write("Colonnes de X_test_sd :", X_test_sd.columns.tolist())
                 
-                # Plot de dépendance pour la variable "previous"
-                fig = plt.figure()
+                # Vérification des dimensions
+                st.write("Shape des SHAP values :", shap_values_XGBOOST_1.shape)
+                st.write("Shape des features :", X_test_sd.shape)
+                
+                # Assurez-vous que la colonne 'previous' est bien présente
+                if "previous" in X_test_sd.columns:
+                    index_previous = X_test_sd.columns.get_loc("previous")  # Index de la colonne
+                    st.write("Index de la colonne 'previous' :", index_previous)
+                
+                    # Générer le Dependence Plot
+                    fig = plt.figure()
+                    shap.dependence_plot(
+                        ind=index_previous,  # Utilisation de l'index
+                        shap_values=shap_values_XGBOOST_1,  # SHAP values (1646, 45)
+                        features=X_test_sd,  # DataFrame contenant les features (1646, 45)
+                        feature_names=X_test_sd.columns.tolist(),  # Noms des colonnes
+                        show=False  # Ne pas afficher directement
+                    )
+                    st.pyplot(fig)
+                else:
+                    st.error("La colonne 'previous' n'existe pas dans X_test_sd.")
                 
                 shap.dependence_plot(
                     ind="previous",  # Nom de la variable d'intérêt
