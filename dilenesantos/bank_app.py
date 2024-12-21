@@ -2190,7 +2190,10 @@ if selected == 'Interprétation':
                 housing_index = X_test_sd.columns.get_loc("housing")
                 
                 #valeurs SHAP pour la colonne "housing"
-                shap_values_housing = shap_values_XGBOOST_1[:, housing_index]  # (1626,) - chaque valeur pour "housing"
+                shap_values_housing = shap_values_XGBOOST_1[:, housing_index]  # (1626,)
+                
+                #reshape en 2D 
+                shap_values_housing = shap_values_housing.reshape(-1, 1)  # (1626, 1)
                 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_housing, X_test_sd[["housing"]], feature_names=["housing"])
