@@ -2186,9 +2186,12 @@ if selected == 'Interprétation':
                 st.write("Summary plot :")
                 st.write("Shape of shap_values_XGBOOST_1:", shap_values_XGBOOST_1.shape)
 
-                housing_index = X_test_sd.columns.get_loc("housing")  # Obtenir l'indice de la colonne "housing"
-                shap_values_housing = shap_values_XGBOOST_1[:, housing_index].reshape(-1, 1)  # (n_samples, 1)
-
+                #indice de la colonne "housing"
+                housing_index = X_test_sd.columns.get_loc("housing")
+                
+                #valeurs SHAP pour la colonne "housing"
+                shap_values_housing = shap_values_XGBOOST_1[:, housing_index]  # (1626,) - chaque valeur pour "housing"
+                
                 fig = plt.figure()
                 shap.summary_plot(shap_values_housing, X_test_sd[["housing"]], feature_names=["housing"])
                 st.pyplot(fig)
