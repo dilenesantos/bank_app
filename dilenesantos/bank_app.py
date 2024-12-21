@@ -2186,16 +2186,13 @@ if selected == 'Interprétation':
                 st.write("Summary plot :")
                 st.write("Shape of shap_values_XGBOOST_1:", shap_values_XGBOOST_1.shape)
 
-                #indice de la colonne "housing"
                 housing_index = X_test_sd.columns.get_loc("housing")
                 
-                shap_values_housing = shap_values_XGBOOST_1[:, housing_index].reshape(-1, 1)  # (1626, 1)
-
-                housing_data = pd.DataFrame(X_test_sd["housing"])
+                # Extraire uniquement les valeurs SHAP pour la colonne "housing"
+                shap_values_housing = shap_values_XGBOOST_1[:, housing_index]  # Récupération des valeurs SHAP pour la colonne "housing"
                 
-                # Créer le graphique de résumé pour "housing"
                 fig = plt.figure()
-                shap.summary_plot(shap_values_housing, housing_data, feature_names=["housing"], show=True)
+                shap.summary_plot(shap_values_housing[:, None], X_test_sd[["housing"]], feature_names=["housing"])
                 st.pyplot(fig)
 
                 st.write("blabla")
