@@ -2212,7 +2212,7 @@ if selected == 'Interprétation':
 
                 st.write("Dependence plot :")
                 fig = plt.figure() 
-                shap.dependence_plot("age", shap_values_XGBOOST_1, X_test_sd_original,interaction_index="age")
+                shap.dependence_plot("age", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")], X_test_sd[["age"],interaction_index="age")
                 st.pyplot(fig)
                 st.write("blabla") 
 
@@ -2249,7 +2249,11 @@ if selected == 'Interprétation':
                                   feature_names=["previous"], 
                                   show=True)
                 st.pyplot(fig)
-                st.write("blabla")         
+                st.write("blabla")    
+                st.write("Dependence plot")
+                fig = plt.figure()
+                shap.dependence_plot("age", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")], X_test_sd[["previous"],interaction_index="previous")
+                st.pyplot(fig)
 
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
