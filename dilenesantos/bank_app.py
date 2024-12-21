@@ -2202,8 +2202,12 @@ if selected == 'Interprétation':
                 st.subheader("IMPACT POSITIF DES TRANCHES D’ÂGES BASSES OU ÉLEVÉES")
                 st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
                 st.write("Summary plot :")
-                #GRAPHIQUE SUMMARY PLOT
-
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")]], 
+                                  X_test_sd[["age"]], 
+                                  feature_names=["age"], 
+                                  show=True)
+                st.pyplot(fig)
                 st.write("blabla")         
 
                 st.write("Dependence plot :")
@@ -2215,7 +2219,12 @@ if selected == 'Interprétation':
                 st.title("BALANCE : POIDS +0.20")
                 st.subheader("IMPACT POSITIF DE BALANCE SUR LA CLASSE 1")
                 st.write("Summary plot :")
-                #GRAPHIQUE SUMMARY PLOT
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("balance")]], 
+                                  X_test_sd[["balance"]], 
+                                  feature_names=["balance"], 
+                                  show=True)
+                st.pyplot(fig)
 
                 st.write("blabla")         
 
@@ -2232,15 +2241,24 @@ if selected == 'Interprétation':
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Summary plot :")
-                #GRAPHIQUE SUMMARY PLOT
-
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
+                                  X_test_sd[["previous"]], 
+                                  feature_names=["previous"], 
+                                  show=True)
+                st.pyplot(fig)
                 st.write("blabla")         
 
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Summary plot :")
-                #GRAPHIQUE SUMMARY PLOT
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("campaign")]], 
+                                  X_test_sd[["campaign"]], 
+                                  feature_names=["campaign"], 
+                                  show=True)
+                st.pyplot(fig)
 
                 st.write("blabla")         
 
