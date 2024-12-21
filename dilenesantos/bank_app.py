@@ -2211,9 +2211,12 @@ if selected == 'Interprétation':
                 st.write("blabla")         
 
                 st.write("Dependence plot :")
-                #GRAPHIQUE DEPENDENCE PLOT
-                
-                st.write("blabla")              
+                fig = plt.figure()
+                shap.dependence_plot("age", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")]], 
+                                     X_test_sd_original[["age"]],feature_names=["age"])                
+                st.pyplot(fig)
+                st.write("blabla") 
+
 
             if submenu_local == "BALANCE" :
                 st.title("BALANCE : POIDS +0.20")
