@@ -2255,6 +2255,8 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
 
                 st.write("Dependence plot :")
+                shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
+                
                 # Recréer l'objet Explanation à partir du tableau NumPy
                 shap_values_XGBOOST_1_explanation = shap.Explanation(
                     values=shap_values_XGBOOST_1_numpy,  # Tableau NumPy des valeurs SHAP
