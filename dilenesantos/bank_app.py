@@ -2264,10 +2264,11 @@ if selected == 'Interprétation':
                         data=X_test_sd.values,  # Données d'entrée sous forme de tableau NumPy
                         feature_names=X_test_sd.columns.tolist(),  # Noms des features
                     )
-                
+                shap_values_array = shap_values_XGBOOST_1_explanation.values
+
                 st.write("shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
                 fig = plt.figure()
-                shap.dependence_plot("previous", shap_values_XGBOOST_1_explanation.values , X_test_sd,interaction_index="previous", show=False)
+                shap.dependence_plot("previous", shap_values=shap_values_array, X_test_sd,interaction_index="previous", show=False)
                 st.pyplot(fig)
                 
                 st.write("Dependence plot :")
