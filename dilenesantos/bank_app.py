@@ -2254,7 +2254,7 @@ if selected == 'Interprétation':
                 interaction_variables = ["housing", "age", "education", "marital_married", "marital_single", "marital_divorced"]
             
                 #radio
-                selected_variable = st.radio("Choix de la variable pour afficher le dependence plot", interaction_variables)
+                selected_variable = st.radio("Choix de la variable pour afficher le dependence plot", interaction_variables, horizontal=True)
                 
                 fig, ax = plt.subplots(figsize=(10, 6))
                 shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
