@@ -2309,7 +2309,7 @@ if selected == 'Interprétation':
                 st.title("SHAP Dependence Plot")
                 
                 # Créer le graphique de dépendance pour la variable "previous"
-                feature_name = "previous"
+                feature_name = "campaign"
                 
                 # Créer le graphique de dépendance
                 fig = plt.figure()
@@ -2318,7 +2318,7 @@ if selected == 'Interprétation':
                     shap_values=shap_values,
                     features=X_data,
                     interaction_index=feature_name,  
-                    show=True  
+                    show=False  
                 )
                 
                 st.pyplot(fig)
