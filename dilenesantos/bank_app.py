@@ -2266,8 +2266,12 @@ if selected == 'Interprétation':
                 st.title("EDUCATION : POIDS +0.09")
                 st.subheader("IMPACT POSITIF OU NÉGATIF DE ÉDUCATION SUR LA CLASSE 1 ????")
                 st.write("Summary plot :")
-                #GRAPHIQUE SUMMARY PLOT
-
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("education")]], 
+                                  X_test_sd[["education"]], 
+                                  feature_names=["education"], 
+                                  show=True)
+                st.pyplot(fig)
                 st.write("blabla")         
 
             
