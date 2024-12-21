@@ -2211,9 +2211,8 @@ if selected == 'Interprétation':
                 st.write("blabla")         
 
                 st.write("Dependence plot :")
-                fig = plt.figure()
-                shap.dependence_plot("age", shap_values_XGBOOST_1[:, [X_test_sd_original.columns.get_loc("age")]], 
-                                     X_test_sd_original[["age"]],feature_names=["age"])                
+                fig = plt.figure() 
+                shap.dependence_plot("age", shap_values_XGBOOST_1, X_test_sd_original,interaction_index="age")
                 st.pyplot(fig)
                 st.write("blabla") 
 
