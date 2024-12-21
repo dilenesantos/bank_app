@@ -2189,7 +2189,10 @@ if selected == 'Interprétation':
                 #housing_index = X_test_sd.columns.get_loc("housing")
                 
                 fig = plt.figure()
-                shap.summary_plot(shap_values_XGBOOST_1, X_test_sd[["housing"]], feature_names=["housing"])
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("housing")]], 
+                                  X_test_sd[["housing"]], 
+                                  feature_names=["housing"], 
+                                  show=True)
                 st.pyplot(fig)
 
                 st.write("blabla")
