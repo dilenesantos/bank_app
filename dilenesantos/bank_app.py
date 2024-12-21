@@ -2260,7 +2260,19 @@ if selected == 'Interprétation':
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
                 fig = plt.figure()
                 shap.dependence_plot("previous", shap_values_XGBOOST_1_numpy, 
-                                  X_test_sd, interaction_index="previous", show=False)
+                                  X_test_sd, interaction_index="previous", show=True)
+                st.pyplot(fig)
+
+                fig = plt.figure()
+                shap.dependence_plot(
+                    "previous",  # Nom de la colonne (ou son index)
+                    shap_values_XGBOOST_1,  # L'objet SHAP d'origine (pas le tableau NumPy)
+                    X_test_sd,  # Données d'entrée (les features)
+                    interaction_index="previous",  # Interaction avec "previous"
+                    show=False  # Ne pas afficher tout de suite
+                )
+                
+                # Affichage du graphique dans Streamlit
                 st.pyplot(fig)
                         
             if submenu_local == "CAMPAIGN" :
