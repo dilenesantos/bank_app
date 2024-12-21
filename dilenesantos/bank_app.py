@@ -2248,27 +2248,26 @@ if selected == 'Interprétation':
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Summary plot :")
                 
-                # Vérification des dimensions
-                st.write("Shape des SHAP values :", shap_values_XGBOOST_1.shape)
-                st.write("Shape des features :", X_test_sd.shape)
+            st.write("Shape des SHAP values :", shap_values_XGBOOST_1.shape)
+            st.write("Shape des features :", X_test_sd.shape)
+            st.write("Index de la colonne 'previous' :", X_test_sd.columns.get_loc("previous"))
+            
+            if "previous" in X_test_sd.columns:
+                # Index de la colonne
+                index_previous = X_test_sd.columns.get_loc("previous")
                 
-                # Assurez-vous que la colonne 'previous' est bien présente
-                if "previous" in X_test_sd.columns:
-                    index_previous = X_test_sd.columns.get_loc("previous")  # Index de la colonne
-                    st.write("Index de la colonne 'previous' :", index_previous)
-                
-                    # Générer le Dependence Plot
-                    fig = plt.figure()
-                    shap.dependence_plot(
-                        ind=index_previous,  # Utilisation de l'index
-                        shap_values=shap_values_XGBOOST_1,  # SHAP values (1646, 45)
-                        features=X_test_sd,  # DataFrame contenant les features (1646, 45)
-                        feature_names=X_test_sd.columns.tolist(),  # Noms des colonnes
-                        show=False  # Ne pas afficher directement
-                    )
-                    st.pyplot(fig)
-                else:
-                    st.error("La colonne 'previous' n'existe pas dans X_test_sd.")
+                # Plot de dépendance
+                fig = plt.figure()
+                shap.dependence_plot(
+                    ind=index_previous,  # Index de la colonne
+                    shap_values=shap_values_XGBOOST_1,  # SHAP values
+                    features=X_test_sd,  # DataFrame des features
+                    feature_names=X_test_sd.columns.tolist(),  # Liste des noms de colonnes
+                    show=False  # Ne pas afficher directement
+                )
+                st.pyplot(fig)
+            else:
+                st.error("La colonne 'previous' n'existe pas dans X_test_sd.")
                 
                 shap.dependence_plot(
                     ind="previous",  # Nom de la variable d'intérêt
