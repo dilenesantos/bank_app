@@ -149,6 +149,14 @@ X_train = pd.concat([X_train.drop('weekday', axis=1), dummies], axis=1)
 dummies = pd.get_dummies(X_test['weekday'], prefix='weekday').astype(int)
 X_test = pd.concat([X_test.drop('weekday', axis=1), dummies], axis=1)
 
+#Récupération des valeurs originales à partir des données standardisées
+X_train_original = X_train.copy()
+X_test_original = X_test.copy()
+
+#Inversion de la standardisation
+X_train_original[cols_num] = scaler.inverse_transform(X_train[cols_num])
+X_test_original[cols_num] = scaler.inverse_transform(X_test[cols_num])
+
 #code python SANS DURATION
 dff_sans_duration = df.copy()
 dff_sans_duration = dff_sans_duration[dff_sans_duration['age'] < 75]
@@ -266,6 +274,14 @@ dummies_sd = pd.get_dummies(X_train_sd['weekday'], prefix='weekday').astype(int)
 X_train_sd = pd.concat([X_train_sd.drop('weekday', axis=1), dummies_sd], axis=1)
 dummies_sd = pd.get_dummies(X_test_sd['weekday'], prefix='weekday').astype(int)
 X_test_sd = pd.concat([X_test_sd.drop('weekday', axis=1), dummies_sd], axis=1)
+
+#Récupération des valeurs originales à partir des données standardisées
+X_train_sd_original = X_train_sd.copy()
+X_test_sd_original = X_test_sd.copy()
+
+#Inversion de la standardisation
+X_train_sd_original[cols_num_sd] = scaler_sd.inverse_transform(X_train_sd[cols_num_sd])
+X_test_sd_original[cols_num_sd] = scaler_sd.inverse_transform(X_test_sd[cols_num_sd])
 
 with st.sidebar:
     selected = option_menu(
@@ -2168,8 +2184,11 @@ if selected == 'Interprétation':
                 st.title("HOUSING : POIDS +0.27")
                 st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
                 st.write("Summary plot :")
-
-                #GRAPHIQUE SUMMARY PLOT
+    
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1[:, X_test_sd.columns.get_loc("housing")][:, None], 
+                                  X_test_sd[["housing"]], feature_names=["housing"])
+                st.pyplot(fig)
 
                 st.write("blabla")
 
