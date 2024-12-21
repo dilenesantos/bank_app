@@ -2264,15 +2264,18 @@ if selected == 'Interprétation':
                         data=X_test_sd.values,  # Données d'entrée sous forme de tableau NumPy
                         feature_names=X_test_sd.columns.tolist(),  # Noms des features
                     )
+
+                st.write("shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
+                
                 shap_values_array = shap_values_XGBOOST_1_explanation.values
                 
-                st.write("shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
+                st.write("shap_values_array", shap_values_array)
+                
                 index_previous = X_test_sd.columns.get_loc("previous")
                 
                 fig = plt.figure()
                 shap.dependence_plot(ind=index_previous, shap_values=shap_values_array, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
                 st.pyplot(fig)
-            
 
                         
             if submenu_local == "CAMPAIGN" :
