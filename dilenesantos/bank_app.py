@@ -2274,10 +2274,12 @@ if selected == 'Interprétation':
                         shap_values=shap_values,
                         features=X_data,
                         interaction_index=None,  # Si vous voulez spécifier un index d'interaction, changez-le ici
-                        show=False  # Empêche l'affichage automatique
+                        show=False,
+                        color= X_data[color_feature]
                     )
                 
                     # Établir le graphique dans un objet pyplot
+                    plt.colorbar(label=color_feature)
                     plt.savefig('dependence_plot.png')  # Sauvegarder le graphique
                     plt.close()  # Fermer le graphique
                 
