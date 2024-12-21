@@ -2267,7 +2267,7 @@ if selected == 'Interprétation':
 
                 st.write("shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
                 
-                shap_values_array = shap_values_XGBOOST_1_explanation.values.tolist()
+                shap_values_array = shap_values_XGBOOST_1_explanation.values.flatten()
                 
                 st.write("shap_values_array", shap_values_array)
                 
