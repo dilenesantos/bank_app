@@ -2262,17 +2262,13 @@ if selected == 'Interprétation':
                 st.write("### Diagnostic des données")
                 st.write("Shape des SHAP values :", shap_values_XGBOOST_1.shape)
                 st.write("Shape des features :", X_test_sd.shape)
-                st.write("Colonnes des features :", X_test_sd.columns.tolist())
-                st.write("Index de la colonne 'previous' :", X_test_sd.columns.get_loc("previous"))
                 st.write("Premières lignes de la colonne 'previous' :", X_test_sd["previous"].head())
                 st.write("SHAP values pour la première ligne :", shap_values_XGBOOST_1[0])
                 
                 # Créer le dependence plot pour la colonne "previous"
                 st.write("### Dependence Plot pour la variable 'previous'")
                 st.write("Shape de shap_values :", shap_values_XGBOOST_1.shape)
-                st.write("Nombre de dimensions de shap_values :", shap_values_XGBOOST_1.ndim)
                 st.write("Type de shap_values :", type(shap_values_XGBOOST_1))
-                st.write("Premières lignes de shap_values :", shap_values_XGBOOST_1[:5]) 
                 
                 # Création du graphique
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
