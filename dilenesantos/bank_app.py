@@ -2185,8 +2185,6 @@ if selected == 'Interprétation':
                 st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
                 st.write("Summary plot :")
                 st.write("Shape of shap_values_XGBOOST_1:", shap_values_XGBOOST_1.shape)
-
-                #housing_index = X_test_sd.columns.get_loc("housing")
                 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("housing")]], 
@@ -2213,19 +2211,12 @@ if selected == 'Interprétation':
 
                 st.write("Dependence plot :")
 
-                # Sélectionnez la caractéristique pour le graphique de dépendance
-                feature_name = "age"  # ou toute autre caractéristique d'intérêt
-                
+
                 # Créer un graphique de dépendance
                 st.write(f"Dependence plot for {feature_name}")
                 
                 # Exécuter le graphique de dépendance
-                fig, ax = plt.subplots(figsize=(10, 6))  # Créer une figure
-                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd, ax=ax, interaction_index="balance")  # Ajustez `interaction_index` si nécessaire.
-                plt.title(f'Dependence Plot for {feature_name}')  # Titre pour le graphique
-                
-                # Afficher le graphique dans Streamlit
-                st.pyplot(fig)  # Utilisation de st.pyplot() pour afficher le graphique généré
+
                 
                 st.write("blabla") 
 
@@ -2264,8 +2255,11 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("blabla")    
                 st.write("Dependence plot")
-                fig = plt.figure()
-                shap.dependence_plot("age", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], X_test_sd[["previous"]])
+                # Sélectionnez la caractéristique pour le graphique de dépendance
+                feature_name = "previous"  # ou toute autre caractéristique d'intérêt
+            
+                fig, ax = plt.subplots(figsize=(10, 6)) 
+                shap.dependence_plot(feature_name, shap_values_XGBOOST_1, X_test_sd, ax=ax, interaction_index="previous",show=True)  # Ajustez `interaction_index` si nécessaire.
                 st.pyplot(fig)
 
             if submenu_local == "CAMPAIGN" :
