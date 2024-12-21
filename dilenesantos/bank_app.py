@@ -2267,20 +2267,19 @@ if selected == 'Interprétation':
                 st.title("SHAP Dependence Plot")
                 
                 # Créer le graphique de dépendance
-                def create_dependence_plot(feature_name, color_feature):
+                def create_dependence_plot(feature_name, interaction_feature):
                     try:
                         # Créer le graphique de dépendance
                         shap.dependence_plot(
                             feature_name,
                             shap_values=shap_values,
                             features=X_data,
-                            interaction_index=None,  # ou spécifiez une autre variable d'interaction si besoin
+                            iinteraction_index=interaction_feature,  # ou spécifiez une autre variable d'interaction si besoin
                             show=False,  # Empêche l'affichage automatique
-                            c= X_data[color_feature]  # Utilisation de la colonne de couleur
                         )
                 
                         # Établir le graphique dans un objet pyplot
-                        plt.colorbar(label=color_feature)  # Ajoute une barre de couleur
+                        plt.colorbar(label=interaction_feature)
                         plt.savefig('dependence_plot.png')
                         plt.close()
                     except Exception as e:
