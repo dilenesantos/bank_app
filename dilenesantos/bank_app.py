@@ -2268,12 +2268,13 @@ if selected == 'Interprétation':
 
                 # Création du graphique
                 fig = plt.figure()
-                shap.dependence_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
+                shap.dependence_plot("previous", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
                                   X_test_sd[["previous"]], 
-                                  feature_names=["previous"], 
+                                  interaction_index=None, 
                                   show=True)
                 st.pyplot(fig)
-                
+
+            
 
                         
             if submenu_local == "CAMPAIGN" :
