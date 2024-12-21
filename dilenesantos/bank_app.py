@@ -2193,7 +2193,7 @@ if selected == 'Interprétation':
                 shap_values_housing = shap_values_XGBOOST_1[:, housing_index]
                 
                 fig = plt.figure()
-                shap.summary_plot(shap_values_housing, X_test_sd[["housing"]], feature_names=["housing"], show=False)
+                shap.summary_plot(shap_values_housing, X_test_sd[["housing"]], feature_names=["housing"])
                 st.pyplot(fig)
 
                 st.write("blabla")
