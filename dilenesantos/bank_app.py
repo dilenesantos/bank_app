@@ -2256,9 +2256,18 @@ if selected == 'Interprétation':
 
                 st.write("test")
                 shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
-                st.write(shap_values_XGBOOST_1_numpy)
+                st.write("shap_values_XGBOOST_1_numpy", shap_values_XGBOOST_1_numpy)
+
+                shap_values_XGBOOST_1_explanation = shap.Explanation(
+                        values=shap_values_XGBOOST_1_numpy,  # Valeurs SHAP sous forme de tableau 2D
+                        base_values=shap_values_XGBOOST_1.base_values,  # Valeurs de base
+                        data=X_test_sd.values,  # Données d'entrée sous forme de tableau NumPy
+                        feature_names=X_test_sd.columns.tolist(),  # Noms des features
+                    )
+                
+                st.write("shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
                 fig = plt.figure()
-                shap.dependence_plot("previous", shap_values_XGBOOST_1_numpy, X_test_sd,interaction_index="previous", show=False)
+                shap.dependence_plot("previous", shap_values_XGBOOST_1_explanation, X_test_sd,interaction_index="previous", show=False)
                 st.pyplot(fig)
                 
                 st.write("Dependence plot :")
