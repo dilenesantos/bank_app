@@ -2312,16 +2312,17 @@ if selected == 'Interprétation':
                 feature_name = "campaign"
                 
                 # Créer le graphique de dépendance
-                fig = plt.figure()
                 shap.dependence_plot(
                     feature_name,
                     shap_values=shap_values,
                     features=X_data,
-                    interaction_index=feature_name,  
-                    show=False  
+                    interaction_index=feature_name,  # Si vous voulez spécifier un index d'interaction, changez-le ici
+                    show=False  # Empêche l'affichage automatique
                 )
                 
-                st.pyplot(fig)
+                fig = plt.gcf()          
+                st.pyplot(fig)       
+                plt.close()
 
 
             if submenu_local == "EDUCATION" :
