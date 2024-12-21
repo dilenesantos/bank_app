@@ -2305,10 +2305,16 @@ if selected == 'Interprétation':
                 
                 st.write("Dependence plot") 
                 
-                shap.dependence_plot(feature_name="campaign", shap_values=shap_values_XGBOOST_1.values, features=X_test_sd_original, interaction_index="campaign", show=False)
+                st.write("Dependence plot") 
+
+                shap_values = shap_values_XGBOOST_1.values
+                X_data = X_test_sd_original  
+                feature_name = "campaign"
+                
+                shap.dependence_plot(feature_name, shap_values=shap_values, features=X_data, interaction_index=feature_name, show=False)
                 fig = plt.gcf()          
                 st.pyplot(fig)       
-                plt.close()      
+                plt.close() 
 
 
             if submenu_local == "EDUCATION" :
