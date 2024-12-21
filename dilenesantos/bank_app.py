@@ -2267,7 +2267,7 @@ if selected == 'Interprétation':
                 st.title("SHAP Dependence Plot")
                 
                 # Créer le graphique de dépendance
-                def create_dependence_plot(feature_name):
+                def create_dependence_plot(feature_name, color_feature):
                     # Créer le graphique de dépendance
                     shap.dependence_plot(
                         feature_name,
