@@ -2292,19 +2292,14 @@ if selected == 'Interprétation':
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Summary plot :")
+                
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("campaign")]], 
                                   X_test_sd[["campaign"]], 
                                   feature_names=["campaign"], 
                                   show=True)
                 st.pyplot(fig)
-
-                
-                st.write("Dependence plot") 
-
-                
-                st.write("Dependence plot") 
-                
+    
                 st.write("Dependence plot") 
 
                 shap_values = shap_values_XGBOOST_1.values
