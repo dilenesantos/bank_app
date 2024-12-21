@@ -2265,7 +2265,9 @@ if selected == 'Interprétation':
                 
                 # Créer le dependence plot pour la colonne "previous"
                 st.write("### Dependence Plot pour la variable 'previous'")
-
+                st.write("Shape de shap_values :", shap_values_XGBOOST_1.shape)
+                st.write("Nombre de dimensions de shap_values :", shap_values_XGBOOST_1.ndim)
+                
                 # Création du graphique
                 fig = plt.figure()
                 shap.dependence_plot("previous", shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
