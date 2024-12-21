@@ -2179,6 +2179,8 @@ if selected == 'Interprétation':
 
         if submenu_interpretation == "ANALYSE DES VARIABLES LES PLUS IMPORTANTES" :
             submenu_local = st.radio("", ("HOUSING", "ÂGE", "BALANCE", "PREVIOUS", "CAMPAIGN", "EDUCATION"), horizontal=True)
+            shap_XGBOOST_1_VALUES = shap_values_XGBOOST_1.values
+            X_test_original_figures = X_test_sd_original 
             
             if submenu_local == "HOUSING" :
                 st.title("HOUSING : POIDS +0.27")
@@ -2209,12 +2211,14 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("blabla")         
 
-                st.write("Dependence plot :")
-
-
-                # Créer un graphique de dépendance
-                st.write(f"Dependence plot for {feature_name}")
+                st.subheader("Dependence plot") 
+                feature_name = "age"
                 
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()          
+                st.pyplot(fig)       
+                plt.close() 
                 # Exécuter le graphique de dépendance
 
                 
@@ -2235,11 +2239,18 @@ if selected == 'Interprétation':
                 st.write("blabla")         
 
                 #GRAPHIQUE DEPENDENCE PLOT
-                st.write("blabla")         
-
+                st.subheader("Dependence plot") 
+                feature_name = "balance"
+                
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()          
+                st.pyplot(fig)       
+                plt.close() 
+                
                 st.write("Recherche d'autres dépendances")
                 #GRAPHIQUE DEPENDENCE PLOT 
-                
+        
                 st.write("ICI il faudrait  peut  être que je tente d'afficher balance x jobs, peut être avec 2 colonnes liste déroulante > dependence plot")
 
 
@@ -2253,23 +2264,11 @@ if selected == 'Interprétation':
                                   feature_names=["previous"], 
                                   show=True)
                 st.pyplot(fig)
-                st.write("format de shap_values_XGBOOST_1", shap_values_XGBOOST_1)
-                st.write("test")
-                shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
-                st.write("format de shap_values_XGBOOST_1_numpy", shap_values_XGBOOST_1_numpy)
-                shap_values_XGBOOST_1_numpy_0 = np.array(shap_values_XGBOOST_1.values[0])
-                st.write("format de shap_values_XGBOOST_1_numpy_0", shap_values_XGBOOST_1_numpy_0)
                 
-                shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelle
-                
-                # Titre de l'application
-                st.title("SHAP Dependence Plot")
-                shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd_original  
+                st.title("SHAP Dependence Plot")       
                 feature_name = "previous"
                 
-                shap.dependence_plot(feature_name, shap_values=shap_values, features=X_data, interaction_index=feature_name, show=False)
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 fig = plt.gcf()          
                 st.pyplot(fig)       
@@ -2288,13 +2287,11 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
 
                 
-                st.write("Dependence plot") 
-                
-                shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd_original  
+                st.subheader("Dependence plot") 
                 feature_name = "campaign"
                 
-                shap.dependence_plot(feature_name, shap_values=shap_values, features=X_data, interaction_index=feature_name, show=False)
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
@@ -2312,6 +2309,14 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("blabla")         
 
+                st.subheader("Dependence plot") 
+                feature_name = "education"
+                
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()          
+                st.pyplot(fig)       
+                plt.close() 
             
         
         if submenu_interpretation == "TESTS" :
