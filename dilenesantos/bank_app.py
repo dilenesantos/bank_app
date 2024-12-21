@@ -2303,7 +2303,7 @@ if selected == 'Interprétation':
                 st.write("Dependence plot") 
 
                 shap_values = shap_values_XGBOOST_1.values
-                X_data = X_test_sd_original  # Remplacez-le par vos données d'entrée réelle
+                X_data = X_test_sd_original  
                 
                 # Titre de l'application
                 st.title("SHAP Dependence Plot")
@@ -2312,17 +2312,15 @@ if selected == 'Interprétation':
                 feature_name = "campaign"
                 
                 # Créer le graphique de dépendance
+                fig = plt.figure()    
                 shap.dependence_plot(
                     feature_name,
                     shap_values=shap_values,
                     features=X_data,
-                    interaction_index=feature_name,  # Si vous voulez spécifier un index d'interaction, changez-le ici
-                    show=False  # Empêche l'affichage automatique
+                    interaction_index=feature_name, 
                 )
                 
-                fig = plt.gcf()          
                 st.pyplot(fig)       
-                plt.close()
 
 
             if submenu_local == "EDUCATION" :
