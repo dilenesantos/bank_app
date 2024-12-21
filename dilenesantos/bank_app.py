@@ -2271,75 +2271,56 @@ if selected == 'Interprétation':
                 st.write("ICI il faudrait  peut  être que je tente d'afficher balance x jobs, peut être avec 2 colonnes liste déroulante > dependence plot")
                 st.title("AUTRE FAÇON D'AFFICHER")
                 
-                # Extraction des valeurs SHAP
-                shap_values = shap_XGBOOST_1_VALUES
-                X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
-                
-                # Liste des variables pour interaction_index
                 interaction_variables = ["housing", "age", "education", "marital status", "job"]
-                #radio
                 selected_variable = st.radio("Choix de la variable", interaction_variables, horizontal=True)
-
-                if selected_variable == "housing" or "age" or "education" :
+                
+                if selected_variable in ["housing", "age", "education"]:
                     fig, ax = plt.subplots(figsize=(10, 6))
                     shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
-                                     interaction_index=selected_variable, show=False, ax=ax)
+                                         interaction_index=selected_variable, show=False, ax=ax)
                 
-                    #Titre et axe horizontal rouge
                     ax.axhline(0, color='red', linewidth=1, linestyle='--')
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
                 
-                elif selected_variable == "marital status" :
-                    # Fonction pour afficher les graphiques associés aux variables de marital status
+                elif selected_variable == "marital status":
                     def display_marital_graphs(status):
-                        # Liste des variables associées à marital status
                         marital_variables = ["marital_married", "marital_single", "marital_divorced"]
-                    
-                        # Si un statut marital est sélectionné, afficher les 3 graphiques associés
+                
                         if status in marital_variables:
-                            # Créer un graphique pour chaque variable associée à marital status
                             fig, axes = plt.subplots(3, 1, figsize=(10, 18))
                 
-                            # Afficher les graphiques pour marital status
                             for i, variable in enumerate(marital_variables):
-                                shap.dependence_plot(
-                                "balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
-                                interaction_index=variable, show=False, ax=axes[i]
-                                )
+                                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
+                                    interaction_index=variable, show=False, ax=axes[i])
                                 axes[i].set_title(f'Balance x {variable}', fontsize=14)
                                 axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
                 
                             plt.tight_layout()
                             st.pyplot(fig)
                             plt.close()
-
-                elif selected_variable == "job" :
-                    # Fonction pour afficher les graphiques associés aux variables de marital status
-                    def display_marital_graphs(status):
-                        # Liste des variables associées à marital status
-                        job_variables = ['job_admin.', 'job_blue-collar','job_entrepreneur', 'job_housemaid', 'job_management', 
-                                         'job_retired','job_self-employed', 'job_services', 'job_student', 'job_technician','job_unemployed']
-                    
-                        # Si un statut marital est sélectionné, afficher les 3 graphiques associés
+                
+                elif selected_variable == "job":
+                    def display_job_graphs(status):
+                        # Liste des variables associées à job
+                        job_variables = ['job_admin.', 'job_blue-collar', 'job_entrepreneur', 'job_housemaid', 
+                                         'job_management','job_retired', 'job_self-employed', 'job_services', 
+                                         'job_student', 'job_technician', 'job_unemployed']
+                
                         if status in job_variables:
-                            # Créer un graphique pour chaque variable associée à marital status
-                            fig, axes = plt.subplots(3, 1, figsize=(10, 18))
+                            fig, axes = plt.subplots(10, 1, figsize=(10, 30))
                 
-                            # Afficher les graphiques pour marital status
                             for i, variable in enumerate(job_variables):
-                                shap.dependence_plot(
-                                "balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
-                                interaction_index=variable, show=False, ax=axes[i]
-                                )
+                                shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
+                                    interaction_index=variable, show=False, ax=axes[i])
                                 axes[i].set_title(f'Balance x {variable}', fontsize=14)
                                 axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
                 
                             plt.tight_layout()
                             st.pyplot(fig)
                             plt.close()
-
+            
 
             if submenu_local == "PREVIOUS" :
                 st.title("PREVIOUS : POIDS +0.14")
