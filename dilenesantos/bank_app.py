@@ -2265,47 +2265,15 @@ if selected == 'Interprétation':
                         feature_names=X_test_sd.columns.tolist(),  # Noms des features
                     )
                 shap_values_array = shap_values_XGBOOST_1_explanation.values
-
+                
                 st.write("shap_values_XGBOOST_1_explanation", shap_values_XGBOOST_1_explanation)
+                index_previous = X_test_sd.columns.get_loc("previous")
+                
                 fig = plt.figure()
-                shap.dependence_plot("previous", shap_values=shap_values_array, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
+                shap.dependence_plot(ind=index_previous, shap_values=shap_values_array, features=X_test_sd, feature_names=X_test_sd.columns.tolist(),interaction_index="previous", show=False)
                 st.pyplot(fig)
-                
-                st.write("Dependence plot :")
-                # Conversion des valeurs SHAP en tableau NumPy
-                shap_values_XGBOOST_1_numpy = np.array(shap_values_XGBOOST_1.values)
-                
-                # Recréer l'objet shap.Explanation à partir du tableau NumPy
-                shap_values_XGBOOST_1_explanation = shap.Explanation(
-                    values=shap_values_XGBOOST_1_numpy,  # Valeurs SHAP en numpy.ndarray
-                    base_values=shap_values_XGBOOST_1.base_values,  # Valeurs de base
-                    data=X_test_sd.values,  # Données d'entrée sous forme de tableau NumPy
-                    feature_names=X_test_sd.columns.tolist(),  # Noms des features
-                )
-                
-                # Afficher les informations sur les valeurs SHAP
-                st.write("Type de shap_values_XGBOOST_1_numpy :", type(shap_values_XGBOOST_1_numpy))
-                st.write("Shape de shap_values_XGBOOST_1_numpy :", shap_values_XGBOOST_1_numpy.shape)
-                st.write("Base values :", shap_values_XGBOOST_1.base_values)
-                st.write("Données d'entrée :", X_test_sd.head())  # Affichage des premières lignes de X_test_sd
-                
-                # Créer le graphique de dépendance
-                fig = plt.figure()
-                
-                # Créer le dependence plot
-                shap.dependence_plot(
-                    "previous",  # Nom de la colonne à analyser
-                    shap_values_XGBOOST_1_explanation,  # L'objet SHAP recréé
-                    X_test_sd,  # DataFrame des features
-                    interaction_index="previous",  # Interaction à analyser
-                    show=False  # Ne pas afficher directement
-                )
-                
-                # Affichage du graphique dans Streamlit
-                st.pyplot(fig)
+            
 
-
-                
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
