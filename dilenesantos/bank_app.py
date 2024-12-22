@@ -4327,9 +4327,9 @@ if selected == 'PRED POUSSÉ':
                 
                
                 # Liste des variables catégorielles multi-modales à traiter
-                cat_cols_multi_modal = ['poutcome']
+                cat_cols_multi_modal_poutcome = ['poutcome']
                 # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
-                for col in cat_cols_multi_modal:
+                for col in cat_cols_multi_modal_poutcome:
                     # Effectuer un encodage des variables catégorielles multi-modales
                     dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
                     pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
