@@ -4285,98 +4285,97 @@ if selected == 'PRED POUSSÉ':
                 cat_cols_multi_modal = ['marital']
                 # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
                 for col in cat_cols_multi_modal:
-                    # Vérifier que la colonne existe dans pred_df
-                    if col in pred_df.columns:
-                        # Effectuer un encodage des variables catégorielles multi-modales
-                        dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
-                        pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
-                                
-                        # Réorganiser les colonnes pour correspondre exactement à celles de dff
-                        pred_df = pred_df.reindex(columns=dff_TEST_marital.columns, fill_value=0)
-                        
-                        # Étape 2 : Concaténer dff et pred_df
-                        # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-                        num_cols = ['age', 'balance','previous']
-                        
-                        # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                        pred_df.index = range(dff_TEST_marital.shape[0], dff_TEST_marital.shape[0] + len(pred_df))
+    
+                    # Effectuer un encodage des variables catégorielles multi-modales
+                    dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
+                    pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
+                            
+                    # Réorganiser les colonnes pour correspondre exactement à celles de dff
+                    pred_df = pred_df.reindex(columns=dff_TEST_marital.columns, fill_value=0)
                     
-                        combined_df_marital = pd.concat([dff_TEST_marital[num_cols], pred_df[num_cols]], axis=0)
-        
-                        # Étape 3 : Standardisation des données numériques
-                        scaler = StandardScaler()
-                        combined_df_marital[num_cols] = scaler.fit_transform(combined_df_marital[num_cols])
-            
-                        # Étape 4 : Séparer à nouveau pred_df des autres données
-                        # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                        pred_df[num_cols] = combined_df_marital.loc[pred_df.index, num_cols]
+                    # Étape 2 : Concaténer dff et pred_df
+                    # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                    num_cols = ['age', 'balance','previous']
                     
-                        # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-                        pred_df = pred_df.reset_index(drop=True)
-                    
-                        # Affichage du DataFrame après la standardisation
-                        st.write("Affichage de pred_df prêt pour la prédiction :")
-                        st.dataframe(pred_df)
-                        st.dataframe(dff_TEST_marital)
-        
-                        
-                        filename_MARITAL = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
-                        model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)
-                    
-                        
-                        # Prédiction avec le DataFrame optimisé
-                        prediction_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict(pred_df)
-                        prediction_proba_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict_proba(pred_df)
-                        max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
+                    # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                    pred_df.index = range(dff_TEST_marital.shape[0], dff_TEST_marital.shape[0] + len(pred_df))
                 
-                        # Affichage des résultats de l'affinage
-                        st.write(f"Prediction après affinage : {prediction_opt_marital[0]}")
-                        st.write(f"Niveau de confiance après affinage : {max_proba_opt_marital:.2f}%")
-                        if prediction_opt_marital[0] == 0:
-                            st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                        else:
-                            st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                            st.write("\nRecommandations : ")
-                            st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                            st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+                    combined_df_marital = pd.concat([dff_TEST_marital[num_cols], pred_df[num_cols]], axis=0)
+    
+                    # Étape 3 : Standardisation des données numériques
+                    scaler = StandardScaler()
+                    combined_df_marital[num_cols] = scaler.fit_transform(combined_df_marital[num_cols])
         
-            
-                    elif option_to_add == "poutcome":
-                        poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
-                        pred_df['poutcome'] = poutcome
-                        st.write("Résultat de la campagne : ", poutcome)
-            
-                    elif option_to_add == "job":
-                        job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
-                                                                             'housemaid', 'management', 'retired', 
-                                                                             'self-employed', 'services', 'student', 
-                                                                             'technician', 'unemployed', 'unknown'))
-                        pred_df['job'] = job
-                        st.write("Emploi : ", job)
-            
-                    elif option_to_add == "Client_Category_M":
-                        Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                        pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-                        st.write("Dernier appel : ", Client_Category_M)
-            
-                    # Afficher le récapitulatif
-                    st.write(f'### Récapitulatif')
-                    st.write("Le client a : ", age, "ans")
-                    st.write("Le client a un niveau d'étude : ", niveau_etude)
-                    st.write("Le solde de son compte en banque est de : ", balance, "euros")
-                    st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
-                    st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
+                    # Étape 4 : Séparer à nouveau pred_df des autres données
+                    # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+                    pred_df[num_cols] = combined_df_marital.loc[pred_df.index, num_cols]
+                
+                    # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+                    pred_df = pred_df.reset_index(drop=True)
+                
+                    # Affichage du DataFrame après la standardisation
+                    st.write("Affichage de pred_df prêt pour la prédiction :")
+                    st.dataframe(pred_df)
+                    st.dataframe(dff_TEST_marital)
+    
                     
-                    # Afficher les informations supplémentaires définies
-                    if option_to_add == "loan":
-                        st.write(f"A un crédit personnel : {loan}")
-                    elif option_to_add == "marital":
-                        st.write(f"Situation maritale : {marital}")
-                    elif option_to_add == "poutcome":
-                        st.write(f"Résultat de la campagne : {poutcome}")
-                    elif option_to_add == "job":
-                        st.write(f"Emploi : {job}")
-                    elif option_to_add == "Client_Category_M":
-                        st.write(f"Dernier appel : {Client_Category_M}")
-             
+                    filename_MARITAL = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
+                    model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)
+                
+                    
+                    # Prédiction avec le DataFrame optimisé
+                    prediction_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict(pred_df)
+                    prediction_proba_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict_proba(pred_df)
+                    max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
+            
+                    # Affichage des résultats de l'affinage
+                    st.write(f"Prediction après affinage : {prediction_opt_marital[0]}")
+                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_marital:.2f}%")
+                    if prediction_opt_marital[0] == 0:
+                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                    else:
+                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                        st.write("\nRecommandations : ")
+                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+    
+        
+                elif option_to_add == "poutcome":
+                    poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
+                    pred_df['poutcome'] = poutcome
+                    st.write("Résultat de la campagne : ", poutcome)
+        
+                elif option_to_add == "job":
+                    job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
+                                                                         'housemaid', 'management', 'retired', 
+                                                                         'self-employed', 'services', 'student', 
+                                                                         'technician', 'unemployed', 'unknown'))
+                    pred_df['job'] = job
+                    st.write("Emploi : ", job)
+        
+                elif option_to_add == "Client_Category_M":
+                    Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+                    pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+                    st.write("Dernier appel : ", Client_Category_M)
+        
+                # Afficher le récapitulatif
+                st.write(f'### Récapitulatif')
+                st.write("Le client a : ", age, "ans")
+                st.write("Le client a un niveau d'étude : ", niveau_etude)
+                st.write("Le solde de son compte en banque est de : ", balance, "euros")
+                st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
+                st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
+                
+                # Afficher les informations supplémentaires définies
+                if option_to_add == "loan":
+                    st.write(f"A un crédit personnel : {loan}")
+                elif option_to_add == "marital":
+                    st.write(f"Situation maritale : {marital}")
+                elif option_to_add == "poutcome":
+                    st.write(f"Résultat de la campagne : {poutcome}")
+                elif option_to_add == "job":
+                    st.write(f"Emploi : {job}")
+                elif option_to_add == "Client_Category_M":
+                    st.write(f"Dernier appel : {Client_Category_M}")
          
+     
