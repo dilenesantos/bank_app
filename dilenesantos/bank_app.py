@@ -4092,7 +4092,9 @@ if selected == 'PRED POUSSÉ':
     dff_TEST_poutcome['poutcome'] = dff_TEST_poutcome['poutcome'].fillna(method ='bfill')
     dff_TEST_poutcome['poutcome'] = dff_TEST_poutcome['poutcome'].fillna(dff_TEST_poutcome['poutcome'].mode()[0])    
 
-
+    dummies = pd.get_dummies(dff_TEST_poutcome['poutcome'], prefix='marital').astype(int)
+    dff_TEST_poutcome = pd.concat([dff_TEST_poutcome.drop('poutcome', axis=1), dummies], axis=1)
+    
     st.title("Démonstration et application de notre modèle à votre cas")               
 
     st.subheader('Vos Informations sur le client')
