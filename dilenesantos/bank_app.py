@@ -4030,7 +4030,7 @@ if selected == 'PRED POUSSÉ':
     st.write("Affichage de pred_df prêt pour la prédiction :")
     st.dataframe(pred_df)
     st.dataframe(dff_TEST)
-
+    pred_df = st.session_state.pred_df
 
     # Bouton pour lancer la prédiction
     prediction_button = st.button(label="Predict")
@@ -4054,7 +4054,8 @@ if selected == 'PRED POUSSÉ':
             
             # Demander si l'utilisateur veut affiner la prédiction
             st.session_state.refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
-    
+            pred_df = st.session_state.pred_df
+            
             if st.session_state.refine_prediction == 'Non':
                 st.write("Merci ! Aucune modification ne sera apportée à la prédiction.")
             
