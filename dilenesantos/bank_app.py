@@ -4030,8 +4030,71 @@ if selected == 'PRED POUSSÉ':
     X_train_o_loan['education'] = X_train_o_loan['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
     X_test_o_loan['education'] = X_test_o_loan['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
 
-
+    #DATAFRAME POUR PRED AVEC MARITAL
+    dff_TEST_marital = df.copy()
+    dff_TEST_marital = dff_TEST_marital[dff_TEST_marital['age'] < 75]
+    dff_TEST_marital = dff_TEST_marital.loc[dff_TEST_marital["balance"] > -2257]
+    dff_TEST_marital = dff_TEST_marital.loc[dff_TEST_marital["balance"] < 4087]
+    dff_TEST_marital = dff_TEST_marital.loc[dff_TEST_marital["campaign"] < 6]
+    dff_TEST_marital = dff_TEST_marital.loc[dff_TEST_marital["previous"] < 2.5]
+    dff_TEST_marital = dff_TEST_marital.drop('contact', axis = 1)
     
+    dff_TEST_marital = dff_TEST_marital.drop('pdays', axis = 1)
+    
+    dff_TEST_marital = dff_TEST_marital.drop(['day'], axis=1)
+    dff_TEST_marital = dff_TEST_marital.drop(['duration'], axis=1)
+    dff_TEST_marital = dff_TEST_marital.drop(['job'], axis=1)
+    dff_TEST_marital = dff_TEST_marital.drop(['default'], axis=1)
+    dff_TEST_marital = dff_TEST_marital.drop(['month'], axis=1)
+    dff_TEST_marital = dff_TEST_marital.drop(['loan'], axis=1)
+    dff_TEST_marital = dff_TEST_marital.drop(['poutcome'], axis=1)
+    dff_TEST_marital = dff_TEST_marital.drop(['campaign'], axis=1)   
+     
+    dff_TEST_marital['education'] = dff_TEST_marital['education'].replace('unknown', np.nan)
+    X_dff_TEST_marital = dff_TEST_marital.drop('deposit', axis = 1)
+    y_dff_TEST_marital = dff_TEST_marital['deposit']
+        
+    dff_TEST_marital = dff_TEST_marital.drop(['deposit'], axis=1)   
+    
+    # Séparation des données en un jeu d'entrainement et jeu de test
+    X_train_o_marital, X_test_o_marital, y_train_o_marital, y_test_o_marital = train_test_split(X_dff_TEST_marital, y_dff_TEST_marital, test_size = 0.20, random_state = 48)
+                        
+    # On fait de même pour les NaaN de 'education'
+    X_train_o_marital['education'] = X_train_o_marital['education'].fillna(method ='bfill')
+    X_train_o_marital['education'] = X_train_o_marital['education'].fillna(X_train_o_marital['education'].mode()[0])
+    
+    X_test_o_marital['education'] = X_test_o_marital['education'].fillna(method ='bfill')
+    X_test_o_marital['education'] = X_test_o_marital['education'].fillna(X_test_o_marital['education'].mode()[0])
+                    
+    # Standardisation des variables quantitatives:
+    scaler_o = StandardScaler()
+    cols_num_sd = ['age', 'balance', 'previous']
+    X_train_o_marital[cols_num_sd] = scaler_o.fit_transform(X_train_o_marital[cols_num_sd])
+    X_test_o_marital[cols_num_sd] = scaler_o.transform (X_test_o_marital[cols_num_sd])
+    
+    # Encodage de la variable Cible 'deposit':
+    le_o = LabelEncoder()
+    y_train_o_marital = le_o.fit_transform(y_train_o_marital)
+    y_test_o_marital = le_o.transform(y_test_o_marital)
+    
+    # Encodage des variables explicatives de type 'objet'
+    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+    cat1_o = ['housing']
+    X_train_o_marital.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o_marital[cat1_o])
+    X_test_o_marital.loc[:, cat1_o] = oneh_o.transform(X_test_o_marital[cat1_o])
+    
+    X_train_o_marital[cat1_o] = X_train_o_marital[cat1_o].astype('int64')
+    X_test_o_marital[cat1_o] = X_test_o_marital[cat1_o].astype('int64')
+        
+    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    X_train_o_marital['education'] = X_train_o_marital['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_test_o_marital['education'] = X_test_o_marital['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    
+    dummies = pd.get_dummies(X_train_o_marital['marital'], prefix='marital').astype(int)
+    X_train_o_marital = pd.concat([X_train_o_marital.drop('marital', axis=1), dummies], axis=1)
+    dummies = pd.get_dummies(X_test_o_marital['marital'], prefix='marital').astype(int)
+    X_test_o_marital = pd.concat([X_test_o_marital.drop('marital', axis=1), dummies], axis=1)
+        
     st.title("Démonstration et application de notre modèle à votre cas")               
 
     st.subheader('Vos Informations sur le client')
@@ -4217,6 +4280,58 @@ if selected == 'PRED POUSSÉ':
                 marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
                 pred_df['marital'] = marital
                 st.write("Situation maritale : ", marital)
+                # Liste des variables catégorielles multi-modales à traiter
+                cat_cols_multi_modal = ['marital']
+                # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
+                for col in cat_cols_multi_modal:
+                    # Vérifier que la colonne existe dans pred_df
+                    if col in pred_df.columns:
+                        # Effectuer un encodage des variables catégorielles multi-modales
+                        dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
+                        pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
+                # Réorganiser les colonnes pour correspondre exactement à celles de dff
+                pred_df = pred_df.reindex(columns=dff_TEST_marital.columns, fill_value=0)
+                 # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                pred_df.index = range(dff_TEST_marital.shape[0], dff_TEST_marital.shape[0] + len(pred_df))
+            
+                # Étape 2 : Concaténer dff et pred_df
+                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                num_cols = ['age', 'balance','previous']
+                combined_df_marital = pd.concat([dff_TEST_marital[num_cols], pred_df[num_cols]], axis=0)
+
+                # Étape 4 : Séparer à nouveau pred_df des autres données
+                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+                pred_df[num_cols] = combined_df_marital.loc[pred_df.index, num_cols]
+            
+                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+                pred_df = pred_df.reset_index(drop=True)
+            
+                # Affichage du DataFrame après la standardisation
+                st.write("Affichage de pred_df prêt pour la prédiction :")
+                st.dataframe(pred_df)
+                st.dataframe(dff_TEST_marital)
+
+                
+                filename_MARITAL = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
+                model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)
+            
+                
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict(pred_df)
+                prediction_proba_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict_proba(pred_df)
+                max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
+        
+                # Affichage des résultats de l'affinage
+                st.write(f"Prediction après affinage : {prediction_opt_marital[0]}")
+                st.write(f"Niveau de confiance après affinage : {max_proba_opt_marital:.2f}%")
+                if prediction_opt_marital[0] == 0:
+                    st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                else:
+                    st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                    st.write("\nRecommandations : ")
+                    st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                    st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+
     
             elif option_to_add == "poutcome":
                 poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
