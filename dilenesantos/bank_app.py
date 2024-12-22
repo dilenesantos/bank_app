@@ -4041,8 +4041,8 @@ if selected == 'PRED POUSSÉ':
     
     # Prédiction
     if prediction_button:
-        prediction = xgboost_best_predict.predict(pred_df)
-        prediction_proba = xgboost_best_predict.predict_proba(pred_df)
+        prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
+        prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
         max_proba = np.max(prediction_proba[0]) * 100
     
         st.write(f"Prediction : {prediction[0]}")
