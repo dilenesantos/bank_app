@@ -4396,7 +4396,7 @@ if selected == 'PRED POUSSÉ':
 
 
             elif option_to_add == "poutcome":
-                poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
+                poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other'))
                 pred_df['poutcome'] = poutcome
                 st.write("Résultat de la campagne : ", poutcome)
                 
