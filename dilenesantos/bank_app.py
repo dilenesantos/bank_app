@@ -4452,7 +4452,7 @@ if selected == 'PRED POUSSÉ':
                 pred_df = pred_df.reset_index(drop=True)
                 st.dataframe(pred_df)
           
-                filename_JOB = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_quater.pkl"
+                filename_JOB = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_job = joblib.load(filename_JOB)         
                 
                 # Prédiction avec le DataFrame optimisé
