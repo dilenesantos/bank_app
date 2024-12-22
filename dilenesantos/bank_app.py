@@ -3857,6 +3857,12 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
 
 if selected == 'PRED POUSSÉ':  
+    if 'refine_prediction' not in st.session_state:
+    st.session_state.refine_prediction = None
+
+    if 'option_to_add' not in st.session_state:
+    st.session_state.option_to_add = None
+    
     dff_TEST = df.copy()
     dff_TEST = dff_TEST[dff_TEST['age'] < 75]
     dff_TEST = dff_TEST.loc[dff_TEST["balance"] > -2257]
@@ -4056,6 +4062,8 @@ if selected == 'PRED POUSSÉ':
             st.write("Merci! Aucune modification ne sera apportée à la prédiction.")
 
         elif refine_prediction == 'Oui':
+            st.session_state.refine_prediction = refine_prediction
+
             # Sélection d'une seule variable parmi les options avec l'option "Choisir = None"
             st.write("Veuillez choisir une information supplémentaire pour affiner la prédiction :")
             option_to_add = st.selectbox("Choisir une variable à ajouter :", 
