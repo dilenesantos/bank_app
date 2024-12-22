@@ -3858,8 +3858,10 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
 
 if selected == "TEST ST.SESSION_STATE" : 
-
-    # Exemple simple de DataFrame pour les tests
+    import streamlit as st
+    import pandas as pd
+    
+    # Exemple de DataFrame
     data = {
         'age': [25, 30, 45, 50],
         'balance': [2000, -500, 1500, 4000],
@@ -3867,46 +3869,45 @@ if selected == "TEST ST.SESSION_STATE" :
     }
     DATATEST = pd.DataFrame(data)
     
-    # Initialisation des états de session
-    if 'balance' not in st.session_state:
-        st.session_state.balance = 2000  # Valeur initiale
+    # Initialisation des états de session pour age et balance
+    if 'selected_age' not in st.session_state:
+        st.session_state.selected_age = 25  # Valeur par défaut
     
-    if 'age' not in st.session_state:
-        st.session_state.age = 25  # Valeur initiale
+    if 'selected_balance' not in st.session_state:
+        st.session_state.selected_balance = 2000  # Valeur par défaut
     
-    # Affichage du DataFrame
+    # Affichage de dff_TEST
     st.write("Données disponibles :")
     st.dataframe(DATATEST)
     
-    # User input pour modifier une des colonnes (pour les tests)
+    # Vérification et modification des informations sur l'utilisateur
     st.write("Modifiez les informations du client :")
-    
-    age = st.slider("Choisissez l'âge:", min_value=18, max_value=100, value=st.session_state.age)
-    balance = st.slider("Choisissez le solde:", min_value=-5000, max_value=10000, value=st.session_state.balance)
+    age = st.slider("Choisissez l'âge:", min_value=18, max_value=100, value=st.session_state.selected_age)
+    balance = st.slider("Choisissez le solde:", min_value=-5000, max_value=10000, value=st.session_state.selected_balance)
     
     # Stockage des choix de l'utilisateur dans l'état de session
-    st.session_state.age = age
-    st.session_state.balance = balance
+    st.session_state.selected_age = age
+    st.session_state.selected_balance = balance
     
     # Affichage des valeurs choisies
-    st.write(f"L'âge choisi est : {st.session_state.age}")
-    st.write(f"Le solde choisi est : {st.session_state.balance}")
+    st.write(f"L'âge choisi est : {st.session_state.selected_age}")
+    st.write(f"Le solde choisi est : {st.session_state.selected_balance}")
     
-    # Ajouter un bouton pour afficher les valeurs enregistrées dans l'état de session
+    # Ajouter un bouton pour voir les valeurs enregistrées
     if st.button("Afficher les valeurs d'état de session"):
-        st.write("Valeur de l'âge dans l'état de session :", st.session_state.age)
-        st.write("Valeur du solde dans l'état de session :", st.session_state.balance)
+        st.write("Valeur de l'âge dans l'état de session :", st.session_state.selected_age)
+        st.write("Valeur du solde dans l'état de session :", st.session_state.selected_balance)
     
-        # Action supplémentaire : Modifier dff_TEST à partir de l'état actuel
-        new_balance = st.slider("Modifier le solde de dff_TEST :", min_value=-5000, max_value=10000, value=int(DATATEST.iloc[0]['balance']))
-        
-        if st.button("Mettre à jour le solde dans dff_TEST"):
-            DATATEST.iloc[0, DATATEST.columns.get_loc('balance')] = new_balance  # Mise à jour du DataFrame
-            st.write("Le solde a été mis à jour dans dff_TEST.")
-            st.dataframe(DATATEST)  # Afficher le DataFrame après la mise à jour
+    # Action supplémentaire : Modifier une valeur du DataFrame dff_TEST
+    st.write("Modifier le solde dans le DataFrame dff_TEST :")
+    new_balance = st.slider("Modifier le solde de dff_TEST :", min_value=-5000, max_value=10000, value=int(DATATEST.iloc[0]['balance']))
+    if st.button("Mettre à jour le solde dans dff_TEST"):
+        DATATEST.iloc[0, DATATEST.columns.get_loc('balance')] = new_balance  # Mise à jour du DataFrame
+        st.write("Le solde a été mis à jour dans dff_TEST.")
+        st.dataframe(DATATEST)  # Afficher le DataFrame après mise à jour
     
-    # Ajouter une action pour voir les données mises à jour
-    if st.button("Afficher dff_TEST après modification"):
+    # Afficher dff_TEST actuel
+    if st.button("Afficher dff_TEST actuel"):
         st.dataframe(DATATEST)
 
 
