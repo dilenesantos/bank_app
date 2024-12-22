@@ -3856,12 +3856,13 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
 
-if selected == 'PRED POUSSÉ':  
-    if 'refine_prediction' not in st.session_state:
+if 'refine_prediction' not in st.session_state:
         st.session_state.refine_prediction = None
 
-    if 'option_to_add' not in st.session_state:
+if 'option_to_add' not in st.session_state:
         st.session_state.option_to_add = None
+    
+if selected == 'PRED POUSSÉ':  
     
     dff_TEST = df.copy()
     dff_TEST = dff_TEST[dff_TEST['age'] < 75]
