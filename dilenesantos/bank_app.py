@@ -4059,46 +4059,7 @@ if selected == 'PRED POUSSÉ':
     dummies = pd.get_dummies(dff_TEST_marital['marital'], prefix='marital').astype(int)
     dff_TEST_marital = pd.concat([dff_TEST_marital.drop('marital', axis=1), dummies], axis=1)
     
-    # Séparation des données en un jeu d'entrainement et jeu de test
-    X_train_o_marital, X_test_o_marital, y_train_o_marital, y_test_o_marital = train_test_split(X_dff_TEST_marital, y_dff_TEST_marital, test_size = 0.20, random_state = 48)
-                        
-    # On fait de même pour les NaaN de 'education'
-    X_train_o_marital['education'] = X_train_o_marital['education'].fillna(method ='bfill')
-    X_train_o_marital['education'] = X_train_o_marital['education'].fillna(X_train_o_marital['education'].mode()[0])
-    
-    X_test_o_marital['education'] = X_test_o_marital['education'].fillna(method ='bfill')
-    X_test_o_marital['education'] = X_test_o_marital['education'].fillna(X_test_o_marital['education'].mode()[0])
 
-    
-                    
-    # Standardisation des variables quantitatives:
-    scaler_o = StandardScaler()
-    cols_num_sd = ['age', 'balance', 'previous']
-    X_train_o_marital[cols_num_sd] = scaler_o.fit_transform(X_train_o_marital[cols_num_sd])
-    X_test_o_marital[cols_num_sd] = scaler_o.transform (X_test_o_marital[cols_num_sd])
-    
-    # Encodage de la variable Cible 'deposit':
-    le_o = LabelEncoder()
-    y_train_o_marital = le_o.fit_transform(y_train_o_marital)
-    y_test_o_marital = le_o.transform(y_test_o_marital)
-    
-    # Encodage des variables explicatives de type 'objet'
-    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
-    cat1_o = ['housing']
-    X_train_o_marital.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o_marital[cat1_o])
-    X_test_o_marital.loc[:, cat1_o] = oneh_o.transform(X_test_o_marital[cat1_o])
-    
-    X_train_o_marital[cat1_o] = X_train_o_marital[cat1_o].astype('int64')
-    X_test_o_marital[cat1_o] = X_test_o_marital[cat1_o].astype('int64')
-        
-    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    X_train_o_marital['education'] = X_train_o_marital['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-    X_test_o_marital['education'] = X_test_o_marital['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-    
-    dummies = pd.get_dummies(X_train_o_marital['marital'], prefix='marital').astype(int)
-    X_train_o_marital = pd.concat([X_train_o_marital.drop('marital', axis=1), dummies], axis=1)
-    dummies = pd.get_dummies(X_test_o_marital['marital'], prefix='marital').astype(int)
-    X_test_o_marital = pd.concat([X_test_o_marital.drop('marital', axis=1), dummies], axis=1)
 
     #DATAFRAME POUR PRED AVEC POUTCOME
     dff_TEST_poutcome = df.copy()
@@ -4131,50 +4092,6 @@ if selected == 'PRED POUSSÉ':
     dff_TEST_poutcome['poutcome'] = dff_TEST_poutcome['poutcome'].fillna(method ='bfill')
     dff_TEST_poutcome['poutcome'] = dff_TEST_poutcome['poutcome'].fillna(dff_TEST_poutcome['poutcome'].mode()[0])    
 
-    # Séparation des données en un jeu d'entrainement et jeu de test
-    X_train_o_poutcome, X_test_o_poutcome, y_train_o_poutcome, y_test_o_poutcome = train_test_split(X_dff_TEST_poutcome, y_dff_TEST_poutcome, test_size = 0.20, random_state = 48)
-                        
-    # On fait de même pour les NaaN de 'education'
-    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].fillna(method ='bfill')
-    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].fillna(X_train_o_poutcome['education'].mode()[0])
-    
-    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].fillna(method ='bfill')
-    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].fillna(X_test_o_poutcome['education'].mode()[0])
-    
-    X_train_o_poutcome['poutcome'] = X_train_o_poutcome['poutcome'].fillna(method ='bfill')
-    X_train_o_poutcome['poutcome'] = X_train_o_poutcome['poutcome'].fillna(X_train_o_poutcome['poutcome'].mode()[0])
-    
-    X_test_o_poutcome['poutcome'] = X_test_o_poutcome['poutcome'].fillna(method ='bfill')
-    X_test_o_poutcome['poutcome'] = X_test_o_poutcome['poutcome'].fillna(X_test_o_poutcome['poutcome'].mode()[0])    
-                
-    # Standardisation des variables quantitatives:
-    scaler_o = StandardScaler()
-    cols_num_sd = ['age', 'balance', 'previous']
-    X_train_o_poutcome[cols_num_sd] = scaler_o.fit_transform(X_train_o_poutcome[cols_num_sd])
-    X_test_o_poutcome[cols_num_sd] = scaler_o.transform (X_test_o_poutcome[cols_num_sd])
-    
-    # Encodage de la variable Cible 'deposit':
-    le_o = LabelEncoder()
-    y_train_o_poutcome = le_o.fit_transform(y_train_o_poutcome)
-    y_test_o_poutcome = le_o.transform(y_test_o_poutcome)
-    
-    # Encodage des variables explicatives de type 'objet'
-    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
-    cat1_o = ['housing']
-    X_train_o_poutcome.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o_poutcome[cat1_o])
-    X_test_o_poutcome.loc[:, cat1_o] = oneh_o.transform(X_test_o_poutcome[cat1_o])
-    
-    X_train_o_poutcome[cat1_o] = X_train_o_poutcome[cat1_o].astype('int64')
-    X_test_o_poutcome[cat1_o] = X_test_o_poutcome[cat1_o].astype('int64')
-        
-    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
-    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
-    
-    dummies = pd.get_dummies(X_train_o_poutcome['poutcome'], prefix='poutcome').astype(int)
-    X_train_o_poutcome = pd.concat([X_train_o_poutcome.drop('poutcome', axis=1), dummies], axis=1)
-    dummies = pd.get_dummies(X_test_o_poutcome['poutcome'], prefix='poutcome').astype(int)
-    X_test_o_poutcome = pd.concat([X_test_o_poutcome.drop('poutcome', axis=1), dummies], axis=1)
 
     st.title("Démonstration et application de notre modèle à votre cas")               
 
