@@ -3859,6 +3859,7 @@ if selected == 'TEST PRÉDICTIF':
 
 if selected == "TEST ST.SESSION_STATE" : 
 
+    
     # Exemple simple de DataFrame
     data = {
         'age': [25, 30, 45, 50],
@@ -3881,7 +3882,6 @@ if selected == "TEST ST.SESSION_STATE" :
     
     # User input pour modifier une des colonnes
     st.write("Modifiez les informations du client :")
-    
     age = st.slider("Choisissez l'âge:", min_value=18, max_value=100, value=st.session_state.selected_age)
     balance = st.slider("Choisissez le solde:", min_value=-5000, max_value=10000, value=st.session_state.selected_balance)
     
@@ -3893,10 +3893,23 @@ if selected == "TEST ST.SESSION_STATE" :
     st.write(f"L'âge choisi est : {st.session_state.selected_age}")
     st.write(f"Le solde choisi est : {st.session_state.selected_balance}")
     
-    # Ajouter un bouton pour voir les valeurs enregistrées
+    # Ajouter un bouton pour voir les valeurs d'état de session
     if st.button("Afficher les valeurs d'état de session"):
         st.write("Valeur de l'âge dans l'état de session :", st.session_state.selected_age)
         st.write("Valeur du solde dans l'état de session :", st.session_state.selected_balance)
+    
+        # Action supplémentaire : Modifier dff_TEST
+        new_balance = st.slider("Modifier le solde de dff_TEST :", min_value=-5000, max_value=10000, value=int(dataframe_TEST.iloc[0]['balance']))
+        
+        if st.button("Mettre à jour le solde dans dff_TEST"):
+            dataframe_TEST.iloc[0, dataframe_TEST.columns.get_loc('balance')] = new_balance  # Met à jour le premier solde dans le DataFrame
+            st.write("Le solde a été mis à jour dans dff_TEST.")
+            st.dataframe(dataframe_TEST)  # Afficher le DataFrame après mise à jour
+    
+    # Ajouter une action pour voir les données mises à jour
+    if st.button("Afficher dff_TEST après modification"):
+        st.dataframe(dataframe_TEST)
+
 
 if selected == 'PRED POUSSÉ':  
     # Initialisation des états de session
