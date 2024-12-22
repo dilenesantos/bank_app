@@ -3971,6 +3971,64 @@ if selected == 'PRED POUSSÉ':
     X_train_o['education'] = X_train_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
     X_test_o['education'] = X_test_o['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
 
+    dff_TEST_loan = df.copy()
+    dff_TEST_loan = dff_TEST_loan[dff_TEST_loan['age'] < 75]
+    dff_TEST_loan = dff_TEST_loan.loc[dff_TEST_loan["balance"] > -2257]
+    dff_TEST_loan = dff_TEST_loan.loc[dff_TEST_loan["balance"] < 4087]
+    dff_TEST_loan = dff_TEST_loan.loc[dff_TEST_loan["campaign"] < 6]
+    dff_TEST_loan = dff_TEST_loan.loc[dff_TEST_loan["previous"] < 2.5]
+    dff_TEST_loan = dff_TEST_loan.drop('contact', axis = 1)
+    
+    dff_TEST_loan = dff_TEST_loan.drop('pdays', axis = 1)
+    
+    dff_TEST_loan = dff_TEST_loan.drop(['day'], axis=1)
+    dff_TEST_loan = dff_TEST_loan.drop(['duration'], axis=1)
+    dff_TEST_loan = dff_TEST_loan.drop(['job'], axis=1)
+    dff_TEST_loan = dff_TEST_loan.drop(['default'], axis=1)
+    dff_TEST_loan = dff_TEST_loan.drop(['month'], axis=1)
+    dff_TEST_loan = dff_TEST_loan.drop(['poutcome'], axis=1)
+    dff_TEST_loan = dff_TEST_loan.drop(['marital'], axis=1)
+    dff_TEST_loan = dff_TEST_loan.drop(['campaign'], axis=1)   
+     
+    dff_TEST_loan['education'] = dff_TEST_loan['education'].replace('unknown', np.nan)
+    X_dff_TEST_loan = dff_TEST_loan.drop('deposit', axis = 1)
+    y_dff_TEST_loan = dff_TEST_loan['deposit']
+        
+    dff_TEST_loan = dff_TEST_loan.drop(['deposit'], axis=1)   
+    
+    # Séparation des données en un jeu d'entrainement et jeu de test
+    X_train_o_loan, X_test_o_loan, y_train_o_loan, y_test_o_loan = train_test_split(X_dff_TEST_loan, y_dff_TEST_loan, test_size = 0.20, random_state = 48)
+                        
+    # On fait de même pour les NaaN de 'education'
+    X_train_o_loan['education'] = X_train_o_loan['education'].fillna(method ='bfill')
+    X_train_o_loan['education'] = X_train_o_loan['education'].fillna(X_train_o_loan['education'].mode()[0])
+    
+    X_test_o_loan['education'] = X_test_o_loan['education'].fillna(method ='bfill')
+    X_test_o_loan['education'] = X_test_o_loan['education'].fillna(X_test_o_loan['education'].mode()[0])
+                    
+    # Standardisation des variables quantitatives:
+    scaler_o = StandardScaler()
+    cols_num_sd = ['age', 'balance', 'previous']
+    X_train_o_loan[cols_num_sd] = scaler_o.fit_transform(X_train_o_loan[cols_num_sd])
+    X_test_o_loan[cols_num_sd] = scaler_o.transform (X_test_o_loan[cols_num_sd])
+    
+    # Encodage de la variable Cible 'deposit':
+    le_o = LabelEncoder()
+    y_train_o_loan = le_o.fit_transform(y_train_o_loan)
+    y_test_o_loan = le_o.transform(y_test_o_loan)
+    
+    # Encodage des variables explicatives de type 'objet'
+    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+    cat1_o = ['housing', 'loan']
+    X_train_o_loan.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o_loan[cat1_o])
+    X_test_o_loan.loc[:, cat1_o] = oneh_o.transform(X_test_o_loan[cat1_o])
+    
+    X_train_o_loan[cat1_o] = X_train_o_loan[cat1_o].astype('int64')
+    X_test_o_loan[cat1_o] = X_test_o_loan[cat1_o].astype('int64')
+        
+    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    X_train_o_loan['education'] = X_train_o_loan['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_test_o_loan['education'] = X_test_o_loan['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
 
 
     
@@ -4167,10 +4225,15 @@ if selected == 'PRED POUSSÉ':
     
             st.write("Affichage de pred_df après affinage :")
             st.dataframe(pred_df)
-    
+
+
+            filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl.pkl"
+            model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename)
+        
+            
             # Prédiction avec le DataFrame optimisé
-            prediction_opt = xgboost_best_predict.predict(pred_df)
-            prediction_proba_opt = xgboost_best_predict.predict_proba(pred_df)
+            prediction_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict(pred_df)
+            prediction_proba_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict_proba(pred_df)
             max_proba_opt = np.max(prediction_proba_opt[0]) * 100
     
             # Affichage des résultats de l'affinage
