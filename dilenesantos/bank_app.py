@@ -3858,10 +3858,10 @@ if selected == 'TEST PRÉDICTIF':
 
 if selected == 'PRED POUSSÉ':  
     if 'refine_prediction' not in st.session_state:
-    st.session_state.refine_prediction = None
+        st.session_state.refine_prediction = None
 
     if 'option_to_add' not in st.session_state:
-    st.session_state.option_to_add = None
+        st.session_state.option_to_add = None
     
     dff_TEST = df.copy()
     dff_TEST = dff_TEST[dff_TEST['age'] < 75]
