@@ -4063,19 +4063,27 @@ if selected == 'PRED POUSSÉ':
 
 
         if max_proba < 80:
-            st.write("Le niveau de confiance étant inférieur à 80%, il se peut que les données soient insuffisantes. Nous vous proposons si vous le désirez d'affiner la prédiction.")
-            refine_prediction = st.selectbox("Souhaitez-vous affiner la prédiction ?",['Choix', 'Oui', 'Non'])
-
+        st.write("Conclusion: Données potentiellement insuffisantes.")
+        
+        # S'assurer que la valeur est mise à jour dans l'état de session
+        if 'refine_prediction' not in st.session_state:
+            st.session_state.refine_prediction = None
+        
+        refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
+        
         if refine_prediction == 'Non':
-            st.write("Merci! Aucune modification ne sera apportée à la prédiction.")
-
+            st.write("Merci ! Aucune modification ne sera apportée à la prédiction.")
+        
         elif refine_prediction == 'Oui':
-            st.session_state.refine_prediction = refine_prediction
-
-            # Sélection d'une seule variable parmi les options avec l'option "Choisir = None"
-            st.write("Veuillez choisir une information supplémentaire pour affiner la prédiction :")
+            st.session_state.refine_prediction = refine_prediction  # Mise à jour de l'état
+            st.write("Affinage sélectionné.")
+        
+            # Sélection d'une seule variable parmi les options
             option_to_add = st.selectbox("Choisir une variable à ajouter :", 
-                                        ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
+                                           ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
+        
+            st.session_state.option_to_add = option_to_add  # Mise à jour de l'option sélectionnée
+            st.write("L'option sélectionnée pour l'affinage :", st.session_state.option_to_add)
 
             if option_to_add != "Choisir = None":
                 # Ajout de la logique pour chaque option sélectionnée
