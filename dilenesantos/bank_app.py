@@ -4127,7 +4127,43 @@ if selected == 'PRED POUSSÉ':
     dff_TEST_job = pd.concat([dff_TEST_job.drop('job', axis=1), dummies], axis=1)
     
     dff_TEST_job = dff_TEST_job.drop(['deposit'], axis=1)  
+
+    #DATAFRAME POUR PRED CLIENT CATEGORY
+    dff_TEST_client_category = df.copy()
+    dff_TEST_client_category = dff_TEST_client_category[dff_TEST_client_category['age'] < 75]
+    dff_TEST_client_category = dff_TEST_client_category.loc[dff_TEST_client_category["balance"] > -2257]
+    dff_TEST_client_category = dff_TEST_client_category.loc[dff_TEST_client_category["balance"] < 4087]
+    dff_TEST_client_category = dff_TEST_client_category.loc[dff_TEST_client_category["campaign"] < 6]
+    dff_TEST_client_category = dff_TEST_client_category.loc[dff_TEST_client_category["previous"] < 2.5]
+    dff_TEST_client_category = dff_TEST_client_category.drop('contact', axis = 1)
     
+    
+    dff_TEST_client_category = dff_TEST_client_category.drop(['day'], axis=1)
+    dff_TEST_client_category = dff_TEST_client_category.drop(['duration'], axis=1)
+    dff_TEST_client_category = dff_TEST_client_category.drop(['poutcome'], axis=1)
+    dff_TEST_client_category = dff_TEST_client_category.drop(['default'], axis=1)
+    dff_TEST_client_category = dff_TEST_client_category.drop(['month'], axis=1)
+    dff_TEST_client_category = dff_TEST_client_category.drop(['loan'], axis=1)
+    dff_TEST_client_category = dff_TEST_client_category.drop(['marital'], axis=1)
+    dff_TEST_client_category = dff_TEST_client_category.drop(['campaign'], axis=1)   
+    dff_TEST_client_category = dff_TEST_client_category.drop(['job'], axis=1)   
+    
+    # Les catégories de clients selon qu'ils soient contactés pour la première fois, il y a moins de 6 mois, ou plus de 6 mois:
+    bins = [-2, -1, 180, 855]
+    labels = ['Prospect', 'Reached-6M', 'Reached+6M']
+    dff_TEST_client_category['Client_Category_M'] = pd.cut(dff_TEST_client_category['pdays'], bins=bins, labels=labels)
+    
+    # Transformation de 'Client_Category' en type 'objet'
+    dff_TEST_client_category['Client_Category_M'] = dff_TEST_client_category['Client_Category_M'].astype('object')
+    
+    # Suppression de pdays
+    dff_TEST_client_category = dff_TEST_client_category.drop('pdays', axis =1)
+    
+    dff_TEST_client_category['education'] = dff_TEST_client_category['education'].replace('unknown', np.nan)
+    
+    # 'Client_Category_M' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    dff_TEST_client_category['Client_Category_M'] = dff_TEST_client_category['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+  
     st.title("Démonstration et application de notre modèle à votre cas")               
 
     st.subheader('Vos Informations sur le client')
@@ -4477,7 +4513,48 @@ if selected == 'PRED POUSSÉ':
                 Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
                 pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
                 st.write("Dernier appel : ", Client_Category_M)
+                
+                # Étape 2 : Concaténer dff et pred_df
+                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                num_cols = ['age', 'balance','previous']
+                
+                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                pred_df.index = range(dff_TEST_client_category.shape[0], dff_TEST_client_category.shape[0] + len(pred_df))
+            
+                combined_df_client_category = pd.concat([dff_TEST_client_category[num_cols], pred_df[num_cols]], axis=0)
+
+                # Étape 3 : Standardisation des données numériques
+                scaler = StandardScaler()
+                combined_df_client_category[num_cols] = scaler.fit_transform(combined_df_client_category[num_cols])
     
+                # Étape 4 : Séparer à nouveau pred_df des autres données
+                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+                pred_df[num_cols] = combined_df_client_category.loc[pred_df.index, num_cols]
+            
+                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+                pred_df = pred_df.reset_index(drop=True)
+                st.dataframe(pred_df)
+          
+                filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
+                model_XGBOOST_1_SD_model_PRED_client_category = joblib.load(filename_client_category)         
+                
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt_client_category = model_XGBOOST_1_SD_model_PRED_client_category.predict(pred_df)
+                prediction_proba_opt_client_category = model_XGBOOST_1_SD_model_PRED_client_category.predict_proba(pred_df)
+                max_proba_opt_client_category = np.max(prediction_proba_opt_client_category[0]) * 100
+        
+                # Affichage des résultats de l'affinage
+                st.write(f"Prediction après affinage : {prediction_opt_client_category[0]}")
+                st.write(f"Niveau de confiance après affinage : {max_proba_opt_client_category:.2f}%")
+                if prediction_opt_client_category[0] == 0:
+                    st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                else:
+                    st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                    st.write("\nRecommandations : ")
+                    st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                    st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+
+
             # Afficher le récapitulatif
             st.write(f'### Récapitulatif')
             st.write("Le client a : ", age, "ans")
