@@ -4177,11 +4177,7 @@ if selected == 'PRED POUSSÉ':
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
                 num_cols = ['age', 'balance','previous']
                 combined_df_loan = pd.concat([dff_TEST_loan[num_cols], pred_df[num_cols]], axis=0)
-            
-                # Étape 3 : Standardisation des données numériques
-                scaler = StandardScaler()
-                combined_df_loan[num_cols] = scaler.fit_transform(combined_df_loan[num_cols])
-            
+
                 # Étape 4 : Séparer à nouveau pred_df des autres données
                 # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
                 pred_df[num_cols] = combined_df_loan.loc[pred_df.index, num_cols]
