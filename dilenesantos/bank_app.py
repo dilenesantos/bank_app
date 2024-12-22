@@ -4446,7 +4446,7 @@ if selected == 'PRED POUSSÉ':
     
                 # Étape 4 : Séparer à nouveau pred_df des autres données
                 # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                pred_df[num_cols] = combined_df_poutcome.loc[pred_df.index, num_cols]
+                pred_df[num_cols] = combined_df_job.loc[pred_df.index, num_cols]
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
