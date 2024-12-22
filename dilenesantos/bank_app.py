@@ -34,14 +34,6 @@ from sklearn.metrics import classification_report
 import joblib
 import shap
 
-if 'pred_df' not in st.session_state:
-    st.session_state.pred_df = None
-if 'max_proba' not in st.session_state:
-    st.session_state.max_proba = None
-if 'refine_prediction' not in st.session_state:
-    st.session_state.refine_prediction = None
-if 'option_to_add' not in st.session_state:
-    st.session_state.option_to_add = None
 
 df=pd.read_csv('dilenesantos/bank.csv')
 
@@ -4049,76 +4041,62 @@ if selected == 'PRED POUSSÉ':
     
     # Prédiction
     if prediction_button:
-        st.session_state.pred_df = pred_df
-        prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
-        prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
-        st.session_state.max_proba = np.max(prediction_proba[0]) * 100
+        prediction = xgboost_best_predict.predict(pred_df)
+        prediction_proba = xgboost_best_predict.predict_proba(pred_df)
+        max_proba = np.max(prediction_proba[0]) * 100
+    
+        st.write(f"Prediction : {prediction[0]}")
+        st.write(f"Niveau de confiance: {max_proba:.2f}%")
+    
+        # Vérifiez si le niveau de confiance est inférieur à 80%
+        if max_proba < 80:
+            st.write("Conclusion: Données potentiellement insuffisantes.")
+            
+            # Demander si l'utilisateur veut affiner la prédiction
+            st.session_state.refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
+    
+            if st.session_state.refine_prediction == 'Non':
+                st.write("Merci ! Aucune modification ne sera apportée à la prédiction.")
+            
+            elif st.session_state.refine_prediction == 'Oui':
+                # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
+                st.write("Veuillez choisir une information supplémentaire pour affiner la prédiction :")
+                option_to_add = st.selectbox("Choisir une variable à ajouter :", 
+                                               ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
+    
+                if option_to_add != "Choisir = None":
+                    # Ajout de la logique pour chaque option sélectionnée
+                    if option_to_add == "loan":
+                        loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
+                        pred_df['loan'] = loan
+                        st.write("A un crédit personnel : ", loan)
+    
+                    elif option_to_add == "marital":
+                        marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
+                        pred_df['marital'] = marital
+                        st.write("Situation maritale : ", marital)
+    
+                    elif option_to_add == "poutcome":
+                        poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
+                        pred_df['poutcome'] = poutcome
+                        st.write("Résultat de la campagne : ", poutcome)
+    
+                    elif option_to_add == "job":
+                        job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur', 
+                                                                             'housemaid', 'management', 'retired', 
+                                                                             'self-employed', 'services', 'student', 
+                                                                             'technician', 'unemployed', 'unknown'))
+                        pred_df['job'] = job
+                        st.write("Emploi : ", job)
+    
+                    elif option_to_add == "Client_Category_M":
+                        Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+                        pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+                        st.write("Dernier appel : ", Client_Category_M)
+    
+                    # Affichage pour les informations fournies
+                    st.write(f'### Récapitulatif')
 
-        # Résultats
-        if prediction[0] == 0:
-            st.write(f"Prediction : {prediction[0]}")
-            st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
-            st.write("Conclusion:", "\nCe client n'est pas susceptible de souscrire à un dépôt à terme.")
-        else:
-            st.write(f"Prediction : {prediction[0]}")
-            st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
-            st.write("Conclusion:", "\nCe client est susceptible de souscrire à un dépôt à terme.")
-            st.write("\n")
-            st.write("Recommandations : ")
-            st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-            st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
-
-        # Afficher les valeurs dans st.session_state pour le débogage
-        st.write("Valeur de refine_prediction dans l'état de session :", st.session_state.refine_prediction)
-        st.write("Valeur de option_to_add dans l'état de session :", st.session_state.option_to_add)
-
-
-        if st.session_state.max_proba < 80:
-                st.write("Conclusion: Données potentiellement insuffisantes.")
-                # Demander si l'utilisateur veut affiner la prédiction
-                st.session_state.refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
-        
-                if st.session_state.refine_prediction == 'Non':
-                    st.write("Merci ! Aucune modification ne sera apportée à la prédiction.")
-                
-                elif st.session_state.refine_prediction == 'Oui':
-                    # Affichage des options pour le raffinement
-                    option_to_add = st.selectbox("Choisir une variable à ajouter :", 
-                                                   ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
-                    st.session_state.option_to_add = option_to_add  # Mémoriser l'option choisie
-        
-                    # Logique pour gérer les options
-                    if st.session_state.option_to_add != "Choisir = None":
-                        if st.session_state.option_to_add == "loan":
-                            loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
-                            st.session_state.pred_df['loan'] = loan
-                            st.write("A un crédit personnel : ", loan)
-        
-                        elif option_to_add == "marital":
-                            marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
-                            st.session_state.pred_df['marital'] = marital
-                            st.write("Situation maritale : ", marital)
-        
-                        elif option_to_add == "poutcome":
-                            poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
-                            st.session_state.pred_df['poutcome'] = poutcome
-                            st.write("Résultat de la campagne : ", poutcome)
-        
-                        elif option_to_add == "job":
-                            job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur', 
-                                                                                'housemaid', 'management', 'retired', 
-                                                                                'self-employed', 'services', 'student', 
-                                                                                'technician', 'unemployed', 'unknown'))
-                            st.session_state.pred_df['job'] = job
-                            st.write("Emploi : ", job)
-        
-                        elif option_to_add == "Client_Category_M":
-                            Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                            st.session_state.pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-                            st.write("Dernier appel : ", Client_Category_M)
-        
-                        # Affichage du récapitulatif
-                        st.write(f'### Récapitulatif')
                         st.write("Le client a :  ", age, "ans")
                         st.write("Le client a un niveau d'étude :  ", niveau_etude)
                         st.write("Le solde de son compte en banque est de :  ", balance, "euros")
