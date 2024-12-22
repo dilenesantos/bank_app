@@ -4339,43 +4339,43 @@ if selected == 'PRED POUSSÉ':
                         st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
                         st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
     
-        
-                elif option_to_add == "poutcome":
-                    poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
-                    pred_df['poutcome'] = poutcome
-                    st.write("Résultat de la campagne : ", poutcome)
-        
-                elif option_to_add == "job":
-                    job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
-                                                                         'housemaid', 'management', 'retired', 
-                                                                         'self-employed', 'services', 'student', 
-                                                                         'technician', 'unemployed', 'unknown'))
-                    pred_df['job'] = job
-                    st.write("Emploi : ", job)
-        
-                elif option_to_add == "Client_Category_M":
-                    Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                    pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-                    st.write("Dernier appel : ", Client_Category_M)
-        
-                # Afficher le récapitulatif
-                st.write(f'### Récapitulatif')
-                st.write("Le client a : ", age, "ans")
-                st.write("Le client a un niveau d'étude : ", niveau_etude)
-                st.write("Le solde de son compte en banque est de : ", balance, "euros")
-                st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
-                st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
-                
-                # Afficher les informations supplémentaires définies
-                if option_to_add == "loan":
-                    st.write(f"A un crédit personnel : {loan}")
-                elif option_to_add == "marital":
-                    st.write(f"Situation maritale : {marital}")
-                elif option_to_add == "poutcome":
-                    st.write(f"Résultat de la campagne : {poutcome}")
-                elif option_to_add == "job":
-                    st.write(f"Emploi : {job}")
-                elif option_to_add == "Client_Category_M":
-                    st.write(f"Dernier appel : {Client_Category_M}")
-         
+
+            elif option_to_add == "poutcome":
+                poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
+                pred_df['poutcome'] = poutcome
+                st.write("Résultat de la campagne : ", poutcome)
+    
+            elif option_to_add == "job":
+                job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
+                                                                     'housemaid', 'management', 'retired', 
+                                                                     'self-employed', 'services', 'student', 
+                                                                     'technician', 'unemployed', 'unknown'))
+                pred_df['job'] = job
+                st.write("Emploi : ", job)
+    
+            elif option_to_add == "Client_Category_M":
+                Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+                pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+                st.write("Dernier appel : ", Client_Category_M)
+    
+            # Afficher le récapitulatif
+            st.write(f'### Récapitulatif')
+            st.write("Le client a : ", age, "ans")
+            st.write("Le client a un niveau d'étude : ", niveau_etude)
+            st.write("Le solde de son compte en banque est de : ", balance, "euros")
+            st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
+            st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
+            
+            # Afficher les informations supplémentaires définies
+            if option_to_add == "loan":
+                st.write(f"A un crédit personnel : {loan}")
+            elif option_to_add == "marital":
+                st.write(f"Situation maritale : {marital}")
+            elif option_to_add == "poutcome":
+                st.write(f"Résultat de la campagne : {poutcome}")
+            elif option_to_add == "job":
+                st.write(f"Emploi : {job}")
+            elif option_to_add == "Client_Category_M":
+                st.write(f"Dernier appel : {Client_Category_M}")
      
+ 
