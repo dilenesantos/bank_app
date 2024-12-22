@@ -287,7 +287,7 @@ X_test_sd_original[cols_num_sd] = scaler_sd.inverse_transform(X_test_sd[cols_num
 with st.sidebar:
     selected = option_menu(
         menu_title='Sections',
-        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "TEST PRED SCORES", "Outil Prédictif", "TEST PRÉDICTIF", "PRED POUSSÉ", "TEST ST.SESSION_STATE"]) 
+        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "TEST PRED SCORES", "Outil Prédictif", "TEST PRÉDICTIF", "PRED POUSSÉ"]) 
 
 if selected == 'Introduction':  
     st.subheader("Contexte du projet")
@@ -3856,57 +3856,6 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("Recommandations : ")
                 st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
-
-if selected == "TEST ST.SESSION_STATE" : 
-    np.random.seed(42)  # Pour la reproductibilité
-    data = {
-        'age': np.random.randint(18, 90, size=100),  # 100 âges aléatoires entre 18 et 90
-        'balance': np.random.randint(-3000, 10000, size=100),  # 100 soldes entre -3000 et 10000
-        'education': np.random.choice(['tertiary', 'secondary', 'primary', 'unknown'], size=100),
-    }
-    DATATEST = pd.DataFrame(data)
-    
-    # Initialisation des états de session pour age et balance
-    if 'selected_age' not in st.session_state:
-        st.session_state.selected_age = 25  # Valeur par défaut
-    
-    if 'selected_balance' not in st.session_state:
-        st.session_state.selected_balance = 2000  # Valeur par défaut
-    
-    # Affichage de dff_TEST
-    st.write("Données disponibles :")
-    st.dataframe(DATATEST)
-    
-    # Vérification et modification des informations sur l'utilisateur
-    st.write("Modifiez les informations du client :")
-    age = st.slider("Choisissez l'âge:", min_value=18, max_value=100, value=st.session_state.selected_age)
-    balance = st.slider("Choisissez le solde:", min_value=-5000, max_value=10000, value=st.session_state.selected_balance)
-    
-    # Stockage des choix de l'utilisateur dans l'état de session
-    st.session_state.selected_age = age
-    st.session_state.selected_balance = balance
-    
-    # Affichage des valeurs choisies
-    st.write(f"L'âge choisi est : {st.session_state.selected_age}")
-    st.write(f"Le solde choisi est : {st.session_state.selected_balance}")
-    
-    # Ajouter un bouton pour voir les valeurs enregistrées
-    if st.button("Afficher les valeurs d'état de session"):
-        st.write("Valeur de l'âge dans l'état de session :", st.session_state.selected_age)
-        st.write("Valeur du solde dans l'état de session :", st.session_state.selected_balance)
-    
-    # Action supplémentaire : Modifier une valeur du DataFrame dff_TEST
-    st.write("Modifier le solde dans le DataFrame dff_TEST :")
-    new_balance = st.slider("Modifier le solde de dff_TEST :", min_value=-5000, max_value=10000, value=int(DATATEST.iloc[0]['balance']))
-    if st.button("Mettre à jour le solde dans dff_TEST"):
-        DATATEST.iloc[0, DATATEST.columns.get_loc('balance')] = new_balance  # Mise à jour du DataFrame
-        st.write("Le solde a été mis à jour dans dff_TEST.")
-        st.dataframe(DATATEST)  # Afficher le DataFrame après mise à jour
-    
-    # Afficher dff_TEST actuel
-    if st.button("Afficher dff_TEST actuel"):
-        st.dataframe(DATATEST)
-
 
 if selected == 'PRED POUSSÉ':  
 
