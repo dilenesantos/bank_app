@@ -3858,14 +3858,11 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
 
 if selected == "TEST ST.SESSION_STATE" : 
-    import streamlit as st
-    import pandas as pd
-    
-    # Exemple de DataFrame
+    np.random.seed(42)  # Pour la reproductibilité
     data = {
-        'age': [25, 30, 45, 50],
-        'balance': [2000, -500, 1500, 4000],
-        'education': ['tertiary', 'secondary', 'primary', 'unknown'],
+        'age': np.random.randint(18, 90, size=100),  # 100 âges aléatoires entre 18 et 90
+        'balance': np.random.randint(-3000, 10000, size=100),  # 100 soldes entre -3000 et 10000
+        'education': np.random.choice(['tertiary', 'secondary', 'primary', 'unknown'], size=100),
     }
     DATATEST = pd.DataFrame(data)
     
