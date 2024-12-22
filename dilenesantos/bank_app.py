@@ -4195,7 +4195,7 @@ if selected == 'PRED POUSSÉ':
 
                 
                 filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
-                model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename)
+                model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename_LOAN)
             
                 
                 # Prédiction avec le DataFrame optimisé
