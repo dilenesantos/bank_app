@@ -4041,7 +4041,7 @@ if selected == 'PRED POUSSÉ':
         st.session_state.pred_df = pred_df
         prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
         prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
-        st.session_state.max_proba = np.max(prediction_proba[0]) * 100
+        max_proba = st.session_state.max_proba = np.max(prediction_proba[0]) * 100
 
         # Résultats
         if prediction[0] == 0:
