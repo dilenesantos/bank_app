@@ -4298,6 +4298,7 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
+                st.dataframe(pred_df)
           
                 filename_MARITAL = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)         
