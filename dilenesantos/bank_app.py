@@ -3859,6 +3859,7 @@ if selected == 'TEST PRÉDICTIF':
 
     
 if selected == 'PRED POUSSÉ':  
+    # Initialisation des états de session
     if 'pred_df' not in st.session_state:
         st.session_state.pred_df = None
     if 'max_proba' not in st.session_state:
@@ -4030,8 +4031,9 @@ if selected == 'PRED POUSSÉ':
     st.write("Affichage de pred_df prêt pour la prédiction :")
     st.dataframe(pred_df)
     st.dataframe(dff_TEST)
-    pred_df = st.session_state.pred_df
+    st.session_state.pred_df = pred_df
 
+    
     # Bouton pour lancer la prédiction
     prediction_button = st.button(label="Predict")
     
@@ -4041,21 +4043,25 @@ if selected == 'PRED POUSSÉ':
     
     # Prédiction
     if prediction_button:
+        st.dataframe(pred_df)
+        st.session_state.pred_df = pred_df
+
         prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
         prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
         max_proba = np.max(prediction_proba[0]) * 100
         st.session_state.max_proba = max_proba  # Stocke la probabilité maxima
 
         st.write(f"Prediction : {prediction[0]}")
-        st.write(f"Niveau de confiance: {max_proba:.2f}%")
+        st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
     
         # Vérifiez si le niveau de confiance est inférieur à 80%
-        if max_proba < 80:
+        if st.session_state.max_proba < 80:
+            st.session_state.pred_df = pred_df
+
             st.write("Conclusion: Données potentiellement insuffisantes.")
             
             # Demander si l'utilisateur veut affiner la prédiction
-            refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
-            st.session_state.refine_prediction = refine_prediction  # Met à jour l'état de session
+            st.session_state.refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
             
             if st.session_state.refine_prediction == 'Non':
                 st.write("Merci ! Aucune modification ne sera apportée à la prédiction.")
@@ -4063,29 +4069,28 @@ if selected == 'PRED POUSSÉ':
             elif st.session_state.refine_prediction == 'Oui':
                 # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
                 st.write("Veuillez choisir une information supplémentaire pour affiner la prédiction :")
-                option_to_add = st.selectbox("Choisir une variable à ajouter :", 
+                st.session_state.option_to_add = st.selectbox("Choisir une variable à ajouter :", 
                                                ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
                 
-                st.session_state.option_to_add = option_to_add  # Enregistrez l'option choisie
 
-                if option_to_add != "Choisir = None":
+                if st.session_state.option_to_add != "Choisir = None":
                     # Ajout de la logique pour chaque option sélectionnée
                     if option_to_add == "loan":
                         loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
                         st.session_state.pred_df['loan'] = loan
                         st.write("A un crédit personnel : ", loan)
     
-                    elif option_to_add == "marital":
+                    elif st.session_state.option_to_add == "marital":
                         marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
                         st.session_state.pred_df['marital'] = marital
                         st.write("Situation maritale : ", marital)
     
-                    elif option_to_add == "poutcome":
+                    elif st.session_state.option_to_add == "poutcome":
                         poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
                         st.session_state.pred_df['poutcome'] = poutcome
                         st.write("Résultat de la campagne : ", poutcome)
     
-                    elif option_to_add == "job":
+                    elif st.session_state.option_to_add == "job":
                         job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur', 
                                                                              'housemaid', 'management', 'retired', 
                                                                              'self-employed', 'services', 'student', 
@@ -4093,7 +4098,7 @@ if selected == 'PRED POUSSÉ':
                         st.session_state.pred_df['job'] = job
                         st.write("Emploi : ", job)
     
-                    elif option_to_add == "Client_Category_M":
+                    elif st.session_state.option_to_add == "Client_Category_M":
                         Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
                         st.session_state.pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
                         st.write("Dernier appel : ", Client_Category_M)
