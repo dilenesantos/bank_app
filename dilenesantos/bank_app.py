@@ -34,11 +34,14 @@ from sklearn.metrics import classification_report
 import joblib
 import shap
 
+if 'pred_df' not in st.session_state:
+    st.session_state.pred_df = None
+if 'max_proba' not in st.session_state:
+    st.session_state.max_proba = None
 if 'refine_prediction' not in st.session_state:
-        st.session_state.refine_prediction = None
-
+    st.session_state.refine_prediction = None
 if 'option_to_add' not in st.session_state:
-        st.session_state.option_to_add = None
+    st.session_state.option_to_add = None
 
 df=pd.read_csv('dilenesantos/bank.csv')
 
@@ -4041,7 +4044,7 @@ if selected == 'PRED POUSSÉ':
         st.session_state.pred_df = pred_df
         prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
         prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
-        max_proba = st.session_state.max_proba = np.max(prediction_proba[0]) * 100
+        st.session_state.max_proba = np.max(prediction_proba[0]) * 100
 
         # Résultats
         if prediction[0] == 0:
@@ -4062,32 +4065,23 @@ if selected == 'PRED POUSSÉ':
         st.write("Valeur de option_to_add dans l'état de session :", st.session_state.option_to_add)
 
 
-        if max_proba < 80:
+        if st.session_state.max_proba < 80:
                 st.write("Conclusion: Données potentiellement insuffisantes.")
-                
-                # S'assurer que la valeur est mise à jour dans l'état de session
-                if 'refine_prediction' not in st.session_state:
-                    st.session_state.refine_prediction = None
-                
-                refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
-                
-                if refine_prediction == 'Non':
+                # Demander si l'utilisateur veut affiner la prédiction
+                st.session_state.refine_prediction = st.radio("Souhaitez-vous affiner la prédiction ?", ('Oui', 'Non'))
+        
+                if st.session_state.refine_prediction == 'Non':
                     st.write("Merci ! Aucune modification ne sera apportée à la prédiction.")
                 
-                elif refine_prediction == 'Oui':
-                    st.session_state.refine_prediction = refine_prediction  # Mise à jour de l'état
-                    st.write("Affinage sélectionné.")
-                
-                    # Sélection d'une seule variable parmi les options
+                elif st.session_state.refine_prediction == 'Oui':
+                    # Affichage des options pour le raffinement
                     option_to_add = st.selectbox("Choisir une variable à ajouter :", 
                                                    ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
-                
-                    st.session_state.option_to_add = option_to_add  # Mise à jour de l'option sélectionnée
-                    st.write("L'option sélectionnée pour l'affinage :", st.session_state.option_to_add)
+                    st.session_state.option_to_add = option_to_add  # Mémoriser l'option choisie
         
-                    if option_to_add != "Choisir = None":
-                        # Ajout de la logique pour chaque option sélectionnée
-                        if option_to_add == "loan":
+                    # Logique pour gérer les options
+                    if st.session_state.option_to_add != "Choisir = None":
+                        if st.session_state.option_to_add == "loan":
                             loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
                             st.session_state.pred_df['loan'] = loan
                             st.write("A un crédit personnel : ", loan)
