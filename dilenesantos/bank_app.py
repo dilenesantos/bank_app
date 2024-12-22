@@ -4424,7 +4424,7 @@ if selected == 'PRED POUSSÉ':
                 pred_df.index = range(dff_TEST_poutcome.shape[0], dff_TEST_poutcome.shape[0] + len(pred_df))
             
                 combined_df_poutcome = pd.concat([dff_TEST_poutcome[num_cols], pred_df[num_cols]], axis=0)
-
+                st.dataframe(dff_TEST_poutcome)
                 # Étape 3 : Standardisation des données numériques
                 scaler = StandardScaler()
                 combined_df_poutcome[num_cols] = scaler.fit_transform(combined_df_poutcome[num_cols])
@@ -4432,10 +4432,10 @@ if selected == 'PRED POUSSÉ':
                 # Étape 4 : Séparer à nouveau pred_df des autres données
                 # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
                 pred_df[num_cols] = combined_df_poutcome.loc[pred_df.index, num_cols]
-            
+                st.dataframe(combined_df_poutcome)
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
-          
+                st.dataframe(pred_df)
                 filename_POUTCOME = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_poutcome = joblib.load(filename_POUTCOME)         
                 
