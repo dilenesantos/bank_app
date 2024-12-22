@@ -4416,7 +4416,7 @@ if selected == 'PRED POUSSÉ':
                 job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
                                                                      'housemaid', 'management', 'retired', 
                                                                      'self-employed', 'services', 'student', 
-                                                                     'technician', 'unemployed', 'unknown'))
+                                                                     'technician', 'unemployed'))
                 pred_df['job'] = job
                 st.write("Emploi : ", job)
              
