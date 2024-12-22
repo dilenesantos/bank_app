@@ -4353,6 +4353,7 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
+                st.dataframe(pred_df)
           
                 filename_POUTCOME = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_bis.pkl"
                 model_XGBOOST_1_SD_model_PRED_poutcome = joblib.load(filename_POUTCOME)         
