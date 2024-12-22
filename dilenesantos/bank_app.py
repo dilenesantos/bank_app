@@ -3825,9 +3825,9 @@ if selected == 'TEST PRÉDICTIF':
         pred_df = pred_df.reset_index(drop=True)
 
         # Affichage du DataFrame après la standardisation
-        #st.write("Affichage de pred_df prêt pour la prédiction :")
-        #st.dataframe(pred_df)
-        #st.dataframe(dff_TEST)
+        st.write("Affichage de pred_df prêt pour la prédiction :")
+        st.dataframe(pred_df)
+        st.dataframe(dff_TEST)
 
 
         # Bouton pour lancer la prédiction
