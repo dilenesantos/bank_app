@@ -4164,7 +4164,10 @@ if selected == 'PRED POUSSÉ':
             if option_to_add == "loan":
                 loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
                 pred_df['loan'] = loan
-                st.write("A un crédit personnel : ", loan)
+                # Remplacer 'yes' par 1 et 'no' par 0 pour chaque colonne
+                cols_to_replace = ['loan']
+                for col in cols_to_replace:
+                    pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
     
             elif option_to_add == "marital":
                 marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
@@ -4208,7 +4211,10 @@ if selected == 'PRED POUSSÉ':
                 st.write(f"Emploi : {job}")
             elif option_to_add == "Client_Category_M":
                 st.write(f"Dernier appel : {Client_Category_M}")
-    
+     
+            st.write(Pred_df après sélection loan en plus)
+            st.dataframe(pred_df)
+
             # Standardiser et préparer le DataFrame pour la préciction
             pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
     
