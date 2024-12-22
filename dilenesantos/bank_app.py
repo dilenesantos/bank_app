@@ -4280,6 +4280,7 @@ if selected == 'PRED POUSSÉ':
                 marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
                 pred_df['marital'] = marital
                 st.write("Situation maritale : ", marital)
+                
                 # Liste des variables catégorielles multi-modales à traiter
                 cat_cols_multi_modal = ['marital']
                 # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
