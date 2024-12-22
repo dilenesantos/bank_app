@@ -4511,7 +4511,7 @@ if selected == 'PRED POUSSÉ':
             
             elif option_to_add == "Client_Category_M":
                 Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+                pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
                 st.write("Dernier appel : ", Client_Category_M)
                 
                 # Étape 2 : Concaténer dff et pred_df
