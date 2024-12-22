@@ -4094,6 +4094,39 @@ if selected == 'PRED POUSSÉ':
 
     dummies = pd.get_dummies(dff_TEST_poutcome['poutcome'], prefix='poutcome').astype(int)
     dff_TEST_poutcome = pd.concat([dff_TEST_poutcome.drop('poutcome', axis=1), dummies], axis=1)
+
+    #DATAFRAME POUR PRED JOB
+    dff_TEST_job = df.copy()
+    dff_TEST_job = dff_TEST_job[dff_TEST_job['age'] < 75]
+    dff_TEST_job = dff_TEST_job.loc[dff_TEST_job["balance"] > -2257]
+    dff_TEST_job = dff_TEST_job.loc[dff_TEST_job["balance"] < 4087]
+    dff_TEST_job = dff_TEST_job.loc[dff_TEST_job["campaign"] < 6]
+    dff_TEST_job = dff_TEST_job.loc[dff_TEST_job["previous"] < 2.5]
+    dff_TEST_job = dff_TEST_job.drop('contact', axis = 1)
+    
+    dff_TEST_job = dff_TEST_job.drop('pdays', axis = 1)
+    
+    dff_TEST_job = dff_TEST_job.drop(['day'], axis=1)
+    dff_TEST_job = dff_TEST_job.drop(['duration'], axis=1)
+    dff_TEST_job = dff_TEST_job.drop(['poutcome'], axis=1)
+    dff_TEST_job = dff_TEST_job.drop(['default'], axis=1)
+    dff_TEST_job = dff_TEST_job.drop(['month'], axis=1)
+    dff_TEST_job = dff_TEST_job.drop(['loan'], axis=1)
+    dff_TEST_job = dff_TEST_job.drop(['marital'], axis=1)
+    dff_TEST_job = dff_TEST_job.drop(['campaign'], axis=1)   
+     
+    dff_TEST_job['education'] = dff_TEST_job['education'].replace('unknown', np.nan)
+    dff_TEST_job['job'] = dff_TEST_job['job'].replace('unknown', np.nan)
+
+
+    imputer = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
+    dff_TEST_job.loc[:,['job']] = imputer.fit_transform(dff_TEST_job[['job']])
+    dff_TEST_job.loc[:,['job']] = imputer.transform(dff_TEST_job[['job']])
+
+    dummies = pd.get_dummies(dff_TEST_job['job'], prefix='job').astype(int)
+    dff_TEST_job = pd.concat([dff_TEST_job.drop('job', axis=1), dummies], axis=1)
+    
+    dff_TEST_job = dff_TEST_job.drop(['deposit'], axis=1)  
     
     st.title("Démonstration et application de notre modèle à votre cas")               
 
@@ -4358,7 +4391,7 @@ if selected == 'PRED POUSSÉ':
                 pred_df = pred_df.reset_index(drop=True)
                 st.dataframe(pred_df)
           
-                filename_POUTCOME = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_ter.pkl"
+                filename_POUTCOME = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_quater.pkl"
                 model_XGBOOST_1_SD_model_PRED_poutcome = joblib.load(filename_POUTCOME)         
                 
                 # Prédiction avec le DataFrame optimisé
@@ -4386,7 +4419,60 @@ if selected == 'PRED POUSSÉ':
                                                                      'technician', 'unemployed', 'unknown'))
                 pred_df['job'] = job
                 st.write("Emploi : ", job)
+             
+                # Liste des variables catégorielles multi-modales à traiter
+                cat_cols_multi_modal_job = ['job']
+                # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
+                for col in cat_cols_multi_modal_job:
+                    # Effectuer un encodage des variables catégorielles multi-modales
+                    dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
+                    pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
+                            
+                # Réorganiser les colonnes pour correspondre exactement à celles de dff
+                pred_df = pred_df.reindex(columns=dff_TEST_poutcome.columns, fill_value=0)
+                
+                # Étape 2 : Concaténer dff et pred_df
+                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                num_cols = ['age', 'balance','previous']
+                
+                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                pred_df.index = range(dff_TEST_job.shape[0], dff_TEST_job.shape[0] + len(pred_df))
+            
+                combined_df_job = pd.concat([dff_TEST_job[num_cols], pred_df[num_cols]], axis=0)
+
+                # Étape 3 : Standardisation des données numériques
+                scaler = StandardScaler()
+                combined_df_job[num_cols] = scaler.fit_transform(combined_df_job[num_cols])
     
+                # Étape 4 : Séparer à nouveau pred_df des autres données
+                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+                pred_df[num_cols] = combined_df_poutcome.loc[pred_df.index, num_cols]
+            
+                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+                pred_df = pred_df.reset_index(drop=True)
+                st.dataframe(pred_df)
+          
+                filename_JOB = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_quater.pkl"
+                model_XGBOOST_1_SD_model_PRED_job = joblib.load(filename_JOB)         
+                
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt_job = model_XGBOOST_1_SD_model_PRED_job.predict(pred_df)
+                prediction_proba_opt_job = model_XGBOOST_1_SD_model_PRED_job.predict_proba(pred_df)
+                max_proba_opt_job = np.max(prediction_proba_opt_job[0]) * 100
+        
+                # Affichage des résultats de l'affinage
+                st.write(f"Prediction après affinage : {prediction_opt_job[0]}")
+                st.write(f"Niveau de confiance après affinage : {max_proba_opt_job:.2f}%")
+                if prediction_opt_job[0] == 0:
+                    st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                else:
+                    st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                    st.write("\nRecommandations : ")
+                    st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                    st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+
+
+            
             elif option_to_add == "Client_Category_M":
                 Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
                 pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
