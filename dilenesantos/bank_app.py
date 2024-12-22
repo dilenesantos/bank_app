@@ -4168,7 +4168,54 @@ if selected == 'PRED POUSSÉ':
                 cols_to_replace = ['loan']
                 for col in cols_to_replace:
                     pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
-    
+                # Réorganiser les colonnes pour correspondre exactement à celles de dff
+                pred_df = pred_df.reindex(columns=dff_TEST_loan.columns, fill_value=0)
+                 # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                pred_df.index = range(dff_TEST_loan.shape[0], dff_TEST_loan.shape[0] + len(pred_df))
+            
+                # Étape 2 : Concaténer dff et pred_df
+                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                combined_df_loan = pd.concat([dff_TEST_loan[num_cols], pred_df[num_cols]], axis=0)
+            
+                # Étape 3 : Standardisation des données numériques
+                scaler = StandardScaler()
+                combined_df_loan[num_cols] = scaler.fit_transform(combined_df_loan[num_cols])
+            
+                # Étape 4 : Séparer à nouveau pred_df des autres données
+                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+                pred_df[num_cols] = combined_df_loan.loc[pred_df.index, num_cols]
+            
+                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+                pred_df = pred_df.reset_index(drop=True)
+            
+                # Affichage du DataFrame après la standardisation
+                st.write("Affichage de pred_df prêt pour la prédiction :")
+                st.dataframe(pred_df)
+                st.dataframe(dff_TEST_loan)
+
+                
+                filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl.pkl"
+                model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename)
+            
+                
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict(pred_df)
+                prediction_proba_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict_proba(pred_df)
+                max_proba_opt = np.max(prediction_proba_opt[0]) * 100
+        
+                # Affichage des résultats de l'affinage
+                st.write(f"Prediction après affinage : {prediction_opt[0]}")
+                st.write(f"Niveau de confiance après affinage : {max_proba_opt:.2f}%")
+                if prediction_opt[0] == 0:
+                    st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                else:
+                    st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                    st.write("\nRecommandations : ")
+                    st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                    st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+        
+        
+
             elif option_to_add == "marital":
                 marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
                 pred_df['marital'] = marital
