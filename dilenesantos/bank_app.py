@@ -4054,7 +4054,10 @@ if selected == 'PRED POUSSÉ':
     X_dff_TEST_marital = dff_TEST_marital.drop('deposit', axis = 1)
     y_dff_TEST_marital = dff_TEST_marital['deposit']
         
-    dff_TEST_marital = dff_TEST_marital.drop(['deposit'], axis=1)   
+    dff_TEST_marital = dff_TEST_marital.drop(['deposit'], axis=1) 
+
+    dummies = pd.get_dummies(dff_TEST_marital['marital'], prefix='marital').astype(int)
+    dff_TEST_marital = pd.concat([dff_TEST_marital.drop('marital', axis=1), dummies], axis=1)
     
     # Séparation des données en un jeu d'entrainement et jeu de test
     X_train_o_marital, X_test_o_marital, y_train_o_marital, y_test_o_marital = train_test_split(X_dff_TEST_marital, y_dff_TEST_marital, test_size = 0.20, random_state = 48)
