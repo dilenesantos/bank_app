@@ -4038,18 +4038,19 @@ if selected == 'PRED POUSSÉ':
     
     # Prédiction
     if prediction_button:
+        st.session_state.pred_df = pred_df
         prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
         prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
-        max_proba = np.max(prediction_proba[0]) * 100
+        st.session_state.max_proba = np.max(prediction_proba[0]) * 100
 
         # Résultats
         if prediction[0] == 0:
             st.write(f"Prediction : {prediction[0]}")
-            st.write(f"Niveau de confiance: {max_proba:.2f}%")
+            st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
             st.write("Conclusion:", "\nCe client n'est pas susceptible de souscrire à un dépôt à terme.")
         else:
             st.write(f"Prediction : {prediction[0]}")
-            st.write(f"Niveau de confiance: {max_proba:.2f}%")
+            st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
             st.write("Conclusion:", "\nCe client est susceptible de souscrire à un dépôt à terme.")
             st.write("\n")
             st.write("Recommandations : ")
@@ -4075,17 +4076,17 @@ if selected == 'PRED POUSSÉ':
                 # Ajout de la logique pour chaque option sélectionnée
                 if option_to_add == "loan":
                     loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
-                    pred_df['loan'] = loan
+                    st.session_state.pred_df['loan'] = loan
                     st.write("A un crédit personnel : ", loan)
 
                 elif option_to_add == "marital":
                     marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
-                    pred_df['marital'] = marital
+                    st.session_state.pred_df['marital'] = marital
                     st.write("Situation maritale : ", marital)
 
                 elif option_to_add == "poutcome":
                     poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
-                    pred_df['poutcome'] = poutcome
+                    st.session_state.pred_df['poutcome'] = poutcome
                     st.write("Résultat de la campagne : ", poutcome)
 
                 elif option_to_add == "job":
@@ -4093,12 +4094,12 @@ if selected == 'PRED POUSSÉ':
                                                                         'housemaid', 'management', 'retired', 
                                                                         'self-employed', 'services', 'student', 
                                                                         'technician', 'unemployed', 'unknown'))
-                    pred_df['job'] = job
+                    st.session_state.pred_df['job'] = job
                     st.write("Emploi : ", job)
 
                 elif option_to_add == "Client_Category_M":
                     Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                    pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+                    st.session_state.pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
                     st.write("Dernier appel : ", Client_Category_M)
 
                 # Affichage du récapitulatif
@@ -4122,7 +4123,7 @@ if selected == 'PRED POUSSÉ':
                     st.write(f"Dernier appel : {Client_Category_M}")
 
                 # Standardiser et préparer le DataFrame pour la prédiction
-                pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
+                pred_df = st.session_state.pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
                 
                 # Standardiser et continuer le processus pour la prédiction
                 combined_df_opt = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
