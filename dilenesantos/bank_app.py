@@ -4097,55 +4097,55 @@ if selected == 'PRED POUSSÉ':
                     # Affichage pour les informations fournies
                     st.write(f'### Récapitulatif')
 
-                        st.write("Le client a :  ", age, "ans")
-                        st.write("Le client a un niveau d'étude :  ", niveau_etude)
-                        st.write("Le solde de son compte en banque est de :  ", balance, "euros")
-                        st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
-                        st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
-        
-                        # Afficher les informations supplémentaires définies
-                        if option_to_add == "loan":
-                            st.write(f"A un crédit personnel : {loan}")
-                        elif option_to_add == "marital":
-                            st.write(f"Situation maritale : {marital}")
-                        elif option_to_add == "poutcome":
-                            st.write(f"Résultat de la campagne : {poutcome}")
-                        elif option_to_add == "job":
-                            st.write(f"Emploi : {job}")
-                        elif option_to_add == "Client_Category_M":
-                            st.write(f"Dernier appel : {Client_Category_M}")
-        
-                        # Standardiser et préparer le DataFrame pour la prédiction
-                        pred_df = st.session_state.pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
-                        
-                        # Standardiser et continuer le processus pour la prédiction
-                        combined_df_opt = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
-        
-                        # Standardisation
-                        scaler = StandardScaler()
-                        combined_df_opt[num_cols] = scaler.fit_transform(combined_df_opt[num_cols])
-        
-                        # Réassigner les valeurs standardisées à pred_df
-                        pred_df[num_cols] = combined_df_opt.loc[pred_df.index, num_cols]
-                        pred_df = pred_df.reset_index(drop=True)
-        
-                        st.write("Affichage de pred_df après affinage :")
-                        st.dataframe(pred_df)
-        
-                        # Prédiction avec le DataFrame optimisé
-                        prediction_opt = xgboost_best_predict.predict(pred_df)
-                        prediction_proba_opt = xgboost_best_predict.predict_proba(pred_df)
-                        max_proba_opt = np.max(prediction_proba_opt[0]) * 100
-        
-                        # Affichage des résultats de l'affinage
-                        st.write(f"Prediction après affinage : {prediction_opt[0]}")
-                        st.write(f"Niveau de confiance après affinage : {max_proba_opt:.2f}%")
-                        if prediction_opt[0] == 0:
-                            st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                        else:
-                            st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                            st.write("\nRecommandations : ")
-                            st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                            st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
-        
-        
+                    st.write("Le client a :  ", age, "ans")
+                    st.write("Le client a un niveau d'étude :  ", niveau_etude)
+                    st.write("Le solde de son compte en banque est de :  ", balance, "euros")
+                    st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
+                    st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
+    
+                    # Afficher les informations supplémentaires définies
+                    if option_to_add == "loan":
+                        st.write(f"A un crédit personnel : {loan}")
+                    elif option_to_add == "marital":
+                        st.write(f"Situation maritale : {marital}")
+                    elif option_to_add == "poutcome":
+                        st.write(f"Résultat de la campagne : {poutcome}")
+                    elif option_to_add == "job":
+                        st.write(f"Emploi : {job}")
+                    elif option_to_add == "Client_Category_M":
+                        st.write(f"Dernier appel : {Client_Category_M}")
+    
+                    # Standardiser et préparer le DataFrame pour la prédiction
+                    pred_df = st.session_state.pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
+                    
+                    # Standardiser et continuer le processus pour la prédiction
+                    combined_df_opt = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
+    
+                    # Standardisation
+                    scaler = StandardScaler()
+                    combined_df_opt[num_cols] = scaler.fit_transform(combined_df_opt[num_cols])
+    
+                    # Réassigner les valeurs standardisées à pred_df
+                    pred_df[num_cols] = combined_df_opt.loc[pred_df.index, num_cols]
+                    pred_df = pred_df.reset_index(drop=True)
+    
+                    st.write("Affichage de pred_df après affinage :")
+                    st.dataframe(pred_df)
+    
+                    # Prédiction avec le DataFrame optimisé
+                    prediction_opt = xgboost_best_predict.predict(pred_df)
+                    prediction_proba_opt = xgboost_best_predict.predict_proba(pred_df)
+                    max_proba_opt = np.max(prediction_proba_opt[0]) * 100
+    
+                    # Affichage des résultats de l'affinage
+                    st.write(f"Prediction après affinage : {prediction_opt[0]}")
+                    st.write(f"Niveau de confiance après affinage : {max_proba_opt:.2f}%")
+                    if prediction_opt[0] == 0:
+                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                    else:
+                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                        st.write("\nRecommandations : ")
+                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+    
+    
