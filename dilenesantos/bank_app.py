@@ -4212,7 +4212,7 @@ if selected == 'PRED POUSSÉ':
             elif option_to_add == "Client_Category_M":
                 st.write(f"Dernier appel : {Client_Category_M}")
      
-            st.write(Pred_df après sélection loan en plus)
+            st.write("Pred_df après sélection loan en plus")
             st.dataframe(pred_df)
 
             # Standardiser et préparer le DataFrame pour la préciction
