@@ -4068,6 +4068,8 @@ if selected == 'PRED POUSSÉ':
     
     X_test_o_marital['education'] = X_test_o_marital['education'].fillna(method ='bfill')
     X_test_o_marital['education'] = X_test_o_marital['education'].fillna(X_test_o_marital['education'].mode()[0])
+
+    
                     
     # Standardisation des variables quantitatives:
     scaler_o = StandardScaler()
@@ -4128,6 +4130,22 @@ if selected == 'PRED POUSSÉ':
 
     dff_TEST_poutcome['poutcome'] = dff_TEST_poutcome['poutcome'].fillna(method ='bfill')
     dff_TEST_poutcome['poutcome'] = dff_TEST_poutcome['poutcome'].fillna(dff_TEST_poutcome['poutcome'].mode()[0])    
+
+    # Séparation des données en un jeu d'entrainement et jeu de test
+    X_train_o_poutcome, X_test_o_poutcome, y_train_o_poutcome, y_test_o_poutcome = train_test_split(X_dff_TEST_poutcome, y_dff_TEST_poutcome, test_size = 0.20, random_state = 48)
+                        
+    # On fait de même pour les NaaN de 'education'
+    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].fillna(method ='bfill')
+    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].fillna(X_train_o_poutcome['education'].mode()[0])
+    
+    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].fillna(method ='bfill')
+    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].fillna(X_test_o_poutcome['education'].mode()[0])
+    
+    X_train_o_poutcome['poutcome'] = X_train_o_poutcome['poutcome'].fillna(method ='bfill')
+    X_train_o_poutcome['poutcome'] = X_train_o_poutcome['poutcome'].fillna(X_train_o_poutcome['poutcome'].mode()[0])
+    
+    X_test_o_poutcome['poutcome'] = X_test_o_poutcome['poutcome'].fillna(method ='bfill')
+    X_test_o_poutcome['poutcome'] = X_test_o_poutcome['poutcome'].fillna(X_test_o_poutcome['poutcome'].mode()[0])    
                 
     # Standardisation des variables quantitatives:
     scaler_o = StandardScaler()
