@@ -4175,6 +4175,7 @@ if selected == 'PRED POUSSÉ':
             
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                num_cols = ['age', 'balance','previous']
                 combined_df_loan = pd.concat([dff_TEST_loan[num_cols], pred_df[num_cols]], axis=0)
             
                 # Étape 3 : Standardisation des données numériques
@@ -4259,45 +4260,4 @@ if selected == 'PRED POUSSÉ':
             elif option_to_add == "Client_Category_M":
                 st.write(f"Dernier appel : {Client_Category_M}")
      
-            st.write("Pred_df après sélection loan en plus")
-            st.dataframe(pred_df)
-
-            # Standardiser et préparer le DataFrame pour la préciction
-            pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
-    
-            # Continuez le processus de standardisation
-            combined_df_opt = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
-    
-            # Standardisation
-            scaler = StandardScaler()
-            combined_df_opt[num_cols] = scaler.fit_transform(combined_df_opt[num_cols])
-    
-            # Réassigner les valeurs standardisées à pred_df
-            pred_df[num_cols] = combined_df_opt.loc[pred_df.index, num_cols]
-            pred_df = pred_df.reset_index(drop=True)
-    
-            st.write("Affichage de pred_df après affinage :")
-            st.dataframe(pred_df)
-
-
-            filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl.pkl"
-            model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename)
-        
-            
-            # Prédiction avec le DataFrame optimisé
-            prediction_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict(pred_df)
-            prediction_proba_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict_proba(pred_df)
-            max_proba_opt = np.max(prediction_proba_opt[0]) * 100
-    
-            # Affichage des résultats de l'affinage
-            st.write(f"Prediction après affinage : {prediction_opt[0]}")
-            st.write(f"Niveau de confiance après affinage : {max_proba_opt:.2f}%")
-            if prediction_opt[0] == 0:
-                st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-            else:
-                st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                st.write("\nRecommandations : ")
-                st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
-    
-    
+ 
