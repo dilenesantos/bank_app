@@ -34,6 +34,12 @@ from sklearn.metrics import classification_report
 import joblib
 import shap
 
+if 'refine_prediction' not in st.session_state:
+        st.session_state.refine_prediction = None
+
+if 'option_to_add' not in st.session_state:
+        st.session_state.option_to_add = None
+
 df=pd.read_csv('dilenesantos/bank.csv')
 
 dff = df.copy()
@@ -3856,11 +3862,6 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
 
-if 'refine_prediction' not in st.session_state:
-        st.session_state.refine_prediction = None
-
-if 'option_to_add' not in st.session_state:
-        st.session_state.option_to_add = None
     
 if selected == 'PRED POUSSÉ':  
     
