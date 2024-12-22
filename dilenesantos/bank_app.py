@@ -4215,8 +4215,8 @@ if selected == 'PRED POUSSÉ':
         
     
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
-        option_to_add = st.radio("Choisir une variable à ajouter :", 
-                                       ["None", "loan", "marital", "poutcome", "job", "Client_Category_M"], horizontal=True)
+        option_to_add = st.selectbox("Choisir une variable à ajouter :", 
+                                       ["None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
         
         if option_to_add != "None":
             # Ajout de la logique pour chaque option sélectionnée
