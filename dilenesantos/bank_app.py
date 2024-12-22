@@ -4024,13 +4024,13 @@ if selected == 'PRED POUSSÉ':
     # Bouton pour lancer la prédiction
     prediction_button = st.button(label="Predict")
     
-    filename = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
+    filename = "dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
     model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename)
 
     # Prédictions sur les données test
     model_XGBOOST_1_model_SD_TOP_4_hyperparam.fit(X_train_o, y_train_o)
 
-
+    
     # Prédiction
     if prediction_button:
         prediction = model_XGBOOST_1_model_SD_TOP_4_hyperparam.predict(pred_df)
