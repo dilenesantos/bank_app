@@ -3857,7 +3857,7 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
 
-if selected == 'TEST ST.SESSION_STATE" : 
+if selected == "TEST ST.SESSION_STATE" : 
 
     # Exemple simple de DataFrame
     data = {
