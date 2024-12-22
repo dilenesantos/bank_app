@@ -4097,7 +4097,80 @@ if selected == 'PRED POUSSÉ':
     X_train_o_marital = pd.concat([X_train_o_marital.drop('marital', axis=1), dummies], axis=1)
     dummies = pd.get_dummies(X_test_o_marital['marital'], prefix='marital').astype(int)
     X_test_o_marital = pd.concat([X_test_o_marital.drop('marital', axis=1), dummies], axis=1)
+
+    #DATAFRAME POUR PRED AVEC POUTCOME
+    dff_TEST_poutcome = df.copy()
+    dff_TEST_poutcome = dff_TEST_poutcome[dff_TEST_poutcome['age'] < 75]
+    dff_TEST_poutcome = dff_TEST_poutcome.loc[dff_TEST_poutcome["balance"] > -2257]
+    dff_TEST_poutcome = dff_TEST_poutcome.loc[dff_TEST_poutcome["balance"] < 4087]
+    dff_TEST_poutcome = dff_TEST_poutcome.loc[dff_TEST_poutcome["campaign"] < 6]
+    dff_TEST_poutcome = dff_TEST_poutcome.loc[dff_TEST_poutcome["previous"] < 2.5]
+    dff_TEST_poutcome = dff_TEST_poutcome.drop('contact', axis = 1)
+    
+    dff_TEST_poutcome = dff_TEST_poutcome.drop('pdays', axis = 1)
+    
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['day'], axis=1)
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['duration'], axis=1)
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['job'], axis=1)
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['default'], axis=1)
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['month'], axis=1)
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['loan'], axis=1)
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['marital'], axis=1)
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['campaign'], axis=1)   
+     
+    dff_TEST_poutcome['education'] = dff_TEST_poutcome['education'].replace('unknown', np.nan)
+    dff_TEST_poutcome['poutcome'] = dff_TEST_poutcome['poutcome'].replace('unknown', np.nan)
+    
+    X_dff_TEST_poutcome = dff_TEST_poutcome.drop('deposit', axis = 1)
+    y_dff_TEST_poutcome = dff_TEST_poutcome['deposit']
         
+    dff_TEST_poutcome = dff_TEST_poutcome.drop(['deposit'], axis=1)   
+    
+    # Séparation des données en un jeu d'entrainement et jeu de test
+    X_train_o_poutcome, X_test_o_poutcome, y_train_o_poutcome, y_test_o_poutcome = train_test_split(X_dff_TEST_poutcome, y_dff_TEST_poutcome, test_size = 0.20, random_state = 48)
+                        
+    # On fait de même pour les NaaN de 'education'
+    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].fillna(method ='bfill')
+    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].fillna(X_train_o_poutcome['education'].mode()[0])
+    
+    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].fillna(method ='bfill')
+    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].fillna(X_test_o_poutcome['education'].mode()[0])
+    
+    X_train_o_poutcome['poutcome'] = X_train_o_poutcome['poutcome'].fillna(method ='bfill')
+    X_train_o_poutcome['poutcome'] = X_train_o_poutcome['poutcome'].fillna(X_train_o_poutcome['poutcome'].mode()[0])
+    
+    X_test_o_poutcome['poutcome'] = X_test_o_poutcome['poutcome'].fillna(method ='bfill')
+    X_test_o_poutcome['poutcome'] = X_test_o_poutcome['poutcome'].fillna(X_test_o_poutcome['poutcome'].mode()[0])    
+                
+    # Standardisation des variables quantitatives:
+    scaler_o = StandardScaler()
+    cols_num_sd = ['age', 'balance', 'previous']
+    X_train_o_poutcome[cols_num_sd] = scaler_o.fit_transform(X_train_o_poutcome[cols_num_sd])
+    X_test_o_poutcome[cols_num_sd] = scaler_o.transform (X_test_o_poutcome[cols_num_sd])
+    
+    # Encodage de la variable Cible 'deposit':
+    le_o = LabelEncoder()
+    y_train_o_poutcome = le_o.fit_transform(y_train_o_poutcome)
+    y_test_o_poutcome = le_o.transform(y_test_o_poutcome)
+    
+    # Encodage des variables explicatives de type 'objet'
+    oneh_o = OneHotEncoder(drop = 'first', sparse_output = False)
+    cat1_o = ['housing']
+    X_train_o_poutcome.loc[:, cat1_o] = oneh_o.fit_transform(X_train_o_poutcome[cat1_o])
+    X_test_o_poutcome.loc[:, cat1_o] = oneh_o.transform(X_test_o_poutcome[cat1_o])
+    
+    X_train_o_poutcome[cat1_o] = X_train_o_poutcome[cat1_o].astype('int64')
+    X_test_o_poutcome[cat1_o] = X_test_o_poutcome[cat1_o].astype('int64')
+        
+    # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
+    X_train_o_poutcome['education'] = X_train_o_poutcome['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    X_test_o_poutcome['education'] = X_test_o_poutcome['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+    
+    dummies = pd.get_dummies(X_train_o_poutcome['poutcome'], prefix='poutcome').astype(int)
+    X_train_o_poutcome = pd.concat([X_train_o_poutcome.drop('poutcome', axis=1), dummies], axis=1)
+    dummies = pd.get_dummies(X_test_o_poutcome['poutcome'], prefix='poutcome').astype(int)
+    X_test_o_poutcome = pd.concat([X_test_o_poutcome.drop('poutcome', axis=1), dummies], axis=1)
+
     st.title("Démonstration et application de notre modèle à votre cas")               
 
     st.subheader('Vos Informations sur le client')
@@ -4326,6 +4399,58 @@ if selected == 'PRED POUSSÉ':
                 poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
                 pred_df['poutcome'] = poutcome
                 st.write("Résultat de la campagne : ", poutcome)
+                
+                # Liste des variables catégorielles multi-modales à traiter
+                cat_cols_multi_modal = ['poutcome']
+                # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
+                for col in cat_cols_multi_modal:
+                    # Effectuer un encodage des variables catégorielles multi-modales
+                    dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
+                    pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
+                            
+                # Réorganiser les colonnes pour correspondre exactement à celles de dff
+                pred_df = pred_df.reindex(columns=dff_TEST_poutcome.columns, fill_value=0)
+                
+                # Étape 2 : Concaténer dff et pred_df
+                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                num_cols = ['age', 'balance','previous']
+                
+                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                pred_df.index = range(dff_TEST_poutcome.shape[0], dff_TEST_poutcome.shape[0] + len(pred_df))
+            
+                combined_df_poutcome = pd.concat([dff_TEST_poutcome[num_cols], pred_df[num_cols]], axis=0)
+
+                # Étape 3 : Standardisation des données numériques
+                scaler = StandardScaler()
+                combined_df_poutcome[num_cols] = scaler.fit_transform(combined_df_poutcome[num_cols])
+    
+                # Étape 4 : Séparer à nouveau pred_df des autres données
+                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+                pred_df[num_cols] = combined_df_poutcome.loc[pred_df.index, num_cols]
+            
+                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+                pred_df = pred_df.reset_index(drop=True)
+          
+                filename_POUTCOME = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_1.pkl"
+                model_XGBOOST_1_SD_model_PRED_poutcome = joblib.load(filename_POUTCOME)         
+                
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt_poutcome = model_XGBOOST_1_SD_model_PRED_poutcome.predict(pred_df)
+                prediction_proba_opt_poutcome = model_XGBOOST_1_SD_model_PRED_poutcome.predict_proba(pred_df)
+                max_proba_opt_poutcome = np.max(prediction_proba_opt_poutcome[0]) * 100
+        
+                # Affichage des résultats de l'affinage
+                st.write(f"Prediction après affinage : {prediction_opt_poutcome[0]}")
+                st.write(f"Niveau de confiance après affinage : {max_proba_opt_poutcome:.2f}%")
+                if prediction_opt_poutcome[0] == 0:
+                    st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                else:
+                    st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                    st.write("\nRecommandations : ")
+                    st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                    st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+
+
     
             elif option_to_add == "job":
                 job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
