@@ -4429,7 +4429,7 @@ if selected == 'PRED POUSSÉ':
                     pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
                             
                 # Réorganiser les colonnes pour correspondre exactement à celles de dff
-                pred_df = pred_df.reindex(columns=dff_TEST_poutcome.columns, fill_value=0)
+                pred_df = pred_df.reindex(columns=dff_TEST_job.columns, fill_value=0)
                 
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
