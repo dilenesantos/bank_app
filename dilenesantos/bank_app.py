@@ -287,7 +287,7 @@ X_test_sd_original[cols_num_sd] = scaler_sd.inverse_transform(X_test_sd[cols_num
 with st.sidebar:
     selected = option_menu(
         menu_title='Sections',
-        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "TEST PRED SCORES", "Outil Prédictif", "TEST PRÉDICTIF", "PRED POUSSÉ"]) 
+        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "TEST PRED SCORES", "Outil Prédictif", "TEST PRÉDICTIF", "PRED POUSSÉ", "TEST ST.SESSION_STATE"]) 
 
 if selected == 'Introduction':  
     st.subheader("Contexte du projet")
@@ -3857,7 +3857,47 @@ if selected == 'TEST PRÉDICTIF':
                 st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
                 st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
 
+if selected == 'TEST ST.SESSION_STATE" : 
+
+    # Exemple simple de DataFrame
+    data = {
+        'age': [25, 30, 45, 50],
+        'balance': [2000, -500, 1500, 4000],
+        'education': ['tertiary', 'secondary', 'primary', 'unknown'],
+        'housing': ['yes', 'no', 'yes', 'no']
+    }
+    dataframe_TEST = pd.DataFrame(data)
     
+    # Initialisation des états de session
+    if 'selected_age' not in st.session_state:
+        st.session_state.selected_age = 25  # Valeur par défaut
+    
+    if 'selected_balance' not in st.session_state:
+        st.session_state.selected_balance = 2000  # Valeur par défaut
+    
+    # Affichage du DataFrame
+    st.write("Données disponibles :")
+    st.dataframe(dataframe_TEST)
+    
+    # User input pour modifier une des colonnes
+    st.write("Modifiez les informations du client :")
+    
+    age = st.slider("Choisissez l'âge:", min_value=18, max_value=100, value=st.session_state.selected_age)
+    balance = st.slider("Choisissez le solde:", min_value=-5000, max_value=10000, value=st.session_state.selected_balance)
+    
+    # Stockage des choix de l'utilisateur dans l'état de session
+    st.session_state.selected_age = age
+    st.session_state.selected_balance = balance
+    
+    # Affichage des valeurs choisies
+    st.write(f"L'âge choisi est : {st.session_state.selected_age}")
+    st.write(f"Le solde choisi est : {st.session_state.selected_balance}")
+    
+    # Ajouter un bouton pour voir les valeurs enregistrées
+    if st.button("Afficher les valeurs d'état de session"):
+        st.write("Valeur de l'âge dans l'état de session :", st.session_state.selected_age)
+        st.write("Valeur du solde dans l'état de session :", st.session_state.selected_balance)
+
 if selected == 'PRED POUSSÉ':  
     # Initialisation des états de session
     if 'pred_df' not in st.session_state:
