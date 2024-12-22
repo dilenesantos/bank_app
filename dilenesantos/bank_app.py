@@ -4194,19 +4194,19 @@ if selected == 'PRED POUSSÉ':
                 st.dataframe(dff_TEST_loan)
 
                 
-                filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl.pkl"
+                filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename)
             
                 
                 # Prédiction avec le DataFrame optimisé
-                prediction_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict(pred_df)
-                prediction_proba_opt = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict_proba(pred_df)
-                max_proba_opt = np.max(prediction_proba_opt[0]) * 100
+                prediction_opt_loan = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict(pred_df)
+                prediction_proba_opt_loan = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict_proba(pred_df)
+                max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
         
                 # Affichage des résultats de l'affinage
-                st.write(f"Prediction après affinage : {prediction_opt[0]}")
-                st.write(f"Niveau de confiance après affinage : {max_proba_opt:.2f}%")
-                if prediction_opt[0] == 0:
+                st.write(f"Prediction après affinage : {prediction_opt_loan[0]}")
+                st.write(f"Niveau de confiance après affinage : {max_proba_opt_loan:.2f}%")
+                if prediction_opt_loan[0] == 0:
                     st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                 else:
                     st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
