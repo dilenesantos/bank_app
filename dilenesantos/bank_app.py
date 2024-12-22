@@ -4043,11 +4043,6 @@ if selected == 'PRED POUSSÉ':
         prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
         max_proba = st.session_state.max_proba = np.max(prediction_proba[0]) * 100
 
-        # Afficher les valeurs dans st.session_state pour le débogage
-        st.write("Valeur de refine_prediction dans l'état de session :", st.session_state.refine_prediction)
-        st.write("Valeur de option_to_add dans l'état de session :", st.session_state.option_to_add)
-
-
         # Résultats
         if prediction[0] == 0:
             st.write(f"Prediction : {prediction[0]}")
@@ -4061,7 +4056,12 @@ if selected == 'PRED POUSSÉ':
             st.write("Recommandations : ")
             st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
             st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
-    
+
+        # Afficher les valeurs dans st.session_state pour le débogage
+        st.write("Valeur de refine_prediction dans l'état de session :", st.session_state.refine_prediction)
+        st.write("Valeur de option_to_add dans l'état de session :", st.session_state.option_to_add)
+
+
         if max_proba < 80:
             st.write("Le niveau de confiance étant inférieur à 80%, il se peut que les données soient insuffisantes. Nous vous proposons si vous le désirez d'affiner la prédiction.")
             refine_prediction = st.selectbox("Souhaitez-vous affiner la prédiction ?",['Choix', 'Oui', 'Non'])
