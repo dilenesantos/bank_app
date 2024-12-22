@@ -4024,14 +4024,14 @@ if selected == 'PRED POUSSÉ':
     # Bouton pour lancer la prédiction
     prediction_button = st.button(label="Predict")
     
-    filename = "dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
-    model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename)
+    filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
+    model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
 
     
     # Prédiction
     if prediction_button:
-        prediction = model_XGBOOST_1_model_SD_TOP_4_hyperparam.predict(pred_df)
-        prediction_proba = model_XGBOOST_1_model_SD_TOP_4_hyperparam.predict_proba(pred_df)
+        prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
+        prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
         max_proba = np.max(prediction_proba[0]) * 100
         
         # Résultats
