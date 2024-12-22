@@ -4024,13 +4024,17 @@ if selected == 'PRED POUSSÉ':
     # Bouton pour lancer la prédiction
     prediction_button = st.button(label="Predict")
     
-    xgboost_best_predict = XGBClassifier(gamma=0.05,colsample_bytree=0.83, learning_rate=0.37, max_depth=6,  min_child_weight=1.2, n_estimators=30, reg_alpha=1.2, reg_lambda=1.7, scale_pos_weight=1.46, subsample=0.99, random_state=42)            
-    xgboost_best_predict.fit(X_train_o, y_train_o)
-        
+    filename = "XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
+    model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename)
+
+    # Prédictions sur les données test
+    model_XGBOOST_1_model_SD_TOP_4_hyperparam.fit(X_train_o, y_train_o)
+
+
     # Prédiction
     if prediction_button:
-        prediction = xgboost_best_predict.predict(pred_df)
-        prediction_proba = xgboost_best_predict.predict_proba(pred_df)
+        prediction = model_XGBOOST_1_model_SD_TOP_4_hyperparam.predict(pred_df)
+        prediction_proba = model_XGBOOST_1_model_SD_TOP_4_hyperparam.predict_proba(pred_df)
         max_proba = np.max(prediction_proba[0]) * 100
         
         # Résultats
