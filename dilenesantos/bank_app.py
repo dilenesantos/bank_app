@@ -4192,12 +4192,6 @@ if selected == 'PRED POUSSÉ':
     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
     pred_df = pred_df.reset_index(drop=True)
 
-    # Affichage du DataFrame après la standardisation
-    st.write("Affichage de pred_df prêt pour la prédiction :")
-    st.dataframe(pred_df)
-    st.dataframe(dff_TEST)
-    st.session_state.pred_df = pred_df
-
     
     # Bouton pour lancer la prédiction
     
@@ -4208,7 +4202,6 @@ if selected == 'PRED POUSSÉ':
     # Prédiction
     st.title("Prédiction")
     st.dataframe(pred_df)
-    st.session_state.pred_df = pred_df
 
     prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
     prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
@@ -4250,12 +4243,6 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
-            
-                # Affichage du DataFrame après la standardisation
-                st.write("Affichage de pred_df prêt pour la prédiction :")
-                st.dataframe(pred_df)
-                st.dataframe(dff_TEST_loan)
-
                 
                 filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename_LOAN)
@@ -4283,7 +4270,6 @@ if selected == 'PRED POUSSÉ':
                 marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
                 pred_df['marital'] = marital
                 st.write("Situation maritale : ", marital)
-                st.dataframe(dff_TEST_marital)
                 
                 # Liste des variables catégorielles multi-modales à traiter
                 cat_cols_multi_modal = ['marital']
@@ -4315,16 +4301,9 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
-            
-                # Affichage du DataFrame après la standardisation
-                st.write("Affichage de pred_df prêt pour la prédiction :")
-                st.dataframe(pred_df)
-                st.dataframe(dff_TEST_marital)
-
-                
+          
                 filename_MARITAL = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
-                model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)
-            
+                model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)         
                 
                 # Prédiction avec le DataFrame optimisé
                 prediction_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict(pred_df)
