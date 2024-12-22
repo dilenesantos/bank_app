@@ -3909,15 +3909,6 @@ if selected == "TEST ST.SESSION_STATE" :
 
 
 if selected == 'PRED POUSSÉ':  
-    # Initialisation des états de session
-    if 'pred_df' not in st.session_state:
-        st.session_state.pred_df = None
-    if 'max_proba' not in st.session_state:
-        st.session_state.max_proba = None
-    if 'refine_prediction' not in st.session_state:
-        st.session_state.refine_prediction = None
-    if 'option_to_add' not in st.session_state:
-        st.session_state.option_to_add = None
 
     dff_TEST = df.copy()
     dff_TEST = dff_TEST[dff_TEST['age'] < 75]
@@ -4099,105 +4090,99 @@ if selected == 'PRED POUSSÉ':
         prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
         prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
         max_proba = np.max(prediction_proba[0]) * 100
-        st.session_state.max_proba = max_proba  # Stocke la probabilité maxima
 
         st.write(f"Prediction : {prediction[0]}")
-        st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
+        st.write(f"Niveau de confiance: {max_proba:.2f}%")
     
-        # Vérifiez si le niveau de confiance est inférieur à 80%
-        if st.session_state.max_proba < 80:
-            st.session_state.pred_df = pred_df
+    if max_proba < 80:
+        st.write("Conclusion: Données potentiellement insuffisantes.")
+        
 
-            st.write("Conclusion: Données potentiellement insuffisantes. Vous pouvez, si vous le souhaitez, ajouter une information sur votre client pour affiner la prédiction. ")
-                    
-            # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
-            st.write("Veuillez choisir une information supplémentaire pour affiner la prédiction :")
-            st.session_state.option_to_add = st.selectbox("Choisir une variable à ajouter :", 
-                                           ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
+        # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
+        option_to_add = st.selectbox("Choisir une variable à ajouter :", 
+                                       ["Choisir = None", "loan", "marital", "poutcome", "job", "Client_Category_M"])
+        
+        if option_to_add != "Choisir = None":
+            # Ajout de la logique pour chaque option sélectionnée
+            if option_to_add == "loan":
+                loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
+                pred_df['loan'] = loan
+                st.write("A un crédit personnel : ", loan)
+
+            elif option_to_add == "marital":
+                marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
+                pred_df['marital'] = marital
+                st.write("Situation maritale : ", marital)
+
+            elif option_to_add == "poutcome":
+                poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
+                pred_df['poutcome'] = poutcome
+                st.write("Résultat de la campagne : ", poutcome)
+
+            elif option_to_add == "job":
+                job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
+                                                                     'housemaid', 'management', 'retired', 
+                                                                     'self-employed', 'services', 'student', 
+                                                                     'technician', 'unemployed', 'unknown'))
+                pred_df['job'] = job
+                st.write("Emploi : ", job)
+
+            elif option_to_add == "Client_Category_M":
+                Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+                pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+                st.write("Dernier appel : ", Client_Category_M)
+
+            # Afficher le récapitulatif
+            st.write(f'### Récapitulatif')
+            st.write("Le client a : ", age, "ans")
+            st.write("Le client a un niveau d'étude : ", niveau_etude)
+            st.write("Le solde de son compte en banque est de : ", balance, "euros")
+            st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
+            st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
             
+            # Afficher les informations supplémentaires définies
+            if option_to_add == "loan":
+                st.write(f"A un crédit personnel : {loan}")
+            elif option_to_add == "marital":
+                st.write(f"Situation maritale : {marital}")
+            elif option_to_add == "poutcome":
+                st.write(f"Résultat de la campagne : {poutcome}")
+            elif option_to_add == "job":
+                st.write(f"Emploi : {job}")
+            elif option_to_add == "Client_Category_M":
+                st.write(f"Dernier appel : {Client_Category_M}")
 
-            if st.session_state.option_to_add != "Choisir = None":
-                # Ajout de la logique pour chaque option sélectionnée
-                if option_to_add == "loan":
-                    loan = st.selectbox("A-t-il un crédit personnel ?", ('yes', 'no'))
-                    st.session_state.pred_df['loan'] = loan
-                    st.write("A un crédit personnel : ", loan)
+            # Standardiser et préparer le DataFrame pour la préciction
+            pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
 
-                elif st.session_state.option_to_add == "marital":
-                    marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
-                    st.session_state.pred_df['marital'] = marital
-                    st.write("Situation maritale : ", marital)
+            # Continuez le processus de standardisation
+            combined_df_opt = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
 
-                elif st.session_state.option_to_add == "poutcome":
-                    poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other', 'unknown'))
-                    st.session_state.pred_df['poutcome'] = poutcome
-                    st.write("Résultat de la campagne : ", poutcome)
+            # Standardisation
+            scaler = StandardScaler()
+            combined_df_opt[num_cols] = scaler.fit_transform(combined_df_opt[num_cols])
 
-                elif st.session_state.option_to_add == "job":
-                    job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur', 
-                                                                         'housemaid', 'management', 'retired', 
-                                                                         'self-employed', 'services', 'student', 
-                                                                         'technician', 'unemployed', 'unknown'))
-                    st.session_state.pred_df['job'] = job
-                    st.write("Emploi : ", job)
+            # Réassigner les valeurs standardisées à pred_df
+            pred_df[num_cols] = combined_df_opt.loc[pred_df.index, num_cols]
+            pred_df = pred_df.reset_index(drop=True)
 
-                elif st.session_state.option_to_add == "Client_Category_M":
-                    Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                    st.session_state.pred_df['Client_Category_M'] = Client_Category_M.replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-                    st.write("Dernier appel : ", Client_Category_M)
+            st.write("Affichage de pred_df après affinage :")
+            st.dataframe(pred_df)
 
-                # Affichage pour les informations fournies
-                st.write(f'### Récapitulatif')
+            # Prédiction avec le DataFrame optimisé
+            prediction_opt = xgboost_best_predict.predict(pred_df)
+            prediction_proba_opt = xgboost_best_predict.predict_proba(pred_df)
+            max_proba_opt = np.max(prediction_proba_opt[0]) * 100
 
-                st.write("Le client a :  ", age, "ans")
-                st.write("Le client a un niveau d'étude :  ", niveau_etude)
-                st.write("Le solde de son compte en banque est de :  ", balance, "euros")
-                st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
-                st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
-
-                # Afficher les informations supplémentaires définies
-                if option_to_add == "loan":
-                    st.write(f"A un crédit personnel : {loan}")
-                elif option_to_add == "marital":
-                    st.write(f"Situation maritale : {marital}")
-                elif option_to_add == "poutcome":
-                    st.write(f"Résultat de la campagne : {poutcome}")
-                elif option_to_add == "job":
-                    st.write(f"Emploi : {job}")
-                elif option_to_add == "Client_Category_M":
-                    st.write(f"Dernier appel : {Client_Category_M}")
-
-                # Standardiser et préparer le DataFrame pour la prédiction
-                pred_df = st.session_state.pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
-                
-                # Standardiser et continuer le processus pour la prédiction
-                combined_df_opt = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
-
-                # Standardisation
-                scaler = StandardScaler()
-                combined_df_opt[num_cols] = scaler.fit_transform(combined_df_opt[num_cols])
-
-                # Réassigner les valeurs standardisées à pred_df
-                pred_df[num_cols] = combined_df_opt.loc[pred_df.index, num_cols]
-                pred_df = pred_df.reset_index(drop=True)
-
-                st.write("Affichage de pred_df après affinage :")
-                st.dataframe(pred_df)
-
-                # Prédiction avec le DataFrame optimisé
-                prediction_opt = xgboost_best_predict.predict(pred_df)
-                prediction_proba_opt = xgboost_best_predict.predict_proba(pred_df)
-                max_proba_opt = np.max(prediction_proba_opt[0]) * 100
-
-                # Affichage des résultats de l'affinage
-                st.write(f"Prediction après affinage : {prediction_opt[0]}")
-                st.write(f"Niveau de confiance après affinage : {max_proba_opt:.2f}%")
-                if prediction_opt[0] == 0:
-                    st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                else:
-                    st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                    st.write("\nRecommandations : ")
-                    st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                    st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+            # Affichage des résultats de l'affinage
+            st.write(f"Prediction après affinage : {prediction_opt[0]}")
+            st.write(f"Niveau de confiance après affinage : {max_proba_opt:.2f}%")
+            if prediction_opt[0] == 0:
+                st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+            else:
+                st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                st.write("\nRecommandations : ")
+                st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
 
 
