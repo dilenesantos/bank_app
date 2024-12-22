@@ -4046,11 +4046,11 @@ if selected == 'PRED POUSSÉ':
         # Résultats
         if prediction[0] == 0:
             st.write(f"Prediction : {prediction[0]}")
-            st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
+            st.write(f"Niveau de confiance: {max_proba:.2f}%")
             st.write("Conclusion:", "\nCe client n'est pas susceptible de souscrire à un dépôt à terme.")
         else:
             st.write(f"Prediction : {prediction[0]}")
-            st.write(f"Niveau de confiance: {st.session_state.max_proba:.2f}%")
+            st.write(f"Niveau de confiance: {max_proba:.2f}%")
             st.write("Conclusion:", "\nCe client est susceptible de souscrire à un dépôt à terme.")
             st.write("\n")
             st.write("Recommandations : ")
