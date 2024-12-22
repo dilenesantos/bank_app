@@ -4027,9 +4027,6 @@ if selected == 'PRED POUSSÉ':
     filename = "dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"
     model_XGBOOST_1_model_SD_TOP_4_hyperparam = joblib.load(filename)
 
-    # Prédictions sur les données test
-    model_XGBOOST_1_model_SD_TOP_4_hyperparam.fit(X_train_o, y_train_o)
-
     
     # Prédiction
     if prediction_button:
