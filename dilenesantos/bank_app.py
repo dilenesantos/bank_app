@@ -4292,14 +4292,20 @@ if selected == 'PRED POUSSÉ':
                         pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
                 # Réorganiser les colonnes pour correspondre exactement à celles de dff
                 pred_df = pred_df.reindex(columns=dff_TEST_marital.columns, fill_value=0)
-                 # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                pred_df.index = range(dff_TEST_marital.shape[0], dff_TEST_marital.shape[0] + len(pred_df))
-            
+                
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
                 num_cols = ['age', 'balance','previous']
+                
+                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                pred_df.index = range(dff_TEST_marital.shape[0], dff_TEST_marital.shape[0] + len(pred_df))
+            
                 combined_df_marital = pd.concat([dff_TEST_marital[num_cols], pred_df[num_cols]], axis=0)
 
+                # Étape 3 : Standardisation des données numériques
+                scaler = StandardScaler()
+                combined_df_marital[num_cols] = scaler.fit_transform(combined_df_marital[num_cols])
+    
                 # Étape 4 : Séparer à nouveau pred_df des autres données
                 # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
                 pred_df[num_cols] = combined_df_marital.loc[pred_df.index, num_cols]
