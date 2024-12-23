@@ -4401,25 +4401,41 @@ if selected == 'PRED POUSSÉ':
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
        
-                    filename_CAMPAIGN = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
-                    model_XGBOOST_1_SD_model_PRED_campaign = joblib.load(filename_CAMPAIGN)         
+                     # Conditions pour charger le modèle approprié
+                    if selected_model_name == "XGBOOST 1":
+                        filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
+                        additional_model = joblib.load(filename_campaign)
                     
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_campaign = model_XGBOOST_1_SD_model_PRED_campaign.predict(pred_df)
-                    prediction_proba_opt_campaign = model_XGBOOST_1_SD_model_PRED_campaign.predict_proba(pred_df)
-                    max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
-            
-                    # Affichage des résultats de l'affinage
-                    st.write(f"Prediction après affinage : {prediction_opt_campaign[0]}")
-                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_campaign:.2f}%")
-                    if prediction_opt_campaign[0] == 0:
-                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                        st.write("\nRecommandations : ")
-                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
-    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_campaign = additional_model.predict(pred_df)
+                        prediction_proba_opt_campaign = additional_model.predict_proba(pred_df)
+                        max_proba_opt_campaign = np.max(prediction_proba_opt_loan[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_campaign[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign:.2f}%**")
+                        if prediction_opt_campaign[0] == 0:
+                            st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        else:
+                            st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                    
+                    elif selected_model_name == "XGBOOST 2":
+                        filename_campaign_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_campaign_XGBOOST_2.pkl"
+                        additional_model2 = joblib.load(filename_campaign_2)
+                    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_campaign2 = additional_model2.predict(pred_df)
+                        prediction_proba_opt_campaign2 = additional_model2.predict_proba(pred_df)
+                        max_proba_opt_campaign2 = np.max(prediction_proba_opt_campaign2[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_campaign2[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign2:.2f}%**")
+                        if prediction_opt_campaign2[0] == 0:
+                            st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
+                        else:
+                            st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
+
     
                 elif option_to_add == "marital":
                     marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
@@ -4457,25 +4473,41 @@ if selected == 'PRED POUSSÉ':
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
               
-                    filename_MARITAL = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
-                    model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)         
+                     # Conditions pour charger le modèle approprié
+                    if selected_model_name == "XGBOOST 1":
+                        filename_marital = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
+                        additional_model = joblib.load(filename_marital)
                     
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict(pred_df)
-                    prediction_proba_opt_marital = model_XGBOOST_1_SD_model_PRED_marital.predict_proba(pred_df)
-                    max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
-            
-                    # Affichage des résultats de l'affinage
-                    st.write(f"Prediction après affinage : {prediction_opt_marital[0]}")
-                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_marital:.2f}%")
-                    if prediction_opt_marital[0] == 0:
-                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                        st.write("\nRecommandations : ")
-                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
-    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_marital = additional_model.predict(pred_df)
+                        prediction_proba_opt_marital = additional_model.predict_proba(pred_df)
+                        max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_marital[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%**")
+                        if prediction_opt_marital[0] == 0:
+                            st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        else:
+                            st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                    
+                    elif selected_model_name == "XGBOOST 2":
+                        filename_marital_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_marital_XGBOOST_2.pkl"
+                        additional_model2 = joblib.load(filename_marital_2)
+                    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_marital2 = additional_model2.predict(pred_df)
+                        prediction_proba_opt_marital2 = additional_model2.predict_proba(pred_df)
+                        max_proba_opt_marital2 = np.max(prediction_proba_opt_marital2[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_marital2[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital2:.2f}%**")
+                        if prediction_opt_marital2[0] == 0:
+                            st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
+                        else:
+                            st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
+
     
                 elif option_to_add == "poutcome":
                     poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other'))
@@ -4514,25 +4546,40 @@ if selected == 'PRED POUSSÉ':
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
               
-                    filename_POUTCOME = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_quater.pkl"
-                    model_XGBOOST_1_SD_model_PRED_poutcome = joblib.load(filename_POUTCOME)         
+                     # Conditions pour charger le modèle approprié
+                    if selected_model_name == "XGBOOST 1":
+                        filename_poutcome = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_1.pkl"
+                        additional_model = joblib.load(filename_poutcome)
                     
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_poutcome = model_XGBOOST_1_SD_model_PRED_poutcome.predict(pred_df)
-                    prediction_proba_opt_poutcome = model_XGBOOST_1_SD_model_PRED_poutcome.predict_proba(pred_df)
-                    max_proba_opt_poutcome = np.max(prediction_proba_opt_poutcome[0]) * 100
-            
-                    # Affichage des résultats de l'affinage
-                    st.write(f"Prediction après affinage : {prediction_opt_poutcome[0]}")
-                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_poutcome:.2f}%")
-                    if prediction_opt_poutcome[0] == 0:
-                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                        st.write("\nRecommandations : ")
-                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
-    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_poutcome = additional_model.predict(pred_df)
+                        prediction_proba_opt_poutcome = additional_model.predict_proba(pred_df)
+                        max_proba_opt_poutcome = np.max(prediction_proba_opt_poutcome[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_poutcome[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
+                        if prediction_opt_poutcome[0] == 0:
+                            st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        else:
+                            st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                    
+                    elif selected_model_name == "XGBOOST 2":
+                        filename_poutcome_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_poutcome_XGBOOST_2.pkl"
+                        additional_model2 = joblib.load(filename_poutcome_2)
+                    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_poutcome2 = additional_model2.predict(pred_df)
+                        prediction_proba_opt_poutcome2 = additional_model2.predict_proba(pred_df)
+                        max_proba_opt_poutcome2 = np.max(prediction_proba_opt_poutcome2[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_poutcome2[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome2:.2f}%**")
+                        if prediction_opt_poutcome2[0] == 0:
+                            st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
+                        else:
+                            st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
     
         
                 elif option_to_add == "job":
@@ -4574,24 +4621,40 @@ if selected == 'PRED POUSSÉ':
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
               
-                    filename_JOB = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_1.pkl"
-                    model_XGBOOST_1_SD_model_PRED_job = joblib.load(filename_JOB)         
+                     # Conditions pour charger le modèle approprié
+                    if selected_model_name == "XGBOOST 1":
+                        filename_job = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_1.pkl"
+                        additional_model = joblib.load(filename_job)
                     
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_job = model_XGBOOST_1_SD_model_PRED_job.predict(pred_df)
-                    prediction_proba_opt_job = model_XGBOOST_1_SD_model_PRED_job.predict_proba(pred_df)
-                    max_proba_opt_job = np.max(prediction_proba_opt_job[0]) * 100
-            
-                    # Affichage des résultats de l'affinage
-                    st.write(f"Prediction après affinage : {prediction_opt_job[0]}")
-                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_job:.2f}%")
-                    if prediction_opt_job[0] == 0:
-                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                        st.write("\nRecommandations : ")
-                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_job = additional_model.predict(pred_df)
+                        prediction_proba_opt_job = additional_model.predict_proba(pred_df)
+                        max_proba_opt_job = np.max(prediction_proba_opt_job[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_job[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%**")
+                        if prediction_opt_job[0] == 0:
+                            st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        else:
+                            st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                    
+                    elif selected_model_name == "XGBOOST 2":
+                        filename_job_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_job_XGBOOST_2.pkl"
+                        additional_model2 = joblib.load(filename_job_2)
+                    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_job2 = additional_model2.predict(pred_df)
+                        prediction_proba_opt_job2 = additional_model2.predict_proba(pred_df)
+                        max_proba_opt_job2 = np.max(prediction_proba_opt_job2[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_job2[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job2:.2f}%**")
+                        if prediction_opt_job2[0] == 0:
+                            st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
+                        else:
+                            st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
     
     
                 
@@ -4632,24 +4695,40 @@ if selected == 'PRED POUSSÉ':
                     pred_df = pred_df.reset_index(drop=True)
                     st.dataframe(pred_df)
                     
-                    filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
-                    model_XGBOOST_1_SD_model_PRED_client_category = joblib.load(filename_client_category)         
+                     # Conditions pour charger le modèle approprié
+                    if selected_model_name == "XGBOOST 1":
+                        filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
+                        additional_model = joblib.load(filename_client_category)
                     
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_client_category = model_XGBOOST_1_SD_model_PRED_client_category.predict(pred_df)
-                    prediction_proba_opt_client_category = model_XGBOOST_1_SD_model_PRED_client_category.predict_proba(pred_df)
-                    max_proba_opt_client_category = np.max(prediction_proba_opt_client_category[0]) * 100
-            
-                    # Affichage des résultats de l'affinage
-                    st.write(f"Prediction après affinage : {prediction_opt_client_category[0]}")
-                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_client_category:.2f}%")
-                    if prediction_opt_client_category[0] == 0:
-                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                        st.write("\nRecommandations : ")
-                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_client_category = additional_model.predict(pred_df)
+                        prediction_proba_opt_client_category = additional_model.predict_proba(pred_df)
+                        max_proba_opt_client_category = np.max(prediction_proba_opt_client_category[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_client_category[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%**")
+                        if prediction_opt_client_category[0] == 0:
+                            st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        else:
+                            st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                    
+                    elif selected_model_name == "XGBOOST 2":
+                        filename_client_category_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_client_category_XGBOOST_2.pkl"
+                        additional_model2 = joblib.load(filename_client_category_2)
+                    
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_client_category2 = additional_model2.predict(pred_df)
+                        prediction_proba_opt_client_category2 = additional_model2.predict_proba(pred_df)
+                        max_proba_opt_client_category2 = np.max(prediction_proba_opt_client_category2[0]) * 100
+                    
+                        # Affichage des résultats
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_client_category2[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category2:.2f}%**")
+                        if prediction_opt_client_category2[0] == 0:
+                            st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
+                        else:
+                            st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
     
     
                 # Afficher le récapitulatif
