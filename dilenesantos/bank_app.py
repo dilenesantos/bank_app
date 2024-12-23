@@ -4339,39 +4339,39 @@ if selected == 'PRED POUSSÉ':
                     pred_df = pred_df.reset_index(drop=True)
 
                     if selected_model_name == "XGBOOST 1":
-                    # Une fois que l'utilisateur choisit XGBOOST 1,
-                    # proposez de charger un modèle supplémentaire
-                    additional_model_names = {
-                        "Modèle 1 loan": "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl",
-                    }
+                        # Une fois que l'utilisateur choisit XGBOOST 1,
+                        # proposez de charger un modèle supplémentaire
+                        additional_model_names = {
+                            "Modèle 1 loan": "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl",
+                        }
+                        
+                        selected_additional_model_name = additional_model_names
                     
-                    selected_additional_model_name = additional_model_names
+                        # Chargez le modèle supplémentaire correspondant
+                        additional_model_file = additional_model_names[selected_additional_model_name]
+                        additional_model = joblib.load(additional_model_file)
+    
+                        #filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
+                        #model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename_LOAN)
+                        #model_file = model_filenames[selected_model_name]
+                        #model = joblib.load(model_file)
+                        
+                        # Prédiction avec le DataFrame optimisé
+                        prediction_opt_loan = additional_model.predict(pred_df)
+                        prediction_proba_opt_loan = additional_model.predict_proba(pred_df)
+                        max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
                 
-                    # Chargez le modèle supplémentaire correspondant
-                    additional_model_file = additional_model_names[selected_additional_model_name]
-                    additional_model = joblib.load(additional_model_file)
-
-                    #filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
-                    #model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename_LOAN)
-                    #model_file = model_filenames[selected_model_name]
-                    #model = joblib.load(model_file)
+                        # Affichage des résultats de l'affinage
+                        st.write(f"Prediction après affinage : {prediction_opt_loan[0]}")
+                        st.write(f"Niveau de confiance après affinage : {max_proba_opt_loan:.2f}%")
+                        if prediction_opt_loan[0] == 0:
+                            st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        else:
+                            st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                            st.write("\nRecommandations : ")
+                            st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                            st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
                     
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_loan = additional_model.predict(pred_df)
-                    prediction_proba_opt_loan = additional_model.predict_proba(pred_df)
-                    max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
-            
-                    # Affichage des résultats de l'affinage
-                    st.write(f"Prediction après affinage : {prediction_opt_loan[0]}")
-                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_loan:.2f}%")
-                    if prediction_opt_loan[0] == 0:
-                        st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
-                        st.write("\nRecommandations : ")
-                        st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-                        st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
-                
                 elif selected_model_name == "XGBOOST 2":
                     # Une fois que l'utilisateur choisit XGBOOST 1,
                     # proposez de charger un modèle supplémentaire
