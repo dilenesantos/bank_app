@@ -4589,7 +4589,6 @@ if selected == 'PRED POUSSÉ':
             st.write("Le solde de son compte en banque est de : ", balance, "euros")
             st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
             st.write("Le client a été contacté ", previous, " fois lors de la précédente campagne marketing")
-            st.write("Le client a été contacté ", campaign, " fois pendant la campagne marketing")
             
             # Afficher les informations supplémentaires définies
             if option_to_add == "loan":
