@@ -4133,7 +4133,8 @@ if selected == 'PRED POUSSÉ':
     dff_TEST_campaign = dff_TEST_campaign.drop(['poutcome'], axis=1)
     dff_TEST_campaign = dff_TEST_campaign.drop(['marital'], axis=1)
     dff_TEST_campaign = dff_TEST_campaign.drop(['loan'], axis=1)
-     
+    dff_TEST_campaign = dff_TEST_campaign.drop(['deposit'], axis=1)
+
     dff_TEST_campaign['education'] = dff_TEST_campaign['education'].replace('unknown', np.nan)
     
 
@@ -4559,7 +4560,9 @@ if selected == 'PRED POUSSÉ':
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
                 st.dataframe(pred_df)
-          
+                st.dataframe(dff_TEST_campaign)
+                st.dataframe(combined_df_campaign)
+                
                 filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_client_category = joblib.load(filename_client_category)         
                 
