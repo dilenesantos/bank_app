@@ -4261,7 +4261,6 @@ if selected == 'PRED POUSSÉ':
         st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
         st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
         
-    st.write(f"Niveau de confiance: {max_proba:.2f}%")
 
     if max_proba < 80:
         st.write("Conclusion: Données potentiellement insuffisantes.")
@@ -4541,6 +4540,16 @@ if selected == 'PRED POUSSÉ':
             
             elif option_to_add == "Client_Category_M":
                 Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+                    #conditions d'affichage pour education : 
+                if Client_Category_M == "Prospect":
+                    Client_Category = "Jamais"
+                elif Client_Category_M == "Reached-6M":
+                    Client_Category = "Il y a moins de 6 mois"
+                elif Client_Category_M == "Reached+6M":
+                    Client_Category = "Il y a plus de 6  mois"
+                else:
+                    Client_Category = "Inconnu"  # Par défaut si `education` a une valeur inattendue
+                    
                 pred_df['Client_Category_M'] = Client_Category_M
                 pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
                 st.write("Dernier appel : ", Client_Category_M)
@@ -4604,7 +4613,7 @@ if selected == 'PRED POUSSÉ':
             elif option_to_add == "job":
                 st.write(f"Emploi : {job}")
             elif option_to_add == "Client_Category_M":
-                st.write(f"Dernier appel : {Client_Category_M}")
+                st.write("Dernier contact avec le client : ", Client_Category)
             elif option_to_add == "campaign":
                 st.write(f"Nombre de contacts avec le client au cours de la campagne : {campaign}")
      
