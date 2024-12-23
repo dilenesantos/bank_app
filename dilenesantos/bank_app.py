@@ -4310,7 +4310,7 @@ if selected == 'PRED POUSSÉ':
                 pred_df['campaign'] = campaign
                 st.write("Le client a été contacté ", campaign," fois durant la campagne")
     
-                pred_df = pred_df.reindex(columns=dff.columns)
+                pred_df = pred_df.reindex(columns=dff_TEST_campaign.columns)
                 
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
