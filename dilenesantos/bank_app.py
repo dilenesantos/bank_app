@@ -4310,6 +4310,7 @@ if selected == 'PRED POUSSÉ':
                 pred_df['campaign'] = campaign
                 st.write("Le client a été contacté ", campaign," fois durant la campagne")
     
+                pred_df = pred_df.reindex(columns=dff.columns)
                 
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
@@ -4560,8 +4561,6 @@ if selected == 'PRED POUSSÉ':
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
                 st.dataframe(pred_df)
-                st.dataframe(dff_TEST_campaign)
-                st.dataframe(combined_df_campaign)
                 
                 filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_client_category = joblib.load(filename_client_category)         
