@@ -4374,12 +4374,13 @@ if selected == 'PRED POUSSÉ':
                             st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
                     
                 elif selected_model_name == "XGBOOST 2":
-                    # Une fois que l'utilisateur choisit XGBOOST 1,
+                    # Une fois que l'utilisateur choisit XGBOOST 2,
                     # proposez de charger un modèle supplémentaire
                     additional_model_names2 = {
-                        "Modèle 2 loan": "dilenesantos/XGBOOST_2_SD_model_PRED_loan_XGBOOST_2.pkl",
-                    }
-                    
+                            "Modèle 2 loan": "dilenesantos/XGBOOST_2_SD_model_PRED_loan_XGBOOST_2.pkl",
+                        }
+
+                        
                     selected_additional_model_name2 = "Modèle 2 loan"
                 
                     # Chargez le modèle supplémentaire correspondant
