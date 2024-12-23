@@ -4331,13 +4331,7 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
-                st.dataframe(pred_df)
-                st.dataframe(dff_TEST_campaign)
-                st.dataframe(combined_df_campaign)
-
-                
    
-          
                 filename_CAMPAIGN = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_campaign = joblib.load(filename_CAMPAIGN)         
                 
@@ -4393,7 +4387,6 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
-                st.dataframe(pred_df)
           
                 filename_MARITAL = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_marital = joblib.load(filename_MARITAL)         
@@ -4451,7 +4444,6 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
-                st.dataframe(pred_df)
           
                 filename_POUTCOME = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_quater.pkl"
                 model_XGBOOST_1_SD_model_PRED_poutcome = joblib.load(filename_POUTCOME)         
@@ -4512,7 +4504,6 @@ if selected == 'PRED POUSSÉ':
             
                 # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                 pred_df = pred_df.reset_index(drop=True)
-                st.dataframe(pred_df)
           
                 filename_JOB = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_1.pkl"
                 model_XGBOOST_1_SD_model_PRED_job = joblib.load(filename_JOB)         
