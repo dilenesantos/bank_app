@@ -4113,7 +4113,30 @@ if selected == 'PRED POUSSÉ':
     
     # 'Client_Category_M' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
     dff_TEST_client_category['Client_Category_M'] = dff_TEST_client_category['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-  
+
+    #DATAFRAME PRED AVEC CAMPAIGN
+    dff_TEST_campaign = df.copy()
+    dff_TEST_campaign = dff_TEST_campaign[dff_TEST_campaign['age'] < 75]
+    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["balance"] > -2257]
+    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["balance"] < 4087]
+    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["campaign"] < 6]
+    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["previous"] < 2.5]
+    dff_TEST_campaign = dff_TEST_campaign.drop('contact', axis = 1)
+    
+    dff_TEST_campaign = dff_TEST_campaign.drop('pdays', axis = 1)
+    
+    dff_TEST_campaign = dff_TEST_campaign.drop(['day'], axis=1)
+    dff_TEST_campaign = dff_TEST_campaign.drop(['duration'], axis=1)
+    dff_TEST_campaign = dff_TEST_campaign.drop(['job'], axis=1)
+    dff_TEST_campaign = dff_TEST_campaign.drop(['default'], axis=1)
+    dff_TEST_campaign = dff_TEST_campaign.drop(['month'], axis=1)
+    dff_TEST_campaign = dff_TEST_campaign.drop(['poutcome'], axis=1)
+    dff_TEST_campaign = dff_TEST_campaign.drop(['marital'], axis=1)
+    dff_TEST_campaign = dff_TEST_campaign.drop(['loan'], axis=1)
+     
+    dff_TEST_campaign['education'] = dff_TEST_campaign['education'].replace('unknown', np.nan)
+    
+
     st.title("Démonstration et application de notre modèle à votre cas")               
 
     st.subheader('Vos Informations sur le client')
@@ -4232,7 +4255,7 @@ if selected == 'PRED POUSSÉ':
     
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
         option_to_add = st.radio("Choisir une variable à ajouter :", 
-                                       ["None", "loan", "marital", "poutcome", "job", "Client_Category_M"], horizontal=True)
+                                       ["None", "campaign", "loan", "marital", "poutcome", "job", "Client_Category_M"], horizontal=True)
         
         if option_to_add != "None":
             # Ajout de la logique pour chaque option sélectionnée
@@ -4281,6 +4304,52 @@ if selected == 'PRED POUSSÉ':
                     st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
         
         
+            elif option_to_add == "campaign":
+                campaign = st.slider("Combien de fois le client a-t-il été contacté durant la campagne ?", 0, 6, 1)
+                pred_df['campaign'] = campaign
+                st.write("Le client a été contacté ", campaign," fois durant la campagne")
+    
+                
+                # Étape 2 : Concaténer dff et pred_df
+                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+                num_cols = ['age', 'balance','previous', 'campaign']
+                
+                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+                pred_df.index = range(dff_TEST_campaign.shape[0], dff_TEST_campaign.shape[0] + len(pred_df))
+            
+                combined_df_campaign = pd.concat([dff_TEST_campaign[num_cols], pred_df[num_cols]], axis=0)
+
+                # Étape 3 : Standardisation des données numériques
+                scaler = StandardScaler()
+                combined_df_campaign[num_cols] = scaler.fit_transform(combined_df_campaign[num_cols])
+    
+                # Étape 4 : Séparer à nouveau pred_df des autres données
+                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+                pred_df[num_cols] = combined_df_campaign.loc[pred_df.index, num_cols]
+            
+                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+                pred_df = pred_df.reset_index(drop=True)
+                st.dataframe(pred_df)
+          
+                filename_CAMPAIGN = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
+                model_XGBOOST_1_SD_model_PRED_campaign = joblib.load(filename_CAMPAIGN)         
+                
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt_campaign = model_XGBOOST_1_SD_model_PRED_campaign.predict(pred_df)
+                prediction_proba_opt_campaign = model_XGBOOST_1_SD_model_PRED_campaign.predict_proba(pred_df)
+                max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
+        
+                # Affichage des résultats de l'affinage
+                st.write(f"Prediction après affinage : {prediction_opt_campaign[0]}")
+                st.write(f"Niveau de confiance après affinage : {max_proba_opt_campaign:.2f}%")
+                if prediction_opt_campaign[0] == 0:
+                    st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                else:
+                    st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+                    st.write("\nRecommandations : ")
+                    st.write("- Durée d'appel : Pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
+                    st.write("- Nombre de contacts pendant la campagne : il serait contre-productif de le contacter plus d'une fois.")
+
 
             elif option_to_add == "marital":
                 marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
@@ -4512,7 +4581,8 @@ if selected == 'PRED POUSSÉ':
             st.write("Le client a un niveau d'étude : ", niveau_etude)
             st.write("Le solde de son compte en banque est de : ", balance, "euros")
             st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
-            st.write("Le client a été contacté ", previous, " fois lors de la dernière campagne marketing")
+            st.write("Le client a été contacté ", previous, " fois lors de la précédente campagne marketing")
+            st.write("Le client a été contacté ", campaign, " fois pendant la campagne marketing")
             
             # Afficher les informations supplémentaires définies
             if option_to_add == "loan":
@@ -4525,5 +4595,7 @@ if selected == 'PRED POUSSÉ':
                 st.write(f"Emploi : {job}")
             elif option_to_add == "Client_Category_M":
                 st.write(f"Dernier appel : {Client_Category_M}")
+            elif option_to_add == "campaign":
+                st.write(f"Nombre de contacts pendant la campagne : {campaign}")
      
  
