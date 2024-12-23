@@ -4369,7 +4369,7 @@ if selected == 'PRED POUSSÉ':
    
                  # Conditions pour charger le modèle approprié
                 if selected_model_name == "XGBOOST 1":
-                    filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_quater.pkl"
+                    filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
                     additional_model = joblib.load(filename_campaign)
                 
                     # Prédiction avec le DataFrame optimisé
