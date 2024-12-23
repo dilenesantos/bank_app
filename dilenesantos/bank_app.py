@@ -4693,7 +4693,6 @@ if selected == 'PRED POUSSÉ':
                 
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
-                    st.dataframe(pred_df)
                     
                      # Conditions pour charger le modèle approprié
                     if selected_model_name == "XGBOOST 1":
