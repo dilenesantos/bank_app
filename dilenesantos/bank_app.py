@@ -4232,36 +4232,8 @@ if selected == 'PRED POUSSÉ':
 
     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
     pred_df = pred_df.reset_index(drop=True)
+  
 
-    
-    # Bouton pour lancer la prédiction
-    
-    filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
-    model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
-
-    
-    # Prédiction
-    st.title("Prédiction")
-    #st.dataframe(pred_df)
-
-    prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
-    prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
-    max_proba = np.max(prediction_proba[0]) * 100
-
-
-    if prediction[0] == 0:
-        st.write(f"Prediction : {prediction[0]}")
-        st.write(f"Niveau de confiance: {max_proba:.2f}%")
-        st.write("Conclusion:", "\nCe client n'est pas susceptible de souscrire à un dépôt à terme.")
-    else:
-        st.write(f"Prediction : {prediction[0]}")
-        st.write(f"Niveau de confiance: {max_proba:.2f}%")
-        st.write("Conclusion:", "\nCe client est susceptible de souscrire à un dépôt à terme.")
-        st.write("\n")
-        st.write("Recommandations : ")
-        st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
-        st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
-        
     #TEST PRÉDICTION
         # Chargement de vos modèles
     model_filenames = {
