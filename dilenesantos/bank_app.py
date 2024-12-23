@@ -4375,7 +4375,7 @@ if selected == 'PRED POUSSÉ':
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_campaign = additional_model.predict(pred_df)
                     prediction_proba_opt_campaign = additional_model.predict_proba(pred_df)
-                    max_proba_opt_campaign = np.max(prediction_proba_opt_loan[0]) * 100
+                    max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
                 
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_campaign[0]}**")
@@ -4514,7 +4514,7 @@ if selected == 'PRED POUSSÉ':
           
                  # Conditions pour charger le modèle approprié
                 if selected_model_name == "XGBOOST 1":
-                    filename_poutcome = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_1.pkl"
+                    filename_poutcome = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_quater.pkl"
                     additional_model = joblib.load(filename_poutcome)
                 
                     # Prédiction avec le DataFrame optimisé
