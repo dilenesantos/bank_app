@@ -4308,7 +4308,7 @@ if selected == 'PRED POUSSÉ':
             elif option_to_add == "campaign":
                 campaign = st.slider("Combien de fois le client a-t-il été contacté durant la campagne ?", 0, 6, 1)
                 pred_df['campaign'] = campaign
-                st.write("Le client a été contacté ", campaign," fois durant la campagne")
+                st.write("Le client a été contacté ", campaign," au cours de la campagne")
     
                 pred_df = pred_df.reindex(columns=dff_TEST_campaign.columns)
                 
@@ -4593,6 +4593,6 @@ if selected == 'PRED POUSSÉ':
             elif option_to_add == "Client_Category_M":
                 st.write(f"Dernier appel : {Client_Category_M}")
             elif option_to_add == "campaign":
-                st.write(f"Nombre de contacts pendant la campagne : {campaign}")
+                st.write(f"Nombre de contacts avec le client au cours de la campagne : {campaign}")
      
  
