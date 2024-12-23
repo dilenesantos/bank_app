@@ -4366,8 +4366,8 @@ if selected == 'PRED POUSSÉ':
                         max_proba_opt_loan2 = np.max(prediction_proba_opt_loan2[0]) * 100
                     
                         # Affichage des résultats
-                        st.write(f"Prediction après affinage pour le Modèle XGBOOST 2 : {prediction_opt_loan2[0]}")
-                        st.write(f"Niveau de confiance après affinage : {max_proba_opt_loan2:.2f}%")
+                        st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_loan2[0]}**")
+                        st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan2:.2f}%**")
                         if prediction_opt_loan2[0] == 0:
                             st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                         else:
