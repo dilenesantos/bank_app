@@ -4263,8 +4263,7 @@ if selected == 'PRED POUSSÉ':
         
 
     if max_proba < 80:
-        st.write("Le niveau de confiance est inférieur à 80%. 
-        st.write("Vous pouvez affiner la prédiction en ajoutant une autre donnée à votre disposition concernant votre client.")
+        st.write("Cependant, comme le niveau de confiance est inférieur à 80%, vous pouvez affiner la prédiction en ajoutant une autre donnée concernant votre client.")
         
     
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
