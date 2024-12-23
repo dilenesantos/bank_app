@@ -4241,7 +4241,7 @@ if selected == 'PRED POUSSÉ':
     
     # Prédiction
     st.title("Prédiction")
-    st.dataframe(pred_df)
+    #st.dataframe(pred_df)
 
     prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
     prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
