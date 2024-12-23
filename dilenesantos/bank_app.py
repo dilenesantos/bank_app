@@ -4262,7 +4262,7 @@ if selected == 'PRED POUSSÉ':
         st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
         
 
-    if max_proba < 80:
+    if prediction[0] != 0 and max_proba < 80:
         st.write("Conclusion: Données potentiellement insuffisantes.")
         
     
