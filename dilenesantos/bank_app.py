@@ -4392,14 +4392,14 @@ if selected == 'PRED POUSSÉ':
                     #model = joblib.load(model_file)
                     
                     # Prédiction avec le DataFrame optimisé
-                    prediction_opt_loan = additional_model2.predict(pred_df)
-                    prediction_proba_opt_loan = additional_model2.predict_proba(pred_df)
-                    max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
+                    prediction_opt_loan2 = additional_model2.predict(pred_df)
+                    prediction_proba_opt_loan2 = additional_model2.predict_proba(pred_df)
+                    max_proba_opt_loan2 = np.max(prediction_proba_opt_loan2[0]) * 100
             
                     # Affichage des résultats de l'affinage
-                    st.write(f"Prediction après affinage : {prediction_opt_loan[0]}")
-                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_loan:.2f}%")
-                    if prediction_opt_loan[0] == 0:
+                    st.write(f"Prediction après affinage : {prediction_opt_loan2[0]}")
+                    st.write(f"Niveau de confiance après affinage : {max_proba_opt_loan2:.2f}%")
+                    if prediction_opt_loan2[0] == 0:
                         st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                     else:
                         st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
