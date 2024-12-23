@@ -3376,6 +3376,7 @@ if selected == 'Outil Prédictif':
             max_proba = np.max(prediction_proba[0]) * 100
             
             # Résultats
+
             if prediction[0] == 0:
                 st.write(f"Prediction : {prediction[0]}")
                 st.write(f"Niveau de confiance: {max_proba:.2f}%")
@@ -4261,6 +4262,47 @@ if selected == 'PRED POUSSÉ':
         st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, il faudra veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minutes).")
         st.write("- Nombre de contacts pendant la campagne : il serait contre productif de le contacter plus d'une fois.")
         
+    #TEST PRÉDICTION
+        # Chargement de vos modèles
+    model_filenames = {
+        "Modèle XGBOOST 1": "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl",
+        "Modèle XGBOOST 2": "dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl",
+    }
+    
+    # Interface utilisateur
+    st.title("Sélection de Modèle et Prédictions")
+    
+    # Créer deux colonnes
+    col1, col2 = st.columns(2)
+    
+    # Colonne 1 : Choix du modèle
+    with col1:
+        st.subheader("Choix du Modèle")
+        selected_model_name = st.selectbox("Sélectionnez un modèle:", list(model_filenames.keys()))
+    
+    # Colonne 2 : Résultats de la prédiction
+    with col2:
+        # Charger le modèle correspondant
+        model_file = model_filenames[selected_model_name]
+        model = joblib.load(model_file)
+
+        # Prédiction
+        prediction = model.predict(pred_df)
+        prediction_proba = model.predict_proba(pred_df)
+        max_proba = np.max(prediction_proba[0]) * 100
+        
+        # Affichage des résultats
+        st.subheader("Résultats de la Prédiction")
+        st.write(f"Prediction : {prediction[0]}")
+        st.write(f"Niveau de confiance: {max_proba:.2f}%")
+
+        if prediction[0] == 0:
+            st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+        else:
+            st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+            st.write("\nRecommandations : ")
+            st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, veiller à rester le plus longtemps possible au téléphone avec ce client.")
+            st.write("- Nombre de contacts : il serait contre-productif de le contacter plus d'une fois.")
 
     if prediction[0] != 0 and max_proba < 80:
         st.write("Le niveau de confiance étant inférieur à 80%, vous pouvez si vous le souhaitez affiner la prédiction en ajoutant une autre donnée concernant votre client.")
