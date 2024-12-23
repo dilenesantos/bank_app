@@ -4344,8 +4344,9 @@ if selected == 'PRED POUSSÉ':
                         additional_model_names = {
                             "Modèle 1 loan": "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl",
                         }
+
                         
-                        selected_additional_model_name = additional_model_names
+                        selected_additional_model_name = "Modèle 1 loan"
                     
                         # Chargez le modèle supplémentaire correspondant
                         additional_model_file = additional_model_names[selected_additional_model_name]
@@ -4379,7 +4380,7 @@ if selected == 'PRED POUSSÉ':
                         "Modèle 2 loan": "dilenesantos/XGBOOST_2_SD_model_PRED_loan_XGBOOST_2.pkl",
                     }
                     
-                    selected_additional_model_name2 = additional_model_names2
+                    selected_additional_model_name2 = "Modèle 2 loan"
                 
                     # Chargez le modèle supplémentaire correspondant
                     additional_model_file2 = additional_model_names2[selected_additional_model_name2]
