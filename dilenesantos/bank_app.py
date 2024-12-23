@@ -3834,7 +3834,7 @@ if selected == 'TEST PRÉDICTIF':
         # Bouton pour lancer la prédiction
         prediction_button = st.button(label="Predict")
         
-        filename = "XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl"
+        filename = "dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl"
         model_XGBOOST_2 = joblib.load(filename)         
                 
             
