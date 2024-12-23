@@ -4265,8 +4265,8 @@ if selected == 'PRED POUSSÉ':
     #TEST PRÉDICTION
         # Chargement de vos modèles
     model_filenames = {
-        "Modèle XGBOOST 1": "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl",
-        "Modèle XGBOOST 2": "dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST 1": "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl",
+        "XGBOOST 2": "dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl",
     }
     
     # Interface utilisateur
@@ -4277,8 +4277,8 @@ if selected == 'PRED POUSSÉ':
     
     # Colonne 1 : Choix du modèle
     with col1:
-        st.subheader("Choix du Modèle")
-        selected_model_name = st.selectbox("Sélectionnez un modèle:", list(model_filenames.keys()))
+        st.subheader("Modèle")
+        selected_model_name = st.selectbox("", list(model_filenames.keys()))
     
     # Colonne 2 : Résultats de la prédiction
     with col2:
@@ -4338,9 +4338,10 @@ if selected == 'PRED POUSSÉ':
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
                     
-                    filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
-                    model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename_LOAN)
-                
+                    #filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
+                    #model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1 = joblib.load(filename_LOAN)
+                    model_file = model_filenames[selected_model_name]
+                    model = joblib.load(model_file)
                     
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_loan = model_XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.predict(pred_df)
