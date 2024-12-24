@@ -205,7 +205,7 @@ X_train_sd, X_test_sd, y_train_sd, y_test_sd = train_test_split(X_sans_duration,
 imputer = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
 X_train_sd.loc[:,['job']] = imputer.fit_transform(X_train_sd[['job']])
 X_test_sd.loc[:,['job']] = imputer.transform(X_test_sd[['job']])
-
+ 
 # On remplace les NaaN de 'poutcome' avec la méthode de remplissage par propagation où chaque valeur unknown est remplacée par la valeur de la ligne suivante (puis la dernière ligne par le Mode de cette variable).
 # On l'applique au X_train et X_test :
 X_train_sd['poutcome'] = X_train_sd['poutcome'].fillna(method ='bfill')
