@@ -1642,120 +1642,6 @@ if selected == "Modélisation":
             table_rf = pd.crosstab(y_test, y_pred, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_rf)
 
-            st.write("PARTIE SHAP SUR MODÈLE SÉLECTIONNÉ")
-            #SHAP
-            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
-            #Chargement du modèle XGBOOST_1 déjà enregistré
-            #filename_RF_carolle = "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl"
-            #model_RF_carolle_model_AD_TOP_3_hyperparam_TEAM = joblib.load(filename_RF_carolle)
-
-            #Chargement des données pour shap 
-            #data_to_explain_RF_carolle = X_test  
-
-            #Création de l'explainer SHAP pour XGBOOST_1
-            #explainer_RF_carolle = shap.TreeExplainer(model_RF_carolle_model_AD_TOP_3_hyperparam_TEAM)
-
-            #Calcul des shap values
-            #shap_values_RF_carolle = explainer_RF_carolle(data_to_explain_RF_carolle)
-
-            #Sauvegarder des shap values avec joblib
-            #joblib.dump(shap_values_RF_carolle, "shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
-
-            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
-            shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
-            st.write(shap_values_RF_carolle.shape)
-            
-            fig = plt.figure()
-            shap.summary_plot(shap_values_RF_carolle[:,:,1], X_test)  
-            st.pyplot(fig)
-            
-            fig = plt.figure()
-            explanation_RF_carolle = shap.Explanation(values=shap_values_RF_carolle,
-                                 data=X_test.values, # Assumant que  X_test est un DataFrame
-                                 feature_names=X_test.columns)
-            shap.plots.bar(explanation_RF_carolle[:,:,1])
-            st.pyplot(fig)
-
-
-            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
-
-            shap_values_rf_carolle_transformed = joblib.load("dilenesantos/shap_values_rf_carolle_transformed.pkl")
-
-            #Étape 1 : Créer une liste des termes à exclure
-            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
-
-            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
-            filtered_columns = [col for col in X_test.columns if not any(term in col for term in terms_to_exclude)]
-
-            #Étape 3 : Identifier les indices correspondants dans X_test_sd
-            filtered_indices = [X_test.columns.get_loc(col) for col in filtered_columns]
-            shap_values_filtered = shap_values_rf_carolle_transformed[:, filtered_indices]
-
-            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
-            explanation_filtered = shap.Explanation(values=shap_values_filtered,
-                                            data=X_test.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
-                                            feature_names=filtered_columns)  # Les noms des features
-
-            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
-            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
-            def get_mean_shap_values(column_names, shap_values):
-                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
-                indices = [X_test.columns.get_loc(col) for col in column_names]
-                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
-                return np.mean(np.abs(values), axis=0)
-
-            # Étape 1 : On identifie les colonnes que l'on recherche
-            month_columns = [col for col in X_test.columns if 'month' in col]
-            weekday_columns = [col for col in X_test.columns if 'weekday' in col]
-            poutcome_columns = [col for col in X_test.columns if 'poutcome' in col]
-            job_columns = [col for col in X_test.columns if 'job' in col]
-            marital_columns = [col for col in X_test.columns if 'marital' in col]
-
-            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
-            mean_shap_month = get_mean_shap_values(month_columns, shap_values_rf_carolle_transformed)
-            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_rf_carolle_transformed)
-            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_rf_carolle_transformed)
-            mean_shap_job = get_mean_shap_values(job_columns, shap_values_rf_carolle_transformed)
-            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_rf_carolle_transformed)
-
-            # Étape 3 : On combine les différentes moyennes et on les nomme
-            combined_values = [np.mean(mean_shap_month),
-                                        np.mean(mean_shap_weekday),
-                                        np.mean(mean_shap_poutcome),
-                                        np.mean(mean_shap_job),
-                                        np.mean(mean_shap_marital)]
-
-            combined_feature_names = ['Mean SHAP Value for Month Features',
-                                            'Mean SHAP Value for Weekday Features',
-                                            'Mean SHAP Value for Poutcome Features',
-                                            'Mean SHAP Value for Job Features',
-                                            'Mean SHAP Value for Marital Features']
-
-            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
-            explanation_combined = shap.Explanation(values=combined_values,
-                                                            data=np.array([[np.nan]] * len(combined_values)),
-                                                            feature_names=combined_feature_names)
-
-            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
-
-            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
-            num_samples = explanation_filtered.values.shape[0]
-            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
-
-            #Étape 2: On concatenate les 2 explanations
-            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
-
-            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
-            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
-
-            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
-            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names)
-
-            fig = plt.figure(figsize=(10, 6))
-            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
-            st.pyplot(fig)
-
-
     if page == pages[2] :
         #SANS DURATION
         submenu_modelisation2 = st.selectbox("Menu", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"))
@@ -2038,9 +1924,122 @@ if selected == 'Interprétation':
         if submenu_interpretation == "Summary plot" : 
             # Affichage des visualisations SHAP
             st.subheader("Summary plot")
+            #SHAP
+            #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
+            #Chargement du modèle XGBOOST_1 déjà enregistré
+            #filename_RF_carolle = "RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl"
+            #model_RF_carolle_model_AD_TOP_3_hyperparam_TEAM = joblib.load(filename_RF_carolle)
+
+            #Chargement des données pour shap 
+            #data_to_explain_RF_carolle = X_test  
+
+            #Création de l'explainer SHAP pour XGBOOST_1
+            #explainer_RF_carolle = shap.TreeExplainer(model_RF_carolle_model_AD_TOP_3_hyperparam_TEAM)
+
+            #Calcul des shap values
+            #shap_values_RF_carolle = explainer_RF_carolle(data_to_explain_RF_carolle)
+
+            #Sauvegarder des shap values avec joblib
+            #joblib.dump(shap_values_RF_carolle, "shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
+
+            #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
+            shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
+            st.write(shap_values_RF_carolle.shape)
+            
+            fig = plt.figure()
+            shap.summary_plot(shap_values_RF_carolle[:,:,1], X_test)  
+            st.pyplot(fig)
+            
+            fig = plt.figure()
+            explanation_RF_carolle = shap.Explanation(values=shap_values_RF_carolle,
+                                 data=X_test.values, # Assumant que  X_test est un DataFrame
+                                 feature_names=X_test.columns)
+            shap.plots.bar(explanation_RF_carolle[:,:,1])
+            st.pyplot(fig)
+
+
             
         if submenu_interpretation == "Bar plot poids des variables" :
             st.subheader("Poids des variables dans le modèle")
+        
+            ### 1 CREATION D'UN EXPLANATION FILTRER SANS LES COLONNES POUR LESQUELLES NOUS ALLONS CALCULER LES MOYENNES
+
+            shap_values_rf_carolle_transformed = joblib.load("dilenesantos/shap_values_rf_carolle_transformed.pkl")
+
+            #Étape 1 : Créer une liste des termes à exclure
+            terms_to_exclude = ['month', 'weekday', 'job', 'poutcome', 'marital']
+
+            #Étape 2 : Filtrer les colonnes qui ne contiennent pas les termes à exclure
+            filtered_columns = [col for col in X_test.columns if not any(term in col for term in terms_to_exclude)]
+
+            #Étape 3 : Identifier les indices correspondants dans X_test_sd
+            filtered_indices = [X_test.columns.get_loc(col) for col in filtered_columns]
+            shap_values_filtered = shap_values_rf_carolle_transformed[:, filtered_indices]
+
+            # Étape 4 : On créé un nouvel Explanation avec les colonnes filtrées
+            explanation_filtered = shap.Explanation(values=shap_values_filtered,
+                                            data=X_test.values[:, filtered_indices],  # Garder uniquement les colonnes correspondantes
+                                            feature_names=filtered_columns)  # Les noms des features
+
+            ###2 CRÉATION D'UN NOUVEAU EXPLANATION AVEC LES MOYENNES SHAP POUR LES COLONNES MONTH / WEEKDAY / POUTCOME / JOB / MARITAL
+            #Fonction pour récupérer les moyennes SHAP en valeur absolue pour les colonnes qui nous intéressent
+            def get_mean_shap_values(column_names, shap_values):
+                # Assurez-vous d'accéder aux valeurs à l'intérieur de shap_values
+                indices = [X_test.columns.get_loc(col) for col in column_names]
+                values = shap_values.values[:, indices]  # Utilisez .values pour accéder aux valeurs brutes
+                return np.mean(np.abs(values), axis=0)
+
+            # Étape 1 : On identifie les colonnes que l'on recherche
+            month_columns = [col for col in X_test.columns if 'month' in col]
+            weekday_columns = [col for col in X_test.columns if 'weekday' in col]
+            poutcome_columns = [col for col in X_test.columns if 'poutcome' in col]
+            job_columns = [col for col in X_test.columns if 'job' in col]
+            marital_columns = [col for col in X_test.columns if 'marital' in col]
+
+            # Étape 2 : On utilise notre fonction pour calculer les moyennes des valeurs SHAP absolues
+            mean_shap_month = get_mean_shap_values(month_columns, shap_values_rf_carolle_transformed)
+            mean_shap_weekday = get_mean_shap_values(weekday_columns, shap_values_rf_carolle_transformed)
+            mean_shap_poutcome = get_mean_shap_values(poutcome_columns, shap_values_rf_carolle_transformed)
+            mean_shap_job = get_mean_shap_values(job_columns, shap_values_rf_carolle_transformed)
+            mean_shap_marital = get_mean_shap_values(marital_columns, shap_values_rf_carolle_transformed)
+
+            # Étape 3 : On combine les différentes moyennes et on les nomme
+            combined_values = [np.mean(mean_shap_month),
+                                        np.mean(mean_shap_weekday),
+                                        np.mean(mean_shap_poutcome),
+                                        np.mean(mean_shap_job),
+                                        np.mean(mean_shap_marital)]
+
+            combined_feature_names = ['Mean SHAP Value for Month Features',
+                                            'Mean SHAP Value for Weekday Features',
+                                            'Mean SHAP Value for Poutcome Features',
+                                            'Mean SHAP Value for Job Features',
+                                            'Mean SHAP Value for Marital Features']
+
+            # Étape 4 : On crée un nouvel Explanation avec les valeurs combinées
+            explanation_combined = shap.Explanation(values=combined_values,
+                                                            data=np.array([[np.nan]] * len(combined_values)),
+                                                            feature_names=combined_feature_names)
+
+            ###3 ON COMBINE LES 2 EXPLANTATION PRÉCÉDEMMENT CRÉÉS
+
+            #Étape 1 : On récupére les nombre de lignes de explanation_filtered et on reshape explanation_combined pour avoir le même nombre de lignes
+            num_samples = explanation_filtered.values.shape[0]
+            combined_values_reshaped = np.repeat(np.array(explanation_combined.values)[:, np.newaxis], num_samples, axis=1).T
+
+            #Étape 2: On concatenate les 2 explanations
+            combined_values = np.concatenate([explanation_filtered.values, combined_values_reshaped], axis=1)
+
+            #Étape 3: On combine le nom des colonnes provenant des 2 explanations
+            combined_feature_names = (explanation_filtered.feature_names + explanation_combined.feature_names)
+
+            #Étape 4: On créé un nouveau explanation avec les valeurs concatnées dans combined_values
+            explanation_combined_new = shap.Explanation(values=combined_values,data=np.array([[np.nan]] * combined_values.shape[0]),feature_names=combined_feature_names)
+
+            fig = plt.figure(figsize=(10, 6))
+            shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
+            st.pyplot(fig)
+
             st.write("blablabla")
 
         if submenu_interpretation == "Analyses des variables catégorielles" :
