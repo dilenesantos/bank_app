@@ -290,6 +290,7 @@ with st.sidebar:
         options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "TEST PRED SCORES", "Outil Prédictif", "TEST PRÉDICTIF", "PRED POUSSÉ"]) 
 
 if selected == 'Introduction':  
+    st.title("Prédiction du succès d’une campagne Marketing pour une banque")
     st.subheader("Contexte du projet")
     st.write("Le projet vise à analyser des données marketing issues d'une banque qui a utilisé le télémarketing pour **promouvoir un produit financier appelé 'dépôt à terme'**. Ce produit nécessite que le client dépose une somme d'argent dans un compte dédié, sans possibilité de retrait avant une date déterminée. En retour, le client reçoit des intérêts à la fin de cette période. **L'objectif de cette analyse est d'examiner les informations personnelles des clients, comme l'âge, le statut matrimonial, le montant d'argent déposé, le nombre de contacts réalisés, etc., afin de comprendre les facteurs qui influencent la décision des clients de souscrire ou non à ce produit financier.**")
     
@@ -297,8 +298,8 @@ if selected == 'Introduction':
     st.write("#### Problématique : ")
     st.write("La principale problématique de ce projet est de **déterminer** les **facteurs qui influencent la probabilité qu'un client souscrive à un dépôt à terme à la suite d'une campagne de télémarketing.**")
     st.write("L'objectif est double :")
-    st.write("- Identifier et analyser visuellement et statistiquement les caractéristiques des clients qui sont corrélées avec la souscription au 'dépôt à terme'.")
-    st.write("- Utiliser des techniques de Machine Learning pour prédire si un client va souscrire au 'dépôt à terme'.")
+    st.write("- Identifier et analyser visuellement et statistiquement **les caractéristiques des clients** qui sont corrélées avec la souscription au 'dépôt à terme'.")
+    st.write("- Utiliser des techniques de Machine Learning pour **prédire si un client va souscrire au 'dépôt à terme'.**")
     
     st.write("BLABLABLA")
     st.write("FATOU")
