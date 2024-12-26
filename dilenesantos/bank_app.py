@@ -291,7 +291,7 @@ with st.sidebar:
 
 if selected == 'Introduction':  
     st.subheader("Contexte du projet")
-    st.write("Le projet vise à analyser des données marketing issues d'une banque qui a utilisé le télémarketing pour promouvoir un produit financier appelé 'dépôt à terme'. Ce produit nécessite que le client dépose une somme d'argent dans un compte dédié, sans possibilité de retrait avant une date déterminée. En retour, le client reçoit des intérêts à la fin de cette période. L'objectif de cette analyse est d'examiner les informations personnelles des clients, comme l'âge, le statut matrimonial, le montant d'argent déposé, le nombre de contacts réalisés, etc., afin de comprendre les facteurs qui influencent la décision des clients de souscrire ou non à ce produit financier.")
+    st.write("Le projet vise à analyser des données marketing issues d'une banque qui a utilisé le télémarketing pour **promouvoir un produit financier appelé 'dépôt à terme'**. Ce produit nécessite que le client dépose une somme d'argent dans un compte dédié, sans possibilité de retrait avant une date déterminée. En retour, le client reçoit des intérêts à la fin de cette période. **L'objectif de cette analyse est d'examiner les informations personnelles des clients, comme l'âge, le statut matrimonial, le montant d'argent déposé, le nombre de contacts réalisés, etc., afin de comprendre les facteurs qui influencent la décision des clients de souscrire ou non à ce produit financier.**")
     
 
     st.write("Problématique : ")
