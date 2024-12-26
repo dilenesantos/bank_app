@@ -300,10 +300,7 @@ if selected == 'Introduction':
     st.write("L'objectif est double :")
     st.write("- Identifier et analyser visuellement et statistiquement **les caractéristiques des clients** qui sont corrélées avec la souscription au 'dépôt à terme'.")
     st.write("- Utiliser des techniques de Machine Learning pour **prédire si un client va souscrire au 'dépôt à terme'.**")
-    
-    st.write("BLABLABLA")
-    st.write("FATOU")
-    st.write("carolle")
+   
 
 if selected == 'DataVisualisation':      
     st.title("DATAVISUALISATION")
