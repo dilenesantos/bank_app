@@ -2053,8 +2053,21 @@ if selected == 'Interprétation':
             submenu_var_inf = st.radio("", ("DURATION", "HOUSING", "PREVIOUS"), horizontal=True) 
 
             if submenu_var_inf == "DURATION" :
-                st.write("#### DURATION : poids de +0.19 dans les prédictions de notre modèle")  
+                st.write("#### DURATION : Poids de +0.19 dans les prédictions de notre modèle")  
+                st.subheader("IMPACT POSITIF DE DURATION SUR LA CLASSE 1")
+                st.write("Summary plot :")
+                st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
+                
+                fig = plt.figure()
+                shap.summary_plot(shap_values_RF_carolle[:, [X_test_sd.columns.get_loc("duration")]], 
+                                  X_test_sd[["duration"]], 
+                                  feature_names=["duration"], 
+                                  show=True)
+                st.pyplot(fig)
+                
 
+                st.write("blabla")
+            
 
             
             if submenu_var_inf == "HOUSING" :
