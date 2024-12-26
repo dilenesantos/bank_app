@@ -2059,8 +2059,8 @@ if selected == 'Interprétation':
                 st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
                 
                 fig = plt.figure()
-                shap.summary_plot(shap_values_RF_carolle[:, [X_test_sd.columns.get_loc("duration")]], 
-                                  X_test_sd[["duration"]], 
+                shap.summary_plot(shap_values_RF_carolle[:, [X_test.columns.get_loc("duration")]], 
+                                  X_test[["duration"]], 
                                   feature_names=["duration"], 
                                   show=True)
                 st.pyplot(fig)
