@@ -295,7 +295,7 @@ if selected == 'Introduction':
     
 
     st.write("#### Problématique : ")
-    st.write("La principale problématique de ce projet est de déterminer les facteurs qui influencent la probabilité qu'un client souscrive à un dépôt à terme à la suite d'une campagne de télémarketing.")
+    st.write("La principale problématique de ce projet est de **déterminer** les **facteurs qui influencent la probabilité qu'un client souscrive à un dépôt à terme à la suite d'une campagne de télémarketing.**")
     st.write("L'objectif est double :")
     st.write("- Identifier et analyser visuellement et statistiquement les caractéristiques des clients qui sont corrélées avec la souscription au 'dépôt à terme'.")
     st.write("- Utiliser des techniques de Machine Learning pour prédire si un client va souscrire au 'dépôt à terme'.")
