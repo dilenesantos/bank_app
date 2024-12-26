@@ -2047,12 +2047,28 @@ if selected == 'Interprétation':
                 shap.plots.bar(explanation_combined_new, max_display=len(explanation_combined_new.feature_names))
                 st.pyplot(fig)
 
-                st.write("blablabla")
+                st.write("")
+
+        if submenu_interpretation_Duration == "ANALYSE DES VARIABLES LES PLUS INFLUENTES" :
+            submenu_var_inf = st.radio("", ("DURATION", "HOUSING", "PREVIOUS"), horizontal=True) 
+
+            if submenu_var_inf == "DURATION" :
+                st.write("#### DURATION : poids de +0.19 dans les prédictions de notre modèle")  
+
+
+            
+            if submenu_var_inf == "HOUSING" :
+                st.write("#### HOUSING : poids de +0.05 dans les prédictions de notre modèle") 
+
+
+            
+            if submenu_var_inf == "PREVIOUS" :
+                st.write("#### PREVIOUS : poids de +0.03 dans les prédictions de notre modèle") 
+    
 
 
 
-
-        
+    
         #if submenu_interpretation == "Analyses des variables catégorielles" :
             #st.subheader("Zoom sur les variables catégorielles")
             #st.write("blablabla")
@@ -2060,7 +2076,10 @@ if selected == 'Interprétation':
         #if submenu_interpretation == "Dependence plots" :
             #st.subheader("Dépendences plots & Analyses")
             #st.write("blablabla")
-            
+
+
+
+    
     if page == pages[1] : 
         #SHAP
         #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
