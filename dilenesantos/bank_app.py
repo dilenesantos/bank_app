@@ -2056,7 +2056,7 @@ if selected == 'Interprétation':
                 st.write("#### DURATION : Poids de +0.19 dans les prédictions de notre modèle")  
                 st.subheader("IMPACT POSITIF DE DURATION SUR LA CLASSE 1")
                 st.write("Summary plot :")
-                st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
+                #st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
                 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_RF_carolle[:, [X_test.columns.get_loc("duration")]], 
