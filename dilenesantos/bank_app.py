@@ -2989,7 +2989,6 @@ if selected == 'Outil  Prédictif':
     # Interface utilisateur
     st.title("Sélection de Modèle et Prédictions")
 
-    model = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
     filename_prediction = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
     model = joblib.load(filename_prediction)
 
