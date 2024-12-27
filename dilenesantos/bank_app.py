@@ -2687,6 +2687,7 @@ if selected == "Recommandations & Perspectives":
           st.write("##### -  Prioriser les clients déjà contactés")
           st.write("##### -  Prioriser xxxxxxxx pr EDUCATION")
           st.write("##### -  Maintenir autant que possible une durée d’appel de minimum 6 minutes ")
+          st.write("##### -  Il ne semble pas pertinent de contacter les clients plus d’une fois pendant la campagne. ")
           
 
 
