@@ -2054,7 +2054,7 @@ if selected == 'Interprétation':
 
             if submenu_var_inf == "DURATION" :
                 st.write("#### DURATION : Poids de +0.19 dans les prédictions de notre modèle")  
-                st.subheader("IMPACT POSITIF DE DURATION SUR LA CLASSE 1")
+                st.subheader("Impact POSITIF de DURATION sur la classe 1")
                 st.write("Summary plot :")
 
                 shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
