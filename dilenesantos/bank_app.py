@@ -2064,9 +2064,9 @@ if selected == 'Interprétation':
                 st.write("Test dilène")
                 shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
                 fig = plt.figure()
-                shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("housing")]], 
-                                  X_test[["housing"]], 
-                                  feature_names=["housing"], 
+                shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("duration")]], 
+                                  X_test[["duration"]], 
+                                  feature_names=["duration"], 
                                   show=True)
                 st.pyplot(fig)
                 
