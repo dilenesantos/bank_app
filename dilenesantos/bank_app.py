@@ -2985,17 +2985,11 @@ if selected == 'Outil  Prédictif':
     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
     pred_df = pred_df.reset_index(drop=True)
   
-
-    # Chargement de vos modèles
-    model_filenames = "XGBOOST 1": "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
-
     
     # Interface utilisateur
     st.title("Sélection de Modèle et Prédictions")
 
-    # Charger le modèle correspondant
-    model_file = model_filenames
-    model = joblib.load(model_file)
+
 
     # Prédiction
     prediction = model.predict(pred_df)
@@ -3050,317 +3044,311 @@ if selected == 'Outil  Prédictif':
                 pred_df = pred_df.reset_index(drop=True)
 
                 # Conditions pour charger le modèle approprié
-                if selected_model_name == "XGBOOST 1":
-                    filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
-                    additional_model = joblib.load(filename_LOAN)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_loan = additional_model.predict(pred_df)
-                    prediction_proba_opt_loan = additional_model.predict_proba(pred_df)
-                    max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_loan[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan:.2f}%**")
-                    if prediction_opt_loan[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-                
-        
-            elif option_to_add == "campaign":
-                campaign = st.slider("Combien de fois le client a-t-il été contacté durant la campagne ?", 0, 6, 1)
-                pred_df['campaign'] = campaign
-                st.write("Le client a été contacté ", campaign," au cours de la campagne")
-    
-                pred_df = pred_df.reindex(columns=dff_TEST_campaign.columns)
-                
-                # Étape 2 : Concaténer dff et pred_df
-                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-                num_cols = ['age', 'balance','previous', 'campaign']
-                
-                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                pred_df.index = range(dff_TEST_campaign.shape[0], dff_TEST_campaign.shape[0] + len(pred_df))
+                filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
+                additional_model = joblib.load(filename_LOAN)
             
-                combined_df_campaign = pd.concat([dff_TEST_campaign[num_cols], pred_df[num_cols]], axis=0)
-
-                # Étape 3 : Standardisation des données numériques
-                scaler = StandardScaler()
-                combined_df_campaign[num_cols] = scaler.fit_transform(combined_df_campaign[num_cols])
-    
-                # Étape 4 : Séparer à nouveau pred_df des autres données
-                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                pred_df[num_cols] = combined_df_campaign.loc[pred_df.index, num_cols]
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt_loan = additional_model.predict(pred_df)
+                prediction_proba_opt_loan = additional_model.predict_proba(pred_df)
+                max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
             
-                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-                pred_df = pred_df.reset_index(drop=True)
-   
-                 # Conditions pour charger le modèle approprié
-                if selected_model_name == "XGBOOST 1":
-                    filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
-                    additional_model = joblib.load(filename_campaign)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_campaign = additional_model.predict(pred_df)
-                    prediction_proba_opt_campaign = additional_model.predict_proba(pred_df)
-                    max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_campaign[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign:.2f}%**")
-                    if prediction_opt_campaign[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-                
-
-            elif option_to_add == "marital":
-                marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
-                pred_df['marital'] = marital
-                st.write("Situation maritale : ", marital)
-                
-                # Liste des variables catégorielles multi-modales à traiter
-                cat_cols_multi_modal = ['marital']
-                # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
-                for col in cat_cols_multi_modal:
-                    # Effectuer un encodage des variables catégorielles multi-modales
-                    dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
-                    pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
-                            
-                # Réorganiser les colonnes pour correspondre exactement à celles de dff
-                pred_df = pred_df.reindex(columns=dff_TEST_marital.columns, fill_value=0)
-                
-                # Étape 2 : Concaténer dff et pred_df
-                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-                num_cols = ['age', 'balance','previous']
-                
-                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                pred_df.index = range(dff_TEST_marital.shape[0], dff_TEST_marital.shape[0] + len(pred_df))
-            
-                combined_df_marital = pd.concat([dff_TEST_marital[num_cols], pred_df[num_cols]], axis=0)
-
-                # Étape 3 : Standardisation des données numériques
-                scaler = StandardScaler()
-                combined_df_marital[num_cols] = scaler.fit_transform(combined_df_marital[num_cols])
-    
-                # Étape 4 : Séparer à nouveau pred_df des autres données
-                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                pred_df[num_cols] = combined_df_marital.loc[pred_df.index, num_cols]
-            
-                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-                pred_df = pred_df.reset_index(drop=True)
-          
-                 # Conditions pour charger le modèle approprié
-                if selected_model_name == "XGBOOST 1":
-                    filename_marital = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
-                    additional_model = joblib.load(filename_marital)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_marital = additional_model.predict(pred_df)
-                    prediction_proba_opt_marital = additional_model.predict_proba(pred_df)
-                    max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_marital[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%**")
-                    if prediction_opt_marital[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-                
-
-            elif option_to_add == "poutcome":
-                poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other'))
-                pred_df['poutcome'] = poutcome
-                st.write("Résultat de la campagne : ", poutcome)
-                
-               
-                # Liste des variables catégorielles multi-modales à traiter
-                cat_cols_multi_modal_poutcome = ['poutcome']
-                # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
-                for col in cat_cols_multi_modal_poutcome:
-                    # Effectuer un encodage des variables catégorielles multi-modales
-                    dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
-                    pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
-                            
-                # Réorganiser les colonnes pour correspondre exactement à celles de dff
-                pred_df = pred_df.reindex(columns=dff_TEST_poutcome.columns, fill_value=0)
-                
-                # Étape 2 : Concaténer dff et pred_df
-                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-                num_cols = ['age', 'balance','previous']
-                
-                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                pred_df.index = range(dff_TEST_poutcome.shape[0], dff_TEST_poutcome.shape[0] + len(pred_df))
-            
-                combined_df_poutcome = pd.concat([dff_TEST_poutcome[num_cols], pred_df[num_cols]], axis=0)
-
-                # Étape 3 : Standardisation des données numériques
-                scaler = StandardScaler()
-                combined_df_poutcome[num_cols] = scaler.fit_transform(combined_df_poutcome[num_cols])
-    
-                # Étape 4 : Séparer à nouveau pred_df des autres données
-                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                pred_df[num_cols] = combined_df_poutcome.loc[pred_df.index, num_cols]
-            
-                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-                pred_df = pred_df.reset_index(drop=True)
-          
-                 # Conditions pour charger le modèle approprié
-                if selected_model_name == "XGBOOST 1":
-                    filename_poutcome = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_quater.pkl"
-                    additional_model = joblib.load(filename_poutcome)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_poutcome = additional_model.predict(pred_df)
-                    prediction_proba_opt_poutcome = additional_model.predict_proba(pred_df)
-                    max_proba_opt_poutcome = np.max(prediction_proba_opt_poutcome[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_poutcome[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
-                    if prediction_opt_poutcome[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-                
-
-    
-            elif option_to_add == "job":
-                job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
-                                                                     'housemaid', 'management', 'retired', 
-                                                                     'self-employed', 'services', 'student', 
-                                                                     'technician', 'unemployed'))
-                pred_df['job'] = job
-                st.write("Emploi : ", job)
-             
-                # Liste des variables catégorielles multi-modales à traiter
-                cat_cols_multi_modal_job = ['job']
-                # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
-                for col in cat_cols_multi_modal_job:
-                    # Effectuer un encodage des variables catégorielles multi-modales
-                    dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
-                    pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
-                            
-                # Réorganiser les colonnes pour correspondre exactement à celles de dff
-                pred_df = pred_df.reindex(columns=dff_TEST_job.columns, fill_value=0)
-                
-                # Étape 2 : Concaténer dff et pred_df
-                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-                num_cols = ['age', 'balance','previous']
-                
-                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                pred_df.index = range(dff_TEST_job.shape[0], dff_TEST_job.shape[0] + len(pred_df))
-            
-                combined_df_job = pd.concat([dff_TEST_job[num_cols], pred_df[num_cols]], axis=0)
-
-                # Étape 3 : Standardisation des données numériques
-                scaler = StandardScaler()
-                combined_df_job[num_cols] = scaler.fit_transform(combined_df_job[num_cols])
-    
-                # Étape 4 : Séparer à nouveau pred_df des autres données
-                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                pred_df[num_cols] = combined_df_job.loc[pred_df.index, num_cols]
-            
-                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-                pred_df = pred_df.reset_index(drop=True)
-          
-                 # Conditions pour charger le modèle approprié
-                if selected_model_name == "XGBOOST 1":
-                    filename_job = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_1.pkl"
-                    additional_model = joblib.load(filename_job)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_job = additional_model.predict(pred_df)
-                    prediction_proba_opt_job = additional_model.predict_proba(pred_df)
-                    max_proba_opt_job = np.max(prediction_proba_opt_job[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_job[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%**")
-                    if prediction_opt_job[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-                
-
-            
-            elif option_to_add == "Client_Category_M":
-                Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                    #conditions d'affichage pour education : 
-                if Client_Category_M == "Prospect":
-                    Client_Category = "Jamais"
-                elif Client_Category_M == "Reached-6M":
-                    Client_Category = "Il y a moins de 6 mois"
-                elif Client_Category_M == "Reached+6M":
-                    Client_Category = "Il y a plus de 6  mois"
+                # Affichage des résultats
+                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_loan[0]}**")
+                st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan:.2f}%**")
+                if prediction_opt_loan[0] == 0:
+                    st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                 else:
-                    Client_Category = "Inconnu"  # Par défaut si `education` a une valeur inattendue
-                    
-                pred_df['Client_Category_M'] = Client_Category_M
-                pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-                st.write("Dernier appel : ", Client_Category_M)
-                
-                # Étape 2 : Concaténer dff et pred_df
-                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-                num_cols = ['age', 'balance','previous']
-                
-                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                pred_df.index = range(dff_TEST_client_category.shape[0], dff_TEST_client_category.shape[0] + len(pred_df))
+                    st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
             
-                combined_df_client_category = pd.concat([dff_TEST_client_category[num_cols], pred_df[num_cols]], axis=0)
-
-                # Étape 3 : Standardisation des données numériques
-                scaler = StandardScaler()
-                combined_df_client_category[num_cols] = scaler.fit_transform(combined_df_client_category[num_cols])
     
-                # Étape 4 : Séparer à nouveau pred_df des autres données
-                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                pred_df[num_cols] = combined_df_client_category.loc[pred_df.index, num_cols]
+        elif option_to_add == "campaign":
+            campaign = st.slider("Combien de fois le client a-t-il été contacté durant la campagne ?", 0, 6, 1)
+            pred_df['campaign'] = campaign
+            st.write("Le client a été contacté ", campaign," au cours de la campagne")
+
+            pred_df = pred_df.reindex(columns=dff_TEST_campaign.columns)
             
-                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-                pred_df = pred_df.reset_index(drop=True)
-                
+            # Étape 2 : Concaténer dff et pred_df
+            # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+            num_cols = ['age', 'balance','previous', 'campaign']
+            
+            # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+            pred_df.index = range(dff_TEST_campaign.shape[0], dff_TEST_campaign.shape[0] + len(pred_df))
+        
+            combined_df_campaign = pd.concat([dff_TEST_campaign[num_cols], pred_df[num_cols]], axis=0)
+
+            # Étape 3 : Standardisation des données numériques
+            scaler = StandardScaler()
+            combined_df_campaign[num_cols] = scaler.fit_transform(combined_df_campaign[num_cols])
+
+            # Étape 4 : Séparer à nouveau pred_df des autres données
+            # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+            pred_df[num_cols] = combined_df_campaign.loc[pred_df.index, num_cols]
+        
+            # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+            pred_df = pred_df.reset_index(drop=True)
+
                  # Conditions pour charger le modèle approprié
-                if selected_model_name == "XGBOOST 1":
-                    filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
-                    additional_model = joblib.load(filename_client_category)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_client_category = additional_model.predict(pred_df)
-                    prediction_proba_opt_client_category = additional_model.predict_proba(pred_df)
-                    max_proba_opt_client_category = np.max(prediction_proba_opt_client_category[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_client_category[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%**")
-                    if prediction_opt_client_category[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                    else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-                
-
-
-            # Afficher le récapitulatif
-            st.write(f'### Récapitulatif')
-            st.write("Le client a : ", age, "ans")
-            st.write("Le client a un niveau d'étude : ", niveau_etude)
-            st.write("Le solde de son compte en banque est de : ", balance, "euros")
-            st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
-            st.write("Le client a été contacté ", previous, " fois lors de la précédente campagne marketing")
+                filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
+                additional_model = joblib.load(filename_campaign)
             
-            # Afficher les informations supplémentaires définies
-            if option_to_add == "loan":
-                st.write(f"A un crédit personnel : {loan}")
-            elif option_to_add == "marital":
-                st.write(f"Situation maritale : {marital}")
-            elif option_to_add == "poutcome":
-                st.write(f"Résultat de la campagne : {poutcome}")
-            elif option_to_add == "job":
-                st.write(f"Emploi : {job}")
-            elif option_to_add == "Client_Category_M":
-                st.write("Dernier contact avec le client : ", Client_Category)
-            elif option_to_add == "campaign":
-                st.write(f"Nombre de contacts avec le client au cours de la campagne : {campaign}")
-     
+                # Prédiction avec le DataFrame optimisé
+                prediction_opt_campaign = additional_model.predict(pred_df)
+                prediction_proba_opt_campaign = additional_model.predict_proba(pred_df)
+                max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
+            
+                # Affichage des résultats
+                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_campaign[0]}**")
+                st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign:.2f}%**")
+                if prediction_opt_campaign[0] == 0:
+                    st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                else:
+                    st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+            
+
+        elif option_to_add == "marital":
+            marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
+            pred_df['marital'] = marital
+            st.write("Situation maritale : ", marital)
+            
+            # Liste des variables catégorielles multi-modales à traiter
+            cat_cols_multi_modal = ['marital']
+            # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
+            for col in cat_cols_multi_modal:
+                # Effectuer un encodage des variables catégorielles multi-modales
+                dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
+                pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
+                        
+            # Réorganiser les colonnes pour correspondre exactement à celles de dff
+            pred_df = pred_df.reindex(columns=dff_TEST_marital.columns, fill_value=0)
+            
+            # Étape 2 : Concaténer dff et pred_df
+            # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+            num_cols = ['age', 'balance','previous']
+            
+            # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+            pred_df.index = range(dff_TEST_marital.shape[0], dff_TEST_marital.shape[0] + len(pred_df))
+        
+            combined_df_marital = pd.concat([dff_TEST_marital[num_cols], pred_df[num_cols]], axis=0)
+
+            # Étape 3 : Standardisation des données numériques
+            scaler = StandardScaler()
+            combined_df_marital[num_cols] = scaler.fit_transform(combined_df_marital[num_cols])
+
+            # Étape 4 : Séparer à nouveau pred_df des autres données
+            # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+            pred_df[num_cols] = combined_df_marital.loc[pred_df.index, num_cols]
+        
+            # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+            pred_df = pred_df.reset_index(drop=True)
+      
+             # Conditions pour charger le modèle approprié
+            filename_marital = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
+            additional_model = joblib.load(filename_marital)
+        
+            # Prédiction avec le DataFrame optimisé
+            prediction_opt_marital = additional_model.predict(pred_df)
+            prediction_proba_opt_marital = additional_model.predict_proba(pred_df)
+            max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
+        
+            # Affichage des résultats
+            st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_marital[0]}**")
+            st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%**")
+            if prediction_opt_marital[0] == 0:
+                st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+            else:
+                st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+        
+
+        elif option_to_add == "poutcome":
+            poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other'))
+            pred_df['poutcome'] = poutcome
+            st.write("Résultat de la campagne : ", poutcome)
+            
+           
+            # Liste des variables catégorielles multi-modales à traiter
+            cat_cols_multi_modal_poutcome = ['poutcome']
+            # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
+            for col in cat_cols_multi_modal_poutcome:
+                # Effectuer un encodage des variables catégorielles multi-modales
+                dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
+                pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
+                        
+            # Réorganiser les colonnes pour correspondre exactement à celles de dff
+            pred_df = pred_df.reindex(columns=dff_TEST_poutcome.columns, fill_value=0)
+            
+            # Étape 2 : Concaténer dff et pred_df
+            # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+            num_cols = ['age', 'balance','previous']
+            
+            # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+            pred_df.index = range(dff_TEST_poutcome.shape[0], dff_TEST_poutcome.shape[0] + len(pred_df))
+        
+            combined_df_poutcome = pd.concat([dff_TEST_poutcome[num_cols], pred_df[num_cols]], axis=0)
+
+            # Étape 3 : Standardisation des données numériques
+            scaler = StandardScaler()
+            combined_df_poutcome[num_cols] = scaler.fit_transform(combined_df_poutcome[num_cols])
+
+            # Étape 4 : Séparer à nouveau pred_df des autres données
+            # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+            pred_df[num_cols] = combined_df_poutcome.loc[pred_df.index, num_cols]
+        
+            # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+            pred_df = pred_df.reset_index(drop=True)
+      
+             # Conditions pour charger le modèle approprié
+            filename_poutcome = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_quater.pkl"
+            additional_model = joblib.load(filename_poutcome)
+        
+            # Prédiction avec le DataFrame optimisé
+            prediction_opt_poutcome = additional_model.predict(pred_df)
+            prediction_proba_opt_poutcome = additional_model.predict_proba(pred_df)
+            max_proba_opt_poutcome = np.max(prediction_proba_opt_poutcome[0]) * 100
+        
+            # Affichage des résultats
+            st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_poutcome[0]}**")
+            st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
+            if prediction_opt_poutcome[0] == 0:
+                st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+            else:
+                st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+        
+
+
+        elif option_to_add == "job":
+            job = st.selectbox("Quel est l'emploi du client ?", ('admin.', 'blue-collar', 'entrepreneur',
+                                                                 'housemaid', 'management', 'retired', 
+                                                                 'self-employed', 'services', 'student', 
+                                                                 'technician', 'unemployed'))
+            pred_df['job'] = job
+            st.write("Emploi : ", job)
+         
+            # Liste des variables catégorielles multi-modales à traiter
+            cat_cols_multi_modal_job = ['job']
+            # Parcourir chaque variable catégorielle multi-modale pour gérer les colonnes manquantes
+            for col in cat_cols_multi_modal_job:
+                # Effectuer un encodage des variables catégorielles multi-modales
+                dummies = pd.get_dummies(pred_df[col], prefix=col).astype(int)
+                pred_df = pd.concat([pred_df.drop(col, axis=1), dummies], axis=1)
+                        
+            # Réorganiser les colonnes pour correspondre exactement à celles de dff
+            pred_df = pred_df.reindex(columns=dff_TEST_job.columns, fill_value=0)
+            
+            # Étape 2 : Concaténer dff et pred_df
+            # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+            num_cols = ['age', 'balance','previous']
+            
+            # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+            pred_df.index = range(dff_TEST_job.shape[0], dff_TEST_job.shape[0] + len(pred_df))
+        
+            combined_df_job = pd.concat([dff_TEST_job[num_cols], pred_df[num_cols]], axis=0)
+
+            # Étape 3 : Standardisation des données numériques
+            scaler = StandardScaler()
+            combined_df_job[num_cols] = scaler.fit_transform(combined_df_job[num_cols])
+
+            # Étape 4 : Séparer à nouveau pred_df des autres données
+            # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+            pred_df[num_cols] = combined_df_job.loc[pred_df.index, num_cols]
+        
+            # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+            pred_df = pred_df.reset_index(drop=True)
+      
+             # Conditions pour charger le modèle approprié
+            filename_job = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_1.pkl"
+            additional_model = joblib.load(filename_job)
+        
+            # Prédiction avec le DataFrame optimisé
+            prediction_opt_job = additional_model.predict(pred_df)
+            prediction_proba_opt_job = additional_model.predict_proba(pred_df)
+            max_proba_opt_job = np.max(prediction_proba_opt_job[0]) * 100
+        
+            # Affichage des résultats
+            st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_job[0]}**")
+            st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%**")
+            if prediction_opt_job[0] == 0:
+                st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+            else:
+                st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+        
+
+        
+        elif option_to_add == "Client_Category_M":
+            Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
+                #conditions d'affichage pour education : 
+            if Client_Category_M == "Prospect":
+                Client_Category = "Jamais"
+            elif Client_Category_M == "Reached-6M":
+                Client_Category = "Il y a moins de 6 mois"
+            elif Client_Category_M == "Reached+6M":
+                Client_Category = "Il y a plus de 6  mois"
+            else:
+                Client_Category = "Inconnu"  # Par défaut si `education` a une valeur inattendue
+                
+            pred_df['Client_Category_M'] = Client_Category_M
+            pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
+            st.write("Dernier appel : ", Client_Category_M)
+            
+            # Étape 2 : Concaténer dff et pred_df
+            # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+            num_cols = ['age', 'balance','previous']
+            
+            # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+            pred_df.index = range(dff_TEST_client_category.shape[0], dff_TEST_client_category.shape[0] + len(pred_df))
+        
+            combined_df_client_category = pd.concat([dff_TEST_client_category[num_cols], pred_df[num_cols]], axis=0)
+
+            # Étape 3 : Standardisation des données numériques
+            scaler = StandardScaler()
+            combined_df_client_category[num_cols] = scaler.fit_transform(combined_df_client_category[num_cols])
+
+            # Étape 4 : Séparer à nouveau pred_df des autres données
+            # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+            pred_df[num_cols] = combined_df_client_category.loc[pred_df.index, num_cols]
+        
+            # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+            pred_df = pred_df.reset_index(drop=True)
+            
+             # Conditions pour charger le modèle approprié
+            filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
+            additional_model = joblib.load(filename_client_category)
+        
+            # Prédiction avec le DataFrame optimisé
+            prediction_opt_client_category = additional_model.predict(pred_df)
+            prediction_proba_opt_client_category = additional_model.predict_proba(pred_df)
+            max_proba_opt_client_category = np.max(prediction_proba_opt_client_category[0]) * 100
+        
+            # Affichage des résultats
+            st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_client_category[0]}**")
+            st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%**")
+            if prediction_opt_client_category[0] == 0:
+                st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+            else:
+                st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+        
+
+
+        # Afficher le récapitulatif
+        st.write(f'### Récapitulatif')
+        st.write("Le client a : ", age, "ans")
+        st.write("Le client a un niveau d'étude : ", niveau_etude)
+        st.write("Le solde de son compte en banque est de : ", balance, "euros")
+        st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
+        st.write("Le client a été contacté ", previous, " fois lors de la précédente campagne marketing")
+        
+        # Afficher les informations supplémentaires définies
+        if option_to_add == "loan":
+            st.write(f"A un crédit personnel : {loan}")
+        elif option_to_add == "marital":
+            st.write(f"Situation maritale : {marital}")
+        elif option_to_add == "poutcome":
+            st.write(f"Résultat de la campagne : {poutcome}")
+        elif option_to_add == "job":
+            st.write(f"Emploi : {job}")
+        elif option_to_add == "Client_Category_M":
+            st.write("Dernier contact avec le client : ", Client_Category)
+        elif option_to_add == "campaign":
+            st.write(f"Nombre de contacts avec le client au cours de la campagne : {campaign}")
  
+
