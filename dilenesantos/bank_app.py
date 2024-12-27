@@ -2060,8 +2060,6 @@ if selected == 'Interprétation':
                 shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
                 st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
 
-                #TEST DILÈNE
-                st.write("Test dilène")
                 shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
                 fig = plt.figure()
                 shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("duration")]], 
@@ -2069,13 +2067,6 @@ if selected == 'Interprétation':
                                   feature_names=["duration"], 
                                   show=True)
                 st.pyplot(fig)
-                
-                #fig = plt.figure()
-                #shap.summary_plot(shap_values_RF_carolle[:, [X_test.columns.get_loc("duration")]], 
-                                  #X_test[["duration"]], 
-                                  #feature_names=["duration"], 
-                                  #show=True)
-                #st.pyplot(fig)
                 
 
                 st.write("##### Dependence plot")
@@ -2104,7 +2095,17 @@ if selected == 'Interprétation':
                 st.subheader("Impact POSITIF de PREVIOUS sur la classe 1")
                 st.write("Summary plot :")
 
+                shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
+                st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
 
+                shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
+                fig = plt.figure()
+                shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("previous")]], 
+                                  X_test[["previous"]], 
+                                  feature_names=["preious"], 
+                                  show=True)
+                st.pyplot(fig)
+                
 
     
         #if submenu_interpretation == "Analyses des variables catégorielles" :
