@@ -3021,7 +3021,7 @@ if selected == 'Outil  Prédictif':
   
     
     # Interface utilisateur
-    st.title("Sélection de Modèle et Prédictions")
+    st.title("Prédiction")
 
     filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
     model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
@@ -3032,8 +3032,7 @@ if selected == 'Outil  Prédictif':
     max_proba = np.max(prediction_proba[0]) * 100
     
     # Affichage des résultats
-    st.subheader("Résultats de la Prédiction")
-    st.write(f"Prediction : {prediction[0]}")
+    st.subheader(f"Prediction : {prediction[0]}")
     st.write(f"Niveau de confiance: {max_proba:.2f}%")
 
     if prediction[0] == 0:
