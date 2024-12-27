@@ -2623,7 +2623,7 @@ if selected == "Recommandations & Perspectives":
                 st.write("Il faudrait analyser plus en profondeur le contexte métier pour comprendre pourquoi la possession d'un prêt immobilier est négativement corrélée à la classe 1. Par exemple :")
                 st.write(" - La classe 1 de ‘housing’ pourrait représenter des clients à risque de défaut de paiement. Dans ce cas, les clients ayant déjà un prêt pourraient être considérés comme plus à risque, car ils ont déjà une dette.")
                 st.write(" - La classe 1 de ‘housing’ pourrait représenter des clients ciblés pour une nouvelle offre de prêt. Dans ce cas, les clients ayant déjà un prêt seraient moins susceptibles d'être sollicités pour un nouveau crédit.")
-                    st.write("blabla")
+                
 
             if submenu_profil == "ÂGE" :
                 st.write("#### ÂGE:")
