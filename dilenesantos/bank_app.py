@@ -2076,7 +2076,7 @@ if selected == 'Interprétation':
                 
                 
                 fig, ax = plt.subplots(figsize=(30, 7))
-                shap.dependence_plot("duration", shap_values[:, :, 1], X_test_original, interaction_index="duration", show=False, ax=ax)
+                shap.dependence_plot("duration", shap_values_RF_CAROLLE_1[:, :, 1], X_test_original, interaction_index="duration", show=False, ax=ax)
                 ax.set_title('SHAP Dependence Plot for Duration', fontsize=14)
 
                 ax.set_xticks(np.arange(0, 2500, 60))
