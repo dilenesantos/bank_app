@@ -2653,8 +2653,8 @@ if selected == "Recommandations & Perspectives":
 
     
       if submenu_reco == "RECAP" :
-          st.write("##### Prioriser les clients qui n’ont pas de prêt immobilier")
-          st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
+          st.write("##### - Prioriser les clients qui n’ont pas de prêt immobilier")
+          st.write("##### - Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
           
 
 
