@@ -2611,7 +2611,7 @@ if selected == 'Interprétation':
 
 if selected == "Recommandations & Perspectives":
       st.subheader("Recommandations & Perspectives")
-      submenu_reco = st.radio("", ("PROFIL DES CLIENTS A CONTACTER", "NOMBRE ET DUREE D’APPEL"), horizontal=True)
+      submenu_reco = st.radio("", ("PROFIL DES CLIENTS A CONTACTER", "NOMBRE ET DUREE D’APPEL", "RECAP"), horizontal=True)
 
       if submenu_reco == "PROFIL DES CLIENTS A CONTACTER" :
             submenu_profil = st.radio("", ("HOUSING", "ÂGE", "BALANCE", "PREVIOUS", "EDUCATION"), horizontal=True) 
@@ -2650,7 +2650,12 @@ if selected == "Recommandations & Perspectives":
 
             if submenu_appel == "CAMPAIGN" :
                 st.write("#### CAMPAIGN:","nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
-                
+
+    
+      if submenu_reco == "RECAP" :
+          st.write("##### Prioriser les clients qui n’ont pas de prêt immobilier")
+          st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
+          
 
 
 
