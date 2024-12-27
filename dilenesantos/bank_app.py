@@ -2069,7 +2069,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 
 
-                st.write("##### Dependence plot"
+                st.write("##### Dependence plot")
                 st.write("blabla")
             
 
