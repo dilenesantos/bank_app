@@ -2609,7 +2609,41 @@ if selected == 'Interprétation':
             shap.plots.bar(explanation_combined_new_XGBOOST_3, max_display=len(explanation_combined_new_XGBOOST_3.feature_names))
             st.pyplot(fig)
 
-           
+if selected == "Recommandations & Perspectives":
+      st.subheader("Recommandations & Perspectives")
+      submenu_reco = st.radio("", ("PROFIL DES CLIENTS A CONTACTER", "NOMBRE ET DUREE D’APPEL"), horizontal=True)
+
+      if submenu_reco == "PROFIL DES CLIENTS A CONTACTER" :
+            submenu_profil = st.radio("", ("HOUSING", "ÂGE", "BALANCE", "PREVIOUS", "EDUCATION"), horizontal=True) 
+
+            if submenu_profil == "HOUSING" :
+                st.subheader("HOUSING")
+
+            if submenu_profil == "ÂGE" :
+                st.subheader("ÂGE")
+            
+            if submenu_profil == "BALANCE" :
+                st.subheader("BALANCE")
+            
+            if submenu_profil == "PREVIOUS" :
+                st.subheader("PREVIOUS")
+            
+            if submenu_profil == "EDUCATION" :
+                st.subheader("EDUCATION")
+
+      if submenu_reco == "NOMBRE ET DUREE D’APPEL" :
+            submenu_appel = st.radio("", ("DURATION", "CAMPAIGN"), horizontal=True) 
+
+            if submenu_appel == "DURATION" :
+                st.subheader("DURATION")
+
+            if submenu_appel == "CAMPAIGN" :
+                st.subheader("CAMPAIGN")
+
+
+
+
+
 
 if selected == 'Outil  Prédictif':  
 
