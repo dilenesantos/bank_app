@@ -2675,6 +2675,8 @@ if selected == "Recommandations & Perspectives":
           
             if submenu_appel == "CAMPAIGN" :
                 st.write("#### CAMPAIGN:","nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
+                st.write("##### Il ne semble pas pertinent de contacter les clients plus d’une fois pendant la campagne. ")
+                st.write("Notre modèle montre qu’il ne semble pas payant de contacter les clients plus d’une fois pour leur proposer le produit. Il vaut mieux capitaliser sur des clients pas encore contactés pour leur proposer le produit plutôt que de contacter plusieurs fois le même client. ")
 
     
       if submenu_reco == "RECAP" :
