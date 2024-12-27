@@ -3088,23 +3088,23 @@ if selected == 'Outil  Prédictif':
             # Réinitialiser l'index de pred_df après la manipulation (facultatif)
             pred_df = pred_df.reset_index(drop=True)
 
-                 # Conditions pour charger le modèle approprié
-                filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
-                additional_model = joblib.load(filename_campaign)
-            
-                # Prédiction avec le DataFrame optimisé
-                prediction_opt_campaign = additional_model.predict(pred_df)
-                prediction_proba_opt_campaign = additional_model.predict_proba(pred_df)
-                max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
-            
-                # Affichage des résultats
-                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_campaign[0]}**")
-                st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign:.2f}%**")
-                if prediction_opt_campaign[0] == 0:
-                    st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                else:
-                    st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-            
+             # Conditions pour charger le modèle approprié
+            filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
+            additional_model = joblib.load(filename_campaign)
+        
+            # Prédiction avec le DataFrame optimisé
+            prediction_opt_campaign = additional_model.predict(pred_df)
+            prediction_proba_opt_campaign = additional_model.predict_proba(pred_df)
+            max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
+        
+            # Affichage des résultats
+            st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_campaign[0]}**")
+            st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign:.2f}%**")
+            if prediction_opt_campaign[0] == 0:
+                st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+            else:
+                st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+        
 
         elif option_to_add == "marital":
             marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
