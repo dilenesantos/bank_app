@@ -2635,7 +2635,10 @@ if selected == "Recommandations & Perspectives":
             if submenu_profil == "BALANCE" :
                 st.write("#### BALANCE:","Solde bancaire du client")
                 st.write("##### Contacter en priorité les clients dont la balance est supérieure à 800€.")
-            
+                st.write("Pour les clients dont la balance se situe **entre 0 et 800€ le modèle prédit 2 groupes de taille quasi identiques**, une partie souscrit au produit et l’autre non. Ainsi pour ces clients en particulier, il faudra là encore veiller à suivre nos recommandations sur les autres variables pour choisir ceux à contacter en priorité : ")
+                st.write(" -  Ils n’ont pas de prêt immobilier")
+                st.write(" -  Ils sont âgés de moins de 29 ans ou de plus de 58 ans")
+          
             if submenu_profil == "PREVIOUS" :
                 st.write("#### PREVIOUS:","Nombre de contacts effectués avant la campagne avec le client")
                
