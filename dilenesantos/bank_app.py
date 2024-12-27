@@ -3042,6 +3042,8 @@ if selected == 'Outil  Prédictif':
         st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, veiller à rester le plus longtemps possible au téléphone avec ce client.")
         st.write("- Nombre de contacts : il serait contre-productif de le contacter plus d'une fois.")
 
+        st.write("__________________________________________________")
+
         st.write("Vous pouvez si vous le souhaitez affiner la prédiction en ajoutant une autre donnée concernant votre client.")
         
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
