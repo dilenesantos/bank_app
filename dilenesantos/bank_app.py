@@ -2666,8 +2666,10 @@ if selected == "Recommandations & Perspectives":
 
             if submenu_appel == "DURATION" :
                 st.write("#### DURATION:","Durée du dernier contact en secondes")
-                
-
+                st.write("Le temps consacré à chaque client s'avère être un facteur clé de succès dans le processus de conversion. **Les commerciaux devraient privilégier des interactions plus longues**, en particulier lors des premières prises de contact. ")
+                st.write("**La qualité des échanges est également déterminante.** Des discussions approfondies permettent de mieux cerner les besoins et attentes des clients, ce qui favorise la proposition d’offres personnalisées et augmente les chances de souscription. ")
+                st.write("**Les résultats de nos analyses soulignent l’importance stratégique de la durée des interactions commerciales.** En optimisant le temps consacré à chaque client, la banque peut **significativement améliorer** ses taux de conversion et renforcer son efficacité commerciale.")
+          
             if submenu_appel == "CAMPAIGN" :
                 st.write("#### CAMPAIGN:","nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
 
