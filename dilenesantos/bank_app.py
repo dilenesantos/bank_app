@@ -2669,6 +2669,9 @@ if selected == "Recommandations & Perspectives":
                 st.write("Le temps consacré à chaque client s'avère être un facteur clé de succès dans le processus de conversion. **Les commerciaux devraient privilégier des interactions plus longues**, en particulier lors des premières prises de contact. ")
                 st.write("**La qualité des échanges est également déterminante.** Des discussions approfondies permettent de mieux cerner les besoins et attentes des clients, ce qui favorise la proposition d’offres personnalisées et augmente les chances de souscription. ")
                 st.write("**Les résultats de nos analyses soulignent l’importance stratégique de la durée des interactions commerciales.** En optimisant le temps consacré à chaque client, la banque peut **significativement améliorer** ses taux de conversion et renforcer son efficacité commerciale.")
+                st.write("Pour maximiser les chances de souscription au produit bancaire (deposit), voici les recommandations clés : ")
+                st.write("** -  Encourager des échanges plus longs :** Former les équipes commerciales à adopter une approche engageante dès le premier contact, afin de mieux comprendre les attentes des clients et de leur proposer des solutions sur mesure. ")
+                st.write("** -  Fixer un objectif minimal de 6 minutes par appel** pour les prospects à fort potentiel. Les analyses montrent en effet que les interactions dépassant 360 secondes (6 minutes) ont un impact significatif, les SHAP values traduisant une corrélation positive à partir de cette durée. ")
           
             if submenu_appel == "CAMPAIGN" :
                 st.write("#### CAMPAIGN:","nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
@@ -2680,6 +2683,8 @@ if selected == "Recommandations & Perspectives":
           st.write("##### -  Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
           st.write("##### -  Contacter en priorité les clients dont la balance est supérieure à 800€.")
           st.write("##### -  Prioriser les clients déjà contactés")
+          st.write("##### -  Prioriser xxxxxxxx pr EDUCATION")
+          st.write("##### -  Maintenir autant que possible une durée d’appel de minimum 6 minutes ")
           
 
 
