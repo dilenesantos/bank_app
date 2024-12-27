@@ -301,273 +301,313 @@ if selected == 'Introduction':
     st.write("- Identifier et analyser visuellement et statistiquement **les caractéristiques des clients** qui sont corrélées avec la souscription au 'dépôt à terme'.")
     st.write("- Utiliser des techniques de Machine Learning pour **prédire si un client va souscrire au 'dépôt à terme'.**")
    
-
 if selected == 'DataVisualisation':      
-    st.title("DATAVISUALISATION")
-    st.sidebar.title("SOUS MENU DATAVISUALISATION")
-    option_submenu = st.sidebar.selectbox('Sélection', ("Description des données", "Analyse des variables", "Analyse des variables qualitatives", "Corrélations entre les variables", "Évolution de la variable deposit dans le temps"))
-    if option_submenu == 'Description des données':
-        st.subheader("Description des données")
-        pages=["Describe", "Valeurs uniques des variables catégorielles", "Afficher les NAns et les Unknowns", "Répartition Deposit"]
-        page=st.sidebar.radio('Afficher', pages)
-    
-    
-        if page == pages[0] :
-            st.dataframe(df.describe())
-        
-        if page == pages[1] : 
-            var_quali = df.select_dtypes(include='object')
-            for col in var_quali :
-                st.write(col)
-                st.dataframe(df[col].unique())
-    
-        if page == pages[2] :
-            st.write('Volume de NAns du dataframe :')
-            st.dataframe(df.isna().sum())
-            st.write("----------------")
-            #affichage du % des valeurs affichant 'unknown' pour les colonnes concernées Job, Education, Contact et poutcome
-            col_unknown = ['job', 'education', 'contact', 'poutcome']
-        
-            st.write("____________________________________")
-        
-            st.write("Volume de Unknows : ")
-            for col in col_unknown:
-                st.write(col)
-                result = round((df[col].value_counts(normalize=True)['unknown']*100),2)
-                st.write(result,"%")
- 
-        if page == pages[3] :
-            fig = plt.figure()
-            sns.countplot(x = 'deposit', hue = 'deposit', data=df, palette =("g", "r"), legend=False)
-            plt.title("Répartition de notre variable cible")
+    pages = ["Analyse Univariée", "Analyse Multivariée", "Profiling"]
+    page = st.sidebar.radio("Aller vers", pages, key="page_radio")  # Clé unique ajoutée
+
+    if page == pages[0]:  # Analyse Univariée
+        st.subheader("Analyse Univariée")
+
+        # Liste des variables qualitatives et quantitatives
+        quantitative_vars = ["age", "duration", "campaign", "balance", "pdays", "previous"]
+        qualitative_vars = ["job", "marital", "education", "default", "housing", "loan", 
+                            "contact", "poutcome", "deposit", "weekday", "month"]
+
+        # Sélection du type de variable
+        analysis_type = st.sidebar.selectbox(
+            "Sélectionnez le type de variable :",
+            ["Variables qualitatives", "Variables quantitatives"],
+            key="type_variable_selectbox"
+        )
+
+        # Affichage des variables en fonction du type choisi
+        if analysis_type == "Variables qualitatives":
+            selected_variable = st.sidebar.selectbox(
+                "Sélectionnez une variable qualitative :",
+                qualitative_vars,
+                key="qualitative_var_selectbox"
+            )
+            st.write(f"Analyse de la variable qualitative : **{selected_variable}**")
+
+            #creation des colonnes year, month_year, date, weekday
+            liste_annee =[]
+            for i in df["month"] :
+                if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
+                    liste_annee.append("2013")
+                elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
+                    liste_annee.append("2014")
+            df["year"] = liste_annee
+
+            df['date'] = df['day'].astype(str)+ '-'+ df['month'].astype(str)+ '-'+ df['year'].astype(str)
+            df['date']= pd.to_datetime(df['date'])
+
+            df["weekday"] = df["date"].dt.weekday
+            dic = {0 : "Lundi",
+            1 : "Mardi",
+            2 : "Mercredi",
+            3 : "Jeudi",
+            4 : "Vendredi",
+            5 : "Samedi",
+            6 : "Dimanche"}
+            df["weekday"] = df["weekday"].replace(dic)
+
+            # Analyse spécifique pour les variables qualitatives
+            st.write("### Distribution des catégories")
+            fig = plt.figure(figsize=(6, 3))
+            sns.countplot(df[selected_variable], color= 'c', order= df[selected_variable].value_counts().index)
+            st.write(fig) 
+            st.write("Le graphique ci-dessus montre la proportion de chaque catégorie dans la variable .")
+
+        elif analysis_type == "Variables quantitatives":
+            selected_variable = st.sidebar.selectbox(
+                "Sélectionnez une variable quantitative :",
+                quantitative_vars,
+                key="quantitative_var_selectbox"
+            )
+            st.write(f"Analyse de la variable quantitative : **{selected_variable}**")
+
+            # 1. Histogramme avec KDE
+            st.write("### Distribution (Histogramme et KDE)")
+            fig, ax = plt.subplots(figsize=(10, 6))
+            sns.histplot(df[selected_variable], bins=20, kde=True, color='b', ax=ax)
+            ax.set_title(f'Distribution de {selected_variable}', fontsize=14)
+            ax.set_xlabel(selected_variable, fontsize=12)
+            ax.set_ylabel('Fréquence', fontsize=12)
             st.pyplot(fig)
-            st.write("Commentaires : blabla")
-    
-    
-        st.write("____________________________________")
 
-    var_quali = df.select_dtypes(include='object')
-    var_quanti = df.select_dtypes(exclude='object')
-
-    if option_submenu == 'Analyse des variables':
-        st.subheader("Analyse des variables")
-        pages=["Distribution des variables quantitatives", "Boxplot des variables quantitatives", "Boxplot des variables quantitatives selon Deposit"]
-        page=st.sidebar.radio('Afficher', pages)
-    
-        if page == pages[0] :
-            st.write("Distribution des variables quantitatives")
-            fig = plt.figure(figsize=(20,60))
-            plotnumber =1
-            for column in var_quanti :
-                ax = plt.subplot(12,3,plotnumber)
-                sns.kdeplot(df[column], fill=True)
-                plotnumber+=1
+            # 2. Boxplot
+            st.write("### Box Plot")
+            fig, ax = plt.subplots(figsize=(10, 4))
+            ax.boxplot(df[selected_variable], vert=False, patch_artist=True, 
+                    boxprops=dict(facecolor='lightblue'))
+            ax.set_title(f'Box Plot de {selected_variable}', fontsize=14)
+            ax.set_xlabel(selected_variable, fontsize=12)
             st.pyplot(fig)
-            st.write("Commentaires : blabla")
-    
-        if page == pages[1] :
-            st.write("Boxplot des variables quantitatives")
-            fig = plt.figure(figsize=(20,60), facecolor='white')
-            plotnumber =1
-            for column in var_quanti :
-                ax = plt.subplot(12,3,plotnumber)
-                sns.boxplot(df[column])
-                plotnumber+=1
+
+            # 3. QQ Plot
+            st.write("### QQ Plot")
+            fig = plt.figure(figsize=(10, 6))
+            stats.probplot(df[selected_variable], dist="norm", plot=plt)
+            plt.title(f"QQ Plot de {selected_variable}", fontsize=14)
             st.pyplot(fig)
-            st.write("Commentaires : blabla")
 
-        if page == pages[2] :
-            st.write("Boxplot des variables quantitatives selon Deposit")
-            fig = plt.figure(figsize=(20,60), facecolor='white')
-            plotnumber =1
-            for column in var_quanti :
-                ax = plt.subplot(12,3,plotnumber)
-                sns.boxplot(y= df[column], hue = "deposit", data=df, palette =("g", "r"), legend=False)
-                plt.xlabel('deposit')
-                plotnumber+=1
-            st.pyplot(fig)
-            st.write("Commentaires : blabla")
-    
-        st.write("____________________________________")
-    
-    if option_submenu == 'Analyse des variables qualitatives':
-    
-        st.write("Distribution des variables qualitatives")
-        fig = plt.figure(figsize=(25,70), facecolor='white')
-        plotnumber =1
-        for column in var_quali:
-            ax = plt.subplot(12,3,plotnumber)
-            sns.countplot(y=column, data=df, order = df[column].value_counts().index, color = "c")
-            plt.xlabel(column)
-            plotnumber+=1
-        st.pyplot(fig) 
+            # Ajouter les commentaires spécifiques pour chaque variable
+            if selected_variable == "age":
+                st.write("""
+                **Commentaires pour 'Age':**
+                - La distribution de la variable 'age' s'approche d'une distribution normale malgré des distorsions aux extrémités.
+                - Le jeu de données affiche une concentration des tranches d'âge 25-40 ans suivi de la tranche 40-65 ans.
+                - 50% des clients ont entre 32 et 49 ans.
+                - Le boxplot montre quelques valeurs extrêmes supérieures à 74.5.
+                """)
+            elif selected_variable == "duration":
+                st.write("""
+                **Commentaires:**
+                - On remarque que duration ne suit pas une distribution normale
+                - 50% des appels ont une durée entre 138 et 496s (soit entre 2.3 et 8.26 min).
+                - La variable présente de nombreuses valeurs extrêmes entre 1033 et 3000s.
+                - Quelques valeurs très extrêmes dépassent 3000s.
+                """)
+            elif selected_variable == "campaign":
+                st.write("""
+                **Commentaires:**
+                - On remarque que campaign ne suit pas une distribution normale
+                - 50% du volume de contacts se situe entre 1 et 3 contacts.
+                - Le boxplot montre de nombreuses valeurs extrêmes supérieures au seuil max de 6 contacts.
+                - On note 3 valeurs très extrêmes supérieures à 40.
+                """)
+            elif selected_variable == "balance":
+                st.write("""
+                **Commentaires:**
+                - On remarque que balance ne suit pas une distribution normale
+                - 50% des clients ont une balance entre 122 et 1708€.
+                - Le boxplot montre de nombreuses valeurs extrêmes concentrées entre 4087€ et 40 000€.
+                - Quelques valeurs très extrêmes atteignent 81 204€.
+                """)
+            elif selected_variable == "pdays":
+                st.write("""
+                **Commentaires:**
+                - On remarque que pdays ne suit pas une distribution normale
+                - La valeur -1 revient constamment, signifiant que la personne n'a jamais été contactée auparavant.
+                - Cette valeur a donc une signification qualitative.
+                """)
+            elif selected_variable == "previous":
+                st.write("""
+                **Commentaires:**
+                - On remarque que previous ne suit pas une distribution normale
+                - La valeur 0 correspond aux clients pour lesquels 'Pdays' est égal à -1.
+                - Parmi les clients contactés auparavant, 50% l'ont été entre 1 et 4 fois.
+                - Le boxplot montre quelques valeurs extrêmes supérieures à 8.5 contacts.
+            """)
 
-        st.write("____________________________________")
+            
+    
 
 
+    if page == pages[1]: 
+        # Title and Introduction 
+        st.subheader("Analyse Multivariée")
     
-        st.write("Deposit selon les caractéristiques socio-démo des clients :")
-    
-        # Store the initial value of widgets in session state
-        col1, col2 = st.columns(2)
+    # Define sub-pages
+        sub_pages = [
+            "Matrice de corrélation",
+            "Analyses et Tests statistiques des variables quantitatives",
+            "Analyses et Tests statistiques des variables qualitatives",
+            "Analyse de l'évolution de la variable deposit dans le temps"
+        ]
 
-        with col1:
-            boxchoices21 = selectbox("Sélectionner", ["Deposit selon leur âge", "Deposit selon leur statut marital", "Deposit selon leur job"])
-
-        with col2:
-            st.write("Sélection : ",boxchoices21)
-    
-            if boxchoices21 == "Deposit selon leur âge" :
-                fig = sns.displot(x = 'age', hue = 'deposit', data = df, palette =("g", "r"), legend=False)
-                st.pyplot(fig)
-    
-            if boxchoices21 == "Deposit selon leur statut marital" :
-                fig = plt.figure()
-                sns.countplot(x="marital", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
-                st.pyplot(fig)
-    
-            if boxchoices21 == "Deposit selon leur job" :
-                fig = plt.figure(figsize=(20,10))
-                sns.countplot(x="job", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
-                st.pyplot(fig)
+        # Sidebar for sub-page selection
+        sub_page = st.sidebar.selectbox("Aller vers", sub_pages, key="multivariate_selectbox")
         
-        st.write("____________________________________")
-    
-    
-    if option_submenu == 'Corrélations entre les variables':
-        option_submenu4 = st.sidebar.selectbox('Sous-Menu', ("Matrice de corrélation", "Analyses et Tests statistiques des variables numeriques", "Analyses et Tests statistiques des variables quantitatives"))
-        if option_submenu4 == 'Matrice de corrélation':
+        if sub_page == 'Matrice de corrélation':
             st.subheader("Matrice de corrélation")
             cor = df[['age', 'balance', 'duration', 'campaign', 'pdays', 'previous']].corr()
             fig, ax = plt.subplots()
             sns.heatmap(cor, annot=True, ax=ax, cmap='rainbow')
             st.write(fig)
-            st.write("Commentaires = blabla")
-    
-        if option_submenu4 == 'Analyses et Tests statistiques des variables numeriques':   
-            pages=["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
-            page=st.sidebar.radio('Afficher', pages)
-    
-    
-            if page == pages[0] :
+            st.write("""Le tableau de corrélation entre toutes les variables quantitatives de notre base de donnée révèle des coefficients 
+            de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
+
+        if sub_page == 'Analyses et Tests statistiques des variables quantitatives':  
+            st.subheader("Analyses et Tests statistiques des variables quantitatives") 
+            sub_pages1=["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
+            page = st.sidebar.radio('Afficher', sub_pages1)
+
+
+            if page == sub_pages1[0] :
                 fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['age'], label='Yes', color='blue');
-                sns.kdeplot(df[df['deposit'] == 'no']['age'], label='No', color='red');
+                sns.kdeplot(df[df['deposit'] == 'yes']['age'], label='Yes', color='blue')
+                sns.kdeplot(df[df['deposit'] == 'no']['age'], label='No', color='red')
                 plt.title('Distribution des âges par groupe yes/no de la variable deposit')
                 plt.xlabel('Âge')
                 plt.ylabel('Densité')
+                plt.legend()
                 st.write(fig)
-        
+
                 st.write("Test Statistique:")
                 st.write("H0 : Il n'y a pas d'effet significatif de l'age sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de l'age sur la souscrition au Deposit")
-        
+
                 import statsmodels.api
                 result = statsmodels.formula.api.ols('age ~ deposit', data = df).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write(table)
-        
+
                 st.write("P_value = 0.0002")
-                st.write("On rejette H1 : PAS DE LIEN SIGNIFICATIF entre Age et Deposit")
-        
-        
-        
-    
-            if page == pages[1] :
+                st.write("On rejette H1 : PAS DE LIEN SIGNIFICATIF entre Age et Deposit")    
+
+            if page == sub_pages1[1] :
                 fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue');
-                sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red');
+                sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue')
+                sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red')
                 plt.title('Distribution de Balance par groupe yes/no de la variable deposit')
                 plt.xlabel('Balance')
                 plt.ylabel('Densité')
+                plt.legend()
                 st.write(fig)       
-        
-        
+
+
                 st.write("Test Statistique:")
                 st.write("H0 : Il n'y a pas d'effet significatif de balance sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de balance sur la souscrition au Deposit")
-        
-                st.image("dilenesantos/stats_balance_deposit.png")
-        
+
+                import statsmodels.api
+                result = statsmodels.formula.api.ols('balance ~ deposit', data = dff).fit()
+                table = statsmodels.api.stats.anova_lm(result)
+                st.write (table)
+
                 st.write("P_value = 9.126568e-18")
                 st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit")
-        
-    
 
-            if page == pages[2] :
+            if page == sub_pages1[2] :
                 fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue');
-                sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red');
+                sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue')
+                sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red')
                 plt.title('Distribution de Duration par groupe yes/no de la variable Deposit')
                 plt.xlabel('Duration')
                 plt.ylabel('Densité')
+                plt.legend()
                 st.write(fig)
-        
+
                 st.write("Test Statistique:")
                 st.write("H0 : Il n'y a pas d'effet significatif de duration sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de duration sur la souscrition au Deposit")
-        
-                st.image("dilenesantos/stats_duration_deposit.png")
 
-        
+                import statsmodels.api
+                result = statsmodels.formula.api.ols('duration ~ deposit', data = dff).fit()
+                table = statsmodels.api.stats.anova_lm(result)
+                st.write (table)
+
+
                 st.write("P_value = 0")
-                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit")
-        
-    
-            if page == pages[3] :
+                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit")  
+
+
+            if page == sub_pages1[3] :
                 fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue');
-                sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red');
+                sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue')
+                sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red')
                 plt.title('Distribution de Campaign par groupe yes/no de la variable Deposit')
                 plt.xlabel('Campaign')
                 plt.ylabel('Densité')
+                plt.legend()
                 st.write(fig)
-        
+
                 st.write("Test Statistique:")
                 st.write("H0 : Il n'y a pas d'effet significatif de campaign sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de campaign la souscrition au Deposit")
-        
-                st.image("dilenesantos/stats_campaign_deposit.png")
 
-        
+                import statsmodels.api
+                result = statsmodels.formula.api.ols('campaign ~ deposit', data = dff).fit()
+                table = statsmodels.api.stats.anova_lm(result)
+                st.write (table)
+
+
                 st.write("P_value = 4.831324e-42")
-                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit")
-    
-            if page == pages[4] :
+                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit") 
+
+
+            if page == sub_pages1[4] :
                 fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue');
-                sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red');
+                sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue')
+                sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red')
                 plt.title('Distribution de Previous par groupe yes/no de la variable Deposit')
                 plt.xlabel('Previous')
                 plt.ylabel('Densité')
+                plt.legend()
                 st.write(fig)
-        
+
                 st.write("Test Statistique:")
                 st.write("H0 : Il n'y a pas d'effet significatif de previous sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de previous sur la souscrition au Deposit")
-        
-                st.image("dilenesantos/stats_previous_deposit.png")
 
-        
+                import statsmodels.api
+                result = statsmodels.formula.api.ols('previous ~ deposit', data = dff).fit()
+                table = statsmodels.api.stats.anova_lm(result)
+                st.write (table)
+
+
                 st.write("P_value = 7.125338e-50")
-                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit")
-    
-            st.write("____________________________________")
-    
-        if option_submenu4 == 'Analyses et Tests statistiques des variables quantitatives': 
-            st.subheader("Analyses et Tests statistiques des variables quantitatives")
-            pages=["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"]
-            page=st.sidebar.radio('Afficher', pages)
-            
-            if page == pages[0] :
+                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit")  
+
+
+        if sub_page == 'Analyses et Tests statistiques des variables qualitatives':
+            st.subheader("Analyses et Tests statistiques des variables qualitatives")   
+            sub_pages2=["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"]
+            page=st.sidebar.radio('Afficher', sub_pages2)  
+
+
+            if page == sub_pages2[0] :
                 fig = plt.figure(figsize=(20,10))
-                sns.countplot(x="job", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
+                sns.countplot(x="job", hue = 'deposit', data = df, palette =("g", "r"))
+                plt.legend()
                 st.pyplot(fig)
-        
+            
+
                 st.write("Test Statistique:")
                 st.write("H0 : Les variables Job et Deposit sont indépendantes")
                 st.write("H1 : La variable Job n'est pas indépendante de la variable Deposit")
-        
+
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['job'], df['deposit'])
                 result = chi2_contingency(ct)
@@ -575,16 +615,17 @@ if selected == 'DataVisualisation':
                 p_value = result[1]
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
-        
-                st.write("On rejette H0 : Il y a une dépendance entre Job et Deposit")
-        
-    
-            if page == pages[1] :
+
+                st.write("On rejette H0 : Il y a une dépendance entre Job et Deposit") 
+
+
+            if page == sub_pages2[1] :
                 fig = plt.figure()
-                sns.countplot(x="marital", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
+                sns.countplot(x="marital", hue = 'deposit', data = df, palette =("g", "r"))
+                plt.legend()
                 st.pyplot(fig)
-        
-        
+
+
                 st.write("Test Statistique:")
                 st.write("H0 : Les variables Marital et Deposit sont indépendantes")
                 st.write("H1 : La variable Marital n'est pas indépendante de la variable Deposit")
@@ -596,19 +637,21 @@ if selected == 'DataVisualisation':
                 p_value = result[1]
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
-        
-                st.write("On rejette H0 : Il y a une dépendance entre Marital et Deposit")
 
-            if page == pages[2] :
+                st.write("On rejette H0 : Il y a une dépendance entre Marital et Deposit")  
+            
+            
+            if page == sub_pages2[2] :
                 fig = plt.figure()
-                sns.countplot(x="education", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
+                sns.countplot(x="education", hue = 'deposit', data = df, palette =("g", "r"))
+                plt.legend()
                 st.pyplot(fig)
-        
-        
+
+
                 st.write("Test Statistique:")
                 st.write("H0 : Les variables Education et Deposit sont indépendantes")
                 st.write("H1 : La variable Education n'est pas indépendante de la variable Deposit")
-        
+
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['education'], df['deposit'])
                 result = chi2_contingency(ct)
@@ -616,19 +659,21 @@ if selected == 'DataVisualisation':
                 p_value = result[1]
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
-        
+
                 st.write("On rejette H0 : Il y a une dépendance entre Education et Deposit")
-    
-            if page == pages[3] :
+
+            
+            if page ==sub_pages2[3] :
                 fig = plt.figure()
-                sns.countplot(x="housing", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
+                sns.countplot(x="housing", hue = 'deposit', data = df, palette =("g", "r"))
+                plt.legend()
                 st.pyplot(fig)
-        
-        
+
+
                 st.write("Test Statistique:")
                 st.write("H0 : Les variables Housing et Deposit sont indépendantes")
                 st.write("H1 : La variable Housing n'est pas indépendante de la variable Deposit")
-        
+
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['housing'], df['deposit'])
                 result = chi2_contingency(ct)
@@ -636,19 +681,20 @@ if selected == 'DataVisualisation':
                 p_value = result[1]
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
-        
+
                 st.write("On rejette H0 : Il y a une dépendance entre Housing et Deposit")
-    
-            if page == pages[4] :
+
+            if page ==sub_pages2[4] :
                 fig = plt.figure()
-                sns.countplot(x="poutcome", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
+                sns.countplot(x="poutcome", hue = 'deposit', data = df, palette =("g", "r"))
+                plt.legend()
                 st.pyplot(fig)
-        
-        
+
+
                 st.write("Test Statistique:")
                 st.write("H0 : Les variables Poutcome et Deposit sont indépendantes")
                 st.write("H1 : La variable Poutcome n'est pas indépendante de la variable Deposit")
-        
+
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['poutcome'], df['deposit'])
                 result = chi2_contingency(ct)
@@ -656,105 +702,463 @@ if selected == 'DataVisualisation':
                 p_value = result[1]
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
-        
-                st.write("On rejette H0 : Il y a une dépendance entre Poutcome et Deposit")
 
-            st.write("____________________________________")
-    
-    if option_submenu == "Évolution de la variable deposit dans le temps":
+                st.write("On rejette H0 : Il y a une dépendance entre Poutcome et Deposit")  
+
+
+        if sub_page == "Analyse de l'évolution de la variable deposit dans le temps":  
+            st.subheader("Analyse de l'évolution de la variable deposit dans le temps") 
+            sub_pages3=["Deposit x month", "Deposit x year", "Deposit x weekday"]
+            page=st.sidebar.radio('Afficher', sub_pages3)    
+               
+            #creation des colonnes year, month_year, date, weekday
+            liste_annee =[]
+            for i in df["month"] :
+                if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
+                    liste_annee.append("2013")
+                elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
+                    liste_annee.append("2014")
+            df["year"] = liste_annee
+
+            df['date'] = df['day'].astype(str)+ '-'+ df['month'].astype(str)+ '-'+ df['year'].astype(str)
+            df['date']= pd.to_datetime(df['date'])
+
+            df["weekday"] = df["date"].dt.weekday
+            dic = {0 : "Lundi",
+            1 : "Mardi",
+            2 : "Mercredi",
+            3 : "Jeudi",
+            4 : "Vendredi",
+            5 : "Samedi",
+            6 : "Dimanche"}
+            df["weekday"] = df["weekday"].replace(dic)
+
+
+            df['month_year'] = df['month'].astype(str)+ '-'+ df['year'].astype(str)
+            df_order_month = df.copy()
+            df_order_month = df_order_month.sort_values(by='date')
+            df_order_month["month_year"] = df_order_month["month"].astype(str)+ '-'+ df_order_month["year"].astype(str)
+
+            #creation de la colonne Client_Category_M selon pdays
+            bins = [-2, -1, 180, 855]
+            labels = ['Prospect', 'Reached-6M', 'Reached+6M']
+            df['Client_Category_M'] = pd.cut(df['pdays'], bins=bins, labels=labels)
+            # Transformation de 'Client_Category' en type 'objet'
+            df['Client_Category_M'] = df['Client_Category_M'].astype('object')
+
+            if page == sub_pages3[0]:
+                fig = plt.figure(figsize=(20,10))
+                sns.countplot(x='month_year', hue='deposit', data=df_order_month, palette =("g", "r"))
+                plt.title("Évolution de notre variable cible selon les mois")
+                plt.legend()
+                st.pyplot(fig)
+                st.write("""Nous pouvons remarquer qu'au début de notre période d'étude la proportion des clients qui
+                ont souscrit à un dépôt à terme est inférieur à celle qui n'y ont pas souscrit.""")
+
+            if page == sub_pages3[1]: 
+                fig = plt.figure()
+                sns.countplot(x='year', hue='deposit', data=df, palette =("g", "r"))
+                plt.title("Évolution de notre variable cible selon l'année")
+                plt.legend()
+                st.pyplot(fig)
+                st.write("""Nous pouvons remarquer ici que la proportion des clients (ayant souscrit ou non à un dépôt à terme)
+                est supérieur durant l'année 2013 que 2014. Ceci serait surement dù à la période de l'étude (7 mois en 2013 et 5 mois en 2014) """)
+
+
+            if page == sub_pages3[2]:
+                fig = plt.figure()
+                sns.countplot(x="weekday", hue = 'deposit', data = df, palette =("g", "r"))
+                plt.title("Évolution de notre variable cible selon les jours de la semaine")
+                plt.legend()
+                st.pyplot(fig)
+                st.write("""Nous remarquons qu'en général les clients souscrivent au dépôt à terme le week-end .""")
         
-        option_submenu2 = st.sidebar.selectbox('SOUS-MENU', ("Deposit x month", "Deposit x year", "Deposit x weekday", "Deposit x Month x Âge", "Deposit x Month x Balance", "Deposit x Month x Campaign", "Deposit x Month x Previous", "Deposit x Month x Pdays"))
-                
+
+    if page == pages[2]:  
+        # Title and Introduction
+        st.subheader("Profil client YES")
         
-        st.subheader("Analyse de l'évolution de la variable deposit dans le temps")
-        #creation des colonnes year, month_year, date, weekday
-        liste_annee =[]
-        for i in df["month"] :
-            if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
-                liste_annee.append("2013")
-            elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
-                liste_annee.append("2014")
-        df["year"] = liste_annee
-    
-        df['date'] = df['day'].astype(str)+ '-'+ df['month'].astype(str)+ '-'+ df['year'].astype(str)
-        df['date']= pd.to_datetime(df['date'])
-    
-        df["weekday"] = df["date"].dt.weekday
-        dic = {0 : "Lundi",
-        1 : "Mardi",
-        2 : "Mercredi",
-        3 : "Jeudi",
-        4 : "Vendredi",
-        5 : "Samedi",
-        6 : "Dimanche"}
-        df["weekday"] = df["weekday"].replace(dic)
-    
-    
-        df['month_year'] = df['month'].astype(str)+ '-'+ df['year'].astype(str)
-        df_order_month = df.copy()
-        df_order_month = df_order_month.sort_values(by='date')
-        df_order_month["month_year"] = df_order_month["month"].astype(str)+ '-'+ df_order_month["year"].astype(str)
-    
-        #creation de la colonne Client_Category_M selon pdays
-        bins = [-2, -1, 180, 855]
-        labels = ['Prospect', 'Reached-6M', 'Reached+6M']
-        df['Client_Category_M'] = pd.cut(df['pdays'], bins=bins, labels=labels)
-        # Transformation de 'Client_Category' en type 'objet'
-        df['Client_Category_M'] = df['Client_Category_M'].astype('object')
+        # Filter the dataset
+        dff = df[df['job'] != "unknown"]  # Remove rows with unknown job
+        dff = dff[dff['education'] != "unknown"]  # Remove rows with unknown education
+
+        # Replace 'unknown' in poutcome with NaN, then fill with the mode
+        dff['poutcome2'] = dff['poutcome'].replace('unknown', np.nan)
+        dff['poutcome2'] = dff['poutcome2'].fillna(dff['poutcome2'].mode()[0])
+
+        # Drop the 'contact' column as it's not needed
+        dff = dff.drop(['contact'], axis=1)
+
+        #  Creation de categorie de client
+
+        liste =[]
+
+        for i in dff["pdays"] :
+            if i == -1 :
+                liste.append("new_prospect")
+            elif i != -1 :
+                liste.append("old_prospect")
+
+        dff["type_prospect"] = liste
+
+
+        # Filter clients who have subscribed
+        clients_yes = dff[dff["deposit"] == "yes"]
+        
+
+        # Display the number of subscribed clients
+        st.text(f"Nombre de clients ayant souscrit à un compte de dépôt à terme : {clients_yes.shape[0]}")
+
+        # Define sub-pages
+        sub_pages = [
+            "Age et Job",
+            "Statut Matrimonial et Education",
+            "Bancaire",
+            "Caracteristique de la Campagne Marketing",
+            "Temporel",
+            "Duration"
+        ]
+        
+        # Sidebar for sub-page selection
+        sub_page = st.sidebar.selectbox("Sélectionner", sub_pages, key="profiling_selectbox")
+        
+        # Logic for each sub-page
+        if sub_page == "Age et Job":
+            st.write("### Analyse: Age et Job")
+            plt.figure(figsize=(10, 6), dpi=120)
+            sns.histplot(clients_yes['age'], kde=False, bins=30)
+            plt.title("Distribution de l'âge des clients")
+            plt.xlabel("Âge des clients")
+            plt.ylabel("Nombre de clients")
+        
+        # Display the plot in Streamlit
+            st.pyplot(plt)
+
+   # Calcul du nombre de clients par job
+            total_client_job = clients_yes.groupby('job').size().reset_index(name='Total Clients')
+
+            # Calcul de la moyenne, du minimum, du maximum de la variable 'age' par job
+            group_age_job = clients_yes.groupby('job')['age'].agg(['mean', 'min', 'max']).reset_index()
+
+            # Renommage des colonnes
+            group_age_job.columns = ['job', 'Age Moyen', 'Age Minimum', 'Age Maximum']
+
+            # Fusion des deux DataFrames sur la colonne 'job'
+            summary = pd.merge(total_client_job, group_age_job, on='job')
+
+            # Triage par ordre décroissant du nombre de clients
+            summary = summary.sort_values(by='Total Clients', ascending=False)
+
+            # Réinitialiser l'index et supprimer la colonne d'index
+            summary = summary.reset_index(drop=True)
+
+             # Affichage du DataFrame final dans Streamlit sans la colonne d'index
+            st.write("### Résumé des clients par job avec les statistiques d'âge:")
+            st.dataframe(summary)
+            st.text("Nous remarquons sur ce tableau qu’il y a une grande diversification des âges pour tous les groupes.")
+            
+        elif sub_page == "Statut Matrimonial et Education":
+            st.write("### Analyse: Statut Matrimonial et Education")
+    # --- Statut matrimonial ---
+            marital_counts = clients_yes['marital'].value_counts()
+            marital_percentage = marital_counts / marital_counts.sum() * 100
+            plt.figure(figsize=(10, 8))
+            sns.barplot(x=marital_percentage.index, y=marital_percentage.values, color='skyblue')
+
+            # Ajouter les pourcentages sur les barres
+            for i, v in enumerate(marital_percentage.values):
+                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+
+            # Titre et étiquettes des axes
+            plt.title("Distribution du statut matrimonial des clients qui ont souscrit à un dépôt à terme")
+            plt.xlabel("Statut matrimonial")
+            plt.ylabel("Pourcentage de clients (%)")
+
+            # Affichage du graphique avec Streamlit
+            st.pyplot(plt)
+
+            # --- Niveau d'éducation ---
+            education_counts = clients_yes['education'].value_counts()
+            education_percentage = education_counts / education_counts.sum() * 100
+            plt.figure(figsize=(10, 8))
+            sns.barplot(x=education_percentage.index, y=education_percentage.values, color='skyblue')
+
+            # Ajouter les pourcentages sur les barres
+            for i, v in enumerate(education_percentage.values):
+                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+
+            # Titre et étiquettes des axes
+            plt.title("Distribution du niveau académique des clients qui ont souscrit à un dépôt à terme")
+            plt.xlabel("Education")
+            plt.ylabel("Pourcentage de clients (%)")
+
+            # Affichage du graphique avec Streamlit
+            st.pyplot(plt)
+
+            # Texte explicatif
+            st.text("Nous observons que la majorité des clients sont mariés, suivis par un groupe de clients célibataires. Les niveaux d’éducation des clients sont le secondaire et le tertiaire. Ceci montre que les clients détenant le DAT (dépôt à terme) ont un certain niveau académique.")
+
+        elif sub_page == "Bancaire":
+            st.header("Analyse: Bancaire")
+            st.subheader("Balance du compte")
+        
+            # Séparation des clients en fonction du solde
+            clients_positif = clients_yes[clients_yes['balance'] > 0]
+            clients_negatif = clients_yes[clients_yes['balance'] <= 0]
+            
+            nb_clients_positif = len(clients_positif)
+            nb_clients_negatif = len(clients_negatif)
+
+            pourcentage_positif = (nb_clients_positif / len(clients_yes)) * 100
+            pourcentage_negatif = (nb_clients_negatif / len(clients_yes)) * 100
 
             
-        if option_submenu2 == 'Deposit x month':
-            fig = plt.figure(figsize=(30,15))
-            sns.countplot(x='month_year', hue='deposit', data=df_order_month, palette =("g", "r"), legend=False)
-            plt.title("Évolution de notre variable cible selon les mois")
-            plt.legend()
-            st.pyplot(fig)
-        
-    
-        if option_submenu2 == 'Deposit x year' :
-            fig = plt.figure(figsize=(30,10))
-            sns.countplot(x='year', hue='deposit', data=df, palette =("g", "r"), legend=False)
-            plt.title("Évolution de notre variable cible selon l'année")
-            plt.legend()
-            st.pyplot(fig)
 
-        if option_submenu2 == 'Deposit x weekday':
-            fig = plt.figure()
-            sns.countplot(x="weekday", hue = 'deposit', data = df, palette =("g", "r"), legend=False)
-            st.pyplot(fig)
-        
-    
-        if option_submenu2 == 'Deposit x Month x Âge' :
-            fig, ax = plt.subplots(1, 1, figsize=(30, 10))
-            sns.lineplot(x="month_year", y="age", hue= "deposit", data= df_order_month, palette =("g", "r"), ax=ax, errorbar=None)
-            plt.grid(True)
-            st.pyplot(fig)
-    
-        if option_submenu2 == 'Deposit x Month x Balance' :
-            fig, ax = plt.subplots(1, 1, figsize=(30, 10))
-            sns.lineplot(x="month_year", y="balance", hue= "deposit", data= df_order_month, palette =("g", "r"), ax=ax, errorbar=None)
-            plt.grid(True)
-            st.pyplot(fig)
-    
-        if option_submenu2 == 'Deposit x Month x Campaign' :
-            fig, ax = plt.subplots(1, 1, figsize=(30, 10))
-            sns.lineplot(x="month_year", y="campaign", hue= "deposit", data= df_order_month, palette =("g", "r"), ax=ax, errorbar=None)
-            plt.grid(True)
-            st.pyplot(fig)
-    
-        if option_submenu2 == 'Deposit x Month x Previous' :
-            fig, ax = plt.subplots(1, 1, figsize=(30, 10))
-            sns.lineplot(x="month_year", y="previous", hue= "deposit", data= df_order_month, palette =("g", "r"), ax=ax, errorbar=None)
-            plt.grid(True)
-            st.pyplot(fig)
-    
-        if option_submenu2 == 'Deposit x Month x Pdays' :
-            fig, ax = plt.subplots(1, 1, figsize=(30, 10))
-            sns.lineplot(x="month_year", y="pdays", hue= "deposit", data= df_order_month, palette =("g", "r"), ax=ax, errorbar=None)
-            plt.grid(True)
-            st.pyplot(fig)
-    
+            # Labels pour les groupes
+            labels = ['Solde positif', 'Solde négatif ou nul']
+            counts = [nb_clients_positif, nb_clients_negatif]
 
+            # Créer un DataFrame temporaire pour le plot
+            data = pd.DataFrame({'Type de solde': labels, 'Nombre de clients': counts})
+            
+
+            # Créer un bar plot pour comparer les deux groupes
+            plt.figure(figsize=(9, 6), dpi=100)
+            sns.barplot(x='Type de solde', y='Nombre de clients', data=data, palette="pastel")
+            plt.title("Comparaison des clients avec un solde positif et un solde négatif ou nul")
+            plt.xlabel("Type de solde")
+            plt.ylabel("Nombre de clients")
+
+            # Ajouter les pourcentages sur les barres
+            for i, v in enumerate(counts):
+                plt.text(i, v + 5, f"{(v / len(clients_yes)) * 100:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+
+            st.pyplot(plt)
+            st.write(f"Pourcentage de clients avec un solde positif : {pourcentage_positif:.2f}%")
+            st.write(f"Pourcentage de clients avec un solde négatif ou nul : {pourcentage_negatif:.2f}%")
+
+            st.subheader("Loan/Housing/default")
+
+            # Statistiques pour 'housing'
+            housing_counts = clients_yes['housing'].value_counts()
+            housing_percentage = housing_counts / housing_counts.sum() * 100
+            housing_stats = pd.DataFrame({
+                'Housing Status': housing_counts.index,
+                'Count': housing_counts.values,
+                'Percentage': housing_percentage.values
+            })
+
+            # Statistiques pour 'loan'
+            loan_counts = clients_yes['loan'].value_counts()
+            loan_percentage = loan_counts / loan_counts.sum() * 100
+            loan_stats = pd.DataFrame({
+                'Loan Status': loan_counts.index,
+                'Count': loan_counts.values,
+                'Percentage': loan_percentage.values
+            })
+
+            # Statistiques pour 'default'
+            default_counts = clients_yes['default'].value_counts()
+            default_percentage = default_counts / default_counts.sum() * 100
+            default_stats = pd.DataFrame({
+                'Default Status': default_counts.index,
+                'Count': default_counts.values,
+                'Percentage': default_percentage.values
+            })
+
+            
+
+            # --- Bar plot pour housing ---
+            plt.figure(figsize=(9, 6))
+            sns.barplot(x=housing_percentage.index, y=housing_percentage.values, palette="pastel")
+            plt.title("Distribution des prêts immobiliers parmi les clients ayant un dépôt à terme")
+            plt.xlabel("Housing")
+            plt.ylabel("Pourcentage de clients (%)")
+            
+            # Ajouter les pourcentages sur les barres
+            for i, v in enumerate(housing_percentage.values):
+                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+            
+            st.pyplot(plt)
+
+            # --- Bar plot pour loan ---
+            plt.figure(figsize=(9, 6))
+            sns.barplot(x=loan_percentage.index, y=loan_percentage.values, palette="pastel")
+            plt.title("Distribution des prêts personnels parmi les clients ayant un dépôt à terme")
+            plt.xlabel("Loan")
+            plt.ylabel("Pourcentage de clients (%)")
+            
+            # Ajouter les pourcentages sur les barres
+            for i, v in enumerate(loan_percentage.values):
+                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+            
+            st.pyplot(plt)
+
+            # --- Bar plot pour default ---
+            plt.figure(figsize=(9, 6))
+            sns.barplot(x=default_percentage.index, y=default_percentage.values, palette="pastel")
+            plt.title("Distribution de défaut de paiement parmi les clients ayant un dépôt à terme")
+            plt.xlabel("Default")
+            plt.ylabel("Pourcentage de clients (%)")
+            
+            # Ajouter les pourcentages sur les barres
+            for i, v in enumerate(default_percentage.values):
+                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+            
+            st.pyplot(plt)
+
+            st.text("Parmi les clients qui ont un DAT :")
+            st.text("Plus de 60% des clients n’ont pas de prêt immobilier.")
+            st.text("90% des clients n’ont pas de prêt personnel.")
+            st.text("99% des clients ayant des engagements bancaires ne sont pas en défaut de paiement.")
+
+            
+    
+        elif sub_page == "Caracteristique de la Campagne Marketing":
+            st.write("### Analyse: Caracteristique de la Campagne Marketing")
+
+            
+    # Nombre de clients par type de prospect
+            prospect_counts = clients_yes["type_prospect"].value_counts()
+
+    # Affichage des résultats
+            st.dataframe(prospect_counts)
+
+            # Fonction pour tracer les barres
+        
+
+
+    #fonction
+            def plot_percentage(data, column, xlabel):
+                if column not in data.columns:
+                    st.error(f"The column '{column}' does not exist in the dataset.")
+                    return
+
+        # Calculate percentages
+                counts = data[column].value_counts(normalize=True) * 100
+
+        # Barplot de distribution
+                plt.figure(figsize=(9, 6))
+                sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                plt.title(f"Distribution de {column} (%)")
+                plt.xlabel(xlabel)
+                plt.ylabel("Percentage (%)")
+                plt.xticks(rotation=45)  
+                st.pyplot(plt)
+                plt.clf()  
+
+            plot_percentage(clients_yes, "type_prospect", "Type de prospect")
+            st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
+            
+            
+            plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
+            st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
+            
+            
+            plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
+            st.write("Plus de 60% des clients qui ont souscrit au DAT n’avaient jamais été contacté par la banque avant cette campagne.")
+            
+            plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
+            st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
+
+        elif sub_page == "Temporel":
+            st.write("### Analyse: Temporel")
+
+            liste_annee =[]
+            for i in clients_yes["month"] :
+                if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
+                    liste_annee.append("2013")
+                elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
+                    liste_annee.append("2014")
+            clients_yes["year"] = liste_annee
+            clients_yes['date'] = clients_yes['day'].astype(str)+ '-'+ clients_yes['month'].astype(str)+ '-'+ clients_yes['year'].astype(str)
+            clients_yes['date']= pd.to_datetime(clients_yes['date'])
+            clients_yes["weekday"] = clients_yes["date"].dt.weekday
+            dic = {0 : "Lundi", 1 : "Mardi", 2 : "Mercredi", 3 : "Jeudi", 4 : "Vendredi", 5 : "Samedi", 6 : "Dimanche"}
+            clients_yes["weekday"] = clients_yes["weekday"].replace(dic)
+           
+
+            # Mois
+            month_year_counts = clients_yes['month'].value_counts()
+            month_year_percentage = month_year_counts / month_year_counts.sum() * 100
+            plt.figure(figsize=(8, 5))
+            sns.barplot(x=month_year_percentage.index, y=month_year_percentage.values, color='skyblue')
+            plt.title("Distribution des mois où les clients  ont souscrit à un dépôt à terme")
+            plt.xlabel("Mois")
+            plt.ylabel("Pourcentage de clients (%)")
+            plt.xticks(rotation=90)
+            st.pyplot(plt)
+
+            #  Jour de la semaine
+            weekday_counts = clients_yes['weekday'].value_counts()
+            weekday_percentage = weekday_counts / weekday_counts.sum() * 100
+            plt.figure(figsize=(8, 5))
+            sns.barplot(x=weekday_percentage.index, y=weekday_percentage.values, color='skyblue')
+            plt.title("Distribution des jours de la semaine où les clients ont souscrit à un dépôt à terme")
+            plt.xlabel("weekday")
+            plt.ylabel("Pourcentage de clients (%)")
+            st.pyplot(plt)
+
+            st.text("Les périodes où les clients sont susceptibles de souscrire sont le printemps et l’été. Et les jours sont par ordre de souscription : dimanche, mardi, mercredi, lundi, jeudi, vendredi et samedi.")
+
+
+        elif sub_page == "Duration":
+            st.write("### Analyse: Duration")
+        
+            # Conversion de la durée en minutes
+            clients_yes = clients_yes.copy()
+            clients_yes['duration_minutes'] = clients_yes['duration'] / 60
+
+            # Calcul des valeurs de référence
+            mean_duration = clients_yes['duration_minutes'].mean()
+            min_duration = clients_yes['duration_minutes'].min()
+            max_duration = clients_yes['duration_minutes'].max()
+
+            # Calcul du pourcentage de clients avec une durée égale ou supérieure au minimum
+            nb_clients_min_or_more = len(clients_yes[clients_yes['duration_minutes'] >= min_duration])
+            pourcentage_min_or_more = (nb_clients_min_or_more / len(clients_yes)) * 100
+
+            # Calcul du pourcentage de clients avec une durée égale ou supérieure au maximum
+            nb_clients_max_or_more = len(clients_yes[clients_yes['duration_minutes'] >= max_duration])
+            pourcentage_max_or_more = (nb_clients_max_or_more / len(clients_yes)) * 100
+
+            # Calcul du pourcentage de clients avec une durée égale ou supérieure à la moyenne
+            nb_clients_mean_or_more = len(clients_yes[clients_yes['duration_minutes'] >= mean_duration])
+            pourcentage_mean_or_more = (nb_clients_mean_or_more / len(clients_yes)) * 100
+
+            # Affichage des résultats sous forme textuelle
+            st.write(f"Durée moyenne (minutes) : {mean_duration:.2f}")
+            st.write(f"Durée minimum (minutes) : {min_duration:.2f}")
+            st.write(f"Durée maximum (minutes) : {max_duration:.2f}")
+
+
+
+            # Création d'un DataFrame pour les pourcentages à afficher dans le graphique
+            duration_stats = {
+                'Durée': ['Moyenne', 'Minimum', 'Maximum'],
+                'Pourcentage': [pourcentage_mean_or_more, pourcentage_min_or_more, pourcentage_max_or_more]
+            }
+            duration_df = pd.DataFrame(duration_stats)
+
+            # Plot des pourcentages
+            plt.figure(figsize=(10, 6))
+            sns.barplot(x='Durée', y='Pourcentage', data=duration_df, palette="pastel")
+
+            # Ajouter les pourcentages sur les barres
+            for i, v in enumerate(duration_df['Pourcentage']):
+                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+
+            # Titre et labels
+            plt.title("Pourcentage de clients en fonction de la durée d'appel")
+            plt.xlabel("Critère de durée")
+            plt.ylabel("Pourcentage de clients (%)")
+
+            # Affichage du graphique
+            st.pyplot(plt)
+
+            st.write(f"Pourcentage de clients avec une durée supérieure ou égale à la moyenne : {pourcentage_mean_or_more:.2f}%")
+            st.write(f"Pourcentage de clients avec une durée supérieure ou égale au minimum : {pourcentage_min_or_more:.2f}%")
+            st.write(f"Pourcentage de clients avec une durée supérieure ou égale au maximum : {pourcentage_max_or_more:.2f}%")
 
 if selected == "Pre-processing":  
     st.title("PRÉ-PROCESSING")
