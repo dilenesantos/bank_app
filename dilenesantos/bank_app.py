@@ -2628,6 +2628,7 @@ if selected == "Recommandations & Perspectives":
             if submenu_profil == "ÂGE" :
                 st.write("#### ÂGE:")
                 st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
+                st.write("S’agissant de la tranche d’âge intermédiaire, **entre 29 et 58 ans**, la tendance est inversée, notre modèle montre **une prédiction majoritairement négative**. Étant donné qu’une grande majorité des clients de la base de donnée concerne justement cette tranche d’âge intermédiaire, il faudra veiller à bien suivre nos recommandations concernant les autres variables pour sélectionner, parmi ces clients âgés de 29 à 58 ans, ceux à contacter en priorité : ")
                 
             
             if submenu_profil == "BALANCE" :
