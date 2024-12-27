@@ -2060,6 +2060,13 @@ if selected == 'Interprétation':
                 shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
                 st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
 
+                #TEST DILÈNE
+                fig = plt.figure()
+                shap.summary_plot(shap_values_RF_carolle[:, [X_test.columns.get_loc("housing"), 1]], 
+                                  X_test[["housing"]], 
+                                  feature_names=["housing"], 
+                                  show=True)
+                st.pyplot(fig)
                 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_RF_carolle[:, [X_test.columns.get_loc("duration")]], 
