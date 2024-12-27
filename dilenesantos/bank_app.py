@@ -2070,12 +2070,12 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
                 
-                fig = plt.figure()
-                shap.summary_plot(shap_values_RF_carolle[:, [X_test.columns.get_loc("duration")]], 
-                                  X_test[["duration"]], 
-                                  feature_names=["duration"], 
-                                  show=True)
-                st.pyplot(fig)
+                #fig = plt.figure()
+                #shap.summary_plot(shap_values_RF_carolle[:, [X_test.columns.get_loc("duration")]], 
+                                  #X_test[["duration"]], 
+                                  #feature_names=["duration"], 
+                                  #show=True)
+                #st.pyplot(fig)
                 
 
                 st.write("##### Dependence plot")
@@ -2087,7 +2087,14 @@ if selected == 'Interprétation':
                 st.write("#### HOUSING : poids de +0.05 dans les prédictions de notre modèle") 
                 st.subheader("Impact NEGATIF de HOUSING sur la classe 1")
                 st.write("Summary plot :")
-
+ 
+                shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
+                fig = plt.figure()
+                shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("housing")]], 
+                                  X_test[["housing"]], 
+                                  feature_names=["housing"], 
+                                  show=True)
+                st.pyplot(fig)
             
             if submenu_var_inf == "PREVIOUS" :
                 st.write("#### PREVIOUS : poids de +0.03 dans les prédictions de notre modèle") 
