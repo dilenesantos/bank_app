@@ -2630,7 +2630,7 @@ if selected == "Recommandations & Perspectives":
                
             
             if submenu_profil == "EDUCATION" :
-                st.write("#### EDUCATION:","Niveau scolaire du client")
+                st.write("#### EDUCATION:","Niveau d'étude du client")
                 
 
       if submenu_reco == "NOMBRE ET DUREE D’APPEL" :
