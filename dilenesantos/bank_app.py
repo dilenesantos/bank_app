@@ -3048,10 +3048,10 @@ if selected == 'Outil  Prédictif':
 
         st.write("__________________________________________________")
 
-        st.write("Vous pouvez si vous le souhaitez affiner la prédiction en ajoutant une autre donnée concernant votre client.")
+        st.markdown("**Si vous le souhaitez, vous pouvez affiner la prédiction en ajoutant une autre information concernant votre client.**")
         
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
-        option_to_add = st.radio("Choisir une variable à ajouter :", 
+        option_to_add = st.radio("Choisir une information à ajouter :", 
                                        ["None", "campaign", "loan", "marital", "poutcome", "job", "Client_Category_M"], horizontal=True)
         
         if option_to_add != "None":
