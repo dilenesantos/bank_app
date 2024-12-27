@@ -2653,6 +2653,7 @@ if selected == "Recommandations & Perspectives":
 
     
       if submenu_reco == "RECAP" :
+          st.write("Nous pouvons résumer les résultats de notre **Modèle pour prédire le succès d’une campagne Marketing pour une banque** dans les points suivants: ")
           st.write("##### - Prioriser les clients qui n’ont pas de prêt immobilier")
           st.write("##### - Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
           
