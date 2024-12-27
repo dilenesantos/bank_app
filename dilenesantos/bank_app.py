@@ -2989,12 +2989,12 @@ if selected == 'Outil  Prédictif':
     # Interface utilisateur
     st.title("Sélection de Modèle et Prédictions")
 
-    filename_prediction = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
-    model = joblib.load(filename_prediction)
+    filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
+    model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
 
     # Prédiction
-    prediction = model.predict(pred_df)
-    prediction_proba = model.predict_proba(pred_df)
+    prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
+    prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
     max_proba = np.max(prediction_proba[0]) * 100
     
     # Affichage des résultats
