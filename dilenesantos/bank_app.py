@@ -2627,6 +2627,8 @@ if selected == "Recommandations & Perspectives":
 
             if submenu_profil == "ÂGE" :
                 st.write("#### ÂGE:")
+                st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
+                
             
             if submenu_profil == "BALANCE" :
                 st.write("#### BALANCE:","Solde bancaire du client")
