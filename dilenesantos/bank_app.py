@@ -2061,6 +2061,7 @@ if selected == 'Interprétation':
                 st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
 
                 #TEST DILÈNE
+                st.write("Test dilène")
                 shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
                 fig = plt.figure()
                 shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("housing")]], 
