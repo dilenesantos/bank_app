@@ -2617,11 +2617,10 @@ if selected == "Recommandations & Perspectives":
             submenu_profil = st.radio("", ("HOUSING", "ÂGE", "BALANCE", "PREVIOUS", "EDUCATION"), horizontal=True) 
 
             if submenu_profil == "HOUSING" :
-                #st.subheader("HOUSING")
                 st.write("#### HOUSING:","Détention ou non d’un prêt immobilier")
 
             if submenu_profil == "ÂGE" :
-                st.subheader("ÂGE")
+                st.write("#### ÂGE:")
             
             if submenu_profil == "BALANCE" :
                 st.subheader("BALANCE")
