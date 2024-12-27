@@ -2984,22 +2984,15 @@ if selected == 'Outil  Prédictif':
     pred_df = pred_df.reset_index(drop=True)
   
 
-    #TEST PRÉDICTION
-        # Chargement de vos modèles
-    model_filenames = {
-        "XGBOOST 1": "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl",
-        "XGBOOST 2": "dilenesantos/XGBOOST_2_SD_model_PRED_AVEC_parametres.pkl",
-    }
+    # Chargement de vos modèles
+    model_filenames = "XGBOOST 1": "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
+
     
     # Interface utilisateur
     st.title("Sélection de Modèle et Prédictions")
 
-    st.subheader("Choix du Modèle")
-    selected_model_name = st.selectbox("", list(model_filenames.keys()))
-    
-
     # Charger le modèle correspondant
-    model_file = model_filenames[selected_model_name]
+    model_file = model_filenames
     model = joblib.load(model_file)
 
     # Prédiction
@@ -3020,8 +3013,8 @@ if selected == 'Outil  Prédictif':
         st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, veiller à rester le plus longtemps possible au téléphone avec ce client.")
         st.write("- Nombre de contacts : il serait contre-productif de le contacter plus d'une fois.")
 
-    if prediction[0] != 0 and max_proba < 80:
-        st.write("Le niveau de confiance étant inférieur à 80%, vous pouvez si vous le souhaitez affiner la prédiction en ajoutant une autre donnée concernant votre client.")
+    if prediction[0] != 0 :
+        st.write("Vous pouvez si vous le souhaitez affiner la prédiction en ajoutant une autre donnée concernant votre client.")
         
     
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
@@ -3072,23 +3065,6 @@ if selected == 'Outil  Prédictif':
                     else:
                         st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
                 
-                elif selected_model_name == "XGBOOST 2":
-                    filename_LOAN_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_loan_XGBOOST_2.pkl"
-                    additional_model2 = joblib.load(filename_LOAN_2)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_loan2 = additional_model2.predict(pred_df)
-                    prediction_proba_opt_loan2 = additional_model2.predict_proba(pred_df)
-                    max_proba_opt_loan2 = np.max(prediction_proba_opt_loan2[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_loan2[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan2:.2f}%**")
-                    if prediction_opt_loan2[0] == 0:
-                        st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
-                    else:
-                        st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
-
         
             elif option_to_add == "campaign":
                 campaign = st.slider("Combien de fois le client a-t-il été contacté durant la campagne ?", 0, 6, 1)
@@ -3135,23 +3111,6 @@ if selected == 'Outil  Prédictif':
                     else:
                         st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
                 
-                elif selected_model_name == "XGBOOST 2":
-                    filename_campaign_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_campaign_XGBOOST_2.pkl"
-                    additional_model2 = joblib.load(filename_campaign_2)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_campaign2 = additional_model2.predict(pred_df)
-                    prediction_proba_opt_campaign2 = additional_model2.predict_proba(pred_df)
-                    max_proba_opt_campaign2 = np.max(prediction_proba_opt_campaign2[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_campaign2[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign2:.2f}%**")
-                    if prediction_opt_campaign2[0] == 0:
-                        st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
-                    else:
-                        st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
-
 
             elif option_to_add == "marital":
                 marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
@@ -3207,23 +3166,6 @@ if selected == 'Outil  Prédictif':
                     else:
                         st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
                 
-                elif selected_model_name == "XGBOOST 2":
-                    filename_marital_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_marital_XGBOOST_2.pkl"
-                    additional_model2 = joblib.load(filename_marital_2)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_marital2 = additional_model2.predict(pred_df)
-                    prediction_proba_opt_marital2 = additional_model2.predict_proba(pred_df)
-                    max_proba_opt_marital2 = np.max(prediction_proba_opt_marital2[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_marital2[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital2:.2f}%**")
-                    if prediction_opt_marital2[0] == 0:
-                        st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
-                    else:
-                        st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
-
 
             elif option_to_add == "poutcome":
                 poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other'))
@@ -3280,22 +3222,6 @@ if selected == 'Outil  Prédictif':
                     else:
                         st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
                 
-                elif selected_model_name == "XGBOOST 2":
-                    filename_poutcome_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_poutcome_XGBOOST_2.pkl"
-                    additional_model2 = joblib.load(filename_poutcome_2)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_poutcome2 = additional_model2.predict(pred_df)
-                    prediction_proba_opt_poutcome2 = additional_model2.predict_proba(pred_df)
-                    max_proba_opt_poutcome2 = np.max(prediction_proba_opt_poutcome2[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_poutcome2[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome2:.2f}%**")
-                    if prediction_opt_poutcome2[0] == 0:
-                        st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
-                    else:
-                        st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
 
     
             elif option_to_add == "job":
@@ -3355,23 +3281,6 @@ if selected == 'Outil  Prédictif':
                     else:
                         st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
                 
-                elif selected_model_name == "XGBOOST 2":
-                    filename_job_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_job_XGBOOST_2.pkl"
-                    additional_model2 = joblib.load(filename_job_2)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_job2 = additional_model2.predict(pred_df)
-                    prediction_proba_opt_job2 = additional_model2.predict_proba(pred_df)
-                    max_proba_opt_job2 = np.max(prediction_proba_opt_job2[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_job2[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job2:.2f}%**")
-                    if prediction_opt_job2[0] == 0:
-                        st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
-                    else:
-                        st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
-
 
             
             elif option_to_add == "Client_Category_M":
@@ -3428,22 +3337,6 @@ if selected == 'Outil  Prédictif':
                     else:
                         st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
                 
-                elif selected_model_name == "XGBOOST 2":
-                    filename_client_category_2 = "dilenesantos/XGBOOST_2_SD_model_PRED_client_category_XGBOOST_2.pkl"
-                    additional_model2 = joblib.load(filename_client_category_2)
-                
-                    # Prédiction avec le DataFrame optimisé
-                    prediction_opt_client_category2 = additional_model2.predict(pred_df)
-                    prediction_proba_opt_client_category2 = additional_model2.predict_proba(pred_df)
-                    max_proba_opt_client_category2 = np.max(prediction_proba_opt_client_category2[0]) * 100
-                
-                    # Affichage des résultats
-                    st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 2 : **{prediction_opt_client_category2[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category2:.2f}%**")
-                    if prediction_opt_client_category2[0] == 0:
-                        st.markdown("Conclusion : Ce client **n'est pas susceptible** de souscrire à un dépôt à terme.")
-                    else:
-                        st.markdown("Conclusion : **Ce client **est susceptible** de souscrire à un dépôt à terme.**")
 
 
             # Afficher le récapitulatif
