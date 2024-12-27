@@ -2623,22 +2623,26 @@ if selected == "Recommandations & Perspectives":
                 st.write("#### ÂGE:")
             
             if submenu_profil == "BALANCE" :
-                st.subheader("BALANCE")
+                st.write("#### BALANCE:","Solde bancaire du client")
             
             if submenu_profil == "PREVIOUS" :
-                st.subheader("PREVIOUS")
+                st.write("#### PREVIOUS:","Nombre de contacts effectués avant la campagne avec le client")
+               
             
             if submenu_profil == "EDUCATION" :
-                st.subheader("EDUCATION")
+                st.write("#### EDUCATION:","Niveau scolaire du client")
+                
 
       if submenu_reco == "NOMBRE ET DUREE D’APPEL" :
             submenu_appel = st.radio("", ("DURATION", "CAMPAIGN"), horizontal=True) 
 
             if submenu_appel == "DURATION" :
-                st.subheader("DURATION")
+                st.write("#### DURATION:","Durée du dernier contact en secondes")
+                
 
             if submenu_appel == "CAMPAIGN" :
-                st.subheader("CAMPAIGN")
+                st.write("#### CAMPAIGN:","nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
+                
 
 
 
