@@ -2671,7 +2671,7 @@ if selected == "Recommandations & Perspectives":
                 st.write("**Les résultats de nos analyses soulignent l’importance stratégique de la durée des interactions commerciales.** En optimisant le temps consacré à chaque client, la banque peut **significativement améliorer** ses taux de conversion et renforcer son efficacité commerciale.")
                 st.write("Pour maximiser les chances de souscription au produit bancaire (deposit), voici les recommandations clés : ")
                 st.write(" -  **Encourager des échanges plus longs :** Former les équipes commerciales à adopter une approche engageante dès le premier contact, afin de mieux comprendre les attentes des clients et de leur proposer des solutions sur mesure. ")
-                st.write(" -  **Fixer un objectif minimal de 6 minutes par appel** pour les prospects à fort potentiel. Les analyses montrent en effet que les interactions dépassant 360 secondes (6 minutes) ont un impact significatif, les SHAP values traduisant une corrélation positive à partir de cette durée. ")
+                st.write(" -  **Fixer un objectif minimal de 6 minutes par appel** pour les prospects à fort potentiel. Les analyses montrent en effet que **les interactions dépassant 360 secondes (6 minutes) ont un impact significatif**, les SHAP values traduisant une corrélation positive à partir de cette durée. ")
           
             if submenu_appel == "CAMPAIGN" :
                 st.write("#### CAMPAIGN:","nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
