@@ -2087,7 +2087,10 @@ if selected == 'Interprétation':
                 st.write("#### HOUSING : poids de +0.05 dans les prédictions de notre modèle") 
                 st.subheader("Impact NEGATIF de HOUSING sur la classe 1")
                 st.write("Summary plot :")
- 
+
+                shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
+                st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
+                
                 shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
                 fig = plt.figure()
                 shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("housing")]], 
