@@ -3423,26 +3423,26 @@ if selected == 'Outil  Prédictif':
             
 
 
-        # Afficher le récapitulatif
-        st.write(f'### Récapitulatif')
-        st.write("Le client a : ", age, "ans")
-        st.write("Le client a un niveau d'étude : ", niveau_etude)
-        st.write("Le solde de son compte en banque est de : ", balance, "euros")
-        st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
-        st.write("Le client a été contacté ", previous, " fois lors de la précédente campagne marketing")
-        
-        # Afficher les informations supplémentaires définies
-        if option_to_add == "loan":
-            st.write(f"A un crédit personnel : {loan}")
-        elif option_to_add == "marital":
-            st.write(f"Situation maritale : {marital}")
-        elif option_to_add == "poutcome":
-            st.write(f"Résultat de la campagne : {poutcome}")
-        elif option_to_add == "job":
-            st.write(f"Emploi : {job}")
-        elif option_to_add == "Client_Category_M":
-            st.write("Dernier contact avec le client : ", Client_Category)
-        elif option_to_add == "campaign":
-            st.write(f"Nombre de contacts avec le client au cours de la campagne : {campaign}")
- 
+            # Afficher le récapitulatif
+            st.write(f'### Récapitulatif')
+            st.write("Le client a : ", age, "ans")
+            st.write("Le client a un niveau d'étude : ", niveau_etude)
+            st.write("Le solde de son compte en banque est de : ", balance, "euros")
+            st.write("Le client est-il propriétaire : ", "Oui" if housing == 1 else "Non")
+            st.write("Le client a été contacté ", previous, " fois lors de la précédente campagne marketing")
+            
+            # Afficher les informations supplémentaires définies
+            if option_to_add == "loan":
+                st.write(f"A un crédit personnel : {loan}")
+            elif option_to_add == "marital":
+                st.write(f"Situation maritale : {marital}")
+            elif option_to_add == "poutcome":
+                st.write(f"Résultat de la campagne : {poutcome}")
+            elif option_to_add == "job":
+                st.write(f"Emploi : {job}")
+            elif option_to_add == "Client_Category_M":
+                st.write("Dernier contact avec le client : ", Client_Category)
+            elif option_to_add == "campaign":
+                st.write(f"Nombre de contacts avec le client au cours de la campagne : {campaign}")
+     
 
