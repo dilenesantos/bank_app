@@ -287,7 +287,7 @@ X_test_sd_original[cols_num_sd] = scaler_sd.inverse_transform(X_test_sd[cols_num
 with st.sidebar:
     selected = option_menu(
         menu_title='Sections',
-        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "TEST PRED SCORES", "Outil Prédictif", "TEST PRÉDICTIF", "PRED POUSSÉ"]) 
+        options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil  Prédictif"]) 
 
 if selected == 'Introduction':  
     st.title("Prédiction du succès d’une campagne Marketing pour une banque")
@@ -2609,7 +2609,7 @@ if selected == 'Interprétation':
 
            
 
-if selected == 'PRED POUSSÉ':  
+if selected == 'Outil  Prédictif':  
 
     dff_TEST = df.copy()
     dff_TEST = dff_TEST[dff_TEST['age'] < 75]
