@@ -2629,7 +2629,8 @@ if selected == "Recommandations & Perspectives":
                 st.write("#### ÂGE:")
                 st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
                 st.write("S’agissant de la tranche d’âge intermédiaire, **entre 29 et 58 ans**, la tendance est inversée, notre modèle montre **une prédiction majoritairement négative**. Étant donné qu’une grande majorité des clients de la base de donnée concerne justement cette tranche d’âge intermédiaire, il faudra veiller à bien suivre nos recommandations concernant les autres variables pour sélectionner, parmi ces clients âgés de 29 à 58 ans, ceux à contacter en priorité : ")
-                
+                st.write(" -  Ils n’ont pas de prêt immobilier")
+                st.write(" -  Ils ont une balance supérieure à 200€ et idéalement supérieure à 800€")
             
             if submenu_profil == "BALANCE" :
                 st.write("#### BALANCE:","Solde bancaire du client")
