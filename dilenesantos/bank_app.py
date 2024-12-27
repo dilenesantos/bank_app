@@ -3028,7 +3028,8 @@ if selected == 'Outil  Prédictif':
     prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
     prediction_proba = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict_proba(pred_df)
     max_proba = np.max(prediction_proba[0]) * 100
-    
+
+    st.write("__________________________________________________")
     # Affichage des résultats
     st.subheader(f"Prediction : {prediction[0]}")
     st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
