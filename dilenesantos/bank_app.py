@@ -3021,8 +3021,6 @@ if selected == 'Outil  Prédictif':
   
     
     # Interface utilisateur
-    st.title("Prédiction")
-
     filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
     model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
 
@@ -3033,7 +3031,7 @@ if selected == 'Outil  Prédictif':
     
     # Affichage des résultats
     st.subheader(f"Prediction : {prediction[0]}")
-    st.write(f"Niveau de confiance: {max_proba:.2f}%")
+    st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
 
     if prediction[0] == 0:
         st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
@@ -3085,7 +3083,7 @@ if selected == 'Outil  Prédictif':
                 max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
             
                 # Affichage des résultats
-                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_loan[0]}**")
+                st.markdown(f"Prediction après affinage : **{prediction_opt_loan[0]}**")
                 st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan:.2f}%**")
                 if prediction_opt_loan[0] == 0:
                     st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
@@ -3130,7 +3128,7 @@ if selected == 'Outil  Prédictif':
                 max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
             
                 # Affichage des résultats
-                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_campaign[0]}**")
+                st.markdown(f"Prediction après affinage : **{prediction_opt_campaign[0]}**")
                 st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign:.2f}%**")
                 if prediction_opt_campaign[0] == 0:
                     st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
@@ -3184,7 +3182,7 @@ if selected == 'Outil  Prédictif':
                 max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
             
                 # Affichage des résultats
-                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_marital[0]}**")
+                st.markdown(f"Prediction après affinage : **{prediction_opt_marital[0]}**")
                 st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%**")
                 if prediction_opt_marital[0] == 0:
                     st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
@@ -3239,7 +3237,7 @@ if selected == 'Outil  Prédictif':
                 max_proba_opt_poutcome = np.max(prediction_proba_opt_poutcome[0]) * 100
             
                 # Affichage des résultats
-                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_poutcome[0]}**")
+                st.markdown(f"Prediction après affinage : **{prediction_opt_poutcome[0]}**")
                 st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
                 if prediction_opt_poutcome[0] == 0:
                     st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
@@ -3297,7 +3295,7 @@ if selected == 'Outil  Prédictif':
                 max_proba_opt_job = np.max(prediction_proba_opt_job[0]) * 100
             
                 # Affichage des résultats
-                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_job[0]}**")
+                st.markdown(f"Prediction après affinage : **{prediction_opt_job[0]}**")
                 st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%**")
                 if prediction_opt_job[0] == 0:
                     st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
@@ -3352,7 +3350,7 @@ if selected == 'Outil  Prédictif':
                 max_proba_opt_client_category = np.max(prediction_proba_opt_client_category[0]) * 100
             
                 # Affichage des résultats
-                st.markdown(f"Prediction après affinage pour le Modèle XGBOOST 1 : **{prediction_opt_client_category[0]}**")
+                st.markdown(f"Prediction après affinage : **{prediction_opt_client_category[0]}**")
                 st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%**")
                 if prediction_opt_client_category[0] == 0:
                     st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
