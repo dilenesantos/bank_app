@@ -2618,6 +2618,7 @@ if selected == "Recommandations & Perspectives":
 
             if submenu_profil == "HOUSING" :
                 st.subheader("HOUSING")
+                st.write("Détention ou non d’un prêt immobilier")
 
             if submenu_profil == "ÂGE" :
                 st.subheader("ÂGE")
