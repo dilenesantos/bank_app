@@ -2076,12 +2076,14 @@ if selected == 'Interprétation':
             
             if submenu_var_inf == "HOUSING" :
                 st.write("#### HOUSING : poids de +0.05 dans les prédictions de notre modèle") 
-
+                st.subheader("Impact NEGATIF de HOUSING sur la classe 1")
+                st.write("Summary plot :")
 
             
             if submenu_var_inf == "PREVIOUS" :
                 st.write("#### PREVIOUS : poids de +0.03 dans les prédictions de notre modèle") 
-    
+                st.subheader("Impact POSITIF de PREVIOUS sur la classe 1")
+                st.write("Summary plot :")
 
 
 
