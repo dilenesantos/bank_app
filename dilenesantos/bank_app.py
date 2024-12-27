@@ -2650,6 +2650,9 @@ if selected == "Recommandations & Perspectives":
           
             if submenu_profil == "PREVIOUS" :
                 st.write("#### PREVIOUS:","Nombre de contacts effectués avant la campagne avec le client")
+                st.write("##### Prioriser les clients déjà contactés")
+                st.write("L'objectif managérial serait de **renforcer les actions auprès des clients déjà engagés** tout en explorant des méthodes pour **réactiver ceux qui n'ont jamais été contactés.** ")
+               
                
             
             if submenu_profil == "EDUCATION" :
@@ -2672,6 +2675,7 @@ if selected == "Recommandations & Perspectives":
           st.write("##### -  Prioriser les clients qui n’ont pas de prêt immobilier")
           st.write("##### -  Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
           st.write("##### -  Contacter en priorité les clients dont la balance est supérieure à 800€.")
+          st.write("##### -  Prioriser les clients déjà contactés")
           
 
 
