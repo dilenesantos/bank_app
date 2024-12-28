@@ -477,7 +477,12 @@ if selected == 'DataVisualisation':
         if st.checkbox('**Variables quantitatives**'): 
             st.subheader("Analyses et Tests statistiques des variables quantitatives")
             sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
-                                  , horizontal=True)
+                                  , key = "variable_selectbox",  horizontal=True)
+            
+            st.write("____________________________________")
+
+            st.write(f"Analyse du **{variable_selectbox}**")
+
 
             if sub_pages1 == "Lien âge x deposit" :
                 fig = plt.figure()
