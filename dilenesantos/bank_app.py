@@ -308,7 +308,7 @@ if selected == 'Introduction':
 if selected == 'DataVisualisation':      
     pages = ["Analyse Univariée", "Analyse Multivariée", "Profiling"]
 
-    if page == pages[0]:  # Analyse Univariée
+    if pages == "Analyse Univariée" :  # Analyse Univariée
         st.title("Analyse Univariée")
 
         # Liste des variables qualitatives et quantitatives
