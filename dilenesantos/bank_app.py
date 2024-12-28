@@ -461,7 +461,6 @@ if selected == 'DataVisualisation':
         ]
 
         # Sidebar for sub-page selection
-        sub_page = st.sidebar.selectbox("Aller vers", sub_pages, key="multivariate_selectbox")
         
         if st.checkbox('Matrice de corrélation') :
             st.subheader("Matrice de corrélation")
