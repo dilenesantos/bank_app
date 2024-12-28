@@ -2979,7 +2979,7 @@ if selected == 'Interprétation':
                 # Vérification si la variable sélectionnée est "housing", "age" ou "education"
                 if selected_variable in ["age", "job"]:
                     fig, ax = plt.subplots(figsize=(10, 6))
-                    shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
+                    shap.dependence_plot("education", shap_XGBOOST_1_VALUES, X_test_original_figures, 
                                          interaction_index=selected_variable, show=False, ax=ax)
                 
                     # Titre et axe horizontal rouge
