@@ -1214,7 +1214,6 @@ if selected == 'DataVisualisation':
 
 if selected == "Pre-processing":  
     st.title("PRÉ-PROCESSING")
-    st.sidebar.title("MENU PRÉ-PROCESSING")  
     option_submenu3 = st.radio(" ", ["AVANT SÉPARATION DES DONNÉES", "APRÈS SÉPARATION DES DONNÉES"], horizontal = True)
         
         
