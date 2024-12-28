@@ -2800,6 +2800,36 @@ if selected == 'Interprétation':
                 st.write("blabla")         
 
                 st.subheader("Dependence plot") 
+
+                feature_name = "age"
+
+                # Créer une figure avec des dimensions personnalisées
+                fig, ax = plt.subplots(figsize=(20, 7))
+                
+                # Générer le graphique SHAP
+                shap.dependence_plot(
+                    feature_name,
+                    shap_values=shap_XGBOOST_1_VALUES,
+                    features=X_test_original_figures,
+                    interaction_index=feature_name,
+                    show=False
+                )
+                
+                # Récupérer l'axe actuel
+                ax = plt.gca()
+                
+                # Appliquer les ajustements à l'axe
+                ax.set_xlim(17, 76)  # Limiter l'axe X entre 17 et 76
+                ax.set_xticks(np.arange(17, 76, 1))  # Ticks tous les 1 an
+                ax.axhline(0, color='red', linewidth=1.5, linestyle='--')  # Ligne horizontale
+                
+                # Afficher le graphique dans Streamlit
+                st.pyplot(fig)
+                
+                # Fermer la figure pour éviter des conflits
+                plt.close(fig)
+
+                
                 feature_name = "age"
                 fig, ax = plt.subplots(figsize=(20, 7))
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
