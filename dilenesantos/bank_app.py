@@ -7,6 +7,9 @@ import os
 
 import scipy.stats as stats
 
+import statsmodels.api
+
+
 from sklearn.model_selection import train_test_split
 
 from sklearn.preprocessing import StandardScaler
@@ -489,6 +492,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de l'age sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de l'age sur la souscrition au Deposit")
 
+                
                 result = statsmodels.formula.api.ols('age ~ deposit', data = df).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write(table)
