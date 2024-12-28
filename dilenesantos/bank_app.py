@@ -2583,9 +2583,12 @@ if selected == 'Interprétation':
 
                 # Dependence plot de DURATION
                 st.write("##### Dependence plot")
+                shap_CAROLLE_VALUES = shap_values_RF_CAROLLE_1.values
+                X_test_original_data = X_test_original
+            
                 featurename = "duration"
                 st.write("blabla")
-                shap.dependence_plot(feature_name = featurename, shap_values=shap_values_RF_CAROLLE_1, features=X_test_original, interaction_index=featurename, show=False)
+                shap.dependence_plot(feature_name = featurename, shap_values=shap_CAROLLE_VALUES, features=X_test_original_data, interaction_index=featurename, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 fig = plt.gcf()          
                 st.pyplot(fig)       
