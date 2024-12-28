@@ -589,6 +589,9 @@ if selected == 'DataVisualisation':
             st.subheader("Analyses et Tests statistiques des variables qualitatives")
             sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"], horizontal = True)
 
+            st.write("____________________________________")
+
+            st.subheader(f"Analyse du {sub_pages2}")
 
             if sub_pages2 == "Lien job x deposit" :
                 fig = plt.figure(figsize=(20,10))
@@ -707,7 +710,11 @@ if selected == 'DataVisualisation':
         if st.checkbox("**Évolution dans le temps**"):  
             st.subheader("Analyse de l'évolution de la variable deposit dans le temps")
             sub_pages3= st.radio(" ", ["Deposit x month", "Deposit x year", "Deposit x weekday"], horizontal = True)
-               
+
+            st.write("____________________________________")
+
+            st.subheader(f"Analyse du {sub_pages3}")
+            
             #creation des colonnes year, month_year, date, weekday
             liste_annee =[]
             for i in df["month"] :
