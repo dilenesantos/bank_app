@@ -376,7 +376,7 @@ if selected == 'DataVisualisation':
             # Ajouter les annotations pourcentages sur les barres
             for i, count in enumerate(category_counts):
                 percentage = category_percentages.iloc[i]
-                ax.text(count + 0.5, i, f"{percentage:.1f}%", va="center", fontsize=6)  # `va="center"` pour centrer verticalement
+                ax.text(count + 0.5, i, f"{percentage:.1f}%", va="center", fontsize=6.5)  # `va="center"` pour centrer verticalement
             
             # Afficher le graphique dans Streamlit
             st.pyplot(fig)
