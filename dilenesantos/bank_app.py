@@ -460,7 +460,7 @@ if selected == 'DataVisualisation':
         # Sidebar for sub-page selection
         sub_page = st.sidebar.selectbox("Aller vers", sub_pages, key="multivariate_selectbox")
         
-        if sub_page == 'Matrice de corrélation':
+        if st.checkbox('Matrice de corrélation') :
             st.subheader("Matrice de corrélation")
             cor = df[['age', 'balance', 'duration', 'campaign', 'pdays', 'previous']].corr()
             fig, ax = plt.subplots()
@@ -469,11 +469,11 @@ if selected == 'DataVisualisation':
             st.write("""Le tableau de corrélation entre toutes les variables quantitatives de notre base de donnée révèle des coefficients 
             de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
 
-        if sub_page == 'Analyses et Tests statistiques des variables quantitatives':  
+        if st.checkbox('Analyses et Tests statistiques des variables quantitatives'):  
             st.subheader("Analyses et Tests statistiques des variables quantitatives") 
+            st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"],
+            key="type_variable_selectbox", horizontal=True)
             sub_pages1=["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
-            page = st.sidebar.radio('Afficher', sub_pages1)
-
 
             if page == sub_pages1[0] :
                 fig = plt.figure()
@@ -592,7 +592,7 @@ if selected == 'DataVisualisation':
                 st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit")  
 
 
-        if sub_page == 'Analyses et Tests statistiques des variables qualitatives':
+        if st.checkbox('Analyses et Tests statistiques des variables qualitatives'):
             st.subheader("Analyses et Tests statistiques des variables qualitatives")   
             sub_pages2=["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"]
             page=st.sidebar.radio('Afficher', sub_pages2)  
@@ -707,7 +707,7 @@ if selected == 'DataVisualisation':
                 st.write("On rejette H0 : Il y a une dépendance entre Poutcome et Deposit")  
 
 
-        if sub_page == "Analyse de l'évolution de la variable deposit dans le temps":  
+        if st.checkbox("Analyse de l'évolution de la variable deposit dans le temps"):  
             st.subheader("Analyse de l'évolution de la variable deposit dans le temps") 
             sub_pages3=["Deposit x month", "Deposit x year", "Deposit x weekday"]
             page=st.sidebar.radio('Afficher', sub_pages3)    
