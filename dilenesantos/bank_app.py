@@ -2813,6 +2813,25 @@ if selected == 'Interprétation':
                 plt.close() 
                 # Exécuter le graphique de dépendance
 
+                shap_XGBOOST_1_VALUES = np.random.rand(100)  # Remplacez par vos valeurs SHAP
+                X_test_original_figures = pd.DataFrame({
+                    'age': np.random.randint(17, 76, size=100),
+                })  # Simulez vos données
+                
+                # Votre propre traçage
+                plt.figure(figsize=(20, 7))
+                plt.scatter(X_test_original_figures['age'], shap_XGBOOST_1_VALUES)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1)
+                plt.xlim(17, 76)
+                plt.xticks(np.arange(17, 77, 1))  # Définir les ticks tous les ans
+                plt.xlabel("Âge")
+                plt.ylabel("Valeurs SHAP")
+                plt.title("Graphique de Dépendance")
+                
+                # Afficher le graphique
+                st.pyplot(plt)
+                plt.close()
+
                 
                 st.write("blabla") 
 
