@@ -330,6 +330,8 @@ if selected == 'DataVisualisation':
                 qualitative_vars,
                 key="qualitative_var_selectbox", horizontal=True
             )
+            st.write("____________________________________")
+
             st.write(f"Analyse de la variable qualitative : **{selected_variable}**")
 
             #creation des colonnes year, month_year, date, weekday
