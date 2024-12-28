@@ -363,10 +363,10 @@ if selected == 'DataVisualisation':
             category_counts = df[selected_variable].value_counts()
             category_percentages = category_counts / category_counts.sum() * 100
             
-            # Création du graphique
+            # Création du graphique avec barres horizontales
             fig, ax = plt.subplots(figsize=(6, 3))
             sns.countplot(
-                x=selected_variable,
+                y=selected_variable,  # Passer `y` pour un graphique horizontal
                 data=df,
                 color='c',
                 order=category_counts.index,
@@ -376,15 +376,13 @@ if selected == 'DataVisualisation':
             # Ajouter les annotations pourcentages sur les barres
             for i, count in enumerate(category_counts):
                 percentage = category_percentages.iloc[i]
-                ax.text(i, count + 0.5, f"{percentage:.1f}%", ha="center", fontsize=10)
+                ax.text(count + 0.5, i, f"{percentage:.1f}%", va="center", fontsize=10)  # `va="center"` pour centrer verticalement
             
             # Afficher le graphique dans Streamlit
             st.pyplot(fig)
             st.write("Le graphique ci-dessus montre la proportion de chaque catégorie dans la variable.")
-
-
-
             
+                        
             fig = plt.figure(figsize=(6, 3))
             sns.countplot(df[selected_variable], color= 'c', order= df[selected_variable].value_counts().index)
             st.write(fig) 
