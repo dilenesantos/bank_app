@@ -605,6 +605,7 @@ if selected == 'DataVisualisation':
                 st.write('P_value: ', p_value)
 
                 st.write("On rejette H0 : **Il y a une dépendance entre Job et Deposit**") 
+                st.write("____________________________________")
 
 
             if sub_pages2 == "Lien marital x deposit" :
@@ -627,6 +628,7 @@ if selected == 'DataVisualisation':
                 st.write('P_value: ', p_value)
 
                 st.write("On rejette H0 : **Il y a une dépendance entre Marital et Deposit**")  
+                st.write("____________________________________")
             
             
             if sub_pages2 == "Lien education x deposit" :
@@ -649,6 +651,7 @@ if selected == 'DataVisualisation':
                 st.write('P_value: ', p_value)
 
                 st.write("On rejette H0 : **Il y a une dépendance entre Education et Deposit**")
+                st.write("____________________________________")
 
             
             if sub_pages2 == "Lien housing x deposit" :
@@ -671,6 +674,7 @@ if selected == 'DataVisualisation':
                 st.write('P_value: ', p_value)
 
                 st.write("On rejette H0 : **Il y a une dépendance entre Housing et Deposit**")
+                st.write("____________________________________")
 
             if sub_pages2 == "Lien poutcome x deposit" :
                 fig = plt.figure()
@@ -692,6 +696,7 @@ if selected == 'DataVisualisation':
                 st.write('P_value: ', p_value)
 
                 st.write("On rejette H0 : **Il y a une dépendance entre Poutcome et Deposit**")  
+                st.write("____________________________________")
 
 
         if st.checkbox("Analyse de l'évolution de la variable deposit dans le temps"):  
