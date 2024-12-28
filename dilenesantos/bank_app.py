@@ -448,7 +448,7 @@ if selected == 'DataVisualisation':
     
 
 
-    if page == pages[1]: 
+    if pages == "Analyse Multivariée" : 
         # Title and Introduction 
         st.title("Analyse Multivariée")
     
@@ -766,7 +766,7 @@ if selected == 'DataVisualisation':
                 st.write("""Nous remarquons qu'en général les clients souscrivent au dépôt à terme le week-end .""")
         
 
-    if page == pages[2]:  
+    if pages == "Profiling" :  
         # Title and Introduction
         st.subheader("Profil client YES")
         
