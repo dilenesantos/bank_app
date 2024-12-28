@@ -481,8 +481,6 @@ if selected == 'DataVisualisation':
             
             st.write("____________________________________")
 
-            st.write(f"Analyse du **{variable_selectbox}**")
-
 
             if sub_pages1 == "Lien âge x deposit" :
                 fig = plt.figure()
