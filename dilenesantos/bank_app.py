@@ -2964,7 +2964,30 @@ if selected == 'Interprétation':
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
-            
+
+                st.subheader("Recherche d'autres dépendances")
+                # Extraction des valeurs SHAP
+                shap_values = shap_XGBOOST_1_VALUES
+                X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
+                
+                # Liste des variables pour interaction_index
+                interaction_variables = ["age", "job"]
+                
+                # radio
+                selected_variable = st.radio("Choix de la variable", interaction_variables, horizontal=True)
+                
+                # Vérification si la variable sélectionnée est "housing", "age" ou "education"
+                if selected_variable in ["age", "job"]:
+                    fig, ax = plt.subplots(figsize=(10, 6))
+                    shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
+                                         interaction_index=selected_variable, show=False, ax=ax)
+                
+                    # Titre et axe horizontal rouge
+                    ax.axhline(0, color='red', linewidth=1, linestyle='--')
+                    plt.tight_layout()
+                    st.pyplot(fig)
+                    plt.close()
+                
         
         if submenu_interpretation == "TESTS" :
 
