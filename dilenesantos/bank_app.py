@@ -312,13 +312,13 @@ if selected == 'Introduction':
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.write("**Colonnes socio-démo:**")
+        st.write("**Infos socio-démo:**")
         st.write("1. **age**")
         st.write("2. **job**")
         st.write("3. **marital**")
         st.write("4. **education**")
     with col2:
-        st.write("**Colonnes situation bancaire:**")
+        st.write("**Infos situation bancaire:**")
         st.write("5. **default**")
         st.write("6. **balance**")
         st.write("7. **housing**")
@@ -326,7 +326,7 @@ if selected == 'Introduction':
         st.write("") 
 
     with col3:
-        st.write("**Colonnes campagnes marketing:**")
+        st.write("**Infos campagnes marketing:**")
         st.write("9. **contact**")
         st.write("10. **day**")
         st.write("11. **month**")
@@ -337,7 +337,7 @@ if selected == 'Introduction':
         st.write("16. **poutcome**")
         st.write("") 
         
-    st.write("**Et enfin la colonne variable cible:**")
+    st.write("**Et enfin la variable cible:**")
     st.write("17. **deposit**")
     
 
