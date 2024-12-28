@@ -493,7 +493,7 @@ if selected == 'DataVisualisation':
                 st.write("H1 : Il y a un effet significatif de l'age sur la souscrition au Deposit")
 
                 
-                result = statsmodels.formula.api.ols('age ~ deposit', data = df).fit()
+                result = ols('age ~ deposit', data = df).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write(table)
 
@@ -515,9 +515,18 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de balance sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de balance sur la souscrition au Deposit")
 
+
+                import statsmodels.api as sm
+                from statsmodels.formula.api import ols
+                moore_lm = ols('balance ~ deposit', data=df).fit()
+                table = sm.stats.anova_lm(moore_lm, typ=2) # Type 2 Anova DataFrame
+                st.write(table)
+                
                 result2 = statsmodels.formula.api.ols('balance ~ deposit', data = df).fit()
                 table2 = statsmodels.api.stats.anova_lm(result2)
                 st.write (table2)
+
+
 
                 st.write("P_value = 9.126568e-18")
                 st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit**")
