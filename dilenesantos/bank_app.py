@@ -481,6 +481,7 @@ if selected == 'DataVisualisation':
             
             st.write("____________________________________")
 
+            st.subheader(f"Analyse du {sub_pages1}")
 
             if sub_pages1 == "Lien âge x deposit" :
                 fig = plt.figure()
