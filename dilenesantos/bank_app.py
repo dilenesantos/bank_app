@@ -1018,43 +1018,97 @@ if selected == 'DataVisualisation':
                 # Affichage des résultats
                 st.dataframe(prospect_counts)
 
-            # Fonction pour tracer les barres
-    
-    
-    
-            #fonction
-            def plot_percentage(data, column, xlabel):
-                if column not in data.columns:
-                    st.error(f"The column '{column}' does not exist in the dataset.")
-                    return
-    
-            # Calculate percentages
-                counts = data[column].value_counts(normalize=True) * 100
-    
-                # Barplot de distribution
-                plt.figure(figsize=(9, 6))
-                sns.barplot(x=counts.index, y=counts.values, color='skyblue')
-                plt.title(f"Distribution de {column} (%)")
-                plt.xlabel(xlabel)
-                plt.ylabel("Percentage (%)")
-                plt.xticks(rotation=45)  
-                st.pyplot(plt)
-                plt.clf()  
+                # Fonction pour tracer les barres
+        
+        
+        
+                #fonction
+                def plot_percentage(data, column, xlabel):
+                    if column not in data.columns:
+                        st.error(f"The column '{column}' does not exist in the dataset.")
+                        return
+        
+                # Calculate percentages
+                    counts = data[column].value_counts(normalize=True) * 100
+        
+                    # Barplot de distribution
+                    plt.figure(figsize=(9, 6))
+                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                    plt.title(f"Distribution de {column} (%)")
+                    plt.xlabel(xlabel)
+                    plt.ylabel("Percentage (%)")
+                    plt.xticks(rotation=45)  
+                    st.pyplot(plt)
+                    plt.clf()  
 
                 plot_percentage(clients_yes, "type_prospect", "Type de prospect")
                 st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
             
             if st.checkbox("Poutcome"):
-                st.write("Résultat de la précédente campagne marketing")                 
+                st.write("Résultat de la précédente campagne marketing")  
+                #fonction
+                def plot_percentage(data, column, xlabel):
+                    if column not in data.columns:
+                        st.error(f"The column '{column}' does not exist in the dataset.")
+                        return
+        
+                # Calculate percentages
+                    counts = data[column].value_counts(normalize=True) * 100
+        
+                    # Barplot de distribution
+                    plt.figure(figsize=(9, 6))
+                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                    plt.title(f"Distribution de {column} (%)")
+                    plt.xlabel(xlabel)
+                    plt.ylabel("Percentage (%)")
+                    plt.xticks(rotation=45)  
+                    st.pyplot(plt)
+                    plt.clf()  
                 plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
                 st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
                 
             if st.checkbox("Previous"):
+                #fonction
+                def plot_percentage(data, column, xlabel):
+                    if column not in data.columns:
+                        st.error(f"The column '{column}' does not exist in the dataset.")
+                        return
+        
+                # Calculate percentages
+                    counts = data[column].value_counts(normalize=True) * 100
+        
+                    # Barplot de distribution
+                    plt.figure(figsize=(9, 6))
+                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                    plt.title(f"Distribution de {column} (%)")
+                    plt.xlabel(xlabel)
+                    plt.ylabel("Percentage (%)")
+                    plt.xticks(rotation=45)  
+                    st.pyplot(plt)
+                    plt.clf()  
                 st.write("Nombre de contacts réalisés avec le client avant la campagne")   
                 plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
                 st.write("Plus de 60% des clients qui ont souscrit au DAT n’avaient jamais été contacté par la banque avant cette campagne.")
 
             if st.checkbox("Campaign"):
+                #fonction
+                def plot_percentage(data, column, xlabel):
+                    if column not in data.columns:
+                        st.error(f"The column '{column}' does not exist in the dataset.")
+                        return
+        
+                # Calculate percentages
+                    counts = data[column].value_counts(normalize=True) * 100
+        
+                    # Barplot de distribution
+                    plt.figure(figsize=(9, 6))
+                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                    plt.title(f"Distribution de {column} (%)")
+                    plt.xlabel(xlabel)
+                    plt.ylabel("Percentage (%)")
+                    plt.xticks(rotation=45)  
+                    st.pyplot(plt)
+                    plt.clf()  
                 st.write("Nombre de contacts réalisés avec le client pendant la campagne") 
                 plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
                 st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
