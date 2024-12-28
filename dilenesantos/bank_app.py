@@ -372,6 +372,7 @@ if selected == 'DataVisualisation':
                 order=category_counts.index,
                 ax=ax
             )
+            ax.set_ylabel("")
             
             # Ajouter les annotations pourcentages sur les barres
             for i, count in enumerate(category_counts):
