@@ -2977,7 +2977,7 @@ if selected == 'Interprétation':
                 selected_variable = st.radio("Choix de la variable", interaction_variables, horizontal=True)
                 
                 # Vérification si la variable sélectionnée est "housing", "age" ou "education"
-                if selected_variable in ["age", "job"]:
+                if selected_variable in ["age"]:
                     fig, ax = plt.subplots(figsize=(10, 6))
                     shap.dependence_plot("education", shap_XGBOOST_1_VALUES, X_test_original_figures, 
                                          interaction_index=selected_variable, show=False, ax=ax)
@@ -2988,6 +2988,27 @@ if selected == 'Interprétation':
                     st.pyplot(fig)
                     plt.close()
                 
+                elif selected_variable == "job":
+                    # Variables associées à job
+                    job_variables = ['job_admin.', 'job_blue-collar', 'job_entrepreneur', 'job_housemaid', 'job_management', 
+                                     'job_retired', 'job_self-employed', 'job_services', 'job_student', 'job_technician', 'job_unemployed']
+                
+                    # Créer un graphique pour chaque variable associée à job
+                    fig, axes = plt.subplots(len(job_variables), 1, figsize=(10, len(job_variables) * 6))
+                
+                    for i, variable in enumerate(job_variables):
+                        shap.dependence_plot(
+                            "education", shap_XGBOOST_1_VALUES, X_test_original_figures, 
+                            interaction_index=variable, show=False, ax=axes[i]
+                        )
+                        axes[i].set_title(f'Balance x {variable}', fontsize=14)
+                        axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
+                
+                    plt.tight_layout()
+                    st.pyplot(fig)
+                    plt.close()
+
+
         
         if submenu_interpretation == "TESTS" :
 
