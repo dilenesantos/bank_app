@@ -1215,12 +1215,11 @@ if selected == 'DataVisualisation':
 if selected == "Pre-processing":  
     st.title("PRÉ-PROCESSING")
     st.sidebar.title("MENU PRÉ-PROCESSING")  
-    option_submenu3 = st.radio(' ', ("TRAITEMENT AVANT TRAIN-TEST-SPLIT", "TRAITEMENT APRÈS TRAIN-TEST-SPLIT"))
+    option_submenu3 = st.radio(' ', ("TRAITEMENT AVANT SÉPARATION DES DONNÉES", "TRAITEMENT APRÈS SÉPARATION DES DONNÉES"), horizontal = True)
         
         
-    if option_submenu3 == 'TRAITEMENT AVANT TRAIN-TEST-SPLIT':
+    if option_submenu3 == 'TRAITEMENT AVANT SÉPARATION DES DONNÉES':
         submenupages=st.radio(" ", ["Suppression de lignes", "Création de colonnes", "Suppression de colonnes", "Gestion des Unknowns"], horizontal = True)
-        page=st.sidebar.radio('Afficher', pages)        
 
         dffpre_pros = df.copy()
         dffpre_pros2 = df.copy()
@@ -1404,9 +1403,8 @@ if selected == "Pre-processing":
             st.write("Nous nous occuperons du remplacement de ces NAns par la suite, une fois le jeu de donnée séparé en jeu d'entraînement et de test. En effet...blabla bla expliquer pourquoi on le fait après le train test split")
             
 
-    if option_submenu3 == 'TRAITEMENT APRÈS TRAIN-TEST-SPLIT':
+    if option_submenu3 == 'TRAITEMENT APRÈS SÉPARATION DES DONNÉES':
         submenupages2 = st.radio(" ", ["Séparation train test", "Traitement des valeurs manquantes", "Standardisation des variables", "Encodage"], horizontal = True)
-        page=st.sidebar.radio('Afficher', pages)
          
         if submenupages2 == "Séparation train test" :
             st.subheader("Séparation train test")
