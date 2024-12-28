@@ -6,6 +6,8 @@ import seaborn as sns
 import os
 
 import scipy.stats as stats
+import statsmodels.api
+
 from sklearn.model_selection import train_test_split
 
 from sklearn.preprocessing import StandardScaler
