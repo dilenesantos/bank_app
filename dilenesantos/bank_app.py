@@ -2613,22 +2613,6 @@ if selected == 'Interprétation':
                                   feature_names=["housing"], 
                                   show=True)
                 st.pyplot(fig)
-
-                # Dependence plot de HOUSING
-                st.write("##### Dependence plot")
-                shap_CAROLLE_VALUES = shap_values_RF_CAROLLE_1.values
-                X_test_original_data = X_test_original
-            
-                feature_name = "housing"
-                st.write("blabla")
-                fig = plt.figure(figsize=(20, 8))
-                shap.dependence_plot(feature_name, shap_values=shap_CAROLLE_VALUES, features=X_test_original_data, interaction_index="default", show=False)
-                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                x_ticks = np.arange(0, X_test_original_data[feature_name].max() + 1,360)
-                plt.xticks(x_ticks)
-                fig = plt.gcf()          
-                st.pyplot(fig)       
-                plt.close() 
                 
                 
             if submenu_var_inf == "PREVIOUS" :
