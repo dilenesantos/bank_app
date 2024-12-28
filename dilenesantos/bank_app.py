@@ -1214,10 +1214,10 @@ if selected == 'DataVisualisation':
 
 if selected == "Pre-processing":  
     st.title("PRÉ-PROCESSING")
-    option_submenu3 = st.radio(" ", ["AVANT SÉPARATION DES DONNÉES", "APRÈS SÉPARATION DES DONNÉES"], horizontal = True)
+    option_submenu3 = st.radio(" ", ["**AVANT SÉPARATION DES DONNÉES**", "**APRÈS SÉPARATION DES DONNÉES**"], horizontal = True)
         
         
-    if option_submenu3 == 'AVANT SÉPARATION DES DONNÉES':
+    if option_submenu3 == '**AVANT SÉPARATION DES DONNÉES**':
         submenupages=st.radio(" ", ["Suppression de lignes", "Création de colonnes", "Suppression de colonnes", "Gestion des Unknowns"], horizontal = True)
 
         dffpre_pros = df.copy()
@@ -1402,7 +1402,7 @@ if selected == "Pre-processing":
             st.write("Nous nous occuperons du remplacement de ces NAns par la suite, une fois le jeu de donnée séparé en jeu d'entraînement et de test. En effet...blabla bla expliquer pourquoi on le fait après le train test split")
             
 
-    if option_submenu3 == 'APRÈS SÉPARATION DES DONNÉES':
+    if option_submenu3 == '**APRÈS SÉPARATION DES DONNÉES**':
         submenupages2 = st.radio(" ", ["Séparation train test", "Traitement des valeurs manquantes", "Standardisation des variables", "Encodage"], horizontal = True)
          
         if submenupages2 == "Séparation train test" :
