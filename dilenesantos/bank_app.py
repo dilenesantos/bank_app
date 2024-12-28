@@ -2814,10 +2814,13 @@ if selected == 'Interprétation':
 
 
                 st.write("Test")
-                feature_name = "age"
 
+                feature_name = "age"
+                
                 # Tracer le graphique de dépendance SHAP
                 fig, ax = plt.subplots(figsize=(20, 7))
+                
+                # Générer le graphique de dépendance avec les vraies valeurs
                 shap.dependence_plot(feature_name, 
                                       shap_values=shap_XGBOOST_1_VALUES, 
                                       features=X_test_original_figures, 
@@ -2827,15 +2830,17 @@ if selected == 'Interprétation':
                 # Ajouter une ligne horizontale à zéro
                 plt.axhline(0, color='red', linestyle='--', linewidth=1)
                 
-                # Configurez les limites de l'axe x manuellement
+                # Configurez les limites et les ticks de l'axe x
                 ax.set_xlim(17, 76)  # Limites des âges
-                # Ajustez les ticks des années sur l'axe x
-                ax.set_xticks(np.arange(17, 77, 1))  # Vérifiez que ce range inclut chaque année
+                ax.set_xticks(np.arange(17, 77, 1))  # Ticks pour chaque année
                 
                 plt.xlabel("Âge")
                 plt.ylabel("Valeurs SHAP")
                 plt.title("Graphique de Dépendance des Valeurs SHAP")
                 
+                # Afficher le graphique dans Streamlit
+                st.pyplot(fig)
+                plt.close()
                 # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
                 plt.close()
