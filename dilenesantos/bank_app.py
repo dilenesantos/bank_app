@@ -494,9 +494,6 @@ if selected == 'DataVisualisation':
                 st.write(fig)
 
                 st.write("Test Statistique d'ANOVA :")
-                st.write("H0 : Il n'y a pas d'effet significatif de l'age sur la souscrition au Deposit")
-                st.write("H1 : Il y a un effet significatif de l'age sur la souscrition au Deposit")
-
                 
                 import statsmodels.api
                 result = statsmodels.formula.api.ols('age ~ deposit', data = df).fit()
@@ -504,7 +501,7 @@ if selected == 'DataVisualisation':
                 st.write(table)
 
                 st.write("P_value = 0.0002")
-                st.write("On rejette H1 : **PAS DE LIEN SIGNIFICATIF entre Age et Deposit**") 
+                st.write("Il n'y a **PAS DE LIEN SIGNIFICATIF entre Age et Deposit**") 
                 st.write("____________________________________")
 
 
@@ -537,8 +534,6 @@ if selected == 'DataVisualisation':
                 st.write(fig)
 
                 st.write("Test Statistique d'ANOVA :")
-                st.write("H0 : Il n'y a pas d'effet significatif de duration sur la souscrition au Deposit")
-                st.write("H1 : Il y a un effet significatif de duration sur la souscrition au Deposit")
 
                 result3 = statsmodels.formula.api.ols('duration ~ deposit', data = df).fit()
                 table3 = statsmodels.api.stats.anova_lm(result3)
@@ -546,7 +541,7 @@ if selected == 'DataVisualisation':
 
 
                 st.write("P_value = 0")
-                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit**")  
+                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit**")  
                 st.write("____________________________________")
 
 
@@ -561,8 +556,6 @@ if selected == 'DataVisualisation':
                 st.write(fig)
 
                 st.write("Test Statistique d'ANOVA :")
-
-
                 st.write("**P_value = 4.831324e-42**")
                 st.write("**IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit**") 
                 st.write("____________________________________")
@@ -601,8 +594,6 @@ if selected == 'DataVisualisation':
             
 
                 st.write("Test Statistique:")
-                st.write("H0 : Les variables Job et Deposit sont indépendantes")
-                st.write("H1 : La variable Job n'est pas indépendante de la variable Deposit")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['job'], df['deposit'])
@@ -612,7 +603,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : **Il y a une dépendance entre Job et Deposit**") 
+                st.write("**Il y a une dépendance entre Job et Deposit**") 
                 st.write("____________________________________")
 
 
@@ -624,8 +615,6 @@ if selected == 'DataVisualisation':
 
 
                 st.write("Test Statistique:")
-                st.write("H0 : Les variables Marital et Deposit sont indépendantes")
-                st.write("H1 : La variable Marital n'est pas indépendante de la variable Deposit")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['marital'], df['deposit'])
@@ -635,7 +624,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : **Il y a une dépendance entre Marital et Deposit**")  
+                st.write("**Il y a une dépendance entre Marital et Deposit**")  
                 st.write("____________________________________")
             
             
@@ -647,8 +636,6 @@ if selected == 'DataVisualisation':
 
 
                 st.write("Test Statistique:")
-                st.write("H0 : Les variables Education et Deposit sont indépendantes")
-                st.write("H1 : La variable Education n'est pas indépendante de la variable Deposit")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['education'], df['deposit'])
@@ -658,7 +645,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : **Il y a une dépendance entre Education et Deposit**")
+                st.write("**Il y a une dépendance entre Education et Deposit**")
                 st.write("____________________________________")
 
             
@@ -670,8 +657,6 @@ if selected == 'DataVisualisation':
 
 
                 st.write("Test Statistique:")
-                st.write("H0 : Les variables Housing et Deposit sont indépendantes")
-                st.write("H1 : La variable Housing n'est pas indépendante de la variable Deposit")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['housing'], df['deposit'])
@@ -681,7 +666,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : **Il y a une dépendance entre Housing et Deposit**")
+                st.write("**Il y a une dépendance entre Housing et Deposit**")
                 st.write("____________________________________")
 
             if sub_pages2 == "Lien poutcome x deposit" :
@@ -692,8 +677,6 @@ if selected == 'DataVisualisation':
 
 
                 st.write("Test Statistique:")
-                st.write("H0 : Les variables Poutcome et Deposit sont indépendantes")
-                st.write("H1 : La variable Poutcome n'est pas indépendante de la variable Deposit")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['poutcome'], df['deposit'])
@@ -703,7 +686,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : **Il y a une dépendance entre Poutcome et Deposit**")  
+                st.write("**Il y a une dépendance entre Poutcome et Deposit**")  
                 st.write("____________________________________")
 
 
