@@ -364,7 +364,7 @@ if selected == 'DataVisualisation':
             category_percentages = category_counts / category_counts.sum() * 100
             
             # Création du graphique avec barres horizontales
-            fig, ax = plt.subplots(figsize=(7, 3))
+            fig, ax = plt.subplots(figsize=(8, 4))
             sns.countplot(
                 y=selected_variable,  # Passer `y` pour un graphique horizontal
                 data=df,
