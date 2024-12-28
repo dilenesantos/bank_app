@@ -2787,7 +2787,7 @@ if selected == 'Interprétation':
                 st.write("blabla")
 
             if submenu_local == "ÂGE" :
-                st.title("HOUSING : POIDS +0.25")
+                st.title("ÂGE : POIDS +0.25")
                 st.subheader("IMPACT POSITIF DES TRANCHES D’ÂGES BASSES OU ÉLEVÉES")
                 st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
                 st.write("Summary plot :")
@@ -2801,10 +2801,13 @@ if selected == 'Interprétation':
 
                 st.subheader("Dependence plot") 
                 feature_name = "age"
-                
+                fig, ax = plt.subplots(figsize=(20, 7))
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                fig = plt.gcf()          
+                fig = plt.gcf()  
+                ax.set_xlim(17, 76)
+                ax.set_xticks(np.arange(17, 76, 1))
+                ax.axhline(0, color='red', linewidth=1.5, linestyle='--')
                 st.pyplot(fig)       
                 plt.close() 
                 # Exécuter le graphique de dépendance
