@@ -310,7 +310,7 @@ if selected == 'DataVisualisation':
     page = st.sidebar.radio("Aller vers", pages, key="page_radio")  # Clé unique ajoutée
 
     if page == pages[0]:  # Analyse Univariée
-        st.header("Analyse Univariée")
+        st.title("Analyse Univariée")
 
         # Liste des variables qualitatives et quantitatives
         quantitative_vars = ["age", "duration", "campaign", "balance", "pdays", "previous"]
@@ -451,7 +451,7 @@ if selected == 'DataVisualisation':
 
     if page == pages[1]: 
         # Title and Introduction 
-        st.subheader("Analyse Multivariée")
+        st.title("Analyse Multivariée")
     
     # Define sub-pages
         sub_pages = [
