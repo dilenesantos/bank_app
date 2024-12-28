@@ -306,7 +306,7 @@ if selected == 'Introduction':
     st.write("- Utiliser des techniques de Machine Learning pour **prédire si un client va souscrire au 'dépôt à terme'.**")
    
 if selected == 'DataVisualisation':      
-    pages = ["Analyse Univariée", "Analyse Multivariée", "Profiling"]
+    pages = st.sidebar.radio("", ["Analyse Univariée", "Analyse Multivariée", "Profiling"])
 
     if pages == "Analyse Univariée" :  # Analyse Univariée
         st.title("Analyse Univariée")
