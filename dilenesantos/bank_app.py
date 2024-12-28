@@ -2805,6 +2805,7 @@ if selected == 'Interprétation':
                 fig, ax = plt.subplots(figsize=(20, 7))
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()  
                 ax.set_xlim(17, 76)
                 ax.set_xticks(np.arange(17, 77, 1))
                 ax.axhline(0, color='red', linewidth=1.5, linestyle='--')
