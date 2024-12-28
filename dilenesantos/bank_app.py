@@ -367,6 +367,8 @@ if selected == 'DataVisualisation':
                 quantitative_vars,
                 key="quantitative_var_selectbox", horizontal=True
             )
+            st.write("____________________________________")
+
             st.write(f"Analyse de la variable quantitative : **{selected_variable}**")
 
             # 1. Histogramme avec KDE
