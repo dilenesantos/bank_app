@@ -459,9 +459,9 @@ if selected == 'DataVisualisation':
     # Define sub-pages
         sub_pages = [
             "Matrice de corrélation",
-            "Analyses et Tests statistiques des variables quantitatives",
-            "Analyses et Tests statistiques des variables qualitatives",
-            "Analyse de l'évolution de la variable deposit dans le temps"
+            "Variables quantitatives",
+            "Variables qualitatives",
+            "Évolution dans le temps"
         ]
 
         # Sidebar for sub-page selection
@@ -474,7 +474,8 @@ if selected == 'DataVisualisation':
             st.write("""Le tableau de corrélation entre toutes les variables quantitatives de notre base de donnée révèle des coefficients 
             de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
 
-        if st.checkbox('**Analyses et Tests statistiques des variables quantitatives**'):  
+        if st.checkbox('**Variables quantitatives**'): 
+            st.subheader("Analyses et Tests statistiques des variables quantitatives")
             sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
                                   , horizontal=True)
 
@@ -580,7 +581,8 @@ if selected == 'DataVisualisation':
                 st.write("____________________________________")
 
 
-        if st.checkbox('**Analyses et Tests statistiques des variables qualitatives**'):
+        if st.checkbox('**Variables qualitatives**'):
+            st.subheader("Analyses et Tests statistiques des variables qualitatives")
             sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"], horizontal = True)
 
 
@@ -698,7 +700,8 @@ if selected == 'DataVisualisation':
                 st.write("____________________________________")
 
 
-        if st.checkbox("**Analyse de l'évolution de la variable deposit dans le temps**"):  
+        if st.checkbox("**Évolution dans le temps**"):  
+            st.subheader("Analyse de l'évolution de la variable deposit dans le temps")
             sub_pages3= st.radio(" ", ["Deposit x month", "Deposit x year", "Deposit x weekday"], horizontal = True)
                
             #creation des colonnes year, month_year, date, weekday
