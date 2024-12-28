@@ -319,12 +319,12 @@ if selected == 'DataVisualisation':
         # Sélection du type de variable        
         analysis_type = st.radio(
             " ",
-            ["VARIABLES QUALITATIVES", "VARIABLES QUANTITATIVES"],
+            ["**VARIABLES QUALITATIVES**", "**VARIABLES QUANTITATIVES**"],
             key="type_variable_selectbox", horizontal=True
         )
 
         # Affichage des variables en fonction du type choisi
-        if analysis_type == "VARIABLES QUALITATIVES":
+        if analysis_type == "**VARIABLES QUALITATIVES**":
             selected_variable = st.radio(
                 " ",
                 qualitative_vars,
@@ -361,7 +361,7 @@ if selected == 'DataVisualisation':
             st.write(fig) 
             st.write("Le graphique ci-dessus montre la proportion de chaque catégorie dans la variable .")
 
-        elif analysis_type == "VARIABLES QUANTITATIVES":
+        elif analysis_type == "**VARIABLES QUANTITATIVES**":
             selected_variable = st.radio(
                 " ",
                 quantitative_vars,
