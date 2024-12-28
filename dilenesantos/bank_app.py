@@ -306,24 +306,24 @@ if selected == 'DataVisualisation':
     page = st.sidebar.radio("Aller vers", pages, key="page_radio")  # Clé unique ajoutée
 
     if page == pages[0]:  # Analyse Univariée
-        st.subheader("Analyse Univariée")
+        st.header("Analyse Univariée")
 
         # Liste des variables qualitatives et quantitatives
         quantitative_vars = ["age", "duration", "campaign", "balance", "pdays", "previous"]
         qualitative_vars = ["job", "marital", "education", "default", "housing", "loan", 
                             "contact", "poutcome", "deposit", "weekday", "month"]
 
-        # Sélection du type de variable
-        analysis_type = st.sidebar.selectbox(
+        # Sélection du type de variable        
+        analysis_type = st.radio(
             "Sélectionnez le type de variable :",
-            ["Variables qualitatives", "Variables quantitatives"],
-            key="type_variable_selectbox"
+            ["VARIABLES QUALITATIVES", "VARIABLES QUANTITATIVES"],
+            key="type_variable_selectbox", horizontal=True
         )
 
         # Affichage des variables en fonction du type choisi
-        if analysis_type == "Variables qualitatives":
-            selected_variable = st.sidebar.selectbox(
-                "Sélectionnez une variable qualitative :",
+        if analysis_type == "VARIABLES QUALITATIVES":
+            selected_variable = st.radio(
+                " ",
                 qualitative_vars,
                 key="qualitative_var_selectbox"
             )
@@ -358,9 +358,9 @@ if selected == 'DataVisualisation':
             st.write(fig) 
             st.write("Le graphique ci-dessus montre la proportion de chaque catégorie dans la variable .")
 
-        elif analysis_type == "Variables quantitatives":
-            selected_variable = st.sidebar.selectbox(
-                "Sélectionnez une variable quantitative :",
+        elif analysis_type == "VARIABLES QUANTITATIVES":
+            selected_variable = st.radio(
+                " ",
                 quantitative_vars,
                 key="quantitative_var_selectbox"
             )
