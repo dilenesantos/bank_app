@@ -488,7 +488,7 @@ if selected == 'DataVisualisation':
                 plt.legend()
                 st.write(fig)
 
-                st.write("Test Statistique:")
+                st.write("Test Statistique d'ANOVA :")
                 st.write("H0 : Il n'y a pas d'effet significatif de l'age sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de l'age sur la souscrition au Deposit")
 
@@ -511,25 +511,10 @@ if selected == 'DataVisualisation':
                 st.write(fig)       
 
 
-                st.write("Test Statistique:")
-                st.write("H0 : Il n'y a pas d'effet significatif de balance sur la souscrition au Deposit")
-                st.write("H1 : Il y a un effet significatif de balance sur la souscrition au Deposit")
+                st.write("Test Statistique d'ANOVA :")
 
-
-                import statsmodels.api as sm
-                from statsmodels.formula.api import ols
-                moore_lm = ols('balance ~ deposit', data=df).fit()
-                table = sm.stats.anova_lm(moore_lm, typ=2) # Type 2 Anova DataFrame
-                st.write(table)
-                
-                result2 = statsmodels.formula.api.ols('balance ~ deposit', data = df).fit()
-                table2 = statsmodels.api.stats.anova_lm(result2)
-                st.write (table2)
-
-
-
-                st.write("P_value = 9.126568e-18")
-                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit**")
+                st.write("**P_value = 9.126568e-18**")
+                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit**")
 
             if sub_pages1 == "Lien duration x deposit" :
                 fig = plt.figure()
@@ -541,7 +526,7 @@ if selected == 'DataVisualisation':
                 plt.legend()
                 st.write(fig)
 
-                st.write("Test Statistique:")
+                st.write("Test Statistique d'ANOVA :")
                 st.write("H0 : Il n'y a pas d'effet significatif de duration sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de duration sur la souscrition au Deposit")
 
@@ -564,17 +549,11 @@ if selected == 'DataVisualisation':
                 plt.legend()
                 st.write(fig)
 
-                st.write("Test Statistique:")
-                st.write("H0 : Il n'y a pas d'effet significatif de campaign sur la souscrition au Deposit")
-                st.write("H1 : Il y a un effet significatif de campaign la souscrition au Deposit")
-
-                result4 = statsmodels.formula.api.ols('campaign ~ deposit', data = df).fit()
-                table4 = statsmodels.api.stats.anova_lm(result4)
-                st.write (table4)
+                st.write("Test Statistique d'ANOVA :")
 
 
-                st.write("P_value = 4.831324e-42")
-                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit**") 
+                st.write("**P_value = 4.831324e-42**")
+                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit**") 
 
 
             if sub_pages1 == "Lien previous x deposit" :
@@ -587,17 +566,10 @@ if selected == 'DataVisualisation':
                 plt.legend()
                 st.write(fig)
 
-                st.write("Test Statistique:")
-                st.write("H0 : Il n'y a pas d'effet significatif de previous sur la souscrition au Deposit")
-                st.write("H1 : Il y a un effet significatif de previous sur la souscrition au Deposit")
+                st.write("Test Statistique d'ANOVA :")
 
-                result5 = statsmodels.formula.api.ols('previous ~ deposit', data = df).fit()
-                table5 = statsmodels.api.stats.anova_lm(result5)
-                st.write (table5)
-
-
-                st.write("P_value = 7.125338e-50")
-                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit**")  
+                st.write("**P_value = 7.125338e-50**")
+                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit**")  
 
 
         if st.checkbox('Analyses et Tests statistiques des variables qualitatives'):
