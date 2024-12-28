@@ -498,7 +498,9 @@ if selected == 'DataVisualisation':
                 st.write(table)
 
                 st.write("P_value = 0.0002")
-                st.write("On rejette H1 : **PAS DE LIEN SIGNIFICATIF entre Age et Deposit**")    
+                st.write("On rejette H1 : **PAS DE LIEN SIGNIFICATIF entre Age et Deposit**") 
+                st.write("____________________________________")
+
 
             if sub_pages1 == "Lien balance x deposit" :
                 fig = plt.figure()
@@ -515,6 +517,8 @@ if selected == 'DataVisualisation':
 
                 st.write("**P_value = 9.126568e-18**")
                 st.write("**IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit**")
+                st.write("____________________________________")
+
 
             if sub_pages1 == "Lien duration x deposit" :
                 fig = plt.figure()
@@ -537,6 +541,7 @@ if selected == 'DataVisualisation':
 
                 st.write("P_value = 0")
                 st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit**")  
+                st.write("____________________________________")
 
 
             if sub_pages1 == "Lien campaign x deposit" :
@@ -554,6 +559,7 @@ if selected == 'DataVisualisation':
 
                 st.write("**P_value = 4.831324e-42**")
                 st.write("**IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit**") 
+                st.write("____________________________________")
 
 
             if sub_pages1 == "Lien previous x deposit" :
@@ -570,6 +576,7 @@ if selected == 'DataVisualisation':
 
                 st.write("**P_value = 7.125338e-50**")
                 st.write("**IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit**")  
+                st.write("____________________________________")
 
 
         if st.checkbox('Analyses et Tests statistiques des variables qualitatives'):
