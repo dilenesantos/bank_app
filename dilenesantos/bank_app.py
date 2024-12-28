@@ -2807,7 +2807,7 @@ if selected == 'Interprétation':
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 fig = plt.gcf()  
                 ax.set_xlim(17, 76)
-                ax.set_xticks(np.arange(17, 76, 5))
+                ax.set_xticks(np.arange(17, 76, 1))
                 ax.axhline(0, color='red', linewidth=1.5, linestyle='--')
                 st.pyplot(fig)       
                 plt.close() 
