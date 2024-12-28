@@ -2590,7 +2590,7 @@ if selected == 'Interprétation':
                 st.write("blabla")
                 shap.dependence_plot(feature_name, shap_values=shap_CAROLLE_VALUES, features=X_test_original_data, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                x_ticks = np.arange(0, X_test_original_data[feature_name].max() + 1, 60)
+                x_ticks = np.arange(0, X_test_original_data[feature_name].max() + 1,360)
                 plt.xticks(x_ticks)
                 fig = plt.gcf()          
                 st.pyplot(fig)       
