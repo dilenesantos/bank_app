@@ -1215,17 +1215,17 @@ if selected == 'DataVisualisation':
 if selected == "Pre-processing":  
     st.title("PRÉ-PROCESSING")
     st.sidebar.title("MENU PRÉ-PROCESSING")  
-    option_submenu3 = st.sidebar.selectbox('Sélection', ("TRAITEMENT AVANT TRAIN-TEST-SPLIT", "TRAITEMENT APRÈS TRAIN-TEST-SPLIT"))
+    option_submenu3 = st.radio(' ', ("TRAITEMENT AVANT TRAIN-TEST-SPLIT", "TRAITEMENT APRÈS TRAIN-TEST-SPLIT"))
         
         
     if option_submenu3 == 'TRAITEMENT AVANT TRAIN-TEST-SPLIT':
-        pages=["Suppression de lignes", "Création de colonnes", "Suppression de colonnes", "Gestion des Unknowns"]
+        submenupages=st.radio(" ", ["Suppression de lignes", "Création de colonnes", "Suppression de colonnes", "Gestion des Unknowns"], horizontal = True)
         page=st.sidebar.radio('Afficher', pages)        
 
         dffpre_pros = df.copy()
         dffpre_pros2 = df.copy()
    
-        if page == pages[0] :            
+        if submenupages == "Suppression de lignes" :            
             st.subheader("Filtre sur la colonne 'age'")
             st.write("Notre analyse univariée a montré des valeurs extrêmes au dessus de 75 ans, aussi nous retirons ces lignes de notre dataset")
             dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
@@ -1261,7 +1261,7 @@ if selected == "Pre-processing":
             nb_lignes = dffpre_pros.shape[0]
             st.write("Notre dataset filtré compte désormais ", nb_lignes, "lignes.")
 
-        if page == pages[1] :   
+        if submenupages == "Création de colonnes" :   
             st.subheader("Création de la colonne 'Client_Category'")
             st.write("Afin de pouvoir classifier les clients selon la colonne pdays, nous décidons de créer à partir de 'pdays' une nouvelle colonne 'Client_Category' qui ")
 
@@ -1300,7 +1300,7 @@ if selected == "Pre-processing":
             st.dataframe(dffpre_pros.head(10))
             
         
-        if page == pages[2] :
+        if submenupages == "Suppression de colonnes" :
             st.subheader("Suppressions de colonnes")
         
             st.write("- La colonne contact comprend bla blabla , nous décidons donc de la supprimer")             
@@ -1357,7 +1357,7 @@ if selected == "Pre-processing":
             st.dataframe(dffpre_pros2.head(5))
 
 
-        if page == pages[3] : 
+        if submenupages == "Gestion des Unknowns" : 
             st.subheader("Les colonnes 'job', 'education' et 'poutcome' contiennent des valeurs 'unknown', il nous faut donc les remplacer.")
             st.write("Pour cela nous allons tout d'abord transformer les valeurs 'unknown' en 'nan'.")
             
@@ -1405,10 +1405,10 @@ if selected == "Pre-processing":
             
 
     if option_submenu3 == 'TRAITEMENT APRÈS TRAIN-TEST-SPLIT':
-        pages=["Séparation train test", "Traitement des valeurs manquantes", "Standardisation des variables", "Encodage"]
+        submenupages2 = st.radio(" ", ["Séparation train test", "Traitement des valeurs manquantes", "Standardisation des variables", "Encodage"], horizontal = True)
         page=st.sidebar.radio('Afficher', pages)
          
-        if page == pages[0] :
+        if submenupages2 == "Séparation train test" :
             st.subheader("Séparation train test")
             st.write("Nous appliquons un ratio de 80/20 pour notre train test split, soit 80% des données en Train et 20% en Test.")
             dffpre_pros2 = df.copy()                        
@@ -1468,7 +1468,7 @@ if selected == "Pre-processing":
             st.write("Le dataframe X_test compte :", colonnes_count, "colonnes et", nb_lignes, "lignes.")
             st.dataframe(X_test_pre_pros2.head())
                 
-        if page == pages[1] :    
+        if submenupages2 == "Traitement des valeurs manquantes" :    
             st.subheader("Traitement des valeurs manquantes")
             st.write("Pour la colonne job, on remplace les Nans par le mode de la variable.")
             st.write("S'agissant des colonnes 'education' et 'poutcome', puisque le nombre de Nans est plus élevé, nous avons décidé de les remplacer en utilisant la méthode de remplissage par propagation : chaque Nan est remplacé par la valeur de la ligne suivante (pour la dernière ligne on utilise le Mode de la variable).") 
@@ -1546,7 +1546,7 @@ if selected == "Pre-processing":
             st.dataframe(X_test_pre_pros2.isna().sum())
 
                 
-        if page == pages[2] :    
+        if submenupages2 == "Standardisation des variables" :    
             st.write("Standardisation des variables")
             st.write("On standardise les variables quantitatives à l'aide de la fonction StandardScaler.")
             dffpre_pros2 = df.copy()                        
@@ -1626,7 +1626,7 @@ if selected == "Pre-processing":
             st.dataframe(X_test_pre_pros2.head())
 
                 
-        if page == pages[3] :    
+        if submenupages2 == "Encodage" :    
             st.subheader("Encodage")
             st.write("On encode la variable cible avec le Label Encoder.")
             dffpre_pros2 = df.copy()                        
