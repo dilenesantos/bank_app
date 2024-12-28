@@ -1252,7 +1252,7 @@ if selected == "Pre-processing":
             count_sup_lignes = df.shape[0] - dffpre_pros.shape[0]
             st.write("Nombre total de lignes supprimées de notre dataset = ", count_sup_lignes)
             nb_lignes = dffpre_pros.shape[0]
-            st.write("Notre dataset filtré compte désormais ", nb_lignes, "lignes.")
+            st.write("**Notre dataset filtré compte désormais ", nb_lignes, "lignes.**")
 
         if submenupages == "Création de colonnes" :   
             st.subheader("Création de la colonne 'Client_Category'")
