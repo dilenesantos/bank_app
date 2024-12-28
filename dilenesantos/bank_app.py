@@ -474,7 +474,7 @@ if selected == 'DataVisualisation':
             sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
                                   , horizontal=True)
 
-            if page == sub_pages1[0] :
+            if sub_pages1 == "Lien âge x deposit" :
                 fig = plt.figure()
                 sns.kdeplot(df[df['deposit'] == 'yes']['age'], label='Yes', color='blue')
                 sns.kdeplot(df[df['deposit'] == 'no']['age'], label='No', color='red')
@@ -496,7 +496,7 @@ if selected == 'DataVisualisation':
                 st.write("P_value = 0.0002")
                 st.write("On rejette H1 : PAS DE LIEN SIGNIFICATIF entre Age et Deposit")    
 
-            if page == sub_pages1[1] :
+            if sub_pages1 == "Lien balance x deposit" :
                 fig = plt.figure()
                 sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue')
                 sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red')
@@ -519,7 +519,7 @@ if selected == 'DataVisualisation':
                 st.write("P_value = 9.126568e-18")
                 st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit")
 
-            if page == sub_pages1[2] :
+            if sub_pages1 == "Lien duration x deposit" :
                 fig = plt.figure()
                 sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue')
                 sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red')
@@ -543,7 +543,7 @@ if selected == 'DataVisualisation':
                 st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit")  
 
 
-            if page == sub_pages1[3] :
+            if sub_pages1 == "Lien campaign x deposit" :
                 fig = plt.figure()
                 sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue')
                 sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red')
@@ -567,7 +567,7 @@ if selected == 'DataVisualisation':
                 st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit") 
 
 
-            if page == sub_pages1[4] :
+            if sub_pages1 == "Lien previous x deposit" :
                 fig = plt.figure()
                 sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue')
                 sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red')
@@ -593,11 +593,11 @@ if selected == 'DataVisualisation':
 
         if st.checkbox('Analyses et Tests statistiques des variables qualitatives'):
             st.subheader("Analyses et Tests statistiques des variables qualitatives")   
-            sub_pages2=["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"]
+            sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"], horizontal = True)
             page=st.sidebar.radio('Afficher', sub_pages2)  
 
 
-            if page == sub_pages2[0] :
+            if sub_pages2 == "Lien job x deposit" :
                 fig = plt.figure(figsize=(20,10))
                 sns.countplot(x="job", hue = 'deposit', data = df, palette =("g", "r"))
                 plt.legend()
@@ -619,7 +619,7 @@ if selected == 'DataVisualisation':
                 st.write("On rejette H0 : Il y a une dépendance entre Job et Deposit") 
 
 
-            if page == sub_pages2[1] :
+            if sub_pages2 == "Lien marital x deposit" :
                 fig = plt.figure()
                 sns.countplot(x="marital", hue = 'deposit', data = df, palette =("g", "r"))
                 plt.legend()
@@ -641,7 +641,7 @@ if selected == 'DataVisualisation':
                 st.write("On rejette H0 : Il y a une dépendance entre Marital et Deposit")  
             
             
-            if page == sub_pages2[2] :
+            if sub_pages2 == "Lien education x deposit" :
                 fig = plt.figure()
                 sns.countplot(x="education", hue = 'deposit', data = df, palette =("g", "r"))
                 plt.legend()
@@ -663,7 +663,7 @@ if selected == 'DataVisualisation':
                 st.write("On rejette H0 : Il y a une dépendance entre Education et Deposit")
 
             
-            if page ==sub_pages2[3] :
+            if sub_pages2 == "Lien housing x deposit" :
                 fig = plt.figure()
                 sns.countplot(x="housing", hue = 'deposit', data = df, palette =("g", "r"))
                 plt.legend()
@@ -684,7 +684,7 @@ if selected == 'DataVisualisation':
 
                 st.write("On rejette H0 : Il y a une dépendance entre Housing et Deposit")
 
-            if page ==sub_pages2[4] :
+            if sub_pages2 == "Lien poutcome x deposit" :
                 fig = plt.figure()
                 sns.countplot(x="poutcome", hue = 'deposit', data = df, palette =("g", "r"))
                 plt.legend()
@@ -708,7 +708,7 @@ if selected == 'DataVisualisation':
 
         if st.checkbox("Analyse de l'évolution de la variable deposit dans le temps"):  
             st.subheader("Analyse de l'évolution de la variable deposit dans le temps") 
-            sub_pages3=["Deposit x month", "Deposit x year", "Deposit x weekday"]
+            sub_pages3= st.radio(" ", ["Deposit x month", "Deposit x year", "Deposit x weekday"], horizontal = True)
             page=st.sidebar.radio('Afficher', sub_pages3)    
                
             #creation des colonnes year, month_year, date, weekday
@@ -746,7 +746,7 @@ if selected == 'DataVisualisation':
             # Transformation de 'Client_Category' en type 'objet'
             df['Client_Category_M'] = df['Client_Category_M'].astype('object')
 
-            if page == sub_pages3[0]:
+            if sub_pages3 == "Deposit x month":
                 fig = plt.figure(figsize=(20,10))
                 sns.countplot(x='month_year', hue='deposit', data=df_order_month, palette =("g", "r"))
                 plt.title("Évolution de notre variable cible selon les mois")
@@ -755,7 +755,7 @@ if selected == 'DataVisualisation':
                 st.write("""Nous pouvons remarquer qu'au début de notre période d'étude la proportion des clients qui
                 ont souscrit à un dépôt à terme est inférieur à celle qui n'y ont pas souscrit.""")
 
-            if page == sub_pages3[1]: 
+            if sub_pages3 == "Deposit x year": 
                 fig = plt.figure()
                 sns.countplot(x='year', hue='deposit', data=df, palette =("g", "r"))
                 plt.title("Évolution de notre variable cible selon l'année")
@@ -765,7 +765,7 @@ if selected == 'DataVisualisation':
                 est supérieur durant l'année 2013 que 2014. Ceci serait surement dù à la période de l'étude (7 mois en 2013 et 5 mois en 2014) """)
 
 
-            if page == sub_pages3[2]:
+            if sub_pages3 == "Deposit x weekday":
                 fig = plt.figure()
                 sns.countplot(x="weekday", hue = 'deposit', data = df, palette =("g", "r"))
                 plt.title("Évolution de notre variable cible selon les jours de la semaine")
