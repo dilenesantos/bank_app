@@ -491,7 +491,8 @@ if selected == 'DataVisualisation':
                 st.write("H1 : Il y a un effet significatif de l'age sur la souscrition au Deposit")
 
                 
-                result = ols('age ~ deposit', data = df).fit()
+                import statsmodels.api
+                result = statsmodels.formula.api.ols('age ~ deposit', data = df).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write(table)
 
