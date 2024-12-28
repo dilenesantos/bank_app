@@ -307,7 +307,7 @@ if selected == 'Introduction':
 
     st.write("#### Le dataset : ")
     st.write("Le dataset fourni contient au total **11 162 lignes** et **17 colonnes**.")
-    st.writes("Les variables - ou colonnes - renseignent 3 types d'informations :")
+    st.write("Les variables - ou colonnes - renseignent 3 types d'informations :")
     st.write("**Colonnes avec informations sur le profil socio-démographie des clients :**")
     st.write("1. age")
     st.write("2. job")
