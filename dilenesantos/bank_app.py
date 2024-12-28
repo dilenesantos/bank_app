@@ -406,7 +406,7 @@ if selected == 'DataVisualisation':
                 - La distribution de la variable 'age' s'approche d'une distribution normale malgré des distorsions aux extrémités.
                 - Le jeu de données affiche une concentration des tranches d'âge 25-40 ans suivi de la tranche 40-65 ans.
                 - 50% des clients ont entre 32 et 49 ans.
-                - Le boxplot montre quelques valeurs extrêmes supérieures à 74.5.
+                - Le boxplot montre quelques valeurs extrêmes supérieures à 74 ans.
                 """)
             elif selected_variable == "duration":
                 st.write("""
