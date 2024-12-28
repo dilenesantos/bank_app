@@ -315,7 +315,7 @@ if selected == 'DataVisualisation':
 
         # Sélection du type de variable        
         analysis_type = st.radio(
-            "Sélectionnez le type de variable :",
+            " ",
             ["VARIABLES QUALITATIVES", "VARIABLES QUANTITATIVES"],
             key="type_variable_selectbox", horizontal=True
         )
@@ -325,7 +325,7 @@ if selected == 'DataVisualisation':
             selected_variable = st.radio(
                 " ",
                 qualitative_vars,
-                key="qualitative_var_selectbox"
+                key="qualitative_var_selectbox", horizontal=True
             )
             st.write(f"Analyse de la variable qualitative : **{selected_variable}**")
 
@@ -362,7 +362,7 @@ if selected == 'DataVisualisation':
             selected_variable = st.radio(
                 " ",
                 quantitative_vars,
-                key="quantitative_var_selectbox"
+                key="quantitative_var_selectbox", horizontal=True
             )
             st.write(f"Analyse de la variable quantitative : **{selected_variable}**")
 
