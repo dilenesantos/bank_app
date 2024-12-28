@@ -803,14 +803,14 @@ if selected == 'DataVisualisation':
         st.text(f"Nombre de clients ayant souscrit à un compte de dépôt à terme : {clients_yes.shape[0]}")
 
         # Define sub-pages
-        sub_pages = [
+        sub_pages = st.radio(" ", [
             "Age et Job",
             "Statut Matrimonial et Education",
             "Bancaire",
             "Caracteristique de la Campagne Marketing",
             "Temporel",
             "Duration"
-        ]
+        ], horizontal = True)
         
         # Sidebar for sub-page selection
         sub_page = st.sidebar.selectbox("Sélectionner", sub_pages, key="profiling_selectbox")
