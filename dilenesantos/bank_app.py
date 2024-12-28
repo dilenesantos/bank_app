@@ -1218,31 +1218,33 @@ if selected == "Pre-processing":
    
         if submenupages == "Suppression de lignes" :            
             st.subheader("Filtre sur la colonne 'age'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes au dessus de 74 ans, aussi nous retirons ces lignes de notre dataset")
+            st.write("Notre analyse univariée a montré des **valeurs extrêmes au dessus de 74 ans.**")
+            st.write("**Nous avons décidé de retirer ces lignes de notre dataset.**")
+            
             dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
             count_age_sup = df[df['age'] > 74.5].shape[0]
-            st.write("Résultat = nombre de lignes concernées:", count_age_sup)
+            st.write("Résultat =", count_age_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'balance'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable balance pour les valeurs inférieures à -2257 et les valeurs supérieures à 4087, aussi nous décidons de retirer ces lignes de notre dataset")
+            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable balance pour les valeurs inférieures à -2257 et les valeurs supérieures à 4087, aussi nous décidons de retirer ces lignes de notre dataset.")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] > -2257]
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] < 4087]
             count_balance_sup = df[df['balance'] < -2257].shape[0]
             count_balance_inf = df[df['balance'] > 4087].shape[0]
             total_balance_count = count_balance_sup + count_balance_inf
-            st.write("Résultat = nombre de lignes concernées:", total_balance_count)
+            st.write("Résultat =", total_balance_count, "**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'campaign'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable campaign pour les valeurs supérieures à 6,  nous décidons de retirer ces lignes de notre dataset")
+            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable campaign pour les valeurs supérieures à 6,  nous décidons de retirer ces lignes de notre dataset.")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["campaign"] < 6]
             count_campaign_sup = df[df['campaign'] > 6].shape[0]
-            st.write("Résultat = nombre de lignes concernées:", count_campaign_sup)
+            st.write("Résultat", count_campaign_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'previous'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable previous pour les valeurs supérieures à 2.5 : nous décidons de retirer ces lignes de notre dataset")
+            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable previous pour les valeurs supérieures à 2.5 : nous décidons de retirer ces lignes de notre dataset.")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["previous"] < 2.5]
             count_previous_sup = df[df['previous'] > 2.5].shape[0]
-            st.write("Résultat = nombre de lignes concernées:", count_previous_sup)
+            st.write("Résultat", count_previous_sup,"**lignes supprimées**")
             
             st.write("____________________________________")
 
