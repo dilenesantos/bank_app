@@ -326,17 +326,17 @@ if selected == 'Introduction':
         st.write("") 
 
     with col3:
-    st.write("**Colonnes campagnes marketing  :**")
-    st.write("9. **contact** : moyen de contact (téléphone fixe / mobile)")
-    st.write("10. **day** : dernier contact (jour du mois)")
-    st.write("11. **month** : dernier contact (mois)")
-    st.write("12. **duration** : durée du dernier contact en secondes")
-    st.write("13. **campaign** : nombre de contacts réalisés avec le client pendant la campagne (dernier contact inclus)")
-    st.write("14. **pdays** : nombre de jours écoulés depuis le dernier contact lors de la précédente campagne (-1 = client jamais contacté auparavant)")
-    st.write("15. **previous** : nombre de contacts effectués avec le cient avant cette campagne")
-    st.write("16. **poutcome** : résultat de la précédente campagne")
-    st.write("") 
-    
+        st.write("**Colonnes campagnes marketing  :**")
+        st.write("9. **contact** : moyen de contact (téléphone fixe / mobile)")
+        st.write("10. **day** : dernier contact (jour du mois)")
+        st.write("11. **month** : dernier contact (mois)")
+        st.write("12. **duration** : durée du dernier contact en secondes")
+        st.write("13. **campaign** : nombre de contacts réalisés avec le client pendant la campagne (dernier contact inclus)")
+        st.write("14. **pdays** : nombre de jours écoulés depuis le dernier contact lors de la précédente campagne (-1 = client jamais contacté auparavant)")
+        st.write("15. **previous** : nombre de contacts effectués avec le cient avant cette campagne")
+        st.write("16. **poutcome** : résultat de la précédente campagne")
+        st.write("") 
+        
     st.write("**Et enfin la colonne avec la variable cible  :**")
     st.write("17. **deposit** : Yes / No")
     
