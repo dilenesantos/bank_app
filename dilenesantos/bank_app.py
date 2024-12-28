@@ -1054,7 +1054,7 @@ if selected == 'DataVisualisation':
                 plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
                 st.write("Plus de 60% des clients qui ont souscrit au DAT n’avaient jamais été contacté par la banque avant cette campagne.")
 
-           if st.checkbox("Campaign"):
+            if st.checkbox("Campaign"):
                 st.write("Nombre de contacts réalisés avec le client pendant la campagne") 
                 plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
                 st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
