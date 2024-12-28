@@ -367,29 +367,30 @@ if selected == 'DataVisualisation':
             st.write(f"Analyse de la variable quantitative : **{selected_variable}**")
 
             # 1. Histogramme avec KDE
-            st.write("### Distribution (Histogramme et KDE)")
-            fig, ax = plt.subplots(figsize=(10, 6))
-            sns.histplot(df[selected_variable], bins=20, kde=True, color='b', ax=ax)
-            ax.set_title(f'Distribution de {selected_variable}', fontsize=14)
-            ax.set_xlabel(selected_variable, fontsize=12)
-            ax.set_ylabel('Fréquence', fontsize=12)
-            st.pyplot(fig)
+            # Créer un bouton
+            if st.checkbox("### Distribution (Histogramme et KDE)")
+                fig, ax = plt.subplots(figsize=(10, 6))
+                sns.histplot(df[selected_variable], bins=20, kde=True, color='b', ax=ax)
+                ax.set_title(f'Distribution de {selected_variable}', fontsize=14)
+                ax.set_xlabel(selected_variable, fontsize=12)
+                ax.set_ylabel('Fréquence', fontsize=12)
+                st.pyplot(fig)
 
             # 2. Boxplot
-            st.write("### Box Plot")
-            fig, ax = plt.subplots(figsize=(10, 4))
-            ax.boxplot(df[selected_variable], vert=False, patch_artist=True, 
-                    boxprops=dict(facecolor='lightblue'))
-            ax.set_title(f'Box Plot de {selected_variable}', fontsize=14)
-            ax.set_xlabel(selected_variable, fontsize=12)
-            st.pyplot(fig)
+            if st.checkbox("### Box Plot")
+                fig, ax = plt.subplots(figsize=(10, 4))
+                ax.boxplot(df[selected_variable], vert=False, patch_artist=True, 
+                        boxprops=dict(facecolor='lightblue'))
+                ax.set_title(f'Box Plot de {selected_variable}', fontsize=14)
+                ax.set_xlabel(selected_variable, fontsize=12)
+                st.pyplot(fig)
 
             # 3. QQ Plot
-            st.write("### QQ Plot")
-            fig = plt.figure(figsize=(10, 6))
-            stats.probplot(df[selected_variable], dist="norm", plot=plt)
-            plt.title(f"QQ Plot de {selected_variable}", fontsize=14)
-            st.pyplot(fig)
+            if st.checkbox("### QQ Plot")
+                fig = plt.figure(figsize=(10, 6))
+                stats.probplot(df[selected_variable], dist="norm", plot=plt)
+                plt.title(f"QQ Plot de {selected_variable}", fontsize=14)
+                st.pyplot(fig)
 
             # Ajouter les commentaires spécifiques pour chaque variable
             if selected_variable == "age":
