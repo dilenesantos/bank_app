@@ -813,7 +813,6 @@ if selected == 'DataVisualisation':
         ], horizontal = True)
         
         # Sidebar for sub-page selection
-        sub_page = st.sidebar.selectbox("Sélectionner", sub_pages, key="profiling_selectbox")
         
         # Logic for each sub-page
         if sub_page == "Age et Job":
