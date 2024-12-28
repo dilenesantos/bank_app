@@ -498,7 +498,7 @@ if selected == 'DataVisualisation':
                 st.write(table)
 
                 st.write("P_value = 0.0002")
-                st.write("On rejette H1 : PAS DE LIEN SIGNIFICATIF entre Age et Deposit")    
+                st.write("On rejette H1 : **PAS DE LIEN SIGNIFICATIF entre Age et Deposit**")    
 
             if sub_pages1 == "Lien balance x deposit" :
                 fig = plt.figure()
@@ -520,7 +520,7 @@ if selected == 'DataVisualisation':
                 st.write (table)
 
                 st.write("P_value = 9.126568e-18")
-                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit")
+                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit**")
 
             if sub_pages1 == "Lien duration x deposit" :
                 fig = plt.figure()
@@ -542,7 +542,7 @@ if selected == 'DataVisualisation':
 
 
                 st.write("P_value = 0")
-                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit")  
+                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit**")  
 
 
             if sub_pages1 == "Lien campaign x deposit" :
@@ -565,7 +565,7 @@ if selected == 'DataVisualisation':
 
 
                 st.write("P_value = 4.831324e-42")
-                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit") 
+                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit**") 
 
 
             if sub_pages1 == "Lien previous x deposit" :
@@ -588,7 +588,7 @@ if selected == 'DataVisualisation':
 
 
                 st.write("P_value = 7.125338e-50")
-                st.write("On rejette H0 : IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit")  
+                st.write("On rejette H0 : **IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit**")  
 
 
         if st.checkbox('Analyses et Tests statistiques des variables qualitatives'):
@@ -616,7 +616,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : Il y a une dépendance entre Job et Deposit") 
+                st.write("On rejette H0 : **Il y a une dépendance entre Job et Deposit**") 
 
 
             if sub_pages2 == "Lien marital x deposit" :
@@ -638,7 +638,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : Il y a une dépendance entre Marital et Deposit")  
+                st.write("On rejette H0 : **Il y a une dépendance entre Marital et Deposit**")  
             
             
             if sub_pages2 == "Lien education x deposit" :
@@ -660,7 +660,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : Il y a une dépendance entre Education et Deposit")
+                st.write("On rejette H0 : **Il y a une dépendance entre Education et Deposit**")
 
             
             if sub_pages2 == "Lien housing x deposit" :
@@ -682,7 +682,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : Il y a une dépendance entre Housing et Deposit")
+                st.write("On rejette H0 : **Il y a une dépendance entre Housing et Deposit**")
 
             if sub_pages2 == "Lien poutcome x deposit" :
                 fig = plt.figure()
@@ -703,7 +703,7 @@ if selected == 'DataVisualisation':
                 st.write('Statistique: ', stat)
                 st.write('P_value: ', p_value)
 
-                st.write("On rejette H0 : Il y a une dépendance entre Poutcome et Deposit")  
+                st.write("On rejette H0 : **Il y a une dépendance entre Poutcome et Deposit**")  
 
 
         if st.checkbox("Analyse de l'évolution de la variable deposit dans le temps"):  
