@@ -307,7 +307,6 @@ if selected == 'Introduction':
    
 if selected == 'DataVisualisation':      
     pages = ["Analyse Univariée", "Analyse Multivariée", "Profiling"]
-    page = st.sidebar.radio("Aller vers", pages, key="page_radio")  # Clé unique ajoutée
 
     if page == pages[0]:  # Analyse Univariée
         st.title("Analyse Univariée")
