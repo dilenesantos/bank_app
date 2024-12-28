@@ -814,7 +814,7 @@ if selected == 'DataVisualisation':
         # Sidebar for sub-page selection
 
         # Logic for each sub-page
-        if sub_page == "Age et Job":
+        if sub_pages == "Age et Job":
             st.write("### Analyse: Age et Job")
             plt.figure(figsize=(10, 6), dpi=120)
             sns.histplot(clients_yes['age'], kde=False, bins=30)
@@ -848,7 +848,7 @@ if selected == 'DataVisualisation':
             st.dataframe(summary)
             st.text("Nous remarquons sur ce tableau qu’il y a une grande diversification des âges pour tous les groupes.")
             
-        elif sub_page == "Statut Matrimonial et Education":
+        elif sub_pages == "Statut Matrimonial et Education":
             st.write("### Analyse: Statut Matrimonial et Education")
     # --- Statut matrimonial ---
             marital_counts = clients_yes['marital'].value_counts()
@@ -889,7 +889,7 @@ if selected == 'DataVisualisation':
             # Texte explicatif
             st.text("Nous observons que la majorité des clients sont mariés, suivis par un groupe de clients célibataires. Les niveaux d’éducation des clients sont le secondaire et le tertiaire. Ceci montre que les clients détenant le DAT (dépôt à terme) ont un certain niveau académique.")
 
-        elif sub_page == "Bancaire":
+        elif sub_pages == "Bancaire":
             st.header("Analyse: Bancaire")
             st.subheader("Balance du compte")
         
@@ -1005,7 +1005,7 @@ if selected == 'DataVisualisation':
 
             
     
-        elif sub_page == "Caracteristique de la Campagne Marketing":
+        elif sub_pages == "Caracteristique de la Campagne Marketing":
             st.write("### Analyse: Caracteristique de la Campagne Marketing")
 
             if st.checkbox("Type de clients"):
@@ -1111,7 +1111,7 @@ if selected == 'DataVisualisation':
                 plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
                 st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
 
-        elif sub_page == "Temporel":
+        elif sub_pages == "Temporel":
             st.write("### Analyse: Temporel")
 
             liste_annee =[]
@@ -1152,7 +1152,7 @@ if selected == 'DataVisualisation':
             st.text("Les périodes où les clients sont susceptibles de souscrire sont le printemps et l’été. Et les jours sont par ordre de souscription : dimanche, mardi, mercredi, lundi, jeudi, vendredi et samedi.")
 
 
-        elif sub_page == "Duration":
+        elif sub_pages == "Duration":
             st.write("### Analyse: Duration")
         
             # Conversion de la durée en minutes
