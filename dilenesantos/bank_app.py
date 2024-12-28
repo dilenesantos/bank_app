@@ -1010,27 +1010,29 @@ if selected == 'DataVisualisation':
         elif sub_page == "Caracteristique de la Campagne Marketing":
             st.write("### Analyse: Caracteristique de la Campagne Marketing")
 
-            
-    # Nombre de clients par type de prospect
-            prospect_counts = clients_yes["type_prospect"].value_counts()
 
-    # Affichage des résultats
-            st.dataframe(prospect_counts)
+            if st.checkbox("Type de clients"):
+                st.write("Clients Jamais contactés ou déjà contactés") 
+                # Nombre de clients par type de prospect
+                prospect_counts = clients_yes["type_prospect"].value_counts()
 
-            # Fonction pour tracer les barres
+                # Affichage des résultats
+                st.dataframe(prospect_counts)
+
+                # Fonction pour tracer les barres
         
 
 
-    #fonction
-            def plot_percentage(data, column, xlabel):
-                if column not in data.columns:
-                    st.error(f"The column '{column}' does not exist in the dataset.")
-                    return
+                #fonction
+                def plot_percentage(data, column, xlabel):
+                    if column not in data.columns:
+                        st.error(f"The column '{column}' does not exist in the dataset.")
+                        return
 
-        # Calculate percentages
+                # Calculate percentages
                 counts = data[column].value_counts(normalize=True) * 100
 
-        # Barplot de distribution
+                # Barplot de distribution
                 plt.figure(figsize=(9, 6))
                 sns.barplot(x=counts.index, y=counts.values, color='skyblue')
                 plt.title(f"Distribution de {column} (%)")
@@ -1040,19 +1042,23 @@ if selected == 'DataVisualisation':
                 st.pyplot(plt)
                 plt.clf()  
 
-            plot_percentage(clients_yes, "type_prospect", "Type de prospect")
-            st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
-            
-            
-            plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
-            st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
-            
-            
-            plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
-            st.write("Plus de 60% des clients qui ont souscrit au DAT n’avaient jamais été contacté par la banque avant cette campagne.")
-            
-            plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
-            st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
+                plot_percentage(clients_yes, "type_prospect", "Type de prospect")
+                st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
+                
+             if st.checkbox("Poutcome"):
+                st.write("Résultat de la précédente campagne marketing")                 
+                plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
+                st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
+                
+            if st.checkbox("Previous"):
+                st.write("Nombre de contacts réalisés avec le client avant la campagne")   
+                plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
+                st.write("Plus de 60% des clients qui ont souscrit au DAT n’avaient jamais été contacté par la banque avant cette campagne.")
+
+           if st.checkbox("Campaign"):
+                st.write("Nombre de contacts réalisés avec le client pendant la campagne") 
+                plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
+                st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
 
         elif sub_page == "Temporel":
             st.write("### Analyse: Temporel")
