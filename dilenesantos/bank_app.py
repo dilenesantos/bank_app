@@ -585,7 +585,6 @@ if selected == 'DataVisualisation':
         if st.checkbox('Analyses et Tests statistiques des variables qualitatives'):
             st.subheader("Analyses et Tests statistiques des variables qualitatives")   
             sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"], horizontal = True)
-            page=st.sidebar.radio('Afficher', sub_pages2)  
 
 
             if sub_pages2 == "Lien job x deposit" :
@@ -705,7 +704,6 @@ if selected == 'DataVisualisation':
         if st.checkbox("Analyse de l'évolution de la variable deposit dans le temps"):  
             st.subheader("Analyse de l'évolution de la variable deposit dans le temps") 
             sub_pages3= st.radio(" ", ["Deposit x month", "Deposit x year", "Deposit x weekday"], horizontal = True)
-            page=st.sidebar.radio('Afficher', sub_pages3)    
                
             #creation des colonnes year, month_year, date, weekday
             liste_annee =[]
