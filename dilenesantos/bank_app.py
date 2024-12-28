@@ -1218,7 +1218,7 @@ if selected == "Pre-processing":
    
         if submenupages == "Suppression de lignes" :            
             st.subheader("Filtre sur la colonne 'age'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes au dessus de 75 ans, aussi nous retirons ces lignes de notre dataset")
+            st.write("Notre analyse univariée a montré des valeurs extrêmes au dessus de 74 ans, aussi nous retirons ces lignes de notre dataset")
             dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
             count_age_sup = df[df['age'] > 74.5].shape[0]
             st.write("Résultat = nombre de lignes concernées:", count_age_sup)
