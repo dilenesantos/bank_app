@@ -368,7 +368,7 @@ if selected == 'DataVisualisation':
 
             # 1. Histogramme avec KDE
             # Créer un bouton
-            st.write(("### Distribution (Histogramme et KDE)") 
+            st.write("### Distribution (Histogramme et KDE)") 
             fig, ax = plt.subplots(figsize=(10, 6))
             sns.histplot(df[selected_variable], bins=20, kde=True, color='b', ax=ax)
             ax.set_title(f'Distribution de {selected_variable}', fontsize=14)
