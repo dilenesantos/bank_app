@@ -515,7 +515,7 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de balance sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de balance sur la souscrition au Deposit")
 
-                result2 = statsmodels.formula.api.ols('balance ~ deposit', data = dff).fit()
+                result2 = statsmodels.formula.api.ols('balance ~ deposit', data = df).fit()
                 table2 = statsmodels.api.stats.anova_lm(result2)
                 st.write (table2)
 
