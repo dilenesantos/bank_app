@@ -309,36 +309,36 @@ if selected == 'Introduction':
     st.write("Le jeu de données fourni contient au total **11 162 lignes** et **17 colonnes**.")
     st.write("Les variables - ou colonnes - renseignent 3 types d'informations :")
     st.write("") 
-    col1, col2, col2 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
     with col1:
         st.write("**Colonnes socio-démo :**")
         st.write("1. **age**")
         st.write("2. **job**")
-        st.write("3. **marital** : situation maritale du client (married / single / divorced)")
-        st.write("4. **education** : niveau d'éducation du client (primary / secondaray / tertiary)")
+        st.write("3. **marital**")
+        st.write("4. **education**")
     with col2:
         st.write("**Colonnes situation bancaire :**")
-        st.write("5. **default** : le client est-il en défaut de paiement ? Yes / No ")
-        st.write("6. **balance** : solde du client")
-        st.write("7. **housing** : le client a-t-il un prêt immobilier en cours ? Yes / No")
-        st.write("8. **loan** : le client a-t-il un prêt personnel en cours ? Yes / No")
+        st.write("5. **default**")
+        st.write("6. **balance**")
+        st.write("7. **housing**")
+        st.write("8. **loan**")
         st.write("") 
 
     with col3:
         st.write("**Colonnes campagnes marketing  :**")
-        st.write("9. **contact** : moyen de contact (téléphone fixe / mobile)")
-        st.write("10. **day** : dernier contact (jour du mois)")
-        st.write("11. **month** : dernier contact (mois)")
-        st.write("12. **duration** : durée du dernier contact en secondes")
-        st.write("13. **campaign** : nombre de contacts réalisés avec le client pendant la campagne (dernier contact inclus)")
-        st.write("14. **pdays** : nombre de jours écoulés depuis le dernier contact lors de la précédente campagne (-1 = client jamais contacté auparavant)")
-        st.write("15. **previous** : nombre de contacts effectués avec le cient avant cette campagne")
-        st.write("16. **poutcome** : résultat de la précédente campagne")
+        st.write("9. **contact**")
+        st.write("10. **day**")
+        st.write("11. **month**")
+        st.write("12. **duration**")
+        st.write("13. **campaign**")
+        st.write("14. **pdays** ")
+        st.write("15. **previous**")
+        st.write("16. **poutcome**")
         st.write("") 
         
     st.write("**Et enfin la colonne avec la variable cible  :**")
-    st.write("17. **deposit** : Yes / No")
+    st.write("17. **deposit**")
     
 
     
