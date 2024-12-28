@@ -698,8 +698,7 @@ if selected == 'DataVisualisation':
                 st.write("____________________________________")
 
 
-        if st.checkbox("Analyse de l'évolution de la variable deposit dans le temps"):  
-            st.subheader("Analyse de l'évolution de la variable deposit dans le temps") 
+        if st.checkbox("**Analyse de l'évolution de la variable deposit dans le temps**"):  
             sub_pages3= st.radio(" ", ["Deposit x month", "Deposit x year", "Deposit x weekday"], horizontal = True)
                
             #creation des colonnes year, month_year, date, weekday
