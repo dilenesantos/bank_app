@@ -337,7 +337,7 @@ if selected == 'Introduction':
         st.write("16. **poutcome**")
         st.write("") 
         
-    st.write("**Et enfin la colonne avec la variable cible**")
+    st.write("**Et enfin la colonne variable cible**")
     st.write("17. **deposit**")
     
 
