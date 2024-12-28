@@ -768,7 +768,7 @@ if selected == 'DataVisualisation':
 
     if pages == "Profiling" :  
         # Title and Introduction
-        st.title("Profil des clients ayant souscrit à un dépôt à terme")
+        st.subheader("Profil des clients ayant souscrit à un dépôt à terme")
         
         # Filter the dataset
         dff = df[df['job'] != "unknown"]  # Remove rows with unknown job
