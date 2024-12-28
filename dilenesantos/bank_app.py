@@ -2586,14 +2586,13 @@ if selected == 'Interprétation':
                 shap_CAROLLE_VALUES = shap_values_RF_CAROLLE_1.values
                 X_test_original_data = X_test_original
             
-                featurename = "duration"
+                feature_name = "duration"
                 st.write("blabla")
-                shap.dependence_plot(feature_name = featurename, shap_values=shap_CAROLLE_VALUES, features=X_test_original_data, interaction_index=featurename, show=False)
+                shap.dependence_plot(feature_name, shap_values=shap_CAROLLE_VALUES, features=X_test_original_data, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
-                
                 
             
             if submenu_var_inf == "HOUSING" :
