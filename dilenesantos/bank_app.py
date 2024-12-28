@@ -381,12 +381,7 @@ if selected == 'DataVisualisation':
             # Afficher le graphique dans Streamlit
             st.pyplot(fig)
             st.write("Le graphique ci-dessus montre la proportion de chaque catégorie dans la variable.")
-            
-                        
-            fig = plt.figure(figsize=(6, 3))
-            sns.countplot(df[selected_variable], color= 'c', order= df[selected_variable].value_counts().index)
-            st.write(fig) 
-            st.write("Le graphique ci-dessus montre la proportion de chaque catégorie dans la variable .")
+
 
         elif analysis_type == "**VARIABLES QUANTITATIVES**":
             selected_variable = st.radio(
