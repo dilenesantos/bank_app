@@ -511,7 +511,6 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de balance sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de balance sur la souscrition au Deposit")
 
-                import statsmodels.api
                 result = statsmodels.formula.api.ols('balance ~ deposit', data = dff).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write (table)
@@ -533,7 +532,6 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de duration sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de duration sur la souscrition au Deposit")
 
-                import statsmodels.api
                 result = statsmodels.formula.api.ols('duration ~ deposit', data = dff).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write (table)
@@ -557,7 +555,6 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de campaign sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de campaign la souscrition au Deposit")
 
-                import statsmodels.api
                 result = statsmodels.formula.api.ols('campaign ~ deposit', data = dff).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write (table)
@@ -581,7 +578,6 @@ if selected == 'DataVisualisation':
                 st.write("H0 : Il n'y a pas d'effet significatif de previous sur la souscrition au Deposit")
                 st.write("H1 : Il y a un effet significatif de previous sur la souscrition au Deposit")
 
-                import statsmodels.api
                 result = statsmodels.formula.api.ols('previous ~ deposit', data = dff).fit()
                 table = statsmodels.api.stats.anova_lm(result)
                 st.write (table)
