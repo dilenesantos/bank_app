@@ -475,7 +475,7 @@ if selected == 'DataVisualisation':
             de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
 
         if st.checkbox('**Variables quantitatives**'): 
-            st.subheader("Analyses et Tests statistiques des variables quantitatives")
+            st.header("Analyses et Tests statistiques des variables quantitatives")
             sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
                                   , key = "variable_selectbox",  horizontal=True)
             
@@ -586,7 +586,7 @@ if selected == 'DataVisualisation':
 
 
         if st.checkbox('**Variables qualitatives**'):
-            st.subheader("Analyses et Tests statistiques des variables qualitatives")
+            st.header("Analyses et Tests statistiques des variables qualitatives")
             sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"], horizontal = True)
 
             st.write("____________________________________")
@@ -708,7 +708,7 @@ if selected == 'DataVisualisation':
 
 
         if st.checkbox("**Évolution dans le temps**"):  
-            st.subheader("Analyse de l'évolution de la variable deposit dans le temps")
+            st.header("Analyse de l'évolution de la variable deposit dans le temps")
             sub_pages3= st.radio(" ", ["Deposit x month", "Deposit x year", "Deposit x weekday"], horizontal = True)
 
             st.write("____________________________________")
