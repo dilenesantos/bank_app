@@ -3677,7 +3677,7 @@ if selected == 'Outil  Prédictif':
         
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
         option_to_add = st.radio("Choisir une information à ajouter :", 
-                                       ["None", "loan", "marital", "poutcome", "job", "Client_Category_M"], horizontal=True)
+                                       ["None", "loan", "marital", "poutcome", "job", "Dernier_contact"], horizontal=True)
         
         if option_to_add != "None":
             # Ajout de la logique pour chaque option sélectionnée
@@ -3891,12 +3891,12 @@ if selected == 'Outil  Prédictif':
             
     
             
-            elif option_to_add == "Client_Category_M":
-                Client_Category_M = st.selectbox("Dernier contact de la banque avec le client?", ('Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'))
+            elif option_to_add == "Dernier_contact":
+                Dernier_contact = st.selectbox("Dernier contact de la banque avec le client?", ('Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'))
                     
-                pred_df['Client_Category_M'] = Client_Category_M
+                pred_df['Client_Category_M'] = Dernier_contact
                 pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'], [0, 1, 2])
-                st.write("Dernier de la banque contact avec le client : ", Client_Category_M)
+                st.write("Dernier de la banque contact avec le client : ", Dernier_contact)
                 
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
@@ -3954,8 +3954,8 @@ if selected == 'Outil  Prédictif':
                 st.write(f"Résultat de la campagne : {poutcome}")
             elif option_to_add == "job":
                 st.write(f"Emploi : {job}")
-            elif option_to_add == "Client_Category_M":
-                st.write("Dernier contact avec le client : ", Client_Category_M)
+            elif option_to_add == "Dernier_contact":
+                st.write("Dernier contact avec le client : ", Dernier_contact)
      
 
 
