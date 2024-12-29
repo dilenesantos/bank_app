@@ -3892,20 +3892,11 @@ if selected == 'Outil  Prédictif':
     
             
             elif option_to_add == "Client_Category_M":
-                Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Prospect', 'Reached-6M', 'Reached+6M'))
-                    #conditions d'affichage pour education : 
-                if Client_Category_M == "Prospect":
-                    Client_Category = "Jamais"
-                elif Client_Category_M == "Reached-6M":
-                    Client_Category = "Il y a moins de 6 mois"
-                elif Client_Category_M == "Reached+6M":
-                    Client_Category = "Il y a plus de 6  mois"
-                else:
-                    Client_Category = "Inconnu"  # Par défaut si `education` a une valeur inattendue
+                Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'))
                     
                 pred_df['Client_Category_M'] = Client_Category_M
-                pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
-                st.write("Dernier appel : ", Client_Category_M)
+                pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'], [0, 1, 2])
+                st.write("Dernier de la banque contact avec le client : ", Client_Category_M)
                 
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
