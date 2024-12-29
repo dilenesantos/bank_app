@@ -3528,38 +3528,15 @@ if selected == 'Outil  Prédictif':
     # 'Client_Category_M' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
     dff_TEST_client_category['Client_Category_M'] = dff_TEST_client_category['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
 
-    #DATAFRAME PRED AVEC CAMPAIGN
-    dff_TEST_campaign = df.copy()
-    dff_TEST_campaign = dff_TEST_campaign[dff_TEST_campaign['age'] < 75]
-    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["balance"] > -2257]
-    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["balance"] < 4087]
-    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["campaign"] < 6]
-    dff_TEST_campaign = dff_TEST_campaign.loc[dff_TEST_campaign["previous"] < 2.5]
-    dff_TEST_campaign = dff_TEST_campaign.drop('contact', axis = 1)
-    
-    dff_TEST_campaign = dff_TEST_campaign.drop('pdays', axis = 1)
-    
-    dff_TEST_campaign = dff_TEST_campaign.drop(['day'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['duration'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['job'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['default'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['month'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['poutcome'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['marital'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['loan'], axis=1)
-    dff_TEST_campaign = dff_TEST_campaign.drop(['deposit'], axis=1)
-
-    dff_TEST_campaign['education'] = dff_TEST_campaign['education'].replace('unknown', np.nan)
-    
 
     st.title("Démonstration et application de notre modèle à votre cas")               
 
     st.subheader('Vos Informations sur le client')
-    age = st.slider("Quel est l'âge du client ?", 17, 90, 1)
-    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
-    balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 10000, 1)
     housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
+    balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 10000, 1)
+    age = st.number_input("Quel est l'âge du client ?", min_value=17, max_value=90, value=1)
     previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,6,1)
+    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
     
     #conditions d'affichage pour education : 
     if education == "tertiary":
@@ -3675,7 +3652,7 @@ if selected == 'Outil  Prédictif':
         
         # Afficher le sélecteur d'option pour le raffinement, incluant l'option pour ne rien ajouter
         option_to_add = st.radio("Choisir une information à ajouter :", 
-                                       ["None", "campaign", "loan", "marital", "poutcome", "job", "Client_Category_M"], horizontal=True)
+                                       ["None", "loan", "marital", "poutcome", "job", "Client_Category_M"], horizontal=True)
         
         if option_to_add != "None":
             # Ajout de la logique pour chaque option sélectionnée
@@ -3716,51 +3693,6 @@ if selected == 'Outil  Prédictif':
                 st.markdown(f"Prediction après affinage : **{prediction_opt_loan[0]}**")
                 st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan:.2f}%**")
                 if prediction_opt_loan[0] == 0:
-                    st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
-                else:
-                    st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
-            
-    
-            elif option_to_add == "campaign":
-                campaign = st.slider("Combien de fois le client a-t-il été contacté durant la campagne ?", 0, 6, 1)
-                pred_df['campaign'] = campaign
-                st.write("Le client a été contacté ", campaign," au cours de la campagne")
-    
-                pred_df = pred_df.reindex(columns=dff_TEST_campaign.columns)
-                
-                # Étape 2 : Concaténer dff et pred_df
-                # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-                num_cols = ['age', 'balance','previous', 'campaign']
-                
-                # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-                pred_df.index = range(dff_TEST_campaign.shape[0], dff_TEST_campaign.shape[0] + len(pred_df))
-            
-                combined_df_campaign = pd.concat([dff_TEST_campaign[num_cols], pred_df[num_cols]], axis=0)
-    
-                # Étape 3 : Standardisation des données numériques
-                scaler = StandardScaler()
-                combined_df_campaign[num_cols] = scaler.fit_transform(combined_df_campaign[num_cols])
-    
-                # Étape 4 : Séparer à nouveau pred_df des autres données
-                # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-                pred_df[num_cols] = combined_df_campaign.loc[pred_df.index, num_cols]
-            
-                # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-                pred_df = pred_df.reset_index(drop=True)
-    
-                 # Conditions pour charger le modèle approprié
-                filename_campaign = "dilenesantos/XGBOOST_1_SD_model_PRED_campaign_XGBOOST_1.pkl"
-                additional_model = joblib.load(filename_campaign)
-            
-                # Prédiction avec le DataFrame optimisé
-                prediction_opt_campaign = additional_model.predict(pred_df)
-                prediction_proba_opt_campaign = additional_model.predict_proba(pred_df)
-                max_proba_opt_campaign = np.max(prediction_proba_opt_campaign[0]) * 100
-            
-                # Affichage des résultats
-                st.markdown(f"Prediction après affinage : **{prediction_opt_campaign[0]}**")
-                st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_campaign:.2f}%**")
-                if prediction_opt_campaign[0] == 0:
                     st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                 else:
                     st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
@@ -4008,7 +3940,6 @@ if selected == 'Outil  Prédictif':
                 st.write(f"Emploi : {job}")
             elif option_to_add == "Client_Category_M":
                 st.write("Dernier contact avec le client : ", Client_Category)
-            elif option_to_add == "campaign":
-                st.write(f"Nombre de contacts avec le client au cours de la campagne : {campaign}")
      
+
 
