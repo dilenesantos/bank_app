@@ -305,7 +305,7 @@ if selected == 'Introduction':
     st.write("- Identifier et analyser visuellement et statistiquement **les caractéristiques des clients** qui sont corrélées avec la souscription au 'dépôt à terme'.")
     st.write("- Utiliser des techniques de Machine Learning pour **prédire si un client va souscrire au 'dépôt à terme'.**")
 
-    st.write("#### Le dataset : ")
+    st.write("#### Les données : ")
     st.markdown("Le jeu de données comprend un total de **11 162 lignes** et **17 colonnes**.  \n\
     Ces colonnes fournissent 3 types d'informations :")
     st.write("") 
@@ -337,7 +337,7 @@ if selected == 'Introduction':
         16. poutcome")
         st.write("") 
         
-    st.write("**Plus la colonne constituant notre variable cible:**  \n\
+    st.write("**Notre variable cible:**  \n\
     17. deposit")
     
 
