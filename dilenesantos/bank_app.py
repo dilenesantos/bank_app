@@ -307,7 +307,7 @@ if selected == 'Introduction':
 
     st.write("#### Le dataset : ")
     st.write("Le jeu de données comprend un total de **11 162 lignes** et **17 colonnes**.
-    Ces colonnes fournissent 3 types d'informations :")
+        Ces colonnes fournissent 3 types d'informations :")
     st.write("") 
     col1, col2, col3 = st.columns(3)
 
