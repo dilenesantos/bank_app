@@ -3533,7 +3533,18 @@ if selected == 'Outil  Prédictif':
 
     st.subheader('Vos Informations sur le client')
     housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
-    balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 10000, 1)
+    # Collecte du solde bancaire avec vérification
+    balance_input = st.text_input("Quel est le solde de son compte en banque ?")  # Pas de valeur par défaut
+    
+    # Validation de l'entrée pour le solde
+    if balance_input:  # Vérifie si balance_input n'est pas vide
+        try:
+            # Convertir l'entrée en float pour accepter les valeurs négatives
+            balance = float(balance_input)
+            st.write(f"Le solde est : {balance} euros")
+        except ValueError:
+            st.error("Veuillez entrer un nombre valide pour le solde.")
+        
     # Collecte de l'âge sans valeur par défaut
     age_input = st.text_input("Quel est l'âge du client ?")  # Valeur par défaut retirée
     
