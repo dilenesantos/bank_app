@@ -3539,11 +3539,10 @@ if selected == 'Outil  Prédictif':
     # Validation de l'entrée pour le solde
     if balance_input:  # Vérifie si balance_input n'est pas vide
         try:
-            # Convertir l'entrée en float pour accepter les valeurs négatives
-            balance = float(balance_input)
-            st.write(f"Le solde est : {balance} euros")
+            # Convertir l'entrée en int pour gérer le solde comme un entier
+            balance = int(balance_input)
         except ValueError:
-            st.error("Veuillez entrer un nombre valide pour le solde.")
+            st.error("Veuillez entrer un nombre entier valide pour le solde.")
         
     # Collecte de l'âge sans valeur par défaut
     age_input = st.text_input("Quel est l'âge du client ?")  # Valeur par défaut retirée
