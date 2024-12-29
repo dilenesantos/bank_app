@@ -3892,7 +3892,7 @@ if selected == 'Outil  Prédictif':
     
             
             elif option_to_add == "Client_Category_M":
-                Client_Category_M = st.selectbox("Dernier appel de votre banque?", ('Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'))
+                Client_Category_M = st.selectbox("Dernier contact de la banque avec le client?", ('Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'))
                     
                 pred_df['Client_Category_M'] = Client_Category_M
                 pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'], [0, 1, 2])
