@@ -3896,7 +3896,7 @@ if selected == 'Outil  Prédictif':
                     
                 pred_df['Client_Category_M'] = Dernier_contact
                 pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'], [0, 1, 2])
-                st.write("Dernier de la banque contact avec le client : ", Dernier_contact)
+                st.write("Dernier contact de la banque avec le client : ", Dernier_contact)
                 
                 # Étape 2 : Concaténer dff et pred_df
                 # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
