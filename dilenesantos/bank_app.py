@@ -3892,10 +3892,10 @@ if selected == 'Outil  Prédictif':
     
             
             elif option_to_add == "Dernier_contact":
-                Dernier_contact = st.selectbox("Dernier contact de la banque avec le client?", ('Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'))
+                Dernier_contact = st.selectbox("Dernier contact de la banque avec le client lors de la précédente campagne?", ('Jamais contacté', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'))
                     
                 pred_df['Client_Category_M'] = Dernier_contact
-                pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Jamais', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'], [0, 1, 2])
+                pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Jamais contacté', 'Il y a moins de 6 mois', 'Il y a plus de 6  mois'], [0, 1, 2])
                 st.write("Dernier contact de la banque avec le client : ", Dernier_contact)
                 
                 # Étape 2 : Concaténer dff et pred_df
@@ -3955,7 +3955,7 @@ if selected == 'Outil  Prédictif':
             elif option_to_add == "job":
                 st.write(f"Emploi : {job}")
             elif option_to_add == "Dernier_contact":
-                st.write("Dernier contact avec le client : ", Dernier_contact)
+                st.write("Dernier contact avec le client lors de la précédente campagne : ", Dernier_contact)
      
 
 
