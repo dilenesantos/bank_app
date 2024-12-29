@@ -312,23 +312,22 @@ if selected == 'Introduction':
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.write("**I. Infos socio-démo:**")
-        st.markdown("\n\
+        st.markdown("**I. Infos socio-démo:**  \n\
         1. age  \n\
         2. job  \n\
         3. marital  \n\
         4. education")
     with col2:
-        st.write("**II. Infos situation bancaire:**")
-        st.markdown("5. default  \n\
+        st.markdown("**II. Infos situation bancaire:** \n\
+        5. default  \n\
         6. balance  \n\
         7. housing  \n\
         8. loan")
         st.write("") 
 
     with col3:
-        st.write("**III. Infos campagnes marketing:**")
-        st.markdown("9. contact  \n\
+        st.markdown("**III. Infos campagnes marketing:** \n\
+        9. contact  \n\
         10. day  \n\
         11. month  \n\
         12. duration  \n\
