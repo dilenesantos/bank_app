@@ -313,7 +313,7 @@ if selected == 'Introduction':
 
     with col1:
         st.write("**I. Infos socio-démo:**")
-        st.markdown("1. age  \n\")
+        st.markdown("1. age  \n\
         2. job  \n\
         3. marital  \n\
         4. education")
