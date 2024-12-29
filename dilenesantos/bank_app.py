@@ -3534,17 +3534,20 @@ if selected == 'Outil  Prédictif':
     st.subheader('Vos Informations sur le client')
     housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
     balance = st.slider('Quel est le solde de son compte en banque ?', -3000, 10000, 1)
-    # Collecte de l'âge
-    age_input = st.text_input("Quel est l'âge du client ?", "")  
+    # Collecte de l'âge sans valeur par défaut
+    age_input = st.text_input("Quel est l'âge du client ?")  # Valeur par défaut retirée
+    
     # Validation de l'entrée
     try:
-        age = int(age_input)  # Conversion de l'entrée en entier
+        # Convertir l'entrée en entier
+        age = int(age_input)
+        
+        # Vérifier si l'âge est dans la plage valide
         if age < 18 or age > 95:
-            st.error("L'âge doit être compris entre 18 et 95 ans.")
-        else:
-            st.write(f"L'âge du client est : {age} ans")
+            st.error("L'âge doit être compris entre 18 et 95 ans.")    
     except ValueError:
         st.error("Veuillez entrer un nombre valide pour l'âge.")
+        
     previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,6,1)
     education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
     
