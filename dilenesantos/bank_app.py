@@ -3955,7 +3955,7 @@ if selected == 'Outil  Prédictif':
             elif option_to_add == "job":
                 st.write(f"Emploi : {job}")
             elif option_to_add == "Client_Category_M":
-                st.write("Dernier contact avec le client : ", Client_Category)
+                st.write("Dernier contact avec le client : ", Client_Category_M)
      
 
 
