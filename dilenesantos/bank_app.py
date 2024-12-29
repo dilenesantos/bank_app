@@ -313,32 +313,32 @@ if selected == 'Introduction':
 
     with col1:
         st.write("**I. Infos socio-démo:**")
-        st.write("1. age")
-        st.write("2. job")
-        st.write("3. marital")
-        st.write("4. education")
+        st.markdown("1. age  \n\")
+        2. job  \n\
+        3. marital  \n\
+        4. education")
     with col2:
         st.write("**II. Infos situation bancaire:**")
-        st.write("5. default")
-        st.write("6. balance")
-        st.write("7. housing")
-        st.write("8. loan")
+        st.markdown("5. default  \n\
+        6. balance  \n\
+        7. housing  \n\
+        8. loan")
         st.write("") 
 
     with col3:
         st.write("**III. Infos campagnes marketing:**")
-        st.write("9. contact")
-        st.write("10. day")
-        st.write("11. month")
-        st.write("12. duration")
-        st.write("13. campaign")
-        st.write("14. pdays")
-        st.write("15. previous")
-        st.write("16. poutcome")
+        st.markdown("9. contact  \n\
+        10. day  \n\
+        11. month  \n\
+        12. duration  \n\
+        13. campaign  \n\
+        14. pdays  \n\
+        15. previous  \n\
+        16. poutcome")
         st.write("") 
         
-    st.write("**Plus la colonne constituant notre variable cible:**")
-    st.write("17. deposit")
+    st.write("**Plus la colonne constituant notre variable cible:**  \n\
+    17. deposit")
     
 
     
