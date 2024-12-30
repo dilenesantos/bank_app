@@ -3531,7 +3531,7 @@ if selected == 'Outil  Prédictif':
 
     st.title("Démonstration et application de notre modèle à votre cas")               
 
-    st.subheader('Vos Informations sur le client')
+    st.subheader('Informations sur le client')
     # Collecte de l'âge sans valeur par défaut
     age_input = st.text_input("Quel est l'âge du client ?")  
     age = None
