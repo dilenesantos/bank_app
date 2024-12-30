@@ -564,7 +564,7 @@ if selected == 'DataVisualisation':
                 st.write(table)
 
                 st.write("P_value = 0.0002")
-                st.write("Il n'y a **PAS DE LIEN SIGNIFICATIF entre Age et Deposit**") 
+                st.write("**Il y a un lien significatif entre Age et Deposit**") 
                 st.write("____________________________________")
 
 
@@ -579,10 +579,10 @@ if selected == 'DataVisualisation':
                 st.write(fig)       
 
 
-                st.write("Test Statistique d'ANOVA :")
+                st.write("Test d'ANOVA :")
 
                 st.write("**P_value = 9.126568e-18**")
-                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Balance et Deposit**")
+                st.write("**Il y a un lien significatif entre Balance et Deposit**")
                 st.write("____________________________________")
 
 
@@ -596,7 +596,7 @@ if selected == 'DataVisualisation':
                 plt.legend()
                 st.write(fig)
 
-                st.write("Test Statistique d'ANOVA :")
+                st.write("Test d'ANOVA :")
 
                 result3 = statsmodels.formula.api.ols('duration ~ deposit', data = df).fit()
                 table3 = statsmodels.api.stats.anova_lm(result3)
@@ -604,7 +604,7 @@ if selected == 'DataVisualisation':
 
 
                 st.write("P_value = 0")
-                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Duration et Deposit**")  
+                st.write("**Il y a un lien significatif entre Duration et Deposit**")  
                 st.write("____________________________________")
 
 
@@ -618,9 +618,9 @@ if selected == 'DataVisualisation':
                 plt.legend()
                 st.write(fig)
 
-                st.write("Test Statistique d'ANOVA :")
+                st.write("Test d'ANOVA :")
                 st.write("**P_value = 4.831324e-42**")
-                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Campaign et Deposit**") 
+                st.write("**Il y a un lien significatif entre Campaign et Deposit**") 
                 st.write("____________________________________")
 
 
@@ -634,10 +634,14 @@ if selected == 'DataVisualisation':
                 plt.legend()
                 st.write(fig)
 
-                st.write("Test Statistique d'ANOVA :")
+                st.write("Test d'ANOVA :")
 
                 st.write("**P_value = 7.125338e-50**")
-                st.write("**IL Y A UN LIEN SIGNIFICATIF entre Previous et Deposit**")  
+                st.write("**Il y a un lien significatif entre Previous et Deposit**")  
+
+                st.subheader("Conclusion")
+                st.image("dilenesantos/recap_test_anova.png")
+                st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables quantitatives ont un lien significatif avec notre variable cible.**")
                 st.write("____________________________________")
 
 
@@ -656,7 +660,7 @@ if selected == 'DataVisualisation':
                 st.pyplot(fig)
             
 
-                st.write("Test Statistique:")
+                st.write("Test de Chi-deux :")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['job'], df['deposit'])
@@ -677,7 +681,7 @@ if selected == 'DataVisualisation':
                 st.pyplot(fig)
 
 
-                st.write("Test Statistique:")
+                st.write("Test de Chi-deux :")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['marital'], df['deposit'])
@@ -698,7 +702,7 @@ if selected == 'DataVisualisation':
                 st.pyplot(fig)
 
 
-                st.write("Test Statistique:")
+                st.write("Test de Chi-deux :")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['education'], df['deposit'])
@@ -719,7 +723,7 @@ if selected == 'DataVisualisation':
                 st.pyplot(fig)
 
 
-                st.write("Test Statistique:")
+                st.write("Test de Chi-deux :")
 
                 from scipy.stats import chi2_contingency
                 ct = pd.crosstab(df['housing'], df['deposit'])
@@ -750,6 +754,11 @@ if selected == 'DataVisualisation':
                 st.write('P_value: ', p_value)
 
                 st.write("**Il y a une dépendance entre Poutcome et Deposit**")  
+                st.write("____________________________________")
+                
+                st.subheader("Conclusion")
+                st.image("dilenesantos/recap_Chi-deux.png")
+                st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables qualitatives ont un lien significatif avec notre variable cible.**")
                 st.write("____________________________________")
 
 
