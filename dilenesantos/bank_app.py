@@ -884,7 +884,7 @@ if selected == 'DataVisualisation':
                 "Age et Job",
                 "Statut Matrimonial et Education",
                 "Bancaire",
-                "Caracteristique de la Campagne Marketing",
+                "Campagne(s) Marketing",
                 "Temporel",
                 "Duration"
             ], horizontal = True)
@@ -1086,11 +1086,11 @@ if selected == 'DataVisualisation':
 
     
         
-            elif sub_pages == "Caracteristique de la Campagne Marketing":
-                st.write("### Analyse: Caracteristique de la Campagne Marketing")
+            elif sub_pages == "Campagnes Marketing":
+                st.write("### Analyse: Caractéristiques des Campagnes marketing")
     
                 if st.checkbox("Type de clients"):
-                    st.write("Clients Jamais contactés ou déjà contactés") 
+                    st.write("Clients Jamais contactés ou déjà contactés lors de la précédente campagne marketing") 
                     # Nombre de clients par type de prospect
                     prospect_counts = clients_yes["type_prospect"].value_counts()
     
