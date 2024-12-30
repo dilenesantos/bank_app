@@ -3592,7 +3592,7 @@ if selected == 'Outil  Prédictif':
         st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
         st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
     else:
-    st.warning("Veuillez remplir les champs nécessaires (âge et solde bancaire) pour afficher la prédiction.")
+        st.warning("Veuillez remplir les champs nécessaires (âge et solde bancaire) pour afficher la prédiction.")
     
     # Créer un dataframe récapitulatif des données du prospect
     infos_prospect = pd.DataFrame({
