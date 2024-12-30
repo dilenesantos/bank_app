@@ -3547,6 +3547,8 @@ if selected == 'Outil  Prédictif':
     
         except ValueError:
             st.error("Veuillez entrer un nombre valide pour l'âge.")
+    else : 
+        pass
     
     education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
     #conditions d'affichage pour education : 
@@ -3571,6 +3573,8 @@ if selected == 'Outil  Prédictif':
             balance = int(balance_input)
         except ValueError:
             st.error("Veuillez entrer un nombre entier valide pour le solde.")
+    else : 
+        pass
     
     housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
 
