@@ -3536,9 +3536,9 @@ if selected == 'Outil  Prédictif':
     age_input = st.text_input("Quel est l'âge du client ?")  
     age = None
     if age_input:  # Vérifie si age_input n'est pas vide
-    try:
-        # Convertir l'entrée en entier
-        age = int(age_input)
+        try:
+            # Convertir l'entrée en entier
+            age = int(age_input)
         
         # Vérifier si l'âge est dans la plage valide
         if age < 18 or age > 95:
