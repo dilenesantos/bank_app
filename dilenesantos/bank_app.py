@@ -3582,15 +3582,17 @@ if selected == 'Outil  Prédictif':
     previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,6,1)
     
 
-
-    st.write(f'### Récapitulatif')
-    if age is not None:
-        st.write("Le client a :  ", age, "ans")
-    st.write("Le client a un niveau d'étude :  ", niveau_etude)
-    if balance is not None :
+    # Vérifiez si age et balance sont correctement remplis
+    if age is not None and balance is not None:
+        # Affichage du récapitulatif
+        st.write(f'### Récapitulatif')
+        st.write("Le client a :  ", age, "ans")   
+        st.write("Le client a un niveau d'étude :  ", niveau_etude)
         st.write("Le solde de son compte en banque est de :  ", balance, "euros")
-    st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
-    st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
+        st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
+        st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
+    else:
+    st.warning("Veuillez remplir les champs nécessaires (âge et solde bancaire) pour afficher la prédiction.")
     
     # Créer un dataframe récapitulatif des données du prospect
     infos_prospect = pd.DataFrame({
