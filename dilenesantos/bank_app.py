@@ -537,10 +537,10 @@ if selected == 'DataVisualisation':
             de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
 
         if st.checkbox("**Tests statistiques**") :
-            submenu_tests = st.radio(" ", ["Variables quantitatives : Tests d'ANOVA", "Variables qualitatives : Tests de Chi-deux"], horizontal = True)
+            submenu_tests = st.radio(" ", ["Tests d'ANOVA", "Tests de Chi-deux"], horizontal = True)
             
-            if submenu_tests == "Variables quantitatives : Tests d'ANOVA" : 
-                st.header("Analyses et Tests statistiques des variables quantitatives")
+            if submenu_tests == "Tests d'ANOVA" : 
+                st.header("Les variables quantitatives sont-elles liées à notre variable cible ?")
                 sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit", "Conclusion"]
                                       , key = "variable_selectbox",  horizontal=True)
                 
@@ -648,8 +648,8 @@ if selected == 'DataVisualisation':
                     st.write("____________________________________")
 
 
-            if submenu_tests == "Variables qualitatives : Tests de Chi-deux" :     
-                st.header("Analyses et Tests statistiques des variables qualitatives")
+            if submenu_tests == "Tests de Chi-deux" :     
+                st.header("Les variables qualitatives sont-elles liées à notre variable cible ?")
                 sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit", "Conclusion"], horizontal = True)
     
                 st.write("____________________________________")
