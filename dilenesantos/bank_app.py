@@ -3592,77 +3592,77 @@ if selected == 'Outil  Prédictif':
         st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
         st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
   
+        
+        # Créer un dataframe récapitulatif des données du prospect
+        infos_prospect = pd.DataFrame({
+            'age': [age], 
+            'education': [education], 
+            'balance': [balance], 
+            'housing': [housing], 
+            'previous': [previous],
+        }, index=[0]) 
     
-    # Créer un dataframe récapitulatif des données du prospect
-    infos_prospect = pd.DataFrame({
-        'age': [age], 
-        'education': [education], 
-        'balance': [balance], 
-        'housing': [housing], 
-        'previous': [previous],
-    }, index=[0]) 
-
-    # Affichage pour vérifier le nouvel index
-    #st.subheader("Voici le tableau avec vos informations")
-    #st.dataframe(infos_prospect)
-
-    # Construction du DataFrame pour le prospect à partir de infos_prospect
-    pred_df = infos_prospect.copy()
-
-    # Remplacer 'unknown' par NaN uniquement pour les colonnes spécifiques
-    cols_to_check = ['education']  # Colonnes à vérifier
-    for col in cols_to_check:
-        if (pred_df[col] == 'unknown').any():  # Vérifie si la valeur est "unknown"
-            pred_df[col] = np.nan  # Remplace "unknown" par NaN
-
-    # Remplissage par le mode pour 'education' et 'poutcome' dans le cas où il y a des NaN
-    if pred_df['education'].isna().any():
-        # Utiliser le mode de 'education' dans dff
-        pred_df['education'] = dff_TEST['education'].mode()[0]
-
-    # Transformation de 'education' et 'Client_Category_M' pour respecter l'ordre ordinal
-    pred_df['education'] = pred_df['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+        # Affichage pour vérifier le nouvel index
+        #st.subheader("Voici le tableau avec vos informations")
+        #st.dataframe(infos_prospect)
     
-
-    # Remplacer 'yes' par 1 et 'no' par 0 pour chaque colonne
-    cols_to_replace = ['housing']
-    for col in cols_to_replace:
-        pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
-
-
-    # Réorganiser les colonnes pour correspondre exactement à celles de dff
-    pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
+        # Construction du DataFrame pour le prospect à partir de infos_prospect
+        pred_df = infos_prospect.copy()
     
-    # Affichage du DataFrame transformé avant la standardisation
-    #st.write("Affichage du dataframe transformé (avant standardisation):")
-    #st.dataframe(pred_df)
-
-    # Liste des colonnes numériques à standardiser
-    num_cols = ['age', 'balance','previous']
-
-    # Étape 1 : Créer un index spécifique pour pred_df
-    # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
-    pred_df.index = range(dff_TEST.shape[0], dff_TEST.shape[0] + len(pred_df))
-
-    # Étape 2 : Concaténer dff et pred_df
-    # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
-    combined_df = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
-
-    # Étape 3 : Standardisation des données numériques
-    scaler = StandardScaler()
-    combined_df[num_cols] = scaler.fit_transform(combined_df[num_cols])
-
-    # Étape 4 : Séparer à nouveau pred_df des autres données
-    # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
-    pred_df[num_cols] = combined_df.loc[pred_df.index, num_cols]
-
-    # Réinitialiser l'index de pred_df après la manipulation (facultatif)
-    pred_df = pred_df.reset_index(drop=True)
-  
+        # Remplacer 'unknown' par NaN uniquement pour les colonnes spécifiques
+        cols_to_check = ['education']  # Colonnes à vérifier
+        for col in cols_to_check:
+            if (pred_df[col] == 'unknown').any():  # Vérifie si la valeur est "unknown"
+                pred_df[col] = np.nan  # Remplace "unknown" par NaN
     
-    # Interface utilisateur
-    filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
-    model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
+        # Remplissage par le mode pour 'education' et 'poutcome' dans le cas où il y a des NaN
+        if pred_df['education'].isna().any():
+            # Utiliser le mode de 'education' dans dff
+            pred_df['education'] = dff_TEST['education'].mode()[0]
+    
+        # Transformation de 'education' et 'Client_Category_M' pour respecter l'ordre ordinal
+        pred_df['education'] = pred_df['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
+        
+    
+        # Remplacer 'yes' par 1 et 'no' par 0 pour chaque colonne
+        cols_to_replace = ['housing']
+        for col in cols_to_replace:
+            pred_df[col] = pred_df[col].replace({'yes': 1, 'no': 0})
+    
+    
+        # Réorganiser les colonnes pour correspondre exactement à celles de dff
+        pred_df = pred_df.reindex(columns=dff_TEST.columns, fill_value=0)
+        
+        # Affichage du DataFrame transformé avant la standardisation
+        #st.write("Affichage du dataframe transformé (avant standardisation):")
+        #st.dataframe(pred_df)
+    
+        # Liste des colonnes numériques à standardiser
+        num_cols = ['age', 'balance','previous']
+    
+        # Étape 1 : Créer un index spécifique pour pred_df
+        # Utiliser un index unique pour pred_df, en le commençant après la dernière ligne de dff
+        pred_df.index = range(dff_TEST.shape[0], dff_TEST.shape[0] + len(pred_df))
+    
+        # Étape 2 : Concaténer dff et pred_df
+        # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
+        combined_df = pd.concat([dff_TEST[num_cols], pred_df[num_cols]], axis=0)
+    
+        # Étape 3 : Standardisation des données numériques
+        scaler = StandardScaler()
+        combined_df[num_cols] = scaler.fit_transform(combined_df[num_cols])
+    
+        # Étape 4 : Séparer à nouveau pred_df des autres données
+        # On récupère uniquement les lignes correspondant à pred_df en utilisant l'index spécifique
+        pred_df[num_cols] = combined_df.loc[pred_df.index, num_cols]
+    
+        # Réinitialiser l'index de pred_df après la manipulation (facultatif)
+        pred_df = pred_df.reset_index(drop=True)
+      
+        
+        # Interface utilisateur
+        filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
+        model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
 
         # Prédiction
         prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
