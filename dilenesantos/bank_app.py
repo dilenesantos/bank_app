@@ -522,8 +522,7 @@ if selected == 'DataVisualisation':
     # Define sub-pages
         sub_pages = [
             "Matrice de corrélation",
-            "Variables quantitatives : Tests d'ANOVA",
-            "Variables qualitatives : Tests de Chi-deux",
+            "Tests statistiques" 
             "Évolution dans le temps"
         ]
 
@@ -537,232 +536,235 @@ if selected == 'DataVisualisation':
             st.write("""Le tableau de corrélation entre toutes les variables quantitatives de notre base de donnée révèle des coefficients 
             de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
 
-        if st.checkbox("**Variables quantitatives : Tests d'ANOVA**") :
-            st.header("Analyses et Tests statistiques des variables quantitatives")
-            sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit", "Conclusion"]
-                                  , key = "variable_selectbox",  horizontal=True)
+        if st.checkbox("**Tests statisques**") :
+            submenu_tests = st.radio(" ", ["Variables quantitatives : Tests d'ANOVA", "Variables qualitatives : Tests de Chi-deux"], horizontal = True)
             
-            st.write("____________________________________")
-
-            st.subheader(f"Analyse du {sub_pages1}")
-
-            if sub_pages1 == "Lien âge x deposit" :
-                fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['age'], label='Yes', color='blue')
-                sns.kdeplot(df[df['deposit'] == 'no']['age'], label='No', color='red')
-                plt.title('Distribution des âges par groupe yes/no de la variable deposit')
-                plt.xlabel('Âge')
-                plt.ylabel('Densité')
-                plt.legend()
-                st.write(fig)
-
-                st.write("Test Statistique d'ANOVA :")
+            if submenu_tests = "Variables quantitatives : Tests d'ANOVA" : 
+                st.header("Analyses et Tests statistiques des variables quantitatives")
+                sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit", "Conclusion"]
+                                      , key = "variable_selectbox",  horizontal=True)
                 
-                import statsmodels.api
-                result = statsmodels.formula.api.ols('age ~ deposit', data = df).fit()
-                table = statsmodels.api.stats.anova_lm(result)
-                st.write(table)
-
-                st.write("P_value = 0.0002")
-                st.write("**Il y a un lien significatif entre Age et Deposit**") 
                 st.write("____________________________________")
+    
+                st.subheader(f"Analyse du {sub_pages1}")
+    
+                if sub_pages1 == "Lien âge x deposit" :
+                    fig = plt.figure()
+                    sns.kdeplot(df[df['deposit'] == 'yes']['age'], label='Yes', color='blue')
+                    sns.kdeplot(df[df['deposit'] == 'no']['age'], label='No', color='red')
+                    plt.title('Distribution des âges par groupe yes/no de la variable deposit')
+                    plt.xlabel('Âge')
+                    plt.ylabel('Densité')
+                    plt.legend()
+                    st.write(fig)
+    
+                    st.write("Test Statistique d'ANOVA :")
+                    
+                    import statsmodels.api
+                    result = statsmodels.formula.api.ols('age ~ deposit', data = df).fit()
+                    table = statsmodels.api.stats.anova_lm(result)
+                    st.write(table)
+    
+                    st.write("P_value = 0.0002")
+                    st.write("**Il y a un lien significatif entre Age et Deposit**") 
+                    st.write("____________________________________")
+    
+    
+                if sub_pages1 == "Lien balance x deposit" :
+                    fig = plt.figure()
+                    sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue')
+                    sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red')
+                    plt.title('Distribution de Balance par groupe yes/no de la variable deposit')
+                    plt.xlabel('Balance')
+                    plt.ylabel('Densité')
+                    plt.legend()
+                    st.write(fig)       
+    
+    
+                    st.write("Test d'ANOVA :")
+    
+                    st.write("**P_value = 9.126568e-18**")
+                    st.write("**Il y a un lien significatif entre Balance et Deposit**")
+                    st.write("____________________________________")
+    
+    
+                if sub_pages1 == "Lien duration x deposit" :
+                    fig = plt.figure()
+                    sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue')
+                    sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red')
+                    plt.title('Distribution de Duration par groupe yes/no de la variable Deposit')
+                    plt.xlabel('Duration')
+                    plt.ylabel('Densité')
+                    plt.legend()
+                    st.write(fig)
+    
+                    st.write("Test d'ANOVA :")
+    
+                    result3 = statsmodels.formula.api.ols('duration ~ deposit', data = df).fit()
+                    table3 = statsmodels.api.stats.anova_lm(result3)
+                    st.write (table3)
+    
+    
+                    st.write("P_value = 0")
+                    st.write("**Il y a un lien significatif entre Duration et Deposit**")  
+                    st.write("____________________________________")
+    
+    
+                if sub_pages1 == "Lien campaign x deposit" :
+                    fig = plt.figure()
+                    sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue')
+                    sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red')
+                    plt.title('Distribution de Campaign par groupe yes/no de la variable Deposit')
+                    plt.xlabel('Campaign')
+                    plt.ylabel('Densité')
+                    plt.legend()
+                    st.write(fig)
+    
+                    st.write("Test d'ANOVA :")
+                    st.write("**P_value = 4.831324e-42**")
+                    st.write("**Il y a un lien significatif entre Campaign et Deposit**") 
+                    st.write("____________________________________")
+    
+    
+                if sub_pages1 == "Lien previous x deposit" :
+                    fig = plt.figure()
+                    sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue')
+                    sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red')
+                    plt.title('Distribution de Previous par groupe yes/no de la variable Deposit')
+                    plt.xlabel('Previous')
+                    plt.ylabel('Densité')
+                    plt.legend()
+                    st.write(fig)
+    
+                    st.write("Test d'ANOVA :")
+    
+                    st.write("**P_value = 7.125338e-50**")
+                    st.write("**Il y a un lien significatif entre Previous et Deposit**")  
+    
+                if sub_pages1 == "Conclustion" :
+                    st.subheader("Conclusion")
+                    st.image("dilenesantos/recap_test_anova.png")
+                    st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables quantitatives ont un lien significatif avec notre variable cible.**")
+                    st.write("____________________________________")
 
 
-            if sub_pages1 == "Lien balance x deposit" :
-                fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue')
-                sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red')
-                plt.title('Distribution de Balance par groupe yes/no de la variable deposit')
-                plt.xlabel('Balance')
-                plt.ylabel('Densité')
-                plt.legend()
-                st.write(fig)       
-
-
-                st.write("Test d'ANOVA :")
-
-                st.write("**P_value = 9.126568e-18**")
-                st.write("**Il y a un lien significatif entre Balance et Deposit**")
+            if submenu_tests = "Variables qualitatives : Tests de Chi-deux" :     
+                st.header("Analyses et Tests statistiques des variables qualitatives")
+                sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit", "Conclusion"], horizontal = True)
+    
                 st.write("____________________________________")
-
-
-            if sub_pages1 == "Lien duration x deposit" :
-                fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue')
-                sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red')
-                plt.title('Distribution de Duration par groupe yes/no de la variable Deposit')
-                plt.xlabel('Duration')
-                plt.ylabel('Densité')
-                plt.legend()
-                st.write(fig)
-
-                st.write("Test d'ANOVA :")
-
-                result3 = statsmodels.formula.api.ols('duration ~ deposit', data = df).fit()
-                table3 = statsmodels.api.stats.anova_lm(result3)
-                st.write (table3)
-
-
-                st.write("P_value = 0")
-                st.write("**Il y a un lien significatif entre Duration et Deposit**")  
-                st.write("____________________________________")
-
-
-            if sub_pages1 == "Lien campaign x deposit" :
-                fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue')
-                sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red')
-                plt.title('Distribution de Campaign par groupe yes/no de la variable Deposit')
-                plt.xlabel('Campaign')
-                plt.ylabel('Densité')
-                plt.legend()
-                st.write(fig)
-
-                st.write("Test d'ANOVA :")
-                st.write("**P_value = 4.831324e-42**")
-                st.write("**Il y a un lien significatif entre Campaign et Deposit**") 
-                st.write("____________________________________")
-
-
-            if sub_pages1 == "Lien previous x deposit" :
-                fig = plt.figure()
-                sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue')
-                sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red')
-                plt.title('Distribution de Previous par groupe yes/no de la variable Deposit')
-                plt.xlabel('Previous')
-                plt.ylabel('Densité')
-                plt.legend()
-                st.write(fig)
-
-                st.write("Test d'ANOVA :")
-
-                st.write("**P_value = 7.125338e-50**")
-                st.write("**Il y a un lien significatif entre Previous et Deposit**")  
-
-            if sub_pages1 == "Conclustion" :
-                st.subheader("Conclusion")
-                st.image("dilenesantos/recap_test_anova.png")
-                st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables quantitatives ont un lien significatif avec notre variable cible.**")
-                st.write("____________________________________")
-
-
-        if st.checkbox("**Variables qualitatives : Tests de Chi-deux**"):
-            st.header("Analyses et Tests statistiques des variables qualitatives")
-            sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit", "Conclusion"], horizontal = True)
-
-            st.write("____________________________________")
-
-            st.subheader(f"Analyse du {sub_pages2}")
-
-            if sub_pages2 == "Lien job x deposit" :
-                fig = plt.figure(figsize=(20,10))
-                sns.countplot(x="job", hue = 'deposit', data = df, palette =("g", "r"))
-                plt.legend()
-                st.pyplot(fig)
-            
-
-                st.write("Test de Chi-deux :")
-
-                from scipy.stats import chi2_contingency
-                ct = pd.crosstab(df['job'], df['deposit'])
-                result = chi2_contingency(ct)
-                stat = result[0]
-                p_value = result[1]
-                st.write('Statistique: ', stat)
-                st.write('P_value: ', p_value)
-
-                st.write("**Il y a une dépendance entre Job et Deposit**") 
-                st.write("____________________________________")
-
-
-            if sub_pages2 == "Lien marital x deposit" :
-                fig = plt.figure()
-                sns.countplot(x="marital", hue = 'deposit', data = df, palette =("g", "r"))
-                plt.legend()
-                st.pyplot(fig)
-
-
-                st.write("Test de Chi-deux :")
-
-                from scipy.stats import chi2_contingency
-                ct = pd.crosstab(df['marital'], df['deposit'])
-                result = chi2_contingency(ct)
-                stat = result[0]
-                p_value = result[1]
-                st.write('Statistique: ', stat)
-                st.write('P_value: ', p_value)
-
-                st.write("**Il y a une dépendance entre Marital et Deposit**")  
-                st.write("____________________________________")
-            
-            
-            if sub_pages2 == "Lien education x deposit" :
-                fig = plt.figure()
-                sns.countplot(x="education", hue = 'deposit', data = df, palette =("g", "r"))
-                plt.legend()
-                st.pyplot(fig)
-
-
-                st.write("Test de Chi-deux :")
-
-                from scipy.stats import chi2_contingency
-                ct = pd.crosstab(df['education'], df['deposit'])
-                result = chi2_contingency(ct)
-                stat = result[0]
-                p_value = result[1]
-                st.write('Statistique: ', stat)
-                st.write('P_value: ', p_value)
-
-                st.write("**Il y a une dépendance entre Education et Deposit**")
-                st.write("____________________________________")
-
-            
-            if sub_pages2 == "Lien housing x deposit" :
-                fig = plt.figure()
-                sns.countplot(x="housing", hue = 'deposit', data = df, palette =("g", "r"))
-                plt.legend()
-                st.pyplot(fig)
-
-
-                st.write("Test de Chi-deux :")
-
-                from scipy.stats import chi2_contingency
-                ct = pd.crosstab(df['housing'], df['deposit'])
-                result = chi2_contingency(ct)
-                stat = result[0]
-                p_value = result[1]
-                st.write('Statistique: ', stat)
-                st.write('P_value: ', p_value)
-
-                st.write("**Il y a une dépendance entre Housing et Deposit**")
-                st.write("____________________________________")
-
-            if sub_pages2 == "Lien poutcome x deposit" :
-                fig = plt.figure()
-                sns.countplot(x="poutcome", hue = 'deposit', data = df, palette =("g", "r"))
-                plt.legend()
-                st.pyplot(fig)
-
-
-                st.write("Test Statistique:")
-
-                from scipy.stats import chi2_contingency
-                ct = pd.crosstab(df['poutcome'], df['deposit'])
-                result = chi2_contingency(ct)
-                stat = result[0]
-                p_value = result[1]
-                st.write('Statistique: ', stat)
-                st.write('P_value: ', p_value)
-
-                st.write("**Il y a une dépendance entre Poutcome et Deposit**")  
-                st.write("____________________________________")
-
-            if sub_pages2 == "Conclusion" :
-
-                st.subheader("Conclusion")
-                st.image("dilenesantos/recap_Chi-deux.png")
-                st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables qualitatives ont un lien significatif avec notre variable cible.**")
-                st.write("____________________________________")
+    
+                st.subheader(f"Analyse du {sub_pages2}")
+    
+                if sub_pages2 == "Lien job x deposit" :
+                    fig = plt.figure(figsize=(20,10))
+                    sns.countplot(x="job", hue = 'deposit', data = df, palette =("g", "r"))
+                    plt.legend()
+                    st.pyplot(fig)
+                
+    
+                    st.write("Test de Chi-deux :")
+    
+                    from scipy.stats import chi2_contingency
+                    ct = pd.crosstab(df['job'], df['deposit'])
+                    result = chi2_contingency(ct)
+                    stat = result[0]
+                    p_value = result[1]
+                    st.write('Statistique: ', stat)
+                    st.write('P_value: ', p_value)
+    
+                    st.write("**Il y a une dépendance entre Job et Deposit**") 
+                    st.write("____________________________________")
+    
+    
+                if sub_pages2 == "Lien marital x deposit" :
+                    fig = plt.figure()
+                    sns.countplot(x="marital", hue = 'deposit', data = df, palette =("g", "r"))
+                    plt.legend()
+                    st.pyplot(fig)
+    
+    
+                    st.write("Test de Chi-deux :")
+    
+                    from scipy.stats import chi2_contingency
+                    ct = pd.crosstab(df['marital'], df['deposit'])
+                    result = chi2_contingency(ct)
+                    stat = result[0]
+                    p_value = result[1]
+                    st.write('Statistique: ', stat)
+                    st.write('P_value: ', p_value)
+    
+                    st.write("**Il y a une dépendance entre Marital et Deposit**")  
+                    st.write("____________________________________")
+                
+                
+                if sub_pages2 == "Lien education x deposit" :
+                    fig = plt.figure()
+                    sns.countplot(x="education", hue = 'deposit', data = df, palette =("g", "r"))
+                    plt.legend()
+                    st.pyplot(fig)
+    
+    
+                    st.write("Test de Chi-deux :")
+    
+                    from scipy.stats import chi2_contingency
+                    ct = pd.crosstab(df['education'], df['deposit'])
+                    result = chi2_contingency(ct)
+                    stat = result[0]
+                    p_value = result[1]
+                    st.write('Statistique: ', stat)
+                    st.write('P_value: ', p_value)
+    
+                    st.write("**Il y a une dépendance entre Education et Deposit**")
+                    st.write("____________________________________")
+    
+                
+                if sub_pages2 == "Lien housing x deposit" :
+                    fig = plt.figure()
+                    sns.countplot(x="housing", hue = 'deposit', data = df, palette =("g", "r"))
+                    plt.legend()
+                    st.pyplot(fig)
+    
+    
+                    st.write("Test de Chi-deux :")
+    
+                    from scipy.stats import chi2_contingency
+                    ct = pd.crosstab(df['housing'], df['deposit'])
+                    result = chi2_contingency(ct)
+                    stat = result[0]
+                    p_value = result[1]
+                    st.write('Statistique: ', stat)
+                    st.write('P_value: ', p_value)
+    
+                    st.write("**Il y a une dépendance entre Housing et Deposit**")
+                    st.write("____________________________________")
+    
+                if sub_pages2 == "Lien poutcome x deposit" :
+                    fig = plt.figure()
+                    sns.countplot(x="poutcome", hue = 'deposit', data = df, palette =("g", "r"))
+                    plt.legend()
+                    st.pyplot(fig)
+    
+    
+                    st.write("Test Statistique:")
+    
+                    from scipy.stats import chi2_contingency
+                    ct = pd.crosstab(df['poutcome'], df['deposit'])
+                    result = chi2_contingency(ct)
+                    stat = result[0]
+                    p_value = result[1]
+                    st.write('Statistique: ', stat)
+                    st.write('P_value: ', p_value)
+    
+                    st.write("**Il y a une dépendance entre Poutcome et Deposit**")  
+                    st.write("____________________________________")
+    
+                if sub_pages2 == "Conclusion" :
+    
+                    st.subheader("Conclusion")
+                    st.image("dilenesantos/recap_Chi-deux.png")
+                    st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables qualitatives ont un lien significatif avec notre variable cible.**")
+                    st.write("____________________________________")
 
 
         if st.checkbox("**Évolution dans le temps**"):  
