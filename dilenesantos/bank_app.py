@@ -568,8 +568,7 @@ if selected == 'DataVisualisation':
                     table = statsmodels.api.stats.anova_lm(result)
                     st.write(table)
 
-                    st.markdown("P_value = 0.0002   \n\
-                    **Il y a un lien significatif entre Age et Deposit**") 
+                    st.markdown("P_value = 0.0002 --> **Il y a un lien significatif entre Age et Deposit**") 
                     st.write("____________________________________")
     
     
