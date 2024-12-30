@@ -1121,7 +1121,7 @@ if selected == 'DataVisualisation':
                         plt.clf()  
 
                     
-                    plot_percentage(clients_yes, "type_prospect", "Type de prospect")
+                    plot_percentage(clients_yes, "type_prospect", "Type de prospect", fontsize=4)
                     st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
                     st.write("____________________________________")
 
