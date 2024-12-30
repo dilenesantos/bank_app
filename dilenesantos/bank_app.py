@@ -1356,10 +1356,10 @@ if selected == "Pre-processing":
             st.dataframe(dffpre_pros.head(10))
             
             st.subheader("Création de la colonne 'weekday'")
-            st.write("Pour créer la colonne weekday, nous devons passer par plusieurs étapes : ")
-            st.write("- ajouter une colonne 'year' : les données du dataset sont datées du juin 2014 ainsi nous pouvons déduire que les mois allant de juin à décembre correspondent à l'année 2023 et que les mois allant de janvier à mai correspondent à l'année 2014")
-            st.write("- ajouter une colonne date : grâce à la colonne mois, day et year")
-            st.write("- nous pouvons alors créer la colonne weekday grâce à la fonction 'dt.weekday'")
+            st.write("Avant de pouvoir créer la colonne weekday, nous devons passer par deux étapes : ")
+            st.markdown("- **ajouter une colonne 'year' **: les données du dataset sont datées du juin 2014 ainsi nous pouvons déduire que les mois allant de juin à décembre correspondent à l'année 2023 et que les mois allant de janvier à mai correspondent à l'année 2014")
+            st.markdown("- **ajouter une colonne 'date' au format datetime **: cela est désormais possibles grâce aux colonnes mois, day et year")
+            st.markdown("**Nous pouvons alors créer la colonne weekday grâce à la fonction 'dt.weekday'**")
             #creation des colonnes year, month_year, date, weekday
             liste_annee =[]
             for i in dffpre_pros["month"] :
