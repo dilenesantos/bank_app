@@ -884,7 +884,7 @@ if selected == 'DataVisualisation':
                 "Age et Job",
                 "Statut Matrimonial et Education",
                 "Bancaire",
-                "Campagne(s) Marketing",
+                "Campagnes Marketing",
                 "Temporel",
                 "Duration"
             ], horizontal = True)
