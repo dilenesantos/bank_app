@@ -555,8 +555,8 @@ if selected == 'DataVisualisation':
                     
                     # Spécifier la taille de la police
                     plt.title('Distribution des âges selon la variable deposit', fontsize=6)  # Modifiez 10 par la taille souhaitée
-                    plt.xlabel('Âge', fontsize=7)  # Taille de police pour l'axe x
-                    plt.ylabel('Densité', fontsize=7)  # Taille de police pour l'axe y
+                    plt.xlabel('Âge', fontsize=5)  # Taille de police pour l'axe x
+                    plt.ylabel('Densité', fontsize=5)  # Taille de police pour l'axe y
                     plt.legend(fontsize=7)  # Taille de police pour la légende
                     st.pyplot(fig)
                     st.write("Test Statistique d'ANOVA :")
@@ -566,8 +566,8 @@ if selected == 'DataVisualisation':
                     table = statsmodels.api.stats.anova_lm(result)
                     st.write(table)
     
-                    st.write("P_value = 0.0002")
-                    st.write("**Il y a un lien significatif entre Age et Deposit**") 
+                    st.markdown("P_value = 0.0002   \n\
+                    **Il y a un lien significatif entre Age et Deposit**") 
                     st.write("____________________________________")
     
     
