@@ -3541,8 +3541,8 @@ if selected == 'Outil  Prédictif':
             age = int(age_input)
         
         # Vérifier si l'âge est dans la plage valide
-        if age < 18 or age > 95:
-            st.error("L'âge doit être compris entre 18 et 95 ans.")
+            if age < 18 or age > 95:
+                st.error("L'âge doit être compris entre 18 et 95 ans.")
 
         except ValueError:
             st.error("Veuillez entrer un nombre valide pour l'âge.")
