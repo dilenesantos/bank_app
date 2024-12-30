@@ -555,9 +555,9 @@ if selected == 'DataVisualisation':
                     
                     # Spécifier la taille de la police
                     plt.title('Distribution des âges selon la variable deposit', fontsize=5)  # Modifiez 10 par la taille souhaitée
-                    plt.xlabel('Âge', fontsize=4)  # Taille de police pour l'axe x
-                    plt.ylabel('Densité', fontsize=4)  # Taille de police pour l'axe y
-                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.xlabel('Âge', fontsize=4)  
+                    plt.ylabel('Densité', fontsize=4)  
+                    plt.legend(fontsize=5) 
                     plt.yticks(fontsize=5)
                     plt.xticks(fontsize=5)
                     st.pyplot(fig)
@@ -577,11 +577,11 @@ if selected == 'DataVisualisation':
                     sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red')
                     plt.title('Distribution de Balance selon la variable deposit', fontsize=5)
-                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.xlabel('Balance', fontsize=4)  
+                    plt.ylabel('Densité', fontsize=4)  
+                    plt.legend(fontsize=5) 
                     plt.yticks(fontsize=5)
                     plt.xticks(fontsize=5)
-                    plt.xlabel('Balance')
-                    plt.ylabel('Densité')
                     st.write(fig)       
     
     
@@ -595,11 +595,11 @@ if selected == 'DataVisualisation':
                     sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red')
                     plt.title('Distribution de Duration selon la variable Deposit', fontsize=5)
-                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.legend(fontsize=5)  
+                    plt.xlabel('Duration', fontsize=4) 
+                    plt.ylabel('Densité', fontsize=4)
                     plt.yticks(fontsize=5)
                     plt.xticks(fontsize=5)
-                    plt.xlabel('Duration')
-                    plt.ylabel('Densité')
                     st.write(fig)
     
                     st.write("Test d'ANOVA :")
@@ -617,11 +617,11 @@ if selected == 'DataVisualisation':
                     sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red')
                     plt.title('Distribution de Campaign selon la variable Deposit', fontsize=5)
-                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.legend(fontsize=5)  
+                    plt.xlabel('Campaign', fontsize=4) 
+                    plt.ylabel('Densité', fontsize=4) 
                     plt.yticks(fontsize=5)
                     plt.xticks(fontsize=5)
-                    plt.xlabel('Campaign')
-                    plt.ylabel('Densité')
                     st.write(fig)
     
                     st.write("Test d'ANOVA :")
@@ -634,11 +634,11 @@ if selected == 'DataVisualisation':
                     sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red')
                     plt.title('Distribution de Previous selon la variable Deposit', fontsize=5)
-                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.legend(fontsize=5)  # Taille de police pour la légende
+                    plt.xlabel('Previous', fontsize=4) 
+                    plt.ylabel('Densité', fontsize=4)                     
                     plt.yticks(fontsize=5)
                     plt.xticks(fontsize=5)
-                    plt.xlabel('Previous')
-                    plt.ylabel('Densité')
                     plt.legend()
                     st.write(fig)
     
