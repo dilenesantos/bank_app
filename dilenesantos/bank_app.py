@@ -880,7 +880,7 @@ if selected == 'DataVisualisation':
             st.text(f"Nombre de clients ayant souscrit à un compte de dépôt à terme : {clients_yes.shape[0]}")
     
             # Define sub-pages
-            sub_pages = st.radio(" ", [
+            sub_pages = st.sidebar.radio(" ", [
                 "Age et Job",
                 "Statut Matrimonial et Education",
                 "Bancaire",
