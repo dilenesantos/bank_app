@@ -1336,8 +1336,11 @@ if selected == "Pre-processing":
 
         if submenupages == "Création de colonnes" :   
             st.subheader("Création de la colonne 'Client_Category'")
-            st.markdown("La colonne 'pdays' qui représente le nombre de jours écoulés depuis le dernier contact avec le client lors de la campagne précédente.  \n\ Or pdays affiche de nombreuses valeurs égales à -1 : ce sont les clients qui n'ont jamais été contactés lors de la précédente campagne. \n\ Aussi, afin de pouvoir catégoriser les clients selon s'ils ont été contactés ou non lors de la précédente campagne , nous décidons de créer une nouvelle colonne à partir de 'pdays'. \n\ **Nous nommons cette colonne 'Client_Category'**.")
-            st.write("Cette nouvelle colonne nouvellement créée comprend 3 valeurs : \n\
+            st.markdown("La colonne 'pdays' qui représente le nombre de jours écoulés depuis le dernier contact avec le client lors de la campagne précédente.  \n\
+            Or pdays affiche de nombreuses valeurs égales à -1 : ce sont les clients qui n'ont jamais été contactés lors de la précédente campagne. \n\
+            Aussi, afin de pouvoir catégoriser les clients selon s'ils ont été contactés ou non lors de la précédente campagne , nous décidons de créer une nouvelle colonne à partir de 'pdays'. \n\
+            **Nous nommons cette colonne 'Client_Category'**.")
+            st.markdown("Cette nouvelle colonne nouvellement créée comprend 3 valeurs : \n\
             - **Prospect** = clients qui n'ont jamais été contacté lors de la précédente campagne \n\
             - **Reached-6M** = clients contactés il y a moins de 6 mois lors de la précédente campagne \n\
             - **Reached+6M** = clients contactés il y a plus de 6 mois lors de la précédente campagne.")
