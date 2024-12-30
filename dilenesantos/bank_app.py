@@ -1282,7 +1282,7 @@ if selected == "Pre-processing":
         if submenupages == "Suppression de lignes" :            
             st.subheader("Filtre sur la colonne 'age'")
             st.markdown("Notre analyse univariée a montré des **valeurs extrêmes au dessus de 74 ans.** \n\
-            **Nous avons décidé de retirer ces lignes de notre dataframe.**")
+            Nous avons décidé de retirer ces lignes de notre dataframe.")
             
             dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
             count_age_sup = df[df['age'] > 74.5].shape[0]
@@ -1290,7 +1290,7 @@ if selected == "Pre-processing":
             
             st.subheader("Filtre sur la colonne 'balance'")
             st.markdown("Pour balance, nous avons également constaté des **valeurs extrêmes** pour **les valeurs inférieures à -2257** et les **valeurs supérieures à 4087**. \n\
-            **Nous retirons ces lignes.**")
+            Nous retirons ces lignes.")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] > -2257]
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] < 4087]
             count_balance_sup = df[df['balance'] < -2257].shape[0]
@@ -1300,14 +1300,14 @@ if selected == "Pre-processing":
             
             st.subheader("Filtre sur la colonne 'campaign'")
             st.markdown("La variable campaign a également montré des **valeurs extrêmes pour les valeurs supérieures à 6**.  \n\
-            **Nous retirons également ces lignes.**")
+            Nous retirons également ces lignes.")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["campaign"] < 6]
             count_campaign_sup = df[df['campaign'] > 6].shape[0]
             st.write("Résultat", count_campaign_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'previous'")
             st.markdown("Nous avons également constaté des **valeurs extrêmes pour les valeurs supérieures à 2**. \n\
-            **Nous retirons également ces lignes de notre dataframe.**")
+            Nous retirons également ces lignes de notre dataframe.")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["previous"] < 2.5]
             count_previous_sup = df[df['previous'] > 2.5].shape[0]
             st.write("Résultat", count_previous_sup,"**lignes supprimées**")
