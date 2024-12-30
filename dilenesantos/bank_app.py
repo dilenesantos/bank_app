@@ -839,243 +839,254 @@ if selected == 'DataVisualisation':
         
 
     if pages == "Profiling" :  
-        # Title and Introduction
-        st.title("Profil des clients 'Deposit YES'")
+        if st.checkbox("Analyses"):
+    
+            # Title and Introduction
+            st.title("Profil des clients 'Deposit YES'")
+            
+            # Filter the dataset
+            dff = df[df['job'] != "unknown"]  # Remove rows with unknown job
+            dff = dff[dff['education'] != "unknown"]  # Remove rows with unknown education
+    
+            # Replace 'unknown' in poutcome with NaN, then fill with the mode
+            dff['poutcome2'] = dff['poutcome'].replace('unknown', np.nan)
+            dff['poutcome2'] = dff['poutcome2'].fillna(dff['poutcome2'].mode()[0])
+    
+            # Drop the 'contact' column as it's not needed
+            dff = dff.drop(['contact'], axis=1)
+    
+            #  Creation de categorie de client
+    
+            liste =[]
+    
+            for i in dff["pdays"] :
+                if i == -1 :
+                    liste.append("new_prospect")
+                elif i != -1 :
+                    liste.append("old_prospect")
+    
+            dff["type_prospect"] = liste
+    
+    
+            # Filter clients who have subscribed
+            clients_yes = dff[dff["deposit"] == "yes"]
+            
+    
+            # Display the number of subscribed clients
+            st.text(f"Nombre de clients ayant souscrit à un compte de dépôt à terme : {clients_yes.shape[0]}")
+    
+            # Define sub-pages
+            sub_pages = st.radio(" ", [
+                "Age et Job",
+                "Statut Matrimonial et Education",
+                "Bancaire",
+                "Caracteristique de la Campagne Marketing",
+                "Temporel",
+                "Duration"
+            ], horizontal = True)
+            
+            # Sidebar for sub-page selection
+    
+            # Logic for each sub-page
+            if sub_pages == "Age et Job":
+                st.write("### Analyse: Age et Job")
+                plt.figure(figsize=(10, 6), dpi=120)
+                sns.histplot(clients_yes['age'], kde=False, bins=30)
+                plt.title("Distribution de l'âge des clients")
+                plt.xlabel("Âge des clients")
+                plt.ylabel("Nombre de clients")
+            
+            # Display the plot in Streamlit
+                st.pyplot(plt)
+    
+       # Calcul du nombre de clients par job
+                total_client_job = clients_yes.groupby('job').size().reset_index(name='Total Clients')
+    
+                # Calcul de la moyenne, du minimum, du maximum de la variable 'age' par job
+                group_age_job = clients_yes.groupby('job')['age'].agg(['mean', 'min', 'max']).reset_index()
+    
+                # Renommage des colonnes
+                group_age_job.columns = ['job', 'Age Moyen', 'Age Minimum', 'Age Maximum']
+    
+                # Fusion des deux DataFrames sur la colonne 'job'
+                summary = pd.merge(total_client_job, group_age_job, on='job')
+    
+                # Triage par ordre décroissant du nombre de clients
+                summary = summary.sort_values(by='Total Clients', ascending=False)
+    
+                # Réinitialiser l'index et supprimer la colonne d'index
+                summary = summary.reset_index(drop=True)
+    
+                 # Affichage du DataFrame final dans Streamlit sans la colonne d'index
+                st.write("### Résumé des clients par job avec les statistiques d'âge:")
+                st.dataframe(summary)
+                st.text("Nous remarquons sur ce tableau qu’il y a une grande diversification des âges pour tous les groupes.")
+                
+            elif sub_pages == "Statut Matrimonial et Education":
+                st.write("### Analyse: Statut Matrimonial et Education")
+        # --- Statut matrimonial ---
+                marital_counts = clients_yes['marital'].value_counts()
+                marital_percentage = marital_counts / marital_counts.sum() * 100
+                plt.figure(figsize=(10, 8))
+                sns.barplot(x=marital_percentage.index, y=marital_percentage.values, color='skyblue')
+    
+                # Ajouter les pourcentages sur les barres
+                for i, v in enumerate(marital_percentage.values):
+                    plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+    
+                # Titre et étiquettes des axes
+                plt.title("Distribution du statut matrimonial des clients qui ont souscrit à un dépôt à terme")
+                plt.xlabel("Statut matrimonial")
+                plt.ylabel("Pourcentage de clients (%)")
+    
+                # Affichage du graphique avec Streamlit
+                st.pyplot(plt)
+    
+                # --- Niveau d'éducation ---
+                education_counts = clients_yes['education'].value_counts()
+                education_percentage = education_counts / education_counts.sum() * 100
+                plt.figure(figsize=(10, 8))
+                sns.barplot(x=education_percentage.index, y=education_percentage.values, color='skyblue')
+    
+                # Ajouter les pourcentages sur les barres
+                for i, v in enumerate(education_percentage.values):
+                    plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+    
+                # Titre et étiquettes des axes
+                plt.title("Distribution du niveau académique des clients qui ont souscrit à un dépôt à terme")
+                plt.xlabel("Education")
+                plt.ylabel("Pourcentage de clients (%)")
+    
+                # Affichage du graphique avec Streamlit
+                st.pyplot(plt)
+    
+                # Texte explicatif
+                st.text("Nous observons que la majorité des clients sont mariés, suivis par un groupe de clients célibataires. Les niveaux d’éducation des clients sont le secondaire et le tertiaire. Ceci montre que les clients détenant le DAT (dépôt à terme) ont un certain niveau académique.")
+    
+            elif sub_pages == "Bancaire":
+                st.header("Analyse: Bancaire")
+                st.subheader("Balance du compte")
+            
+                # Séparation des clients en fonction du solde
+                clients_positif = clients_yes[clients_yes['balance'] > 0]
+                clients_negatif = clients_yes[clients_yes['balance'] <= 0]
+                
+                nb_clients_positif = len(clients_positif)
+                nb_clients_negatif = len(clients_negatif)
+    
+                pourcentage_positif = (nb_clients_positif / len(clients_yes)) * 100
+                pourcentage_negatif = (nb_clients_negatif / len(clients_yes)) * 100
+    
+                
+    
+                # Labels pour les groupes
+                labels = ['Solde positif', 'Solde négatif ou nul']
+                counts = [nb_clients_positif, nb_clients_negatif]
+    
+                # Créer un DataFrame temporaire pour le plot
+                data = pd.DataFrame({'Type de solde': labels, 'Nombre de clients': counts})
+                
+    
+                # Créer un bar plot pour comparer les deux groupes
+                plt.figure(figsize=(9, 6), dpi=100)
+                sns.barplot(x='Type de solde', y='Nombre de clients', data=data, palette="pastel")
+                plt.title("Comparaison des clients avec un solde positif et un solde négatif ou nul")
+                plt.xlabel("Type de solde")
+                plt.ylabel("Nombre de clients")
+    
+                # Ajouter les pourcentages sur les barres
+                for i, v in enumerate(counts):
+                    plt.text(i, v + 5, f"{(v / len(clients_yes)) * 100:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+    
+                st.pyplot(plt)
+                st.write(f"Pourcentage de clients avec un solde positif : {pourcentage_positif:.2f}%")
+                st.write(f"Pourcentage de clients avec un solde négatif ou nul : {pourcentage_negatif:.2f}%")
+    
+                st.subheader("Loan/Housing/default")
+    
+                # Statistiques pour 'housing'
+                housing_counts = clients_yes['housing'].value_counts()
+                housing_percentage = housing_counts / housing_counts.sum() * 100
+                housing_stats = pd.DataFrame({
+                    'Housing Status': housing_counts.index,
+                    'Count': housing_counts.values,
+                    'Percentage': housing_percentage.values
+                })
+    
+                # Statistiques pour 'loan'
+                loan_counts = clients_yes['loan'].value_counts()
+                loan_percentage = loan_counts / loan_counts.sum() * 100
+                loan_stats = pd.DataFrame({
+                    'Loan Status': loan_counts.index,
+                    'Count': loan_counts.values,
+                    'Percentage': loan_percentage.values
+                })
+    
+                # Statistiques pour 'default'
+                default_counts = clients_yes['default'].value_counts()
+                default_percentage = default_counts / default_counts.sum() * 100
+                default_stats = pd.DataFrame({
+                    'Default Status': default_counts.index,
+                    'Count': default_counts.values,
+                    'Percentage': default_percentage.values
+                })
+    
+                
+    
+                # --- Bar plot pour housing ---
+                plt.figure(figsize=(9, 6))
+                sns.barplot(x=housing_percentage.index, y=housing_percentage.values, palette="pastel")
+                plt.title("Distribution des prêts immobiliers parmi les clients ayant un dépôt à terme")
+                plt.xlabel("Housing")
+                plt.ylabel("Pourcentage de clients (%)")
+                
+                # Ajouter les pourcentages sur les barres
+                for i, v in enumerate(housing_percentage.values):
+                    plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+                
+                st.pyplot(plt)
+    
+                # --- Bar plot pour loan ---
+                plt.figure(figsize=(9, 6))
+                sns.barplot(x=loan_percentage.index, y=loan_percentage.values, palette="pastel")
+                plt.title("Distribution des prêts personnels parmi les clients ayant un dépôt à terme")
+                plt.xlabel("Loan")
+                plt.ylabel("Pourcentage de clients (%)")
+                
+                # Ajouter les pourcentages sur les barres
+                for i, v in enumerate(loan_percentage.values):
+                    plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+                
+                st.pyplot(plt)
+    
+                # --- Bar plot pour default ---
+                plt.figure(figsize=(9, 6))
+                sns.barplot(x=default_percentage.index, y=default_percentage.values, palette="pastel")
+                plt.title("Distribution de défaut de paiement parmi les clients ayant un dépôt à terme")
+                plt.xlabel("Default")
+                plt.ylabel("Pourcentage de clients (%)")
+                
+                # Ajouter les pourcentages sur les barres
+                for i, v in enumerate(default_percentage.values):
+                    plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+                
+                st.pyplot(plt)
+    
+                st.text("Parmi les clients qui ont un DAT :")
+                st.text("Plus de 60% des clients n’ont pas de prêt immobilier.")
+                st.text("90% des clients n’ont pas de prêt personnel.")
+                st.text("99% des clients ayant des engagements bancaires ne sont pas en défaut de paiement.")
+
+        if st.checkbox("Récapitulatif"):
+            st.write("#### Le profil des clients ayant souscrit au produit DAT de la banque est le suivant :")
+            st.write("* Clients **âgés entre 25 et 60 ans** avec des métiers de **manager, technicien, ouvrier, ou travaillant dans l’administration.**")
+            st.write("* Ils sont **mariés** pour la plupart et ont un niveau **académique secondaire ou tertiaire.**")
+            st.write("* La majorité des clients n’ont **pas d’engagement bancaire** (prêt personnel, prêt immobilier) et ne sont **pas en défaut de paiement.**")
+            st.write("* Ils n’ont, pour la plupart, **jamais été contacté par la banque.**")
+            st.write("* Ils souscrivent au DAT dans les périodes **fin printemps / l’été**, principalement, dans l’ordre, **le dimanche, mardi, mercredi, lundi.**")
+            st.write("* Et la durée moyenne des appels pour convaincre un client de souscrire à un DAT est de **9 minutes.**")
         
-        # Filter the dataset
-        dff = df[df['job'] != "unknown"]  # Remove rows with unknown job
-        dff = dff[dff['education'] != "unknown"]  # Remove rows with unknown education
 
-        # Replace 'unknown' in poutcome with NaN, then fill with the mode
-        dff['poutcome2'] = dff['poutcome'].replace('unknown', np.nan)
-        dff['poutcome2'] = dff['poutcome2'].fillna(dff['poutcome2'].mode()[0])
-
-        # Drop the 'contact' column as it's not needed
-        dff = dff.drop(['contact'], axis=1)
-
-        #  Creation de categorie de client
-
-        liste =[]
-
-        for i in dff["pdays"] :
-            if i == -1 :
-                liste.append("new_prospect")
-            elif i != -1 :
-                liste.append("old_prospect")
-
-        dff["type_prospect"] = liste
-
-
-        # Filter clients who have subscribed
-        clients_yes = dff[dff["deposit"] == "yes"]
-        
-
-        # Display the number of subscribed clients
-        st.text(f"Nombre de clients ayant souscrit à un compte de dépôt à terme : {clients_yes.shape[0]}")
-
-        # Define sub-pages
-        sub_pages = st.radio(" ", [
-            "Age et Job",
-            "Statut Matrimonial et Education",
-            "Bancaire",
-            "Caracteristique de la Campagne Marketing",
-            "Temporel",
-            "Duration"
-        ], horizontal = True)
-        
-        # Sidebar for sub-page selection
-
-        # Logic for each sub-page
-        if sub_pages == "Age et Job":
-            st.write("### Analyse: Age et Job")
-            plt.figure(figsize=(10, 6), dpi=120)
-            sns.histplot(clients_yes['age'], kde=False, bins=30)
-            plt.title("Distribution de l'âge des clients")
-            plt.xlabel("Âge des clients")
-            plt.ylabel("Nombre de clients")
-        
-        # Display the plot in Streamlit
-            st.pyplot(plt)
-
-   # Calcul du nombre de clients par job
-            total_client_job = clients_yes.groupby('job').size().reset_index(name='Total Clients')
-
-            # Calcul de la moyenne, du minimum, du maximum de la variable 'age' par job
-            group_age_job = clients_yes.groupby('job')['age'].agg(['mean', 'min', 'max']).reset_index()
-
-            # Renommage des colonnes
-            group_age_job.columns = ['job', 'Age Moyen', 'Age Minimum', 'Age Maximum']
-
-            # Fusion des deux DataFrames sur la colonne 'job'
-            summary = pd.merge(total_client_job, group_age_job, on='job')
-
-            # Triage par ordre décroissant du nombre de clients
-            summary = summary.sort_values(by='Total Clients', ascending=False)
-
-            # Réinitialiser l'index et supprimer la colonne d'index
-            summary = summary.reset_index(drop=True)
-
-             # Affichage du DataFrame final dans Streamlit sans la colonne d'index
-            st.write("### Résumé des clients par job avec les statistiques d'âge:")
-            st.dataframe(summary)
-            st.text("Nous remarquons sur ce tableau qu’il y a une grande diversification des âges pour tous les groupes.")
-            
-        elif sub_pages == "Statut Matrimonial et Education":
-            st.write("### Analyse: Statut Matrimonial et Education")
-    # --- Statut matrimonial ---
-            marital_counts = clients_yes['marital'].value_counts()
-            marital_percentage = marital_counts / marital_counts.sum() * 100
-            plt.figure(figsize=(10, 8))
-            sns.barplot(x=marital_percentage.index, y=marital_percentage.values, color='skyblue')
-
-            # Ajouter les pourcentages sur les barres
-            for i, v in enumerate(marital_percentage.values):
-                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
-
-            # Titre et étiquettes des axes
-            plt.title("Distribution du statut matrimonial des clients qui ont souscrit à un dépôt à terme")
-            plt.xlabel("Statut matrimonial")
-            plt.ylabel("Pourcentage de clients (%)")
-
-            # Affichage du graphique avec Streamlit
-            st.pyplot(plt)
-
-            # --- Niveau d'éducation ---
-            education_counts = clients_yes['education'].value_counts()
-            education_percentage = education_counts / education_counts.sum() * 100
-            plt.figure(figsize=(10, 8))
-            sns.barplot(x=education_percentage.index, y=education_percentage.values, color='skyblue')
-
-            # Ajouter les pourcentages sur les barres
-            for i, v in enumerate(education_percentage.values):
-                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
-
-            # Titre et étiquettes des axes
-            plt.title("Distribution du niveau académique des clients qui ont souscrit à un dépôt à terme")
-            plt.xlabel("Education")
-            plt.ylabel("Pourcentage de clients (%)")
-
-            # Affichage du graphique avec Streamlit
-            st.pyplot(plt)
-
-            # Texte explicatif
-            st.text("Nous observons que la majorité des clients sont mariés, suivis par un groupe de clients célibataires. Les niveaux d’éducation des clients sont le secondaire et le tertiaire. Ceci montre que les clients détenant le DAT (dépôt à terme) ont un certain niveau académique.")
-
-        elif sub_pages == "Bancaire":
-            st.header("Analyse: Bancaire")
-            st.subheader("Balance du compte")
-        
-            # Séparation des clients en fonction du solde
-            clients_positif = clients_yes[clients_yes['balance'] > 0]
-            clients_negatif = clients_yes[clients_yes['balance'] <= 0]
-            
-            nb_clients_positif = len(clients_positif)
-            nb_clients_negatif = len(clients_negatif)
-
-            pourcentage_positif = (nb_clients_positif / len(clients_yes)) * 100
-            pourcentage_negatif = (nb_clients_negatif / len(clients_yes)) * 100
-
-            
-
-            # Labels pour les groupes
-            labels = ['Solde positif', 'Solde négatif ou nul']
-            counts = [nb_clients_positif, nb_clients_negatif]
-
-            # Créer un DataFrame temporaire pour le plot
-            data = pd.DataFrame({'Type de solde': labels, 'Nombre de clients': counts})
-            
-
-            # Créer un bar plot pour comparer les deux groupes
-            plt.figure(figsize=(9, 6), dpi=100)
-            sns.barplot(x='Type de solde', y='Nombre de clients', data=data, palette="pastel")
-            plt.title("Comparaison des clients avec un solde positif et un solde négatif ou nul")
-            plt.xlabel("Type de solde")
-            plt.ylabel("Nombre de clients")
-
-            # Ajouter les pourcentages sur les barres
-            for i, v in enumerate(counts):
-                plt.text(i, v + 5, f"{(v / len(clients_yes)) * 100:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
-
-            st.pyplot(plt)
-            st.write(f"Pourcentage de clients avec un solde positif : {pourcentage_positif:.2f}%")
-            st.write(f"Pourcentage de clients avec un solde négatif ou nul : {pourcentage_negatif:.2f}%")
-
-            st.subheader("Loan/Housing/default")
-
-            # Statistiques pour 'housing'
-            housing_counts = clients_yes['housing'].value_counts()
-            housing_percentage = housing_counts / housing_counts.sum() * 100
-            housing_stats = pd.DataFrame({
-                'Housing Status': housing_counts.index,
-                'Count': housing_counts.values,
-                'Percentage': housing_percentage.values
-            })
-
-            # Statistiques pour 'loan'
-            loan_counts = clients_yes['loan'].value_counts()
-            loan_percentage = loan_counts / loan_counts.sum() * 100
-            loan_stats = pd.DataFrame({
-                'Loan Status': loan_counts.index,
-                'Count': loan_counts.values,
-                'Percentage': loan_percentage.values
-            })
-
-            # Statistiques pour 'default'
-            default_counts = clients_yes['default'].value_counts()
-            default_percentage = default_counts / default_counts.sum() * 100
-            default_stats = pd.DataFrame({
-                'Default Status': default_counts.index,
-                'Count': default_counts.values,
-                'Percentage': default_percentage.values
-            })
-
-            
-
-            # --- Bar plot pour housing ---
-            plt.figure(figsize=(9, 6))
-            sns.barplot(x=housing_percentage.index, y=housing_percentage.values, palette="pastel")
-            plt.title("Distribution des prêts immobiliers parmi les clients ayant un dépôt à terme")
-            plt.xlabel("Housing")
-            plt.ylabel("Pourcentage de clients (%)")
-            
-            # Ajouter les pourcentages sur les barres
-            for i, v in enumerate(housing_percentage.values):
-                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
-            
-            st.pyplot(plt)
-
-            # --- Bar plot pour loan ---
-            plt.figure(figsize=(9, 6))
-            sns.barplot(x=loan_percentage.index, y=loan_percentage.values, palette="pastel")
-            plt.title("Distribution des prêts personnels parmi les clients ayant un dépôt à terme")
-            plt.xlabel("Loan")
-            plt.ylabel("Pourcentage de clients (%)")
-            
-            # Ajouter les pourcentages sur les barres
-            for i, v in enumerate(loan_percentage.values):
-                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
-            
-            st.pyplot(plt)
-
-            # --- Bar plot pour default ---
-            plt.figure(figsize=(9, 6))
-            sns.barplot(x=default_percentage.index, y=default_percentage.values, palette="pastel")
-            plt.title("Distribution de défaut de paiement parmi les clients ayant un dépôt à terme")
-            plt.xlabel("Default")
-            plt.ylabel("Pourcentage de clients (%)")
-            
-            # Ajouter les pourcentages sur les barres
-            for i, v in enumerate(default_percentage.values):
-                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
-            
-            st.pyplot(plt)
-
-            st.text("Parmi les clients qui ont un DAT :")
-            st.text("Plus de 60% des clients n’ont pas de prêt immobilier.")
-            st.text("90% des clients n’ont pas de prêt personnel.")
-            st.text("99% des clients ayant des engagements bancaires ne sont pas en défaut de paiement.")
-
-            
     
         elif sub_pages == "Caracteristique de la Campagne Marketing":
             st.write("### Analyse: Caracteristique de la Campagne Marketing")
