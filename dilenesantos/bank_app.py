@@ -1289,7 +1289,8 @@ if selected == "Pre-processing":
             st.write("Résultat =", count_age_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'balance'")
-            st.markdown("Pour la balance, nous avons également constaté des **valeurs extrêmes** pour **les valeurs inférieures à -2257** et les **valeurs supérieures à 4087**. \n\ **Nous avons décidé de retirer ces lignes.**")
+            st.markdown("Pour balance, nous avons également constaté des **valeurs extrêmes** pour **les valeurs inférieures à -2257** et les **valeurs supérieures à 4087**. \n\
+            **Nous retirons ces lignes.**")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] > -2257]
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] < 4087]
             count_balance_sup = df[df['balance'] < -2257].shape[0]
@@ -1298,13 +1299,15 @@ if selected == "Pre-processing":
             st.write("Résultat =", total_balance_count, "**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'campaign'")
-            st.markdown("La variable campaign a également montré des **valeurs extrêmes pour les valeurs supérieures à 6**.  \n\ **Nous retirons également ces lignes.**")
+            st.markdown("La variable campaign a également montré des **valeurs extrêmes pour les valeurs supérieures à 6**.  \n\
+            **Nous retirons également ces lignes.**")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["campaign"] < 6]
             count_campaign_sup = df[df['campaign'] > 6].shape[0]
             st.write("Résultat", count_campaign_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'previous'")
-            st.markdown("Nous avons également constaté des **valeurs extrêmes pour les valeurs supérieures à 2**. \n\ **Nous retirons également ces lignes de notre dataframe.**")
+            st.markdown("Nous avons également constaté des **valeurs extrêmes pour les valeurs supérieures à 2**. \n\
+            **Nous retirons également ces lignes de notre dataframe.**")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["previous"] < 2.5]
             count_previous_sup = df[df['previous'] > 2.5].shape[0]
             st.write("Résultat", count_previous_sup,"**lignes supprimées**")
@@ -1461,7 +1464,8 @@ if selected == "Pre-processing":
             
             st.dataframe(dffpre_pros2.isna().sum())
             
-            st.markdown("Nous nous occuperons du remplacement de ces NAns par la suite, une fois le jeu de donnée séparé en jeu d'entraînement et de test.  \n\ **Cela dans le but de s'assurer que la même transformation des Nans est appliquée au jeu de données Train et Test.**")
+            st.markdown("Nous nous occuperons du remplacement de ces NAns par la suite, une fois le jeu de donnée séparé en jeu d'entraînement et de test.  \n\
+            **Cela dans le but de s'assurer que la même transformation des Nans est appliquée au jeu de données Train et Test.**")
             
 
     if option_submenu3 == '**APRÈS SÉPARATION DES DONNÉES**':
