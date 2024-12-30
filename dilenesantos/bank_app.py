@@ -557,8 +557,9 @@ if selected == 'DataVisualisation':
                     plt.title('Distribution des âges selon la variable deposit', fontsize=5)  # Modifiez 10 par la taille souhaitée
                     plt.xlabel('Âge', fontsize=4)  # Taille de police pour l'axe x
                     plt.ylabel('Densité', fontsize=4)  # Taille de police pour l'axe y
-                    plt.legend(fontsize=3)  # Taille de police pour la légende
+                    plt.legend(fontsize=4)  # Taille de police pour la légende
                     plt.yticks(fontsize=3)
+                    plt.xticks(fontsize=4)
                     st.pyplot(fig)
                     st.write("Test Statistique d'ANOVA :")
                     
