@@ -1357,8 +1357,8 @@ if selected == "Pre-processing":
             
             st.subheader("Création de la colonne 'weekday'")
             st.markdown("Avant de pouvoir créer la colonne weekday, nous devons passer par deux étapes : \n\
-            1. **ajouter une colonne 'year' **: les données fournies par la banque portugaises sont datées de juin 2014. Nous en déduisons que les mois allant de juin à décembre correspondent à l'année 2023 et que les mois allant de janvier à mai correspondent à l'année 2014  \n\
-            2. **ajouter une colonne 'date' au format datetime **: cela est désormais possibles grâce aux colonnes mois, day et year")
+            1. **ajouter une colonne year**: les données fournies par la banque portugaises sont datées de juin 2014. Nous en déduisons que les mois allant de juin à décembre correspondent à l'année 2023 et que les mois allant de janvier à mai correspondent à l'année 2014  \n\
+            2. **ajouter une colonne date au format datetime **: cela est désormais possibles grâce aux colonnes mois, day et year")
 
             st.markdown("**Nous pouvons alors créer la colonne weekday grâce à la fonction 'dt.weekday'**")
             
