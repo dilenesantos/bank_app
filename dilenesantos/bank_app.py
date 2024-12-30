@@ -549,15 +549,15 @@ if selected == 'DataVisualisation':
                 st.subheader(f"Analyse du {sub_pages1}")
     
                 if sub_pages1 == "Lien âge x deposit" :
-                    fig = plt.figure(figsize=(4,2))
+                    fig = plt.figure(figsize=(3,1))
                     sns.kdeplot(df[df['deposit'] == 'yes']['age'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['age'], label='No', color='red')
                     
                     # Spécifier la taille de la police
-                    plt.title('Distribution des âges selon la variable deposit', fontsize=6)  # Modifiez 10 par la taille souhaitée
-                    plt.xlabel('Âge', fontsize=5)  # Taille de police pour l'axe x
-                    plt.ylabel('Densité', fontsize=5)  # Taille de police pour l'axe y
-                    plt.legend(fontsize=7)  # Taille de police pour la légende
+                    plt.title('Distribution des âges selon la variable deposit', fontsize=5)  # Modifiez 10 par la taille souhaitée
+                    plt.xlabel('Âge', fontsize=3)  # Taille de police pour l'axe x
+                    plt.ylabel('Densité', fontsize=3)  # Taille de police pour l'axe y
+                    plt.legend(fontsize=4)  # Taille de police pour la légende
                     st.pyplot(fig)
                     st.write("Test Statistique d'ANOVA :")
                     
