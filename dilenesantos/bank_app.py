@@ -1304,7 +1304,7 @@ if selected == "Pre-processing":
             st.write("Résultat", count_campaign_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'previous'")
-            st.markdown("Nous avons également constaté des **valeurs extrêmes pour les valeurs supérieures à 2**. \n\ Nous retirons également ces lignes de notre dataframe.**")
+            st.markdown("Nous avons également constaté des **valeurs extrêmes pour les valeurs supérieures à 2**. \n\ **Nous retirons également ces lignes de notre dataframe.**")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["previous"] < 2.5]
             count_previous_sup = df[df['previous'] > 2.5].shape[0]
             st.write("Résultat", count_previous_sup,"**lignes supprimées**")
