@@ -549,7 +549,7 @@ if selected == 'DataVisualisation':
                 st.subheader(f"Analyse du {sub_pages1}")
     
                 if sub_pages1 == "Lien âge x deposit" :
-                    fig = plt.figure(figsize=(6,3))
+                    fig = plt.figure(figsize=(4,2))
                     sns.kdeplot(df[df['deposit'] == 'yes']['age'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['age'], label='No', color='red')
                     plt.title('Distribution des âges selon la variable deposit')
