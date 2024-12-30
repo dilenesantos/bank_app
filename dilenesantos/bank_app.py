@@ -3533,22 +3533,7 @@ if selected == 'Outil  Prédictif':
 
     st.subheader('Vos Informations sur le client')
     # Collecte de l'âge sans valeur par défaut
-    age_input = st.text_input("Quel est l'âge du client ?")  # Valeur par défaut retirée
-    
-    # Validation de l'entrée
-    if age_input:  # Vérifie si age_input n'est pas vide
-        try:
-            # Convertir l'entrée en entier
-            age = int(age_input)
-            
-            # Vérifier si l'âge est dans la plage valide
-            if age < 18 or age > 95:
-                st.error("L'âge doit être compris entre 18 et 95 ans.")
-    
-        except ValueError:
-            st.error("Veuillez entrer un nombre valide pour l'âge.")
-    else : 
-        pass
+    age_input = st.text_input("Quel est l'âge du client ?")  
     
     education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
     #conditions d'affichage pour education : 
