@@ -568,7 +568,7 @@ if selected == 'DataVisualisation':
                     table = statsmodels.api.stats.anova_lm(result)
                     st.write(table)
 
-                    st.markdown("P_value = 0.0002 ➡️ **Il y a un lien significatif entre Age et Deposit**") 
+                    st.markdown("P_value = 0.0002  ➡️  **Il y a un lien significatif entre Age et Deposit**") 
                     st.write("____________________________________")
     
     
@@ -576,17 +576,17 @@ if selected == 'DataVisualisation':
                     fig = plt.figure()
                     sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red')
-                    plt.title('Distribution de Balance selon la variable deposit')
+                    plt.title('Distribution de Balance selon la variable deposit', fontsize=5)
+                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.yticks(fontsize=5)
+                    plt.xticks(fontsize=5)
                     plt.xlabel('Balance')
                     plt.ylabel('Densité')
-                    plt.legend()
                     st.write(fig)       
     
     
                     st.write("Test d'ANOVA :")
-    
-                    st.write("**P_value = 9.126568e-18**")
-                    st.write("**Il y a un lien significatif entre Balance et Deposit**")
+                    st.markdown("P_value = 9.126568e-18  ➡️  **Il y a un lien significatif entre Balance et Deposit**") 
                     st.write("____________________________________")
     
     
@@ -594,10 +594,12 @@ if selected == 'DataVisualisation':
                     fig = plt.figure()
                     sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red')
-                    plt.title('Distribution de Duration selon la variable Deposit')
+                    plt.title('Distribution de Duration selon la variable Deposit', fontsize=5)
+                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.yticks(fontsize=5)
+                    plt.xticks(fontsize=5)
                     plt.xlabel('Duration')
                     plt.ylabel('Densité')
-                    plt.legend()
                     st.write(fig)
     
                     st.write("Test d'ANOVA :")
@@ -606,9 +608,7 @@ if selected == 'DataVisualisation':
                     table3 = statsmodels.api.stats.anova_lm(result3)
                     st.write (table3)
     
-    
-                    st.write("P_value = 0")
-                    st.write("**Il y a un lien significatif entre Duration et Deposit**")  
+                    st.markdown("P_value = 0  ➡️  **Il y a un lien significatif entre Duration et Deposit**") 
                     st.write("____________________________________")
     
     
@@ -616,15 +616,16 @@ if selected == 'DataVisualisation':
                     fig = plt.figure()
                     sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red')
-                    plt.title('Distribution de Campaign selon la variable Deposit')
+                    plt.title('Distribution de Campaign selon la variable Deposit', fontsize=5)
+                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.yticks(fontsize=5)
+                    plt.xticks(fontsize=5)
                     plt.xlabel('Campaign')
                     plt.ylabel('Densité')
-                    plt.legend()
                     st.write(fig)
     
                     st.write("Test d'ANOVA :")
-                    st.write("**P_value = 4.831324e-42**")
-                    st.write("**Il y a un lien significatif entre Campaign et Deposit**") 
+                    st.markdown("P_value = 4.831324e-42  ➡️  **Il y a un lien significatif entre Campaign et Deposit**") 
                     st.write("____________________________________")
     
     
@@ -632,17 +633,18 @@ if selected == 'DataVisualisation':
                     fig = plt.figure()
                     sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red')
-                    plt.title('Distribution de Previous selon la variable Deposit')
+                    plt.title('Distribution de Previous selon la variable Deposit', fontsize=5)
+                    plt.legend(fontsize=4)  # Taille de police pour la légende
+                    plt.yticks(fontsize=5)
+                    plt.xticks(fontsize=5)
                     plt.xlabel('Previous')
                     plt.ylabel('Densité')
                     plt.legend()
                     st.write(fig)
     
                     st.write("Test d'ANOVA :")
-    
-                    st.write("**P_value = 7.125338e-50**")
-                    st.write("**Il y a un lien significatif entre Previous et Deposit**")  
-    
+                    st.markdown("P_value = 7.125338e-50  ➡️  **Il y a un lien significatif entre Previous et Deposit**") 
+                    
                 if sub_pages1 == "Conclusion" :
                     st.subheader("Conclusion")
                     st.image("dilenesantos/recap_test_anova.png")
