@@ -1111,7 +1111,7 @@ if selected == 'DataVisualisation':
                         counts = data[column].value_counts(normalize=True) * 100
             
                         # Barplot de distribution
-                        fig = plt.figure(figsize=(4,2))
+                        fig = plt.figure(figsize=(9,6))
                         sns.barplot(x=counts.index, y=counts.values, color='skyblue')
                         plt.title(f"Distribution de {column} (%)", fontsize=5)
                         plt.xlabel(xlabel, fontsize=4)
