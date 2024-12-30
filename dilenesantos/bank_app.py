@@ -1111,15 +1111,16 @@ if selected == 'DataVisualisation':
                         counts = data[column].value_counts(normalize=True) * 100
             
                         # Barplot de distribution
-                        plt.figure(figsize=(9, 6))
+                        fig = plt.figure(figsize=(4,2))
                         sns.barplot(x=counts.index, y=counts.values, color='skyblue')
-                        plt.title(f"Distribution de {column} (%)")
-                        plt.xlabel(xlabel)
-                        plt.ylabel("Percentage (%)")
-                        plt.xticks(rotation=45)  
+                        plt.title(f"Distribution de {column} (%)", fontsize=5)
+                        plt.xlabel(xlabel, fontsize=4)
+                        plt.ylabel("Percentage (%)", fontsize=4)
+                        plt.xticks(rotation=45, fontsize=5)  
                         st.pyplot(plt)
                         plt.clf()  
-    
+
+                    
                     plot_percentage(clients_yes, "type_prospect", "Type de prospect")
                     st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
                     st.write("____________________________________")
