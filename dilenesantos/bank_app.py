@@ -573,7 +573,7 @@ if selected == 'DataVisualisation':
     
     
                 if sub_pages1 == "Lien balance x deposit" :
-                    fig = plt.figure()
+                    fig = plt.figure(figsize=(4,2))
                     sns.kdeplot(df[df['deposit'] == 'yes']['balance'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['balance'], label='No', color='red')
                     plt.title('Distribution de Balance selon la variable deposit', fontsize=5)
@@ -591,7 +591,7 @@ if selected == 'DataVisualisation':
     
     
                 if sub_pages1 == "Lien duration x deposit" :
-                    fig = plt.figure()
+                    fig = plt.figure(figsize=(4,2))
                     sns.kdeplot(df[df['deposit'] == 'yes']['duration'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['duration'], label='No', color='red')
                     plt.title('Distribution de Duration selon la variable Deposit', fontsize=5)
@@ -613,7 +613,7 @@ if selected == 'DataVisualisation':
     
     
                 if sub_pages1 == "Lien campaign x deposit" :
-                    fig = plt.figure()
+                    fig = plt.figure(figsize=(4,2))
                     sns.kdeplot(df[df['deposit'] == 'yes']['campaign'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['campaign'], label='No', color='red')
                     plt.title('Distribution de Campaign selon la variable Deposit', fontsize=5)
@@ -630,7 +630,7 @@ if selected == 'DataVisualisation':
     
     
                 if sub_pages1 == "Lien previous x deposit" :
-                    fig = plt.figure()
+                    fig = plt.figure(figsize=(4,2))
                     sns.kdeplot(df[df['deposit'] == 'yes']['previous'], label='Yes', color='blue')
                     sns.kdeplot(df[df['deposit'] == 'no']['previous'], label='No', color='red')
                     plt.title('Distribution de Previous selon la variable Deposit', fontsize=5)
