@@ -3579,7 +3579,7 @@ if selected == 'Outil  Prédictif':
     
     housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
 
-    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,6,1)
+    previous = st.slider("Lors de la précédente campagne marketing, combien de fois le client a-t-il été contacté ?", 0,6,1)
     
 
     # Vérifiez si age et balance sont correctement remplis
