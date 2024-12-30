@@ -641,7 +641,7 @@ if selected == 'DataVisualisation':
                     st.write("**P_value = 7.125338e-50**")
                     st.write("**Il y a un lien significatif entre Previous et Deposit**")  
     
-                if sub_pages1 == "Conclustion" :
+                if sub_pages1 == "Conclusion" :
                     st.subheader("Conclusion")
                     st.image("dilenesantos/recap_test_anova.png")
                     st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables quantitatives ont un lien significatif avec notre variable cible.**")
