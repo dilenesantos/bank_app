@@ -921,6 +921,7 @@ if selected == 'DataVisualisation':
                 st.write("### Résumé des clients par job avec les statistiques d'âge:")
                 st.dataframe(summary)
                 st.text("Nous remarquons sur ce tableau qu’il y a une grande diversification des âges pour tous les groupes.")
+                st.write("____________________________________")
                 
             elif sub_pages == "Statut Matrimonial et Education":
                 st.write("### Analyse: Statut Matrimonial et Education")
@@ -962,7 +963,8 @@ if selected == 'DataVisualisation':
     
                 # Texte explicatif
                 st.text("Nous observons que la majorité des clients sont mariés, suivis par un groupe de clients célibataires. Les niveaux d’éducation des clients sont le secondaire et le tertiaire. Ceci montre que les clients détenant le DAT (dépôt à terme) ont un certain niveau académique.")
-    
+                st.write("____________________________________")
+
             elif sub_pages == "Bancaire":
                 st.header("Analyse: Bancaire")
                 st.subheader("Balance du compte")
@@ -1076,6 +1078,7 @@ if selected == 'DataVisualisation':
                 st.text("Plus de 60% des clients n’ont pas de prêt immobilier.")
                 st.text("90% des clients n’ont pas de prêt personnel.")
                 st.text("99% des clients ayant des engagements bancaires ne sont pas en défaut de paiement.")
+                st.write("____________________________________")
 
     
         
@@ -1115,6 +1118,8 @@ if selected == 'DataVisualisation':
     
                     plot_percentage(clients_yes, "type_prospect", "Type de prospect")
                     st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
+                    st.write("____________________________________")
+
                 
                 if st.checkbox("Poutcome"):
                     st.write("Résultat de la précédente campagne marketing")  
@@ -1138,7 +1143,8 @@ if selected == 'DataVisualisation':
                         plt.clf()  
                     plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
                     st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
-                    
+                    st.write("____________________________________")
+
                 if st.checkbox("Previous"):
                     #fonction
                     def plot_percentage(data, column, xlabel):
@@ -1184,7 +1190,8 @@ if selected == 'DataVisualisation':
                     st.write("Nombre de contacts réalisés avec le client pendant la campagne") 
                     plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
                     st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
-    
+                    st.write("____________________________________")
+
             elif sub_pages == "Temporel":
                 st.write("### Analyse: Temporel")
     
@@ -1224,7 +1231,8 @@ if selected == 'DataVisualisation':
                 st.pyplot(plt)
     
                 st.text("Les périodes où les clients sont susceptibles de souscrire sont le printemps et l’été. Et les jours sont par ordre de souscription : dimanche, mardi, mercredi, lundi, jeudi, vendredi et samedi.")
-    
+                st.write("____________________________________")
+
     
             elif sub_pages == "Duration":
                 st.write("### Analyse: Duration")
@@ -1283,6 +1291,7 @@ if selected == 'DataVisualisation':
                 st.write(f"Pourcentage de clients avec une durée supérieure ou égale à la moyenne : {pourcentage_mean_or_more:.2f}%")
                 st.write(f"Pourcentage de clients avec une durée supérieure ou égale au minimum : {pourcentage_min_or_more:.2f}%")
                 st.write(f"Pourcentage de clients avec une durée supérieure ou égale au maximum : {pourcentage_max_or_more:.2f}%")
+                st.write("____________________________________")
 
 
 
