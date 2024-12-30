@@ -3586,11 +3586,11 @@ if selected == 'Outil  Prédictif':
     if age is not None and balance is not None:
         # Affichage du récapitulatif
         st.write(f'### Récapitulatif')
-        st.write("Le client a :  ", age, "ans")   
-        st.write("Le client a un niveau d'étude :  ", niveau_etude)
-        st.write("Le solde de son compte en banque est de :  ", balance, "euros")
-        st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
-        st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
+        st.write("Le client a :  ", age, "**ans**")   
+        st.write("Le client a un niveau d'étude :  **", niveau_etude, "**")
+        st.write("Le solde de son compte en banque est de :  ", balance, "**euros**")
+        st.write("Le client est-il propriétaire :  ", "**Oui**" if housing == 1 else "**Non**")
+        st.write("Le clients a été contacté  ", previous, " **fois lors de la dernière campagne marketing**")
   
         
         # Créer un dataframe récapitulatif des données du prospect
