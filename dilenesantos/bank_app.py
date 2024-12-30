@@ -522,8 +522,8 @@ if selected == 'DataVisualisation':
     # Define sub-pages
         sub_pages = [
             "Matrice de corrélation",
-            "Variables quantitatives",
-            "Variables qualitatives",
+            "Variables quantitatives : Tests d'ANOVA",
+            "Variables qualitatives : Tests de Chi-deux",
             "Évolution dans le temps"
         ]
 
@@ -537,9 +537,9 @@ if selected == 'DataVisualisation':
             st.write("""Le tableau de corrélation entre toutes les variables quantitatives de notre base de donnée révèle des coefficients 
             de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
 
-        if st.checkbox('**Variables quantitatives**'): 
+        if st.checkbox('**Variables quantitatives : Tests d'ANOVA**'): 
             st.header("Analyses et Tests statistiques des variables quantitatives")
-            sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit"]
+            sub_pages1 = st.radio(" ", ["Lien âge x deposit", "Lien balance x deposit", "Lien duration x deposit", "Lien campaign x deposit", "Lien previous x deposit", "Conclusion"]
                                   , key = "variable_selectbox",  horizontal=True)
             
             st.write("____________________________________")
@@ -639,15 +639,16 @@ if selected == 'DataVisualisation':
                 st.write("**P_value = 7.125338e-50**")
                 st.write("**Il y a un lien significatif entre Previous et Deposit**")  
 
+            if sub_pages1 == "Conclustion" :
                 st.subheader("Conclusion")
                 st.image("dilenesantos/recap_test_anova.png")
                 st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables quantitatives ont un lien significatif avec notre variable cible.**")
                 st.write("____________________________________")
 
 
-        if st.checkbox('**Variables qualitatives**'):
+        if st.checkbox('**Variables qualitatives : Tests de Chi-deux**'):
             st.header("Analyses et Tests statistiques des variables qualitatives")
-            sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit"], horizontal = True)
+            sub_pages2= st.radio(" ", ["Lien job x deposit", "Lien marital x deposit", "Lien education x deposit", "Lien housing x deposit", "Lien poutcome x deposit", "Conclusion"], horizontal = True)
 
             st.write("____________________________________")
 
@@ -755,7 +756,9 @@ if selected == 'DataVisualisation':
 
                 st.write("**Il y a une dépendance entre Poutcome et Deposit**")  
                 st.write("____________________________________")
-                
+
+            if sub_pages2 == "Conclusion" :
+
                 st.subheader("Conclusion")
                 st.image("dilenesantos/recap_Chi-deux.png")
                 st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables qualitatives ont un lien significatif avec notre variable cible.**")
