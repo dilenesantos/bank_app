@@ -1341,9 +1341,9 @@ if selected == "Pre-processing":
             Aussi, afin de pouvoir catégoriser les clients selon s'ils ont été contactés ou non lors de la précédente campagne , nous décidons de créer une nouvelle colonne à partir de 'pdays'. \n\
             **Nous nommons cette colonne 'Client_Category'**.")
             st.markdown("Cette nouvelle colonne nouvellement créée comprend 3 valeurs : \n\
-            1. **Prospect** = clients qui n'ont jamais été contacté lors de la précédente campagne \n\
-            2. **Reached-6M** = clients contactés il y a moins de 6 mois lors de la précédente campagne \n\
-            3. **Reached+6M** = clients contactés il y a plus de 6 mois lors de la précédente campagne.")
+            9. **Prospect** = clients qui n'ont jamais été contacté lors de la précédente campagne  \n\
+            10. **Reached-6M** = clients contactés il y a moins de 6 mois lors de la précédente campagne  \n\
+            11. **Reached+6M** = clients contactés il y a plus de 6 mois lors de la précédente campagne")
 
             
             bins = [-2, -1, 180, 855]
