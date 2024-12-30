@@ -1077,6 +1077,215 @@ if selected == 'DataVisualisation':
                 st.text("90% des clients n’ont pas de prêt personnel.")
                 st.text("99% des clients ayant des engagements bancaires ne sont pas en défaut de paiement.")
 
+    
+        
+            elif sub_pages == "Caracteristique de la Campagne Marketing":
+                st.write("### Analyse: Caracteristique de la Campagne Marketing")
+    
+                if st.checkbox("Type de clients"):
+                    st.write("Clients Jamais contactés ou déjà contactés") 
+                    # Nombre de clients par type de prospect
+                    prospect_counts = clients_yes["type_prospect"].value_counts()
+    
+                    # Affichage des résultats
+                    st.dataframe(prospect_counts)
+    
+                    # Fonction pour tracer les barres
+            
+            
+            
+                    #fonction
+                    def plot_percentage(data, column, xlabel):
+                        if column not in data.columns:
+                            st.error(f"The column '{column}' does not exist in the dataset.")
+                            return
+            
+                    # Calculate percentages
+                        counts = data[column].value_counts(normalize=True) * 100
+            
+                        # Barplot de distribution
+                        plt.figure(figsize=(9, 6))
+                        sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                        plt.title(f"Distribution de {column} (%)")
+                        plt.xlabel(xlabel)
+                        plt.ylabel("Percentage (%)")
+                        plt.xticks(rotation=45)  
+                        st.pyplot(plt)
+                        plt.clf()  
+    
+                    plot_percentage(clients_yes, "type_prospect", "Type de prospect")
+                    st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
+                
+                if st.checkbox("Poutcome"):
+                    st.write("Résultat de la précédente campagne marketing")  
+                    #fonction
+                    def plot_percentage(data, column, xlabel):
+                        if column not in data.columns:
+                            st.error(f"The column '{column}' does not exist in the dataset.")
+                            return
+            
+                    # Calculate percentages
+                        counts = data[column].value_counts(normalize=True) * 100
+            
+                        # Barplot de distribution
+                        plt.figure(figsize=(9, 6))
+                        sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                        plt.title(f"Distribution de {column} (%)")
+                        plt.xlabel(xlabel)
+                        plt.ylabel("Percentage (%)")
+                        plt.xticks(rotation=45)  
+                        st.pyplot(plt)
+                        plt.clf()  
+                    plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
+                    st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
+                    
+                if st.checkbox("Previous"):
+                    #fonction
+                    def plot_percentage(data, column, xlabel):
+                        if column not in data.columns:
+                            st.error(f"The column '{column}' does not exist in the dataset.")
+                            return
+            
+                    # Calculate percentages
+                        counts = data[column].value_counts(normalize=True) * 100
+            
+                        # Barplot de distribution
+                        plt.figure(figsize=(9, 6))
+                        sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                        plt.title(f"Distribution de {column} (%)")
+                        plt.xlabel(xlabel)
+                        plt.ylabel("Percentage (%)")
+                        plt.xticks(rotation=45)  
+                        st.pyplot(plt)
+                        plt.clf()  
+                    st.write("Nombre de contacts réalisés avec le client avant la campagne")   
+                    plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
+                    st.write("Plus de 60% des clients qui ont souscrit au DAT n’avaient jamais été contacté par la banque avant cette campagne.")
+    
+                if st.checkbox("Campaign"):
+                    #fonction
+                    def plot_percentage(data, column, xlabel):
+                        if column not in data.columns:
+                            st.error(f"The column '{column}' does not exist in the dataset.")
+                            return
+            
+                    # Calculate percentages
+                        counts = data[column].value_counts(normalize=True) * 100
+            
+                        # Barplot de distribution
+                        plt.figure(figsize=(9, 6))
+                        sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                        plt.title(f"Distribution de {column} (%)")
+                        plt.xlabel(xlabel)
+                        plt.ylabel("Percentage (%)")
+                        plt.xticks(rotation=45)  
+                        st.pyplot(plt)
+                        plt.clf()  
+                    st.write("Nombre de contacts réalisés avec le client pendant la campagne") 
+                    plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
+                    st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
+    
+            elif sub_pages == "Temporel":
+                st.write("### Analyse: Temporel")
+    
+                liste_annee =[]
+                for i in clients_yes["month"] :
+                    if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
+                        liste_annee.append("2013")
+                    elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
+                        liste_annee.append("2014")
+                clients_yes["year"] = liste_annee
+                clients_yes['date'] = clients_yes['day'].astype(str)+ '-'+ clients_yes['month'].astype(str)+ '-'+ clients_yes['year'].astype(str)
+                clients_yes['date']= pd.to_datetime(clients_yes['date'])
+                clients_yes["weekday"] = clients_yes["date"].dt.weekday
+                dic = {0 : "Lundi", 1 : "Mardi", 2 : "Mercredi", 3 : "Jeudi", 4 : "Vendredi", 5 : "Samedi", 6 : "Dimanche"}
+                clients_yes["weekday"] = clients_yes["weekday"].replace(dic)
+               
+    
+                # Mois
+                month_year_counts = clients_yes['month'].value_counts()
+                month_year_percentage = month_year_counts / month_year_counts.sum() * 100
+                plt.figure(figsize=(8, 5))
+                sns.barplot(x=month_year_percentage.index, y=month_year_percentage.values, color='skyblue')
+                plt.title("Distribution des mois où les clients  ont souscrit à un dépôt à terme")
+                plt.xlabel("Mois")
+                plt.ylabel("Pourcentage de clients (%)")
+                plt.xticks(rotation=90)
+                st.pyplot(plt)
+    
+                #  Jour de la semaine
+                weekday_counts = clients_yes['weekday'].value_counts()
+                weekday_percentage = weekday_counts / weekday_counts.sum() * 100
+                plt.figure(figsize=(8, 5))
+                sns.barplot(x=weekday_percentage.index, y=weekday_percentage.values, color='skyblue')
+                plt.title("Distribution des jours de la semaine où les clients ont souscrit à un dépôt à terme")
+                plt.xlabel("weekday")
+                plt.ylabel("Pourcentage de clients (%)")
+                st.pyplot(plt)
+    
+                st.text("Les périodes où les clients sont susceptibles de souscrire sont le printemps et l’été. Et les jours sont par ordre de souscription : dimanche, mardi, mercredi, lundi, jeudi, vendredi et samedi.")
+    
+    
+            elif sub_pages == "Duration":
+                st.write("### Analyse: Duration")
+            
+                # Conversion de la durée en minutes
+                clients_yes = clients_yes.copy()
+                clients_yes['duration_minutes'] = clients_yes['duration'] / 60
+    
+                # Calcul des valeurs de référence
+                mean_duration = clients_yes['duration_minutes'].mean()
+                min_duration = clients_yes['duration_minutes'].min()
+                max_duration = clients_yes['duration_minutes'].max()
+    
+                # Calcul du pourcentage de clients avec une durée égale ou supérieure au minimum
+                nb_clients_min_or_more = len(clients_yes[clients_yes['duration_minutes'] >= min_duration])
+                pourcentage_min_or_more = (nb_clients_min_or_more / len(clients_yes)) * 100
+    
+                # Calcul du pourcentage de clients avec une durée égale ou supérieure au maximum
+                nb_clients_max_or_more = len(clients_yes[clients_yes['duration_minutes'] >= max_duration])
+                pourcentage_max_or_more = (nb_clients_max_or_more / len(clients_yes)) * 100
+    
+                # Calcul du pourcentage de clients avec une durée égale ou supérieure à la moyenne
+                nb_clients_mean_or_more = len(clients_yes[clients_yes['duration_minutes'] >= mean_duration])
+                pourcentage_mean_or_more = (nb_clients_mean_or_more / len(clients_yes)) * 100
+    
+                # Affichage des résultats sous forme textuelle
+                st.write(f"Durée moyenne (minutes) : {mean_duration:.2f}")
+                st.write(f"Durée minimum (minutes) : {min_duration:.2f}")
+                st.write(f"Durée maximum (minutes) : {max_duration:.2f}")
+    
+    
+    
+                # Création d'un DataFrame pour les pourcentages à afficher dans le graphique
+                duration_stats = {
+                    'Durée': ['Moyenne', 'Minimum', 'Maximum'],
+                    'Pourcentage': [pourcentage_mean_or_more, pourcentage_min_or_more, pourcentage_max_or_more]
+                }
+                duration_df = pd.DataFrame(duration_stats)
+    
+                # Plot des pourcentages
+                plt.figure(figsize=(10, 6))
+                sns.barplot(x='Durée', y='Pourcentage', data=duration_df, palette="pastel")
+    
+                # Ajouter les pourcentages sur les barres
+                for i, v in enumerate(duration_df['Pourcentage']):
+                    plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
+    
+                # Titre et labels
+                plt.title("Pourcentage de clients en fonction de la durée d'appel")
+                plt.xlabel("Critère de durée")
+                plt.ylabel("Pourcentage de clients (%)")
+    
+                # Affichage du graphique
+                st.pyplot(plt)
+    
+                st.write(f"Pourcentage de clients avec une durée supérieure ou égale à la moyenne : {pourcentage_mean_or_more:.2f}%")
+                st.write(f"Pourcentage de clients avec une durée supérieure ou égale au minimum : {pourcentage_min_or_more:.2f}%")
+                st.write(f"Pourcentage de clients avec une durée supérieure ou égale au maximum : {pourcentage_max_or_more:.2f}%")
+
+
+
         if st.checkbox("Récapitulatif"):
             st.write("#### Le profil des clients ayant souscrit au produit DAT de la banque est le suivant :")
             st.write("* Clients **âgés entre 25 et 60 ans** avec des métiers de **manager, technicien, ouvrier, ou travaillant dans l’administration.**")
@@ -1086,213 +1295,6 @@ if selected == 'DataVisualisation':
             st.write("* Ils souscrivent au DAT dans les périodes **fin printemps / l’été**, principalement, dans l’ordre, **le dimanche, mardi, mercredi, lundi.**")
             st.write("* Et la durée moyenne des appels pour convaincre un client de souscrire à un DAT est de **9 minutes.**")
         
-
-    
-        elif sub_pages == "Caracteristique de la Campagne Marketing":
-            st.write("### Analyse: Caracteristique de la Campagne Marketing")
-
-            if st.checkbox("Type de clients"):
-                st.write("Clients Jamais contactés ou déjà contactés") 
-                # Nombre de clients par type de prospect
-                prospect_counts = clients_yes["type_prospect"].value_counts()
-
-                # Affichage des résultats
-                st.dataframe(prospect_counts)
-
-                # Fonction pour tracer les barres
-        
-        
-        
-                #fonction
-                def plot_percentage(data, column, xlabel):
-                    if column not in data.columns:
-                        st.error(f"The column '{column}' does not exist in the dataset.")
-                        return
-        
-                # Calculate percentages
-                    counts = data[column].value_counts(normalize=True) * 100
-        
-                    # Barplot de distribution
-                    plt.figure(figsize=(9, 6))
-                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
-                    plt.title(f"Distribution de {column} (%)")
-                    plt.xlabel(xlabel)
-                    plt.ylabel("Percentage (%)")
-                    plt.xticks(rotation=45)  
-                    st.pyplot(plt)
-                    plt.clf()  
-
-                plot_percentage(clients_yes, "type_prospect", "Type de prospect")
-                st.write("On voit ici que plus de 60% des clients qui ont souscrit au DAT sont de nouveaux prospects.")
-            
-            if st.checkbox("Poutcome"):
-                st.write("Résultat de la précédente campagne marketing")  
-                #fonction
-                def plot_percentage(data, column, xlabel):
-                    if column not in data.columns:
-                        st.error(f"The column '{column}' does not exist in the dataset.")
-                        return
-        
-                # Calculate percentages
-                    counts = data[column].value_counts(normalize=True) * 100
-        
-                    # Barplot de distribution
-                    plt.figure(figsize=(9, 6))
-                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
-                    plt.title(f"Distribution de {column} (%)")
-                    plt.xlabel(xlabel)
-                    plt.ylabel("Percentage (%)")
-                    plt.xticks(rotation=45)  
-                    st.pyplot(plt)
-                    plt.clf()  
-                plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
-                st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
-                
-            if st.checkbox("Previous"):
-                #fonction
-                def plot_percentage(data, column, xlabel):
-                    if column not in data.columns:
-                        st.error(f"The column '{column}' does not exist in the dataset.")
-                        return
-        
-                # Calculate percentages
-                    counts = data[column].value_counts(normalize=True) * 100
-        
-                    # Barplot de distribution
-                    plt.figure(figsize=(9, 6))
-                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
-                    plt.title(f"Distribution de {column} (%)")
-                    plt.xlabel(xlabel)
-                    plt.ylabel("Percentage (%)")
-                    plt.xticks(rotation=45)  
-                    st.pyplot(plt)
-                    plt.clf()  
-                st.write("Nombre de contacts réalisés avec le client avant la campagne")   
-                plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
-                st.write("Plus de 60% des clients qui ont souscrit au DAT n’avaient jamais été contacté par la banque avant cette campagne.")
-
-            if st.checkbox("Campaign"):
-                #fonction
-                def plot_percentage(data, column, xlabel):
-                    if column not in data.columns:
-                        st.error(f"The column '{column}' does not exist in the dataset.")
-                        return
-        
-                # Calculate percentages
-                    counts = data[column].value_counts(normalize=True) * 100
-        
-                    # Barplot de distribution
-                    plt.figure(figsize=(9, 6))
-                    sns.barplot(x=counts.index, y=counts.values, color='skyblue')
-                    plt.title(f"Distribution de {column} (%)")
-                    plt.xlabel(xlabel)
-                    plt.ylabel("Percentage (%)")
-                    plt.xticks(rotation=45)  
-                    st.pyplot(plt)
-                    plt.clf()  
-                st.write("Nombre de contacts réalisés avec le client pendant la campagne") 
-                plot_percentage(clients_yes, "campaign", "Nombre de contact réalisé pendant la campagne")
-                st.write("La plus grande proportion des clients qui ont souscrit au DAT a été contactée une fois pendant cette campagne. Donc en un appel le client a accepté l’offre.")
-
-        elif sub_pages == "Temporel":
-            st.write("### Analyse: Temporel")
-
-            liste_annee =[]
-            for i in clients_yes["month"] :
-                if i == "jun" or i == "jul" or i == "aug" or i == "sep" or i == "oct" or i == "nov" or i == "dec" :
-                    liste_annee.append("2013")
-                elif i == "jan" or i == "feb" or i == "mar" or i =="apr" or i =="may" :
-                    liste_annee.append("2014")
-            clients_yes["year"] = liste_annee
-            clients_yes['date'] = clients_yes['day'].astype(str)+ '-'+ clients_yes['month'].astype(str)+ '-'+ clients_yes['year'].astype(str)
-            clients_yes['date']= pd.to_datetime(clients_yes['date'])
-            clients_yes["weekday"] = clients_yes["date"].dt.weekday
-            dic = {0 : "Lundi", 1 : "Mardi", 2 : "Mercredi", 3 : "Jeudi", 4 : "Vendredi", 5 : "Samedi", 6 : "Dimanche"}
-            clients_yes["weekday"] = clients_yes["weekday"].replace(dic)
-           
-
-            # Mois
-            month_year_counts = clients_yes['month'].value_counts()
-            month_year_percentage = month_year_counts / month_year_counts.sum() * 100
-            plt.figure(figsize=(8, 5))
-            sns.barplot(x=month_year_percentage.index, y=month_year_percentage.values, color='skyblue')
-            plt.title("Distribution des mois où les clients  ont souscrit à un dépôt à terme")
-            plt.xlabel("Mois")
-            plt.ylabel("Pourcentage de clients (%)")
-            plt.xticks(rotation=90)
-            st.pyplot(plt)
-
-            #  Jour de la semaine
-            weekday_counts = clients_yes['weekday'].value_counts()
-            weekday_percentage = weekday_counts / weekday_counts.sum() * 100
-            plt.figure(figsize=(8, 5))
-            sns.barplot(x=weekday_percentage.index, y=weekday_percentage.values, color='skyblue')
-            plt.title("Distribution des jours de la semaine où les clients ont souscrit à un dépôt à terme")
-            plt.xlabel("weekday")
-            plt.ylabel("Pourcentage de clients (%)")
-            st.pyplot(plt)
-
-            st.text("Les périodes où les clients sont susceptibles de souscrire sont le printemps et l’été. Et les jours sont par ordre de souscription : dimanche, mardi, mercredi, lundi, jeudi, vendredi et samedi.")
-
-
-        elif sub_pages == "Duration":
-            st.write("### Analyse: Duration")
-        
-            # Conversion de la durée en minutes
-            clients_yes = clients_yes.copy()
-            clients_yes['duration_minutes'] = clients_yes['duration'] / 60
-
-            # Calcul des valeurs de référence
-            mean_duration = clients_yes['duration_minutes'].mean()
-            min_duration = clients_yes['duration_minutes'].min()
-            max_duration = clients_yes['duration_minutes'].max()
-
-            # Calcul du pourcentage de clients avec une durée égale ou supérieure au minimum
-            nb_clients_min_or_more = len(clients_yes[clients_yes['duration_minutes'] >= min_duration])
-            pourcentage_min_or_more = (nb_clients_min_or_more / len(clients_yes)) * 100
-
-            # Calcul du pourcentage de clients avec une durée égale ou supérieure au maximum
-            nb_clients_max_or_more = len(clients_yes[clients_yes['duration_minutes'] >= max_duration])
-            pourcentage_max_or_more = (nb_clients_max_or_more / len(clients_yes)) * 100
-
-            # Calcul du pourcentage de clients avec une durée égale ou supérieure à la moyenne
-            nb_clients_mean_or_more = len(clients_yes[clients_yes['duration_minutes'] >= mean_duration])
-            pourcentage_mean_or_more = (nb_clients_mean_or_more / len(clients_yes)) * 100
-
-            # Affichage des résultats sous forme textuelle
-            st.write(f"Durée moyenne (minutes) : {mean_duration:.2f}")
-            st.write(f"Durée minimum (minutes) : {min_duration:.2f}")
-            st.write(f"Durée maximum (minutes) : {max_duration:.2f}")
-
-
-
-            # Création d'un DataFrame pour les pourcentages à afficher dans le graphique
-            duration_stats = {
-                'Durée': ['Moyenne', 'Minimum', 'Maximum'],
-                'Pourcentage': [pourcentage_mean_or_more, pourcentage_min_or_more, pourcentage_max_or_more]
-            }
-            duration_df = pd.DataFrame(duration_stats)
-
-            # Plot des pourcentages
-            plt.figure(figsize=(10, 6))
-            sns.barplot(x='Durée', y='Pourcentage', data=duration_df, palette="pastel")
-
-            # Ajouter les pourcentages sur les barres
-            for i, v in enumerate(duration_df['Pourcentage']):
-                plt.text(i, v + 1, f"{v:.2f}%", ha='center', va='bottom', fontsize=10, color='black')
-
-            # Titre et labels
-            plt.title("Pourcentage de clients en fonction de la durée d'appel")
-            plt.xlabel("Critère de durée")
-            plt.ylabel("Pourcentage de clients (%)")
-
-            # Affichage du graphique
-            st.pyplot(plt)
-
-            st.write(f"Pourcentage de clients avec une durée supérieure ou égale à la moyenne : {pourcentage_mean_or_more:.2f}%")
-            st.write(f"Pourcentage de clients avec une durée supérieure ou égale au minimum : {pourcentage_min_or_more:.2f}%")
-            st.write(f"Pourcentage de clients avec une durée supérieure ou égale au maximum : {pourcentage_max_or_more:.2f}%")
-
 if selected == "Pre-processing":  
     st.title("PRÉ-PROCESSING")
     option_submenu3 = st.radio(" ", ["**AVANT SÉPARATION DES DONNÉES**", "**APRÈS SÉPARATION DES DONNÉES**"], horizontal = True)
