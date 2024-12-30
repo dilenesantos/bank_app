@@ -3534,6 +3534,21 @@ if selected == 'Outil  Prédictif':
     st.subheader('Vos Informations sur le client')
     # Collecte de l'âge sans valeur par défaut
     age_input = st.text_input("Quel est l'âge du client ?")  
+    age = None
+    if age_input:  # Vérifie si age_input n'est pas vide
+    try:
+        # Convertir l'entrée en entier
+        age = int(age_input)
+        
+        # Vérifier si l'âge est dans la plage valide
+        if age < 18 or age > 95:
+            st.error("L'âge doit être compris entre 18 et 95 ans.")
+
+        except ValueError:
+            st.error("Veuillez entrer un nombre valide pour l'âge.")
+    else:
+    # Quand le champ est vide, on ne fait rien
+        pass  # Vous pouvez aussi utiliser `st.write("")` pour rien afficher.
     
     education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
     #conditions d'affichage pour education : 
@@ -3552,6 +3567,7 @@ if selected == 'Outil  Prédictif':
     balance_input = st.text_input("Quel est le solde de son compte en banque ?")  # Pas de valeur par défaut
     
     # Validation de l'entrée pour le solde
+    balance = None
     if balance_input:  # Vérifie si balance_input n'est pas vide
         try:
             # Convertir l'entrée en int pour gérer le solde comme un entier
@@ -3568,9 +3584,11 @@ if selected == 'Outil  Prédictif':
 
 
     st.write(f'### Récapitulatif')
-    st.write("Le client a :  ", age, "ans")
+    if age is not None:
+        st.write("Le client a :  ", age, "ans")
     st.write("Le client a un niveau d'étude :  ", niveau_etude)
-    st.write("Le solde de son compte en banque est de :  ", balance, "euros")
+    if balance is not None :
+        st.write("Le solde de son compte en banque est de :  ", balance, "euros")
     st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
     st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
     
