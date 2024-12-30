@@ -3532,18 +3532,6 @@ if selected == 'Outil  Prédictif':
     st.title("Démonstration et application de notre modèle à votre cas")               
 
     st.subheader('Vos Informations sur le client')
-    housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
-    # Collecte du solde bancaire avec vérification
-    balance_input = st.text_input("Quel est le solde de son compte en banque ?")  # Pas de valeur par défaut
-    
-    # Validation de l'entrée pour le solde
-    if balance_input:  # Vérifie si balance_input n'est pas vide
-        try:
-            # Convertir l'entrée en int pour gérer le solde comme un entier
-            balance = int(balance_input)
-        except ValueError:
-            st.error("Veuillez entrer un nombre entier valide pour le solde.")
-        
     # Collecte de l'âge sans valeur par défaut
     age_input = st.text_input("Quel est l'âge du client ?")  # Valeur par défaut retirée
     
@@ -3559,10 +3547,8 @@ if selected == 'Outil  Prédictif':
     
         except ValueError:
             st.error("Veuillez entrer un nombre valide pour l'âge.")
-        
-    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,6,1)
-    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
     
+    education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
     #conditions d'affichage pour education : 
     if education == "tertiary":
         niveau_etude = "Tertiaire"
@@ -3574,6 +3560,23 @@ if selected == 'Outil  Prédictif':
         niveau_etude = "Inconnu"
     else:
         niveau_etude = "Inconnu"  # Par défaut si `education` a une valeur inattendue
+         
+    # Collecte du solde bancaire avec vérification
+    balance_input = st.text_input("Quel est le solde de son compte en banque ?")  # Pas de valeur par défaut
+    
+    # Validation de l'entrée pour le solde
+    if balance_input:  # Vérifie si balance_input n'est pas vide
+        try:
+            # Convertir l'entrée en int pour gérer le solde comme un entier
+            balance = int(balance_input)
+        except ValueError:
+            st.error("Veuillez entrer un nombre entier valide pour le solde.")
+    
+    housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
+
+    previous = st.slider("Lors de la précédente campagne marketing, combien de fois avez-vous été appélé par votre banque", 0,6,1)
+    
+
 
     st.write(f'### Récapitulatif')
     st.write("Le client a :  ", age, "ans")
