@@ -536,7 +536,7 @@ if selected == 'DataVisualisation':
             st.write("""Le tableau de corrélation entre toutes les variables quantitatives de notre base de donnée révèle des coefficients 
             de corrélation très proche de 0. Cela signifie que nos variables quantitatives ne sont pas corrélées entre elles.""")
 
-        if st.checkbox("**Tests statisques**") :
+        if st.checkbox("**Tests statistiques**") :
             submenu_tests = st.radio(" ", ["Variables quantitatives : Tests d'ANOVA", "Variables qualitatives : Tests de Chi-deux"], horizontal = True)
             
             if submenu_tests == "Variables quantitatives : Tests d'ANOVA" : 
