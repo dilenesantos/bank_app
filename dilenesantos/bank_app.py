@@ -1281,15 +1281,15 @@ if selected == "Pre-processing":
    
         if submenupages == "Suppression de lignes" :            
             st.subheader("Filtre sur la colonne 'age'")
-            st.write("Notre analyse univariée a montré des **valeurs extrêmes au dessus de 74 ans.**")
-            st.write("**Nous avons décidé de retirer ces lignes de notre dataset.**")
+            st.write("Notre analyse univariée a montré des **valeurs extrêmes au dessus de 74 ans.** \n\
+            **Nous avons décidé de retirer ces lignes de notre dataframe.**")
             
             dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
             count_age_sup = df[df['age'] > 74.5].shape[0]
             st.write("Résultat =", count_age_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'balance'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable balance pour les valeurs inférieures à -2257 et les valeurs supérieures à 4087, aussi nous décidons de retirer ces lignes de notre dataset.")
+            st.write("Pour la balance, nous avons également constaté des **valeurs extrêmes** pour **les valeurs inférieures à -2257** et les **valeurs supérieures à 4087**. \n\ **Nous avons décidé de retirer ces lignes.**")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] > -2257]
             dffpre_pros = dffpre_pros.loc[dffpre_pros["balance"] < 4087]
             count_balance_sup = df[df['balance'] < -2257].shape[0]
@@ -1298,13 +1298,13 @@ if selected == "Pre-processing":
             st.write("Résultat =", total_balance_count, "**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'campaign'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable campaign pour les valeurs supérieures à 6,  nous décidons de retirer ces lignes de notre dataset.")
+            st.write("La variable campaign a également montré des **valeurs extrêmes pour les valeurs supérieures à 6**.  \n\ **Nous retirons également ces lignes.**")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["campaign"] < 6]
             count_campaign_sup = df[df['campaign'] > 6].shape[0]
             st.write("Résultat", count_campaign_sup,"**lignes supprimées**")
             
             st.subheader("Filtre sur la colonne 'previous'")
-            st.write("Notre analyse univariée a montré des valeurs extrêmes de la variable previous pour les valeurs supérieures à 2.5 : nous décidons de retirer ces lignes de notre dataset.")
+            st.write("Nous avons également constaté des **valeurs extrêmes pour les valeurs supérieures à 2**. \n\ Nous retirons également ces lignes de notre dataframe.**")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["previous"] < 2.5]
             count_previous_sup = df[df['previous'] > 2.5].shape[0]
             st.write("Résultat", count_previous_sup,"**lignes supprimées**")
@@ -1313,13 +1313,17 @@ if selected == "Pre-processing":
 
             st.subheader("Résultat:")
             count_sup_lignes = df.shape[0] - dffpre_pros.shape[0]
-            st.write("Nombre total de lignes supprimées de notre dataset = ", count_sup_lignes)
+            st.write("Nombre total de lignes supprimées = ", count_sup_lignes)
             nb_lignes = dffpre_pros.shape[0]
-            st.write("**Notre dataset filtré compte désormais ", nb_lignes, "lignes.**")
+            st.write("**Notre jeu de données filtré compte désormais ", nb_lignes, "lignes.**")
 
         if submenupages == "Création de colonnes" :   
             st.subheader("Création de la colonne 'Client_Category'")
-            st.write("Afin de pouvoir classifier les clients selon la colonne pdays, nous décidons de créer à partir de 'pdays' une nouvelle colonne 'Client_Category' qui ")
+            st.write("La colonne 'pdays' qui représente le nombre de jours écoulés depuis le dernier contact avec le client lors de la campagne précédente.  \n\ Or pdays affiche de nombreuses valeurs égales à -1 : ce sont les clients qui n'ont jamais été contactés lors de la précédente campagne. \n\ Aussi, afin de pouvoir catégoriser les clients selon s'ils ont été contactés ou non lors de la précédente campagne , nous décidons de créer une nouvelle colonne à partir de 'pdays'. \n\ **Nous nommons cette colonne 'Client_Category'**.")
+            st.write("Cette nouvelle colonne nouvellement créée comprend 3 valeurs : \n\
+            - **Prospect** = clients qui n'ont jamais été contacté lors de la précédente campagne \n\
+            - **Reached-6M** = clients contactés il y a moins de 6 mois lors de la précédente campagne \n\
+            - **Reached+6M** = clients contactés il y a plus de 6 mois lors de la précédente campagne.")
 
             
             bins = [-2, -1, 180, 855]
@@ -1359,10 +1363,10 @@ if selected == "Pre-processing":
         if submenupages == "Suppression de colonnes" :
             st.subheader("Suppressions de colonnes")
         
-            st.write("- La colonne contact comprend bla blabla , nous décidons donc de la supprimer")             
-            st.write("- Puisque nous avons créé la colonne Client_Category à partir de la colonne 'pdays', nous pouvons supprimer la colonne 'pdays'") 
-            st.write("- Puisque nous avons créé la colonne weeday à partir de la colonne 'date', nous pouvons supprimer la colonne 'day' ainsi que la colonne date")     
-            st.write("- Enfin, nous nous pouvons supprimer la colonne 'year' puisqu'elle n'apporte aucune valeur - en effet ...blablabla")
+            st.write("- La colonne contact ne contribuerait pas de manière significative à la compréhension des données, nous décidons donc de la supprimer.")             
+            st.write("- Puisque nous avons créé la colonne Client_Category à partir de la colonne 'pdays', nous supprimons la colonne 'pdays'") 
+            st.write("- Puisque nous avons créé la colonne weeday à partir de la colonne 'date', nous supprimons la colonne 'day' ainsi que la colonne date qui nous a uniquement servi à crééer notre colonne weekday.")     
+            st.write("- Enfin, nous nous pouvons supprimer la colonne 'year' car les années 2013 et 2014 ne sont pas complètes, nous ne pouvons donc pas les comparer.")
 
                         
             dffpre_pros2 = dffpre_pros2[dffpre_pros2['age'] < 75]
@@ -1457,7 +1461,7 @@ if selected == "Pre-processing":
             
             st.dataframe(dffpre_pros2.isna().sum())
             
-            st.write("Nous nous occuperons du remplacement de ces NAns par la suite, une fois le jeu de donnée séparé en jeu d'entraînement et de test. En effet...blabla bla expliquer pourquoi on le fait après le train test split")
+            st.write("Nous nous occuperons du remplacement de ces NAns par la suite, une fois le jeu de donnée séparé en jeu d'entraînement et de test.  \n\ **Cela dans le but de s'assurer que la même transformation des Nans est appliquée au jeu de données Train et Test.**")
             
 
     if option_submenu3 == '**APRÈS SÉPARATION DES DONNÉES**':
