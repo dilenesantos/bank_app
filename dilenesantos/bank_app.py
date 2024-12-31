@@ -1323,7 +1323,7 @@ if selected == "Pre-processing":
         if submenupages == "Suppression de lignes" :            
             st.subheader("Filtre sur la colonne 'age'")
             st.markdown("Notre analyse univariée a montré des **valeurs extrêmes au dessus de 74 ans.** \n\
-            Nous avons décidé de retirer ces lignes de notre dataframe.")
+            Nous avons décidé de retirer ces lignes de notre dataset.")
             
             dffpre_pros = dffpre_pros[dffpre_pros['age'] < 75]
             count_age_sup = df[df['age'] > 74.5].shape[0]
@@ -1348,7 +1348,7 @@ if selected == "Pre-processing":
             
             st.subheader("Filtre sur la colonne 'previous'")
             st.markdown("Nous avons également constaté des **valeurs extrêmes pour les valeurs supérieures à 2**. \n\
-            Nous retirons également ces lignes de notre dataframe.")
+            Nous retirons également ces lignes de notre dataset.")
             dffpre_pros = dffpre_pros.loc[dffpre_pros["previous"] < 2.5]
             count_previous_sup = df[df['previous'] > 2.5].shape[0]
             st.write("Résultat", count_previous_sup,"**lignes supprimées**")
