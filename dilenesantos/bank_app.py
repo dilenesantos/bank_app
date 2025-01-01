@@ -318,7 +318,7 @@ if selected == 'Introduction':
         3. marital  \n\
         4. education")
     with col2:
-        st.markdown("**II. Infos situation bancaire:** \n\
+        st.markdown("**II. Infos situation bancaire:**  \n\
         5. default  \n\
         6. balance  \n\
         7. housing  \n\
