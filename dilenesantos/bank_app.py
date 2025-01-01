@@ -2174,7 +2174,7 @@ if selected == "Modélisation":
             
             st.subheader("Étape 3 : Modèle sélectionné")
             st.write("Le modèle Random Forest 'RF_carolle' avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
-            st.write("RandomForestClassifier(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)")
+            st.write("RandomForestClassifier**(class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42)**")
                 
             # Chargement du modèle enregistré
             filename = "dilenesantos/RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl"
