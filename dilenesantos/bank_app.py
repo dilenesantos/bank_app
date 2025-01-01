@@ -1364,7 +1364,7 @@ if selected == "Pre-processing":
         if submenupages == "Création de colonnes" :   
             st.subheader("Création de la colonne 'Client_Category'")
             st.write("La colonne **'pdays'** indique le nombre de jours depuis le dernier contact avec un client lors de la campagne précédente, mais contient souvent **la valeur -1, signalant des clients jamais contactés**.")
-            st.write("Pour distinguer les clients ayant été contactés de ceux qui ne l'ont pas été, une nouvelle colonne **'Client_Category_M'** est créée à partir de 'pdays'. \n\")
+            st.write("Pour distinguer les clients ayant été contactés de ceux qui ne l'ont pas été, une nouvelle colonne **'Client_Category_M'** est créée à partir de 'pdays'.")
             st.markdown("Cette nouvelle colonne nouvellement créée comprend 3 valeurs :  \n\
             1. **Prospect** = clients qui n'ont jamais été contacté lors de la précédente campagne  \n\
             2. **Reached-6M** = clients contactés il y a moins de 6 mois lors de la précédente campagne  \n\
