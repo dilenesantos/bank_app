@@ -2158,7 +2158,7 @@ if selected == "Modélisation":
     
         if submenu_modelisation == "Hyperparamètres et choix du modèle" :
             st.subheader("Hyperparamètres et choix du modèle")
-            st.write("blabla GridSearchCV ....")
+            st.write("")
             
             st.subheader("Étape 1 : Team GridSearch top 3 modèles")
             st.write("Recherches Gridsearch des 4 membres de la Team sur les top 3 modèles ressortis sans paramètres")
