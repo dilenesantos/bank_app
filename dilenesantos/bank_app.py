@@ -2127,7 +2127,7 @@ if selected == "Modélisation":
 
     if page == pages[0] : 
         st.subheader("Méthodologie")
-        st.write("Nous avons effectué **deux modélisations**, l'une en **conservant la variable Duration** et **l'autre sans la variable Duration**.")
+        st.write("Nous avons effectué **deux modélisations**, l'une en **conservant la variable Duration** et **l'autre sans la variable Duration**: étant donné que cette variable **ne peut être connue qu'après le contact avec le client**.")
         st.write("Pour chaque modélisation, avec ou sans Duration, nous avons analysé les scores des principaux modèles de classification d'abord **sans paramètres** afin de sélectionner les 3 meilleurs modèles, **puis sur ces 3 modèles nous avons effectué des recherches d'hyperparamètres** à l'aide de la **fonction GridSearchCV** afin de sélectionner le modèle **le plus performant possible.**")
         st.write("Enfin sur le meilleur modèle trouvé, nous avons effectué une **analyse SHAP afin d'interpréter les décisions prises par le modèle** dans la détection des clients susceptibles de Deposit YES.")
         st.write("La **métrique principale** choisie est le **Recall pour la classe 1 (deposit = 1)**, afin d'**optimiser la détection des clients intéressés par le DAT en réduisant les faux négatifs**. ")
