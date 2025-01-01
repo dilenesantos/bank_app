@@ -2196,11 +2196,11 @@ if selected == "Modélisation":
             report_df = report_df.drop(columns=["support"])
 
             # Affichage global du rapport sous forme de tableau
-            st.write("Rapport de classification du modèle")
+            st.write("**Rapport de classification du modèle:**")
             st.table(report_df)
 
             # Création de la matrice de confusion sous forme de DataFrame
-            st.write("Matrice de confusion du modèle")
+            st.write("**Matrice de confusion du modèle:**")
             table_rf = pd.crosstab(y_test, y_pred, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_rf)
 
@@ -2462,11 +2462,11 @@ if selected == "Modélisation":
             report_df_1 = report_df_1.drop(columns=["support"])
 
             # Affichage global du rapport sous forme de tableau
-            st.write("Rapport de classification du modèle")
+            st.write("**Rapport de classification du modèle:**")
             st.table(report_df_1)
 
             # Création de la matrice de confusion sous forme de DataFrame
-            st.write("Matrice de confusion du modèle")
+            st.write("**Matrice de confusion du modèle:**")
             table_xgboost_1 = pd.crosstab(y_test_sd, y_pred_1, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_xgboost_1)
             
