@@ -2829,7 +2829,6 @@ if selected == 'Interprétation':
             if submenu_local == "HOUSING" :
                 st.title("HOUSING : POIDS +0.27")
                 st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
-                st.write("Summary plot :")
                 st.write("Détenir ou non un prêt immobilier joue un rôle déterminant dans les prédictions de notre modèle.")
                 
                 fig = plt.figure()
@@ -2846,7 +2845,6 @@ if selected == 'Interprétation':
                 st.title("ÂGE : POIDS +0.25")
                 st.subheader("IMPACT POSITIF DES TRANCHES D’ÂGES BASSES OU ÉLEVÉES")
                 st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
-                st.write("Summary plot :")
                 st.write("L’âge joue un rôle significatif dans l’orientation des prédictions. Valeurs comprises entre 18 et 74 ans.")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")]], 
@@ -2856,7 +2854,6 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("Ce summary plot montre assez clairement qu'une majorité de 'violet' soit des âges intermédiaires présentent des shap values négatives, ils ont donc tendance à ne pas souscrire au dépôt à terme.")         
 
-                st.subheader("Dependence plot") 
                 st.write("Pour une meilleure représentation de la distribution de la variable âge, affichons son dépendance plot avec Shap :")
                 feature_name = "age"
                 fig, ax = plt.subplots(figsize=(20, 7))
@@ -2875,7 +2872,6 @@ if selected == 'Interprétation':
             if submenu_local == "BALANCE" :
                 st.title("BALANCE : POIDS +0.20")
                 st.subheader("IMPACT POSITIF DE BALANCE SUR LA CLASSE 1")
-                st.write("Summary plot :")
                 st.write("Le solde du client semble être déterminant pour la prédiction. Valeurs comprises entre -1451€ et 4048€")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("balance")]], 
@@ -2887,9 +2883,8 @@ if selected == 'Interprétation':
                 st.write("La graduation du bleu (solde bas) au rouge (solde élevé) indique qu'**un solde bancaire moyen ou élevé augmente la probabilité d'appartenir à la classe 'YES'.**")         
 
                 #GRAPHIQUE DEPENDENCE PLOT
-                st.subheader("Dependence plot") 
                 feature_name = "balance"
-                st.write("Ce graphique présente une distribution en courbe qui confirme notre précédent constat : **plus la balance est élevée et plus les valeurs SHAP tendent vers le positif.**")
+                st.write("Le dependence plot présente une distribution en courbe qui confirme notre précédent constat : **plus la balance est élevée et plus les valeurs SHAP tendent vers le positif.**")
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 xticks = range(-1500, 4300, 300)
@@ -3004,7 +2999,6 @@ if selected == 'Interprétation':
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Le nombre de contacts effectués avant la campagne avec le client semble également jouer un rôle important dans la prédiction. Valeurs comprises entre 0 et 2 fois.")
-                st.write("Summary plot :")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
                                   X_test_sd[["previous"]], 
@@ -3014,7 +3008,6 @@ if selected == 'Interprétation':
                 
                 st.markdown("**Les clients ayant eu des interactions avec la banque par le passé** ont une **probabilité plus élevée d'appartenir à la classe 'YES'.")
                 
-                st.title("SHAP Dependence Plot")       
                 feature_name = "previous"
                 
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
@@ -3027,8 +3020,7 @@ if selected == 'Interprétation':
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
-                st.write("Summary plot :")
-                
+                st.write("Le nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus) est également un paramètre relativement important dans la prédiction de notre modèle. Valeurs comprises entre 1 et 5.")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("campaign")]], 
                                   X_test_sd[["campaign"]], 
@@ -3036,8 +3028,8 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
 
+                st.write("Bien que cette variable ait un impact relativement faible, elle reste positive dans notre modèle. Il semble que plus le nombre de contacts avec le client pendant la campagne est élevé (points violets et rouges), plus cela a un effet négatif sur la prédiction : un nombre élevé d’appels semble entraîner un échec à convaincre le client à souscrire au produit.")
                 
-                st.subheader("Dependence plot") 
                 feature_name = "campaign"
                 
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
@@ -3045,12 +3037,11 @@ if selected == 'Interprétation':
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
-
+                st.write("Ce graphique montre clairement que **les clients qui n’ont été contactés qu’une seule fois affichent très majoritairement des SHAP values positives.**")
 
             if submenu_local == "EDUCATION" :
                 st.title("EDUCATION : POIDS +0.09")
                 st.subheader("IMPACT POSITIF DE ÉDUCATION SUR LA CLASSE 1")
-                st.write("Summary plot :")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("education")]], 
                                   X_test_sd[["education"]], 
@@ -3059,7 +3050,6 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("blabla")         
 
-                st.subheader("Dependence plot") 
                 feature_name = "education"
                 
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
