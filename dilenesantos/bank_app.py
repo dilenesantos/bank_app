@@ -2921,7 +2921,7 @@ if selected == 'Interprétation':
                 Les clients affichant un solde positif entre 200 et 800€ sont globalement scindés en 2 groupes : une moitié de ces clients ne souscrivent pas au produit, mais l’autre moitié oui.")
                 
                 st.subheader("Recherche d'autres dépendances")
-                st.write("Il serait pertinent d'examiner la balance en relation avec d'autres variables pour voir si nous pouvons identifier des tendances avec d'autres variables.")
+                st.write("Pour tenter de départager ces clients ayant une balance entre 200 et 800€, examinons la relation de la balance pour ces valeurs avec d'autres variables pour voir si nous pouvons identifier des tendances.")
                 # Extraction des valeurs SHAP
                 shap_values = shap_XGBOOST_1_VALUES
                 X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
@@ -2937,9 +2937,12 @@ if selected == 'Interprétation':
                     fig, ax = plt.subplots(figsize=(10, 6))
                     shap.dependence_plot("balance", shap_XGBOOST_1_VALUES, X_test_original_figures, 
                                          interaction_index=selected_variable, show=False, ax=ax)
-                
+                  
                     # Titre et axe horizontal rouge
                     ax.axhline(0, color='red', linewidth=1, linestyle='--')
+                    xticks = range(200, 800, 100)
+                    plt.xlim(200, 800) 
+
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
@@ -2958,7 +2961,9 @@ if selected == 'Interprétation':
                         )
                         axes[i].set_title(f'Balance x {variable}', fontsize=14)
                         axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
-                
+                    xticks = range(200, 800, 100)
+                    plt.xlim(200, 800)
+
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
@@ -2978,7 +2983,8 @@ if selected == 'Interprétation':
                         )
                         axes[i].set_title(f'Balance x {variable}', fontsize=14)
                         axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
-                
+                    xticks = range(200, 800, 100)
+                    plt.xlim(200, 800)
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
