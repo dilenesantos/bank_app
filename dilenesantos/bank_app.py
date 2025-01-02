@@ -2892,11 +2892,13 @@ if selected == 'Interprétation':
                 st.write("Ce graphique présente une distribution en courbe qui confirme notre précédent constat : **plus la balance est élevée et plus les valeurs SHAP tendent vers le positif.**")
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                xticks = range(int(X_test_original_figures[feature_name].min()), int(X_test_original_figures[feature_name].max()) + 100, 100)
+                plt.xticks(xticks)
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
 
-                st.markdwon("Les clients dont la balance est comprise entre -1000€ et 200 affichent très nettement des valeurs shap négatives. \n\
+                st.markdown("Les clients dont la balance est comprise entre -1000€ et 200 affichent très nettement des valeurs shap négatives. \n\
                 Les clients affichant un solde positif entre 200 et 800€ (800€ correspondant à la mean value) sont globalement scindés en 2 groupes : plus de la moitié de ces clients ne souscrivent pas au produit, mais l’autre moitié oui.")
                 
                 st.subheader("Recherche d'autres dépendances")
