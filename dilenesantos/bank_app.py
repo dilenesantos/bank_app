@@ -2384,7 +2384,7 @@ if selected == "Modélisation":
                 "Random Forest": joblib.load("dilenesantos/Random_Forest_model_SD_TOP_4_hyperparam.pkl"),
                 "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
                 "SVM": joblib.load("dilenesantos/SVM_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_1": joblib.load("dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
+                "XGBOOST": joblib.load("dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
             }
 
             # Résultats des modèles
