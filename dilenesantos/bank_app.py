@@ -2830,6 +2830,7 @@ if selected == 'Interprétation':
                 st.title("HOUSING : POIDS +0.27")
                 st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
                 st.write("Summary plot :")
+                st.write("Détenir ou non un prêt immobilier joue un rôle déterminant dans les prédictions de notre modèle.")
                 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("housing")]], 
@@ -2839,23 +2840,24 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 
 
-                st.write("blabla")
+                st.write("Les clients avec un prêt immobilier (Housing = 1, rouge) ont une probabilité plus faible de souscrire, tandis que **les clients sans prêt (Housing = 0, bleu) ont une probabilité plus élevée de souscrire à un dépôt à terme**.")
 
             if submenu_local == "ÂGE" :
                 st.title("ÂGE : POIDS +0.25")
                 st.subheader("IMPACT POSITIF DES TRANCHES D’ÂGES BASSES OU ÉLEVÉES")
                 st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
                 st.write("Summary plot :")
+                st.write("L’âge joue un rôle significatif dans l’orientation des prédictions. Valeurs comprises entre 18 et 74 ans.")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")]], 
                                   X_test_sd[["age"]], 
                                   feature_names=["age"], 
                                   show=True)
                 st.pyplot(fig)
-                st.write("blabla")         
+                st.write("Ce summary plot montre assez clairement qu'une majorité de 'violet' soit des âges intermédiaires présentent des shap values négatives, ils ont donc tendance à ne pas souscrire au dépôt à terme.")         
 
                 st.subheader("Dependence plot") 
-                
+                st.write("Pour une meilleure représentation de la distribution de la variable âge, affichons son dépendance plot avec Shap :")
                 feature_name = "age"
                 fig, ax = plt.subplots(figsize=(20, 7))
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
@@ -2867,13 +2869,14 @@ if selected == 'Interprétation':
                 st.pyplot(fig)       
                 plt.close()
      
-                st.write("blabla") 
+                st.write("Le graphique en U confirme que **les souscriptions au dépôt à terme concernent principalement des clients jeunes (18-28 ans) ou les clients plus âgés (59ans et plus)**, tandis que les clients d'âge intermédiaire (29-59 ans) sont majoritairement associés à des valeurs SHAP négatives, indiquant une tendance à ne pas souscrire.") 
 
 
             if submenu_local == "BALANCE" :
                 st.title("BALANCE : POIDS +0.20")
                 st.subheader("IMPACT POSITIF DE BALANCE SUR LA CLASSE 1")
                 st.write("Summary plot :")
+                st.write("Le solde du client semble être déterminant pour la prédiction. Valeurs comprises entre -1451€ et 4048€")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("balance")]], 
                                   X_test_sd[["balance"]], 
@@ -2881,19 +2884,23 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
 
-                st.write("blabla")         
+                st.write("La graduation du bleu (solde bas) au rouge (solde élevé) indique qu'**un solde bancaire moyen ou élevé augmente la probabilité d'appartenir à la classe 'YES'.**")         
 
                 #GRAPHIQUE DEPENDENCE PLOT
                 st.subheader("Dependence plot") 
                 feature_name = "balance"
-                
+                st.write("Ce graphique présente une distribution en courbe qui confirme notre précédent constat : **plus la balance est élevée et plus les valeurs SHAP tendent vers le positif.**")
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
+
+                st.markdwon("Les clients dont la balance est comprise entre -1000€ et 200 affichent très nettement des valeurs shap négatives. \n\
+                Les clients affichant un solde positif entre 200 et 800€ (800€ correspondant à la mean value) sont globalement scindés en 2 groupes : plus de la moitié de ces clients ne souscrivent pas au produit, mais l’autre moitié oui.")
                 
                 st.subheader("Recherche d'autres dépendances")
+                st.write("Il serait pertinent d'examiner la balance en relation avec d'autres variables pour voir si nous pouvons identifier des tendances avec d'autres variables.")
                 # Extraction des valeurs SHAP
                 shap_values = shap_XGBOOST_1_VALUES
                 X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
