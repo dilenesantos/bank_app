@@ -2309,10 +2309,10 @@ if selected == "Modélisation":
             melted_df_results_SD_sans_param = df_results_SD_sans_param.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
             melted_df_results_SD_sans_param.rename(columns={"index": "Classifier"}, inplace=True)
 
-            st.write("On affiche le tableau des résultats des modèles sans paramètres avec load modèles :")
+            st.write("La variable 'duration' a été retirée du dataset, les modèles ont été initialement testés sans hyperparamètres et classés selon le score "Recall" avant une sélection pour optimisation ultérieure.")
             st.dataframe(df_results_SD_sans_param)
             
-            st.write("Graphique :")
+            st.write("Visualiation des résultats :")
             # Visualisation des résultats des différents modèles :
             fig = plt.figure(figsize=(12, 6))
             sns.barplot(data=melted_df_results_SD_sans_param,x="Classifier",y="Score",hue="Metric",palette="rainbow")
@@ -2325,12 +2325,16 @@ if selected == "Modélisation":
             plt.legend(loc='lower right')
             plt.tight_layout()
             st.pyplot(fig)
-    
+
+            st.markdown("Ces scores nous permettent de sélectionner notre top 3 des modèles à tester avec le GridSearchCV, qui sont donc : \n\
+            - Le modèle **Decision Tree** \n\
+            - Le modèle **XGBOOST** \n\
+            - Le modèle **Random Forest**")
+
+            st.markdown("Puisque le modèle **SVM** donne de bien **meilleurs résultats sur le score de Précision**, nous allons également effectuer des tests avec ce modèle SVM, en plus des modèles listés ci-dessus.")
 
         if submenu_modelisation2 == "Hyperparamètres et choix du modèle" :
-            st.write("Recherche d'hyperparamètres et choix du modèle")
-            st.write("blabla GridSearchCV ....")
-            
+            st.write("Scores des modèles hyperparamétrés :")            
             #CODE CHARGÉ UNE FOIS POUR LOAD PUIS RETIRÉ
             # Initialisation des classifiers
             #classifiers_SD_hyperparam= {
@@ -2417,10 +2421,9 @@ if selected == "Modélisation":
             melted_df_results_SD_TOP_4_hyperparam = df_results_SD_TOP_4_hyperparam.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
             melted_df_results_SD_TOP_4_hyperparam.rename(columns={"index": "Classifier"}, inplace=True)
             
-            st.write("On affiche le tableau des résultats des modèles hyper paramétrés loadés Joblib :")
             st.dataframe(df_results_SD_TOP_4_hyperparam)
             
-            st.write("Graphique avec load:")
+            st.write("Visualisation des résultats:")
             # Visualisation des résultats des différents modèles :
             fig = plt.figure(figsize=(12, 6))
             sns.barplot(data=melted_df_results_SD_TOP_4_hyperparam,x="Classifier",y="Score",hue="Metric",palette="rainbow")
@@ -2432,11 +2435,13 @@ if selected == "Modélisation":
             plt.legend(title="Métrique", fontsize=12)
             plt.legend(loc='lower right')
             plt.tight_layout()
-            st.pyplot(fig)        
+            st.pyplot(fig) 
+
+            st.markdown("Étant donné les scores obtenus sur ces modèles avec hyperparamètres, **nous retenons le modèle XGBOOST** qui affiche un bien meilleur Recall Score sur la classe 1.")
      
                     
             st.subheader("Modèle sélectionné")
-            st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.write("Voici les hyperparamètres du modèle XGBOOST retenu et ses scores sur les classes 0 et 1.")
             st.write("XGBClassifier(**gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42**)")
                 
             # Chargement du modèle enregistré
@@ -2458,17 +2463,17 @@ if selected == "Modélisation":
             # Suppression des colonnes inutiles si besoin
             report_df_1 = report_df_1.drop(columns=["support"])
 
-            # Affichage global du rapport sous forme de tableau
-            st.write("**Rapport de classification du modèle:**")
-            st.table(report_df_1)
 
             # Création de la matrice de confusion sous forme de DataFrame
             st.write("**Matrice de confusion du modèle:**")
             table_xgboost_1 = pd.crosstab(y_test_sd, y_pred_1, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_xgboost_1)
+
+            # Affichage global du rapport sous forme de tableau
+            st.write("**Rapport de classification du modèle:**")
+            st.table(report_df_1)
             
 
-        
 
         
 if selected == 'Interprétation':      
@@ -2487,7 +2492,7 @@ if selected == 'Interprétation':
 
             if submenu_globale == "Summary plot" :
                 st.subheader("Summary plot")
-                    
+                st.write("Le summary plot de SHAP est utilisé pour **évaluer l'impact positif ou négatif des variables sur les prédictions** du modèle.")
                 # Affichage des visualisations SHAP
                 #SHAP
                 #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
@@ -2517,7 +2522,8 @@ if selected == 'Interprétation':
             
             if submenu_globale == "Bar plot" :
                 st.subheader("Bar plot")  
-                    
+                st.write("Pour évaluer l'**impact des variables sur les prédictions du modèle**, le bar plot de la librairie SHAP permet d'afficher les moyennes absolues des valeurs SHAP.")
+                st.write("Nous avons par ailleurs regroupé certaines variables catégorielles dispatchées en plusieurs colonnes après le One Hot Encoding afin d'avoir une vue d'ensemble de leur effet positif ou négatif sur la prédictivité du modèle.")
                 #Affichage des barplot sans les moyennes des vaiables à plusieurs items
                 #fig = plt.figure()
                 #explanation_RF_carolle = shap.Explanation(values=shap_values_RF_carolle,
