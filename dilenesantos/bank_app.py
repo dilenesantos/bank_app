@@ -2910,6 +2910,7 @@ if selected == 'Interprétation':
                 plt.yticks(fontsize=7) 
                 plt.xlabel('balance',fontsize=7)  
                 plt.ylabel('shap values', fontsize=7)
+                plt.xlim(0, 1800)  # Limites de l'axe x
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
