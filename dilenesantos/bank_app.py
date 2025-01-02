@@ -2385,9 +2385,6 @@ if selected == "Modélisation":
                 "Decision Tree": joblib.load("dilenesantos/Decision_Tree_model_SD_TOP_4_hyperparam.pkl"),
                 "SVM": joblib.load("dilenesantos/SVM_model_SD_TOP_4_hyperparam.pkl"),
                 "XGBOOST_1": joblib.load("dilenesantos/XGBOOST_1_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_2": joblib.load("dilenesantos/XGBOOST_2_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_3": joblib.load("dilenesantos/XGBOOST_3_model_SD_TOP_4_hyperparam.pkl"),
-                "XGBOOST_TESTDIL": joblib.load("dilenesantos/XGBOOST_TESTDIL_model_SD_TOP_4_hyperparam.pkl")
             }
 
             # Résultats des modèles
@@ -2438,8 +2435,8 @@ if selected == "Modélisation":
             st.pyplot(fig)        
      
                     
-            st.subheader("Modèle sélectionné 1")
-            st.write("XGBOOST_1_model_SD_TOP_4_hyperparam.pkl avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
+            st.subheader("Modèle sélectionné")
+            st.write("Le modèle XGBOOST avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
             st.write("XGBClassifier(**gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42**)")
                 
             # Chargement du modèle enregistré
