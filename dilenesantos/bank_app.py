@@ -3003,6 +3003,7 @@ if selected == 'Interprétation':
             if submenu_local == "PREVIOUS" :
                 st.title("PREVIOUS : POIDS +0.14")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
+                st.write("Le nombre de contacts effectués avant la campagne avec le client semble également jouer un rôle important dans la prédiction. Valeurs comprises entre 0 et 2 fois.")
                 st.write("Summary plot :")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("previous")]], 
@@ -3010,6 +3011,8 @@ if selected == 'Interprétation':
                                   feature_names=["previous"], 
                                   show=True)
                 st.pyplot(fig)
+                
+                st.markdown("**Les clients ayant eu des interactions avec la banque par le passé** ont une **probabilité plus élevée d'appartenir à la classe 'YES'.")
                 
                 st.title("SHAP Dependence Plot")       
                 feature_name = "previous"
@@ -3019,6 +3022,7 @@ if selected == 'Interprétation':
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
+                st.write("La distribution des valeurs de previous montre très clairement que lorsque les clients n’ont jamais été contactés (previous = 0) alors la shap value est négative, tandis que **les clients qui ont été contactés par le passé affichent des valeurs shap très nettement positives, ils sont donc plus susceptibles de souscrire au produit.**")
                         
             if submenu_local == "CAMPAIGN" :
                 st.title("PREVIOUS : POIDS +0.14")
