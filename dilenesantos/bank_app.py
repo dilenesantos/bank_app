@@ -2206,7 +2206,7 @@ if selected == "Modélisation":
 
     if page == pages[2] :
         #SANS DURATION
-        submenu_modelisation2 = st.radio("Menu", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"))
+        submenu_modelisation2 = st.radio("Menu", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"), horizontal = True)
     
         if submenu_modelisation2 == "Scores modèles sans paramètres" :
             st.subheader("Scores modèles sans paramètres")
