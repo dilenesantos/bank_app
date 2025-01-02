@@ -3089,8 +3089,7 @@ if selected == 'Interprétation':
                                      'job_retired', 'job_self-employed', 'job_services', 'job_student', 'job_technician', 'job_unemployed']
                 
                     # Créer un graphique pour chaque variable associée à job
-                    st.write("Pour ce qui est du job, on remarque que certains sont emplois sont dépendants du niveau d'éducation et c'est assez logique.")
-                    st.write("Les jobs ont l'on peut observer une vraie tendances ne concernent que les **Blue-collar** (plutôt d'un niveau primaire d'éducation) et **emplois dans le Management** (niveau d'éducation plutôt tertiaire)")
+                    st.write("Les jobs ont l'on peut observer une vraie tendance ne concernent que les **Blue-collar** (plutôt d'un niveau primaire d'éducation) et **emplois dans le Management** (niveau d'éducation plutôt tertiaire)")
 
                     fig, axes = plt.subplots(len(job_variables), 1, figsize=(10, len(job_variables) * 6))
                 
