@@ -2893,7 +2893,7 @@ if selected == 'Interprétation':
                 fig = plt.figure(figsize=(15,20))
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                xticks = range(int(X_test_original_figures[feature_name].min()), int(X_test_original_figures[feature_name].max()) + 500, 500)
+                xticks = range(-1500, 4101, 500) 
                 plt.xticks(xticks, fontsize=6)
                 fig = plt.gcf()          
                 st.pyplot(fig)       
