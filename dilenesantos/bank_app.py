@@ -2512,7 +2512,6 @@ if selected == 'Interprétation':
 
                 #CODE À UTILISER UNE FOIS LES SHAP VALUES CHARGÉES
                 shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
-                st.write(shap_values_RF_carolle.shape)
 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_RF_carolle[:,:,1], X_test)  
@@ -2622,7 +2621,6 @@ if selected == 'Interprétation':
                 st.write("Summary plot :")
 
                 shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
-                st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
 
                 shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
                 fig = plt.figure()
@@ -2640,7 +2638,7 @@ if selected == 'Interprétation':
                 X_test_original_data = X_test_original
             
                 feature_name = "duration"
-                st.write("blabla")
+                #st.write("blabla")
                 fig = plt.figure(figsize=(20, 8))
                 shap.dependence_plot(feature_name, shap_values=shap_CAROLLE_VALUES, features=X_test_original_data, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
@@ -2657,7 +2655,6 @@ if selected == 'Interprétation':
                 st.write("Summary plot :")
 
                 shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
-                st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
                 
                 shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
                 fig = plt.figure()
@@ -2674,7 +2671,6 @@ if selected == 'Interprétation':
                 st.write("Summary plot :")
 
                 shap_values_RF_carolle = joblib.load("dilenesantos/shap_values_RF_carolle_model_AD_TOP_3_hyperparam_TEAM.pkl")
-                st.write("Shape du shap values du modèle sélectionné :", shap_values_RF_carolle.shape)
 
                 shap_values_RF_CAROLLE_1 = shap_values_RF_carolle[:,:,1]
                 fig = plt.figure()
@@ -2828,7 +2824,6 @@ if selected == 'Interprétation':
                 st.title("HOUSING : POIDS +0.27")
                 st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
                 st.write("Summary plot :")
-                st.write("Shape of shap_values_XGBOOST_1:", shap_values_XGBOOST_1.shape)
                 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("housing")]], 
@@ -3000,7 +2995,7 @@ if selected == 'Interprétation':
 
             if submenu_local == "EDUCATION" :
                 st.title("EDUCATION : POIDS +0.09")
-                st.subheader("IMPACT POSITIF OU NÉGATIF DE ÉDUCATION SUR LA CLASSE 1 ????")
+                st.subheader("IMPACT POSITIF DE ÉDUCATION SUR LA CLASSE 1")
                 st.write("Summary plot :")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("education")]], 
