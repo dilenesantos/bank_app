@@ -2970,7 +2970,7 @@ if selected == 'Interprétation':
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
-                    st.write("Il n'est pas non plus possible d'établir un lien clair entre la balance des clients et le statut marital.")
+                    st.write("Il n'est pas non plus possible d'établir un lien clair entre la balance des clients et leur statut marital.")
 
                 
                 elif selected_variable == "job":
@@ -2996,7 +2996,7 @@ if selected == 'Interprétation':
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
-                    st.write("Idem pour la variable job, impossible d'identifier clairement les clients ayant une balance entre 200 et 800€ plus susceptibles de souscrire à un dépôt à terme.")
+                    st.write("Il en est de même pour la variable job.")
 
 
 
