@@ -2961,9 +2961,11 @@ if selected == 'Interprétation':
                         )
                         axes[i].set_title(f'Balance x {variable}', fontsize=14)
                         axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
-                        xticks = range(200, 800, 100)
-                        plt.xlim(200, 800)
-
+                        #focus valeurs entre 200 et 800 
+                        axes[i].set_xlim(200, 800)  # Définir les limites de l'axe x
+                        xticks = range(200, 801, 100)  # Créer une gamme de ticks
+                        axes[i].set_xticks(xticks) 
+       
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
@@ -2983,8 +2985,11 @@ if selected == 'Interprétation':
                         )
                         axes[i].set_title(f'Balance x {variable}', fontsize=14)
                         axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
-                        xticks = range(200, 800, 100)
-                        plt.xlim(200, 800)
+                        #focus valeurs entre 200 et 800 
+                        axes[i].set_xlim(200, 800)  # Définir les limites de l'axe x
+                        xticks = range(200, 801, 100)  # Créer une gamme de ticks
+                        axes[i].set_xticks(xticks) 
+                     
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
