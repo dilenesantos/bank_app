@@ -2854,7 +2854,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("Ce summary plot montre assez clairement qu'une **majorité de 'violet' soit des âges intermédiaires présentent des shap values négatives, ils ont donc tendance à ne pas souscrire au dépôt à terme.**")         
 
-                st.write("Pour une meilleure représentation de la distribution de la variable âge, affichons son dépendance plot avec Shap :")
+                st.write("Pour une meilleure représentation de la distribution de la variable âge, affichons son dépendance plot.")
                 feature_name = "age"
                 fig, ax = plt.subplots(figsize=(20, 7))
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
