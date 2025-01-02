@@ -2717,7 +2717,7 @@ if selected == 'Interprétation':
         st.subheader("Interprétation du modèle XGBOOST")
         #MODÈLE UTILISÉ : XGBOOST_1_model_SD_TOP_4_hyperparam.pkl         
 
-        submenu_interpretation = st.radio("", ("ANALYSE GLOBALE", "ANALYSE DES VARIABLES LES PLUS IMPORTANTES"))
+        submenu_interpretation = st.radio("", ("ANALYSE GLOBALE", "ANALYSE DES VARIABLES LES PLUS IMPORTANTES"), horizontal = True)
 
         if submenu_interpretation == "ANALYSE GLOBALE" :
             submenu_global = st.radio("", ("Summary plot", "Bar plot"), horizontal=True)
