@@ -2901,7 +2901,8 @@ if selected == 'Interprétation':
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
-             
+                st.write("")
+                st.write("Effectuons un zoom pour les balances entre 0 et 1800€ pour une meilleure visibilité")
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 xticks = range(0, 1800, 100)
