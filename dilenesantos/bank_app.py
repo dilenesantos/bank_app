@@ -2309,7 +2309,7 @@ if selected == "Modélisation":
             melted_df_results_SD_sans_param = df_results_SD_sans_param.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
             melted_df_results_SD_sans_param.rename(columns={"index": "Classifier"}, inplace=True)
 
-            st.write("La variable 'duration' a été retirée du dataset, les modèles ont été initialement testés sans hyperparamètres et classés selon le score "Recall" avant une sélection pour optimisation ultérieure.")
+            st.write("La variable 'duration' a été retirée du dataset, les modèles ont été initialement testés sans hyperparamètres et classés selon le score 'Recall' afin de sélection les tops modèles pour optimisation ultérieure.")
             st.dataframe(df_results_SD_sans_param)
             
             st.write("Visualiation des résultats :")
