@@ -2896,6 +2896,7 @@ if selected == 'Interprétation':
                 xticks = range(-1500, 4101, 500) 
                 plt.grid(True, which='both', linestyle='--', linewidth=0.5) 
                 plt.xticks(xticks, fontsize=5)
+                plt.yticks(fontsize=7) 
                 plt.xlabel('balance',fontsize=7)  
                 plt.ylabel('shap values', fontsize=7)
                 fig = plt.gcf()          
