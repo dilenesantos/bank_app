@@ -2946,6 +2946,7 @@ if selected == 'Interprétation':
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
+                    st.write("Il n'est pas possible d'établir un lien clair entre la balance des clients et ces autres variables numériques.")
                 
                 elif selected_variable == "marital status":
                     # Variables associées à marital status
@@ -2964,11 +2965,13 @@ if selected == 'Interprétation':
                         #focus valeurs entre 200 et 800 
                         axes[i].set_xlim(200, 800)  # Définir les limites de l'axe x
                         xticks = range(200, 801, 100)  # Créer une gamme de ticks
-                        axes[i].set_xticks(xticks) 
+                        axes[i].set_xticks(xticks)
        
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
+                    st.write("Il n'est pas non plus possible d'établir un lien clair entre la balance des clients et le statut marital.")
+
                 
                 elif selected_variable == "job":
                     # Variables associées à job
@@ -2993,6 +2996,8 @@ if selected == 'Interprétation':
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
+                    st.write("Idem pour la variable job, impossible d'identifier clairement les clients ayant une balance entre 200 et 800€ plus susceptibles de souscrire à un dépôt à terme.")
+
 
 
             if submenu_local == "PREVIOUS" :
