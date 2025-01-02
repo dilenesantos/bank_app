@@ -3042,13 +3042,14 @@ if selected == 'Interprétation':
             if submenu_local == "EDUCATION" :
                 st.title("EDUCATION : POIDS +0.09")
                 st.subheader("IMPACT POSITIF DE ÉDUCATION SUR LA CLASSE 1")
+                st.write("Il est clair que les clients ayant un niveau d'éducation élévé ont davantage tendance à souscrire au dépôt à terme.")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("education")]], 
                                   X_test_sd[["education"]], 
                                   feature_names=["education"], 
                                   show=True)
                 st.pyplot(fig)
-                st.write("blabla")         
+                st.write("Cela est confirmé par le dependence plot.")         
 
                 feature_name = "education"
                 
@@ -3071,6 +3072,7 @@ if selected == 'Interprétation':
                 
                 # Vérification si la variable sélectionnée est "housing", "age" ou "education"
                 if selected_variable in ["age"]:
+                    st.write("Côté âges, pas de dépendance claire avec le niveau d'éducation.")
                     fig, ax = plt.subplots(figsize=(10, 6))
                     shap.dependence_plot("education", shap_XGBOOST_1_VALUES, X_test_original_figures, 
                                          interaction_index=selected_variable, show=False, ax=ax)
@@ -3087,6 +3089,9 @@ if selected == 'Interprétation':
                                      'job_retired', 'job_self-employed', 'job_services', 'job_student', 'job_technician', 'job_unemployed']
                 
                     # Créer un graphique pour chaque variable associée à job
+                    st.write("Pour ce qui est du job, on remarque que certains sont emplois sont dépendants du niveau d'éducation et c'est assez logique.")
+                    st.write("Les jobs ont l'on peut observer une vraie tendances ne concernent que les **Blue-collar** (plutôt d'un niveau primaire d'éducation) et **emplois dans le Management** (niveau d'éducation plutôt tertiaire)").
+
                     fig, axes = plt.subplots(len(job_variables), 1, figsize=(10, len(job_variables) * 6))
                 
                     for i, variable in enumerate(job_variables):
