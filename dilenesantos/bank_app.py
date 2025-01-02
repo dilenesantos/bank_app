@@ -2492,7 +2492,6 @@ if selected == 'Interprétation':
 
             if submenu_globale == "Summary plot" :
                 st.subheader("Summary plot")
-                st.write("Le summary plot de SHAP est utilisé pour **évaluer l'impact positif ou négatif des variables sur les prédictions** du modèle.")
                 # Affichage des visualisations SHAP
                 #SHAP
                 #PARTIE DU CODE À VIRER UNE FOIS LES SHAP VALUES CHARGÉES
@@ -2522,8 +2521,7 @@ if selected == 'Interprétation':
             
             if submenu_globale == "Bar plot" :
                 st.subheader("Bar plot")  
-                st.write("Pour évaluer l'**impact des variables sur les prédictions du modèle**, le bar plot de la librairie SHAP permet d'afficher les moyennes absolues des valeurs SHAP.")
-                st.write("Nous avons par ailleurs regroupé certaines variables catégorielles dispatchées en plusieurs colonnes après le One Hot Encoding afin d'avoir une vue d'ensemble de leur effet positif ou négatif sur la prédictivité du modèle.")
+
                 #Affichage des barplot sans les moyennes des vaiables à plusieurs items
                 #fig = plt.figure()
                 #explanation_RF_carolle = shap.Explanation(values=shap_values_RF_carolle,
@@ -2723,12 +2721,17 @@ if selected == 'Interprétation':
             
             if submenu_global == "Summary plot" :
                 st.subheader("Summary plot")
+                st.write("Le summary plot de SHAP est utilisé pour **évaluer l'impact positif ou négatif des variables sur les prédictions** du modèle.")
+
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
                 st.pyplot(fig)
                 
             if submenu_global == "Bar plot" :
                 st.subheader("Bar plot")
+                st.write("Pour évaluer l'**impact des variables sur les prédictions du modèle**, le bar plot de la librairie SHAP permet d'afficher les moyennes absolues des valeurs SHAP.")
+                st.write("Nous avons par ailleurs regroupé certaines variables catégorielles dispatchées en plusieurs colonnes après le One Hot Encoding afin d'avoir une vue d'ensemble de leur effet positif ou négatif sur la prédictivité du modèle.")
+
                 explanation_XGBOOST_1 = shap.Explanation(values=shap_values_XGBOOST_1,
                                      data=X_test_sd.values, # Assumant que  X_test est un DataFrame
                                      feature_names=X_test_sd.columns)
