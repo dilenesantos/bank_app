@@ -2894,6 +2894,11 @@ if selected == 'Interprétation':
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 xticks = range(-1451, 4100, 100) 
+                def thousands_formatter(x, pos):
+                 return f'{int(x / 1000)}K' if x >= 1000 else str(int(x))
+
+                plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(thousands_formatter))
+
                 plt.grid(True, which='both', linestyle='--', linewidth=0.5) 
                 plt.xticks(xticks, fontsize=4)
                 plt.xlabel('balance',fontsize=7)  
