@@ -2893,7 +2893,7 @@ if selected == 'Interprétation':
                 plt.figure(figsize=(25, 13)) 
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                xticks = range(-1500, 4250, 250) 
+                xticks = range(-1500, 4300, 300)
                 plt.grid(True, which='both', linestyle='--', linewidth=0.5) 
                 plt.xticks(xticks, fontsize=5)
                 plt.yticks(fontsize=7) 
