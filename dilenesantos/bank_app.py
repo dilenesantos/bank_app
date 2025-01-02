@@ -2918,7 +2918,7 @@ if selected == 'Interprétation':
                 
 
                 st.markdown("Les clients dont la balance est comprise entre -1000€ et 200 affichent très nettement des valeurs shap négatives. \n\
-                Les clients affichant un solde positif entre 200 et 1400€ sont globalement scindés en 2 groupes : une moitié de ces clients ne souscrivent pas au produit, mais l’autre moitié oui.")
+                Les clients affichant un solde positif entre 200 et 800€ sont globalement scindés en 2 groupes : une moitié de ces clients ne souscrivent pas au produit, mais l’autre moitié oui.")
                 
                 st.subheader("Recherche d'autres dépendances")
                 st.write("Il serait pertinent d'examiner la balance en relation avec d'autres variables pour voir si nous pouvons identifier des tendances avec d'autres variables.")
