@@ -2852,7 +2852,7 @@ if selected == 'Interprétation':
                                   feature_names=["age"], 
                                   show=True)
                 st.pyplot(fig)
-                st.write("Ce summary plot montre assez clairement qu'une majorité de 'violet' soit des âges intermédiaires présentent des shap values négatives, ils ont donc tendance à ne pas souscrire au dépôt à terme.")         
+                st.write("Ce summary plot montre assez clairement qu'une **majorité de 'violet' soit des âges intermédiaires présentent des shap values négatives, ils ont donc tendance à ne pas souscrire au dépôt à terme.**")         
 
                 st.write("Pour une meilleure représentation de la distribution de la variable âge, affichons son dépendance plot avec Shap :")
                 feature_name = "age"
