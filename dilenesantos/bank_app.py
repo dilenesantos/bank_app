@@ -2843,7 +2843,7 @@ if selected == 'Interprétation':
 
             if submenu_local == "ÂGE" :
                 st.title("ÂGE : POIDS +0.25")
-                st.subheader("IMPACT POSITIF DES TRANCHES D’ÂGES BASSES OU ÉLEVÉES")
+                st.subheader("IMPACT POSITIF CHEZ LES JEUNES ET LES PERSONNES ÂGÉES")
                 st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
                 st.write("L’âge joue un rôle significatif dans l’orientation des prédictions. Valeurs comprises entre 18 et 74 ans.")
                 fig = plt.figure()
