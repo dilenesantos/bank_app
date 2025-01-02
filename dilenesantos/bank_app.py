@@ -2890,6 +2890,7 @@ if selected == 'Interprétation':
                 st.subheader("Dependence plot") 
                 feature_name = "balance"
                 st.write("Ce graphique présente une distribution en courbe qui confirme notre précédent constat : **plus la balance est élevée et plus les valeurs SHAP tendent vers le positif.**")
+                fig = plt.figure(figsize=(10,8))
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 xticks = range(int(X_test_original_figures[feature_name].min()), int(X_test_original_figures[feature_name].max()) + 100, 100)
