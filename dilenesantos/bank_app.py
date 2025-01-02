@@ -3006,7 +3006,7 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
                 
-                st.markdown("**Les clients ayant eu des interactions avec la banque par le passé** ont une **probabilité plus élevée d'appartenir à la classe 'YES'.")
+                st.markdown("**Les clients ayant eu des interactions avec la banque par le passé** ont une **probabilité plus élevée d'appartenir à la classe 'YES'.**")
                 
                 feature_name = "previous"
                 
