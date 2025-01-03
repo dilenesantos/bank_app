@@ -1576,9 +1576,9 @@ if selected == "Pre-processing":
                 
         if submenupages2 == "Traitement des valeurs manquantes" :    
             st.subheader("Traitement des valeurs manquantes")
-            st.write("Pour la colonne job, on remplace les Nans par le mode de la variable.")
-            st.write("S'agissant des colonnes 'education' et 'poutcome', puisque le nombre de Nans est plus élevé, nous avons décidé de les remplacer en utilisant la méthode de remplissage par propagation : chaque Nan est remplacé par la valeur de la ligne suivante (pour la dernière ligne on utilise le Mode de la variable).") 
-            st.write("On applique ce process à X_train et X_test.")
+            st.write("Pour la **colonne job**, on remplace les Nans par le **mode** de la variable.")
+            st.write("S'agissant des **colonnes 'education' et 'poutcome'**, puisque le nombre de Nans est plus élevé, nous avons décidé de les remplacer en utilisant la **méthode de remplissage par propagation** : chaque Nan est remplacé par la valeur de la ligne suivante (pour la dernière ligne on utilise le mode de la variable).") 
+            st.write("Ce processus est appliqué à X_train et X_test.")
 
             dffpre_pros2 = df.copy()                        
             dffpre_pros2 = dffpre_pros2[dffpre_pros2['age'] < 75]
@@ -1644,12 +1644,13 @@ if selected == "Pre-processing":
             X_test_pre_pros2['education'] = X_test_pre_pros2['education'].fillna(method ='bfill')
             X_test_pre_pros2['education'] = X_test_pre_pros2['education'].fillna(X_test_pre_pros2['education'].mode()[0])
 
-
-            st.write("Vérification sur X_train, reste-t-il des Nans ?")
-            st.dataframe(X_train_pre_pros2.isna().sum())
-                
-            st.write("Vérification sur X_test, reste-t-il des Nans ?")
-            st.dataframe(X_test_pre_pros2.isna().sum())
+            col1, col2 = st.columns(2)
+            with col1 :
+             st.write("Vérification sur X_train, reste-t-il des Nans ?")
+             st.dataframe(X_train_pre_pros2.isna().sum())
+            with col2 :   
+             st.write("Vérification sur X_test, reste-t-il des Nans ?")
+             st.dataframe(X_test_pre_pros2.isna().sum())
 
                 
         if submenupages2 == "Standardisation des variables" :    
