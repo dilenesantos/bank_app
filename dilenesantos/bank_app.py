@@ -2834,7 +2834,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 
 
-                st.write("Les clients avec un prêt immobilier (Housing = 1, rouge) ont une probabilité plus faible de souscrire, tandis que **les clients sans prêt (Housing = 0, bleu) ont une probabilité plus élevée de souscrire à un dépôt à terme**.")
+                st.write("Les clients avec un prêt immobilier (Housing = 1) ont une probabilité plus faible de souscrire, tandis que **les clients sans prêt (Housing = 0) ont une probabilité plus élevée de souscrire à un dépôt à terme**.")
 
          
             if submenu_local == "BALANCE" :
