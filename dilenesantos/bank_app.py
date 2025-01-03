@@ -3589,6 +3589,7 @@ if selected == 'Outil  Prédictif':
         model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
         explainer = shap.TreeExplainer(model_XGBOOST_1_SD_model_PRED_AVEC_parametres)
         shap_values_pred = explainer.shap_values(pred_df)
+        shap_values_pred_rounded = np.round(shap_values_pred, 2)
        
 
         # Prédiction
@@ -3604,7 +3605,7 @@ if selected == 'Outil  Prédictif':
         st.write("Force plot du client :")
         # Générer un graphique de force SHAP avec matplotlib
         shap.initjs() 
-        shap.force_plot(explainer.expected_value, shap_values_pred, pred_df, matplotlib=True)
+        shap.force_plot(explainer.expected_value, shap_values_pred_rounded, pred_df, matplotlib=True)
         fig = plt.gcf()
         st.pyplot(fig)
         plt.close()
@@ -3659,6 +3660,8 @@ if selected == 'Outil  Prédictif':
                     additional_model = joblib.load(filename_LOAN)
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_loan = explainer.shap_values(pred_df)
+                    shap_values_loan_rounded = np.round(shap_values_loan, 2)
+
        
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_loan = additional_model.predict(pred_df)
@@ -3671,7 +3674,7 @@ if selected == 'Outil  Prédictif':
                     
                     st.write("Force plot du client :")
                     shap.initjs() 
-                    shap.force_plot(explainer.expected_value, shap_values_loan, pred_df, matplotlib=True)
+                    shap.force_plot(explainer.expected_value, shap_values_loan_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
                     plt.close()
@@ -3724,6 +3727,7 @@ if selected == 'Outil  Prédictif':
                     additional_model = joblib.load(filename_marital)
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_marital = explainer.shap_values(pred_df)
+                    shap_values_marital_rounded = np.round(shap_values_marital, 2)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_marital = additional_model.predict(pred_df)
@@ -3737,7 +3741,7 @@ if selected == 'Outil  Prédictif':
                  
                     st.write("Force plot du client :")
                     shap.initjs() 
-                    shap.force_plot(explainer.expected_value, shap_values_marital, pred_df, matplotlib=True)
+                    shap.force_plot(explainer.expected_value, shap_values_marital_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
                     plt.close()
@@ -3790,6 +3794,7 @@ if selected == 'Outil  Prédictif':
                     additional_model = joblib.load(filename_poutcome)
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_poutcome = explainer.shap_values(pred_df)
+                    shap_values_poutcome_rounded = np.round(shap_values_poutcome, 2)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_poutcome = additional_model.predict(pred_df)
@@ -3805,7 +3810,7 @@ if selected == 'Outil  Prédictif':
                  
                     st.write("Force plot du client :")
                     shap.initjs() 
-                    shap.force_plot(explainer.expected_value, shap_values_poutcome, pred_df, matplotlib=True)
+                    shap.force_plot(explainer.expected_value, shap_values_poutcome_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
                     plt.close()
@@ -3861,6 +3866,8 @@ if selected == 'Outil  Prédictif':
                     additional_model = joblib.load(filename_job)
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_job = explainer.shap_values(pred_df)
+                    shap_values_job_rounded = np.round(shap_values_job, 2)
+                 
                     st.write("Dataframe du client en question")
                     st.dataframe(pred_df)
                 
@@ -3874,7 +3881,7 @@ if selected == 'Outil  Prédictif':
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%**")
                     st.write("Force plot du client :")
                     shap.initjs() 
-                    shap.force_plot(explainer.expected_value, shap_values_job, pred_df, matplotlib=True)
+                    shap.force_plot(explainer.expected_value, shap_values_job_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
                     plt.close()
@@ -3918,6 +3925,7 @@ if selected == 'Outil  Prédictif':
                     additional_model = joblib.load(filename_client_category)
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_client_category = explainer.shap_values(pred_df)
+                    shap_values_client_category_rounded = np.round(shap_values_client_category, 2)
                     st.write("Dataframe du client en question")
                     st.dataframe(pred_df)
                  
@@ -3931,7 +3939,7 @@ if selected == 'Outil  Prédictif':
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%**")
                     st.write("Force plot du client :")
                     shap.initjs() 
-                    shap.force_plot(explainer.expected_value, shap_values_client_category, pred_df, matplotlib=True)
+                    shap.force_plot(explainer.expected_value, shap_values_client_category_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
                     plt.close()
