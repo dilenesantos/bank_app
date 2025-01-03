@@ -2201,10 +2201,10 @@ if selected == "Modélisation":
 
     if page == pages[2] :
         #SANS DURATION
-        submenu_modelisation2 = st.radio(" ", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"), horizontal = True)
+        submenu_modelisation2 = st.radio(" ", ("Scores sans paramètres", "Hyperparamètres et choix du modèle"), horizontal = True)
     
-        if submenu_modelisation2 == "Scores modèles sans paramètres" :
-            st.subheader("Scores modèles sans paramètres")
+        if submenu_modelisation2 == "Scores sans paramètres" :
+            st.subheader("Scores des modèles sans paramètres")
             
             #RÉSULTAT DES MODÈLES SANS PARAMETRES (CODE UTILISÉ UNE FOIS POUR CHARGER LES MODÈLES)
             # Initialisation des classifiers
