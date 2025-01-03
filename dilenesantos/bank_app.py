@@ -3603,18 +3603,7 @@ if selected == 'Outil  Prédictif':
         # Afficher la figure dans Streamlit
         st.pyplot(fig)
         plt.close()
-        st.write("Résumé des valeurs SHAP :")
-        shap.summary_plot(shap_values, pred_df, plot_type="bar")  # Utilisez 'bar' pour une approche plus compacte
-        
-        # Récupérer la figure courante et l'afficher dans Streamlit
-        fig = plt.gcf()
-        st.pyplot(fig)
-        plt.close()
 
-        force_plot = shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False)
-        st.components.v1.html(force_plot.html, height=400, scrolling=True)
-
-        
             
         if prediction[0] == 0:
             st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
