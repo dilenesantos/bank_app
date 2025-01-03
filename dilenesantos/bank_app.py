@@ -2321,7 +2321,7 @@ if selected == "Modélisation":
             plt.tight_layout()
             st.pyplot(fig)
 
-            st.markdown("Ces scores nous permettent de sélectionner notre **top 3 des modèles** à tester avec le GridSearchCV, qui sont donc :  \n\
+            st.markdown("Ces scores nous permettent de sélectionner notre **top 3 des modèles** à tester avec le GridSearchCV :  \n\
             1. Le modèle **Decision Tree**  \n\
             2. Le modèle **XGBOOST**  \n\
             3. Le modèle **Random Forest**")
