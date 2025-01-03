@@ -2716,7 +2716,7 @@ if selected == 'Interprétation':
             
             if submenu_global == "Summary plot" :
                 st.subheader("Summary plot")
-                st.write("Le summary plot de SHAP est utilisé pour **évaluer l'impact positif ou négatif des variables sur les prédictions** du modèle.")
+                st.write("Le summary plot de SHAP permet d'**évaluer l'impact positif ou négatif de chaque variable sur les prédictions** du modèle.")
 
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1, X_test_sd)  
@@ -2725,7 +2725,7 @@ if selected == 'Interprétation':
             if submenu_global == "Bar plot" :
                 st.subheader("Bar plot")
                 st.write("Pour évaluer l'**impact des variables sur les prédictions du modèle**, le bar plot de la librairie SHAP permet d'afficher les moyennes absolues des valeurs SHAP.")
-                st.write("Nous avons par ailleurs regroupé certaines variables catégorielles dispatchées en plusieurs colonnes après le One Hot Encoding afin d'avoir une vue d'ensemble de leur effet positif ou négatif sur la prédictivité du modèle.")
+                st.write("Nous avons par ailleurs regroupé certaines variables catégorielles dispatchées en plusieurs colonnes après encodage afin d'avoir une vue d'ensemble de leur effet positif ou négatif sur les prédictions.")
 
                 explanation_XGBOOST_1 = shap.Explanation(values=shap_values_XGBOOST_1,
                                      data=X_test_sd.values, # Assumant que  X_test est un DataFrame
@@ -2809,20 +2809,20 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 
                 st.subheader("Choix des 5 variables les plus importantes")
-                st.write("1. HOUSING : détention ou non d’un prêt immobilier")
-                st.write("2. ÂGE")
-                st.write("3. BALANCE : solde bancaire du client")
-                st.write("4. PREVIOUS : nombre de contacts effectués avant la campagne avec le client")
-                st.write("5. CAMPAIGN : nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
-                
+                st.write("1. **HOUSING** : détention ou non d’un prêt immobilier")
+                st.write("2. **BALANCE** : solde bancaire du client")
+                st.write("3. **ÂGE**")
+                st.write("4. **PREVIOUS** : nombre de contacts effectués avant cette campagne avec le client")
+                st.write("5. **CAMPAIGN** : nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus)")
+                st.write("6. **EDUCATION** : niveau scolaire du client")                
 
         if submenu_interpretation == "ANALYSE DES VARIABLES LES PLUS IMPORTANTES" :
-            submenu_local = st.radio("", ("HOUSING", "ÂGE", "BALANCE", "PREVIOUS", "CAMPAIGN", "EDUCATION"), horizontal=True)
+            submenu_local = st.radio("", ("HOUSING", "BALANCE", "AGE", "PREVIOUS", "CAMPAIGN", "EDUCATION"), horizontal=True)
             shap_XGBOOST_1_VALUES = shap_values_XGBOOST_1.values
             X_test_original_figures = X_test_sd_original 
             
             if submenu_local == "HOUSING" :
-                st.title("HOUSING : POIDS +0.27")
+                st.title("HOUSING : POIDS +0.26")
                 st.subheader("IMPACT NÉGATIF DE HOUSING SUR LA CLASSE 1")
                 st.write("Détenir ou non un prêt immobilier joue un rôle déterminant dans les prédictions de notre modèle.")
                 
@@ -2836,36 +2836,9 @@ if selected == 'Interprétation':
 
                 st.write("Les clients avec un prêt immobilier (Housing = 1, rouge) ont une probabilité plus faible de souscrire, tandis que **les clients sans prêt (Housing = 0, bleu) ont une probabilité plus élevée de souscrire à un dépôt à terme**.")
 
-            if submenu_local == "ÂGE" :
-                st.title("ÂGE : POIDS +0.25")
-                st.subheader("IMPACT POSITIF CHEZ LES JEUNES ET LES PLUS ÂGÉS")
-                st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
-                st.write("L’âge joue un rôle significatif dans l’orientation des prédictions. Valeurs comprises entre 18 et 74 ans.")
-                fig = plt.figure()
-                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")]], 
-                                  X_test_sd[["age"]], 
-                                  feature_names=["age"], 
-                                  show=True)
-                st.pyplot(fig)
-                st.write("Ce summary plot montre assez clairement qu'une **majorité de 'violet' soit des âges intermédiaires présentent des shap values négatives, ils ont donc tendance à ne pas souscrire au dépôt à terme.**")         
-
-                st.write("Pour une meilleure représentation de la distribution de la variable âge, affichons son dépendance plot.")
-                feature_name = "age"
-                fig, ax = plt.subplots(figsize=(20, 7))
-                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
-                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                fig = plt.gcf()  
-                ax.set_xlim(17, 76)
-                ax.set_xticks(np.arange(17, 77, 1))
-                ax.axhline(0, color='red', linewidth=1.5, linestyle='--')
-                st.pyplot(fig)       
-                plt.close()
-     
-                st.write("Le graphique en U confirme que **les souscriptions au dépôt à terme concernent principalement des clients jeunes (18-28 ans) ou les clients plus âgés (59 ans et plus)**, tandis que les clients d'âge intermédiaire (29-59 ans) sont majoritairement associés à des valeurs SHAP négatives, indiquant une tendance à ne pas souscrire.") 
-
-
+         
             if submenu_local == "BALANCE" :
-                st.title("BALANCE : POIDS +0.20")
+                st.title("BALANCE : POIDS +0.24")
                 st.subheader("IMPACT POSITIF DE BALANCE SUR LA CLASSE 1")
                 st.write("Le solde du client semble être déterminant pour la prédiction. Valeurs comprises entre -1451€ et 4048€")
                 fig = plt.figure()
@@ -2989,9 +2962,36 @@ if selected == 'Interprétation':
                     st.write("Il en est de même pour la variable job.")
 
 
+            if submenu_local == "AGE" :
+                st.title("ÂGE : POIDS +0.23")
+                st.subheader("IMPACT POSITIF CHEZ LES JEUNES ET LES PLUS ÂGÉS")
+                st.subheader("IMPACT NÉGATIF DES TRANCHES D’ÂGES MOYENNES")
+                st.write("L’âge joue un rôle significatif dans l’orientation des prédictions. Valeurs comprises entre 18 et 74 ans.")
+                fig = plt.figure()
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("age")]], 
+                                  X_test_sd[["age"]], 
+                                  feature_names=["age"], 
+                                  show=True)
+                st.pyplot(fig)
+                st.write("Ce summary plot montre assez clairement qu'une **majorité de 'violet' soit des âges intermédiaires présentent des shap values négatives, ils ont donc tendance à ne pas souscrire au dépôt à terme.**")         
+
+                st.write("Pour une meilleure représentation de la distribution de la variable âge, affichons son dépendance plot.")
+                feature_name = "age"
+                fig, ax = plt.subplots(figsize=(20, 7))
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()  
+                ax.set_xlim(17, 76)
+                ax.set_xticks(np.arange(17, 77, 1))
+                ax.axhline(0, color='red', linewidth=1.5, linestyle='--')
+                st.pyplot(fig)       
+                plt.close()
+     
+                st.write("Le graphique en U confirme que **les souscriptions au dépôt à terme concernent principalement des clients jeunes (18-28 ans) ou les clients plus âgés (59 ans et plus)**, tandis que les clients d'âge intermédiaire (29-59 ans) sont majoritairement associés à des valeurs SHAP négatives, indiquant une tendance à ne pas souscrire.") 
+
 
             if submenu_local == "PREVIOUS" :
-                st.title("PREVIOUS : POIDS +0.14")
+                st.title("PREVIOUS : POIDS +0.22")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Le nombre de contacts effectués avant la campagne avec le client semble également jouer un rôle important dans la prédiction. Valeurs comprises entre 0 et 2 fois.")
                 fig = plt.figure()
@@ -3013,7 +3013,7 @@ if selected == 'Interprétation':
                 st.write("La distribution des valeurs de previous montre très clairement que lorsque les clients n’ont jamais été contactés (previous = 0) alors la shap value est négative, tandis que **les clients qui ont été contactés par le passé affichent des valeurs shap très nettement positives, ils sont donc plus susceptibles de souscrire au produit.**")
                         
             if submenu_local == "CAMPAIGN" :
-                st.title("PREVIOUS : POIDS +0.14")
+                st.title("PREVIOUS : POIDS +0.10")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Le nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus) est également un paramètre relativement important dans la prédiction de notre modèle. Valeurs comprises entre 1 et 5.")
                 fig = plt.figure()
