@@ -3594,7 +3594,7 @@ if selected == 'Outil  Prédictif':
 
         st.write("Force plot du client :")
         # Générer un graphique de force SHAP avec matplotlib
-        shap.force_plot(explainer.expected_value, shap_values[0,;], pred_df[0,;], matplotlib=True)
+        shap.force_plot(explainer.expected_value, shap_values[0,:], pred_df[0,:], matplotlib=True)
         
         # Récupérer la figure courante
         fig = plt.gcf()
