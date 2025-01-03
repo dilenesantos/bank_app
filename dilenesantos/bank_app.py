@@ -3593,15 +3593,14 @@ if selected == 'Outil  Prédictif':
         st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
 
         st.write("Force plot du client :")
-        import tempfile
-        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmpfile:
-            shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False, show=False, out_names=tmpfile.name)
-            # Lire le contenu du fichier HTML
-            tmpfile.seek(0)
-            plot_html = tmpfile.read().decode('utf-8')
+        shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=True)
         
-        # Afficher le graphique dans Streamlit
-        st.components.v1.html(plot_html, height=400, scrolling=True)
+        # Récupérer la figure courante
+        fig = plt.gcf()
+        
+        # Afficher la figure dans Streamlit
+        st.pyplot(fig)
+        plt.close()
 
         
             
