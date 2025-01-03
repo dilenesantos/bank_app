@@ -3593,8 +3593,16 @@ if selected == 'Outil  Prédictif':
         st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
 
         st.write("Force plot du client :")
+        import base64
         shap.initjs()  # Initialiser JavaScript pour les visualisations SHAP
-        shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False)
+        force_plot_html = shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False)
+        
+        # Encode le plot en base64 pour l'affichage HTML
+        plot_html = force_plot_html.html
+        
+        # Afficher le graphique dans Streamlit
+        st.components.v1.html(plot_html, height=400, scrolling=True)
+
         
             
         if prediction[0] == 0:
