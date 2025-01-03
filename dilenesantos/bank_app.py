@@ -2808,7 +2808,7 @@ if selected == 'Interprétation':
                 shap.plots.bar(explanation_combined_new_XGBOOST_1, max_display=len(explanation_combined_new_XGBOOST_1.feature_names))
                 st.pyplot(fig)
                 
-                st.subheader("Choix des 5 variables les plus importantes")
+                st.subheader("Choix des variables les plus importantes")
                 st.write("1. **HOUSING** : détention ou non d’un prêt immobilier")
                 st.write("2. **BALANCE** : solde bancaire du client")
                 st.write("3. **ÂGE**")
