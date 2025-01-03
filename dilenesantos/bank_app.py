@@ -3593,11 +3593,10 @@ if selected == 'Outil  Prédictif':
         st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
 
         st.write("Force plot du client :")
-        shap.force_plot(explainer.expected_value, shap_values, pred_df)
-        fig = plt.gcf()          
-        st.pyplot(fig)       
-        plt.close() 
-    
+        shap.initjs()  # Initialiser JavaScript pour les visualisations SHAP
+        shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False)
+        
+            
         if prediction[0] == 0:
             st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
         else:
