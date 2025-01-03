@@ -2866,16 +2866,16 @@ if selected == 'Interprétation':
                 st.pyplot(fig)       
                 plt.close() 
                 st.write("")
-                st.write("Effectuons un zoom pour les balances entre 0 et 1800€ pour une meilleure visibilité")
+                st.write("Effectuons un zoom pour les balances entre 0 et 1500€ pour une meilleure visibilité")
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                xticks = range(0, 1800, 100)
+                xticks = range(0, 1500, 100)
                 plt.grid(True, which='both', linestyle='--', linewidth=0.5) 
                 plt.xticks(xticks, fontsize=5)
                 plt.yticks(fontsize=7) 
                 plt.xlabel('balance',fontsize=7)  
                 plt.ylabel('shap values', fontsize=7)
-                plt.xlim(0, 1800)  # Limites de l'axe x
+                plt.xlim(0, 1500)  # Limites de l'axe x
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
@@ -3062,53 +3062,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)       
                 plt.close() 
 
-                st.subheader("Recherche d'autres dépendances")
-                # Extraction des valeurs SHAP
-                shap_values = shap_XGBOOST_1_VALUES
-                X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
-                
-                # Liste des variables pour interaction_index
-                interaction_variables = ["age", "job"]
-                
-                # radio
-                selected_variable = st.radio("Choix de la variable", interaction_variables, horizontal=True)
-                
-                # Vérification si la variable sélectionnée est "housing", "age" ou "education"
-                if selected_variable in ["age"]:
-                    st.write("Côté âges, pas de dépendance claire avec le niveau d'éducation.")
-                    fig, ax = plt.subplots(figsize=(10, 6))
-                    shap.dependence_plot("education", shap_XGBOOST_1_VALUES, X_test_original_figures, 
-                                         interaction_index=selected_variable, show=False, ax=ax)
-                
-                    # Titre et axe horizontal rouge
-                    ax.axhline(0, color='red', linewidth=1, linestyle='--')
-                    plt.tight_layout()
-                    st.pyplot(fig)
-                    plt.close()
-                
-                elif selected_variable == "job":
-                    # Variables associées à job
-                    job_variables = ['job_admin.', 'job_blue-collar', 'job_entrepreneur', 'job_housemaid', 'job_management', 
-                                     'job_retired', 'job_self-employed', 'job_services', 'job_student', 'job_technician', 'job_unemployed']
-                
-                    # Créer un graphique pour chaque variable associée à job
-                    st.write("Les jobs ont l'on peut observer une vraie tendance ne concernent que les **Blue-collar** (plutôt d'un niveau primaire d'éducation) et **emplois dans le Management** (niveau d'éducation plutôt tertiaire)")
-
-                    fig, axes = plt.subplots(len(job_variables), 1, figsize=(10, len(job_variables) * 6))
-                
-                    for i, variable in enumerate(job_variables):
-                        shap.dependence_plot(
-                            "education", shap_XGBOOST_1_VALUES, X_test_original_figures, 
-                            interaction_index=variable, show=False, ax=axes[i]
-                        )
-                        axes[i].set_title(f'Balance x {variable}', fontsize=14)
-                        axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
-                
-                    plt.tight_layout()
-                    st.pyplot(fig)
-                    plt.close()
-
-
+  
 if selected == "Recommandations & Perspectives":
       st.subheader("Recommandations & Perspectives")
       submenu_reco = st.radio("", ("PROFIL DES CLIENTS A CONTACTER", "NOMBRE ET DUREE D’APPEL", "RECAP"), horizontal=True)
