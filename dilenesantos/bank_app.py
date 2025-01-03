@@ -2436,7 +2436,7 @@ if selected == "Modélisation":
      
                     
             st.subheader("Modèle sélectionné")
-            st.write("Voici les hyperparamètres du modèle XGBOOST retenu et ses scores sur les classes 0 et 1.")
+            st.write("Voici les hyperparamètres du modèle XGBOOST retenu :")
             st.write("XGBClassifier(**gamma=0.05,colsample_bytree=0.9, learning_rate=0.39, max_depth=6, min_child_weight=1.29, n_estimators=34, reg_alpha=1.29, reg_lambda=1.9, scale_pos_weight=2.6, subsample=0.99, random_state=42**)")
                 
             # Chargement du modèle enregistré
@@ -2460,12 +2460,12 @@ if selected == "Modélisation":
 
 
             # Création de la matrice de confusion sous forme de DataFrame
-            st.write("**Matrice de confusion du modèle:**")
+            st.write("**Matrice de confusion du modèle :**")
             table_xgboost_1 = pd.crosstab(y_test_sd, y_pred_1, rownames=["Réalité"], colnames=["Prédiction"])
             st.dataframe(table_xgboost_1)
 
             # Affichage global du rapport sous forme de tableau
-            st.write("**Rapport de classification du modèle:**")
+            st.write("**Rapport de classification du modèle :**")
             st.table(report_df_1)
             
 
