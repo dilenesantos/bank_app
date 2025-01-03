@@ -3503,7 +3503,7 @@ if selected == 'Outil  Prédictif':
         st.write("Le client a :  ", age, "ans")   
         st.write("Le client a un niveau d'étude :  ", niveau_etude)
         st.write("Le solde de son compte en banque est de :  ", balance, "euros")
-        st.write("Le client est-il propriétaire :  ", "Oui" if housing == 1 else "Non")
+        st.write("Le client est-il propriétaire :  ", "Yes" if housing == 1 else "No")
         st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
   
         
