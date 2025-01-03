@@ -3581,7 +3581,8 @@ if selected == 'Outil  Prédictif':
     
         # Réinitialiser l'index de pred_df après la manipulation (facultatif)
         pred_df = pred_df.reset_index(drop=True)
-      
+        st.write("Dataframe du client en question")
+        st.dataframe(pred_df)
         
         # Interface utilisateur
         filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
@@ -3650,6 +3651,8 @@ if selected == 'Outil  Prédictif':
                 
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
+                    st.write("Dataframe du client en question")
+                    st.dataframe(pred_df)
     
                     # Conditions pour charger le modèle approprié
                     filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
@@ -3725,7 +3728,9 @@ if selected == 'Outil  Prédictif':
                     prediction_opt_marital = additional_model.predict(pred_df)
                     prediction_proba_opt_marital = additional_model.predict_proba(pred_df)
                     max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
-                
+                    st.write("Dataframe du client en question")
+                    st.dataframe(pred_df)
+                 
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_marital[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%**")
@@ -3790,10 +3795,14 @@ if selected == 'Outil  Prédictif':
                     prediction_opt_poutcome = additional_model.predict(pred_df)
                     prediction_proba_opt_poutcome = additional_model.predict_proba(pred_df)
                     max_proba_opt_poutcome = np.max(prediction_proba_opt_poutcome[0]) * 100
-                
+
+                    
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_poutcome[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
+                    st.write("Dataframe du client en question")
+                    st.dataframe(pred_df)
+                 
                     st.write("Force plot du client :")
                     shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_poutcome, pred_df, matplotlib=True)
@@ -3852,6 +3861,8 @@ if selected == 'Outil  Prédictif':
                     additional_model = joblib.load(filename_job)
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_job = explainer.shap_values(pred_df)
+                    st.write("Dataframe du client en question")
+                    st.dataframe(pred_df)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_job = additional_model.predict(pred_df)
@@ -3907,7 +3918,9 @@ if selected == 'Outil  Prédictif':
                     additional_model = joblib.load(filename_client_category)
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_client_category = explainer.shap_values(pred_df)
-                
+                    st.write("Dataframe du client en question")
+                    st.dataframe(pred_df)
+                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_client_category = additional_model.predict(pred_df)
                     prediction_proba_opt_client_category = additional_model.predict_proba(pred_df)
