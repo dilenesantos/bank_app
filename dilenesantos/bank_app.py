@@ -3591,7 +3591,9 @@ if selected == 'Outil  Prédictif':
         # Affichage des résultats
         st.subheader(f"Prediction : {prediction[0]}")
         st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
-        shap.force_plot(explainer.expected_value, shap_values[0,:], pred_df.iloc[0,:])
+
+        st.write("Force plot du client :")
+        shap.force_plot(explainer.expected_value, shap_values, pred_df)
         fig = plt.gcf()          
         st.pyplot(fig)       
         plt.close() 
