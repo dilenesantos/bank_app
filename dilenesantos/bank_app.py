@@ -1735,7 +1735,7 @@ if selected == "Pre-processing":
                 
         if submenupages2 == "Encodage" :    
             st.subheader("Encodage")
-            st.write("On **encode la variable cible** avec le **Label Encoder**.")
+            st.write("On encode la **variable cible** avec le **Label Encoder**.")
             dffpre_pros2 = df.copy()                        
             dffpre_pros2 = dffpre_pros2[dffpre_pros2['age'] < 75]
             dffpre_pros2 = dffpre_pros2.loc[dffpre_pros2["balance"] > -2257]
@@ -1811,7 +1811,7 @@ if selected == "Pre-processing":
             y_train_pre_pros2 = le.fit_transform(y_train_pre_pros2)
             y_test_pre_pros2 = le.transform(y_test_pre_pros2)
                 
-            st.write("S'agissant des **variables qualitatives à 2 modalités 'default', 'housing' et 'loan'**, on encode avec le **One Hot Encoder**.")
+            st.write("S'agissant des variables qualitatives à 2 modalités **'default'**, **'housing'** et **'loan'**, on encode avec le **One Hot Encoder**.")
             # Encodage des variables explicatives de type 'objet'
             oneh = OneHotEncoder(drop = 'first', sparse_output = False)
             cat1 = ['default', 'housing','loan']
@@ -1821,7 +1821,7 @@ if selected == "Pre-processing":
             X_train_pre_pros2[cat1] = X_train_pre_pros2[cat1].astype('int64')
             X_test_pre_pros2[cat1] = X_test_pre_pros2[cat1].astype('int64')
                 
-            st.write("Pour les **variables ordinales 'education' et 'Client_Category'**, on **remplace les modalités par des nombres** en tenant compte de l'ordre.")
+            st.write("Pour les variables ordinales **'education'** et **'Client_Category'**, on **remplace les modalités par des nombres** en tenant compte de l'ordre.")
                 
             # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
             X_train_pre_pros2['education'] = X_train_pre_pros2['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
@@ -1832,7 +1832,7 @@ if selected == "Pre-processing":
             X_test_pre_pros2['Client_Category_M'] = X_test_pre_pros2['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
 
 
-            st.write("Enfin pour les **variables catégorielles à plus de 2 modalités** on applique le **get dummies sur X_train et X_test**.")
+            st.write("Pour les **variables catégorielles à plus de 2 modalités** on applique le **get dummies** sur X_train et X_test.")
                 
             # Encoder les variables à plus de 2 modalités 'job', 'marital', 'poutome', 'month', 'weekday' pour X_train
             dummies = pd.get_dummies(X_train_pre_pros2['job'], prefix='job').astype(int)
@@ -1866,6 +1866,7 @@ if selected == "Pre-processing":
                 
             #Afficher les dimensions des jeux reconstitués.
             st.write("**Dimensions du jeu d'entraînement :**",X_train_pre_pros2.shape)
+            st.write("")
                 
             st.write("Dataframe final X_test : ")
             st.dataframe(X_test_pre_pros2.head())
