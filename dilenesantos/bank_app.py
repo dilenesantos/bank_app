@@ -2881,9 +2881,9 @@ if selected == 'Interprétation':
                 plt.close() 
                 
                 st.markdown("Ce zoom offre une meilleure visibilité :  \n\
-                1. Les clients dont la balance est comprise entre 0€ et 200 affichent majoritairement des valeurs shap négatives.  \n\
-                2. Les clients dont la balance est supérieure à 800€ sont affichent majoritairement des valeurs shap positives.  \n\
-                3. Les clients affichant un solde entre 200 et 800€ sont globalement scindés en 2 groupes : une moitié ne souscrit pas au produit, mais l’autre oui.")
+                - Les clients dont la balance est comprise entre 0€ et 200 affichent majoritairement des valeurs shap négatives.  \n\
+                - Les clients dont la balance est supérieure à 800€ sont affichent majoritairement des valeurs shap positives.  \n\
+                - Les clients affichant un solde entre 200 et 800€ sont globalement scindés en 2 groupes : une moitié ne souscrit pas au produit, mais l’autre oui.")
 
                 st.subheader("Recherche d'autres dépendances")
                 st.write("Pour tenter de départager ces clients dont la balance est comprise entre 200 et 800€, examinons les relations avec d'autres variables pour voir si nous pouvons identifier des tendances.")
