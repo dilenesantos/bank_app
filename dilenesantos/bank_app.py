@@ -2895,7 +2895,7 @@ if selected == 'Interprétation':
                 interaction_variables = ["housing", "age", "education", "marital status", "job"]
                 
                 # radio
-                selected_variable = st.radio(" ", interaction_variables, horizontal=True)
+                selected_variable = st.radio(interaction_variables, horizontal=True)
                 
                 # Vérification si la variable sélectionnée est "housing", "age" ou "education"
                 if selected_variable in ["housing", "age", "education"]:
