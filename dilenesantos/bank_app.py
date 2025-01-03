@@ -3496,6 +3496,7 @@ if selected == 'Outil  Prédictif':
     previous = st.selectbox("Lors de la précédente campagne marketing, combien de fois le client a-t-il été contacté ?", 
                              options=["0 fois", "1 fois", "2 fois ou plus"])    
 
+
     # Vérifiez si age et balance sont correctement remplis
     if age is not None and balance is not None:
         # Affichage du récapitulatif
@@ -3505,7 +3506,14 @@ if selected == 'Outil  Prédictif':
         st.write("Le solde de son compte en banque est de :  ", balance, "euros")
         st.write("Le client est-il propriétaire :  ", housing)
         st.write("Le client a été contacté  ", previous, " lors de la dernière campagne marketing")
-  
+
+        # Mapper les options à des valeurs entières
+        if previous == "0 fois":
+            previous = 0
+        elif previous == "1 fois":
+            previous = 1
+        else:  # "2 fois ou plus"
+            previous = 2
         
         # Créer un dataframe récapitulatif des données du prospect
         infos_prospect = pd.DataFrame({
