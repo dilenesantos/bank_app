@@ -2911,7 +2911,13 @@ if selected == 'Interprétation':
                     plt.tight_layout()
                     st.pyplot(fig)
                     plt.close()
-                    st.write("Il n'est pas possible d'établir un lien clair entre la balance des clients et ces autres variables numériques.")
+
+                    if selected_variable in ["housing"] :
+                     st.write("Il n'est pas possible d'établir un lien clair entre la balance de ces clients et la variable housing.")
+                    if selected_variable in ["age"] :
+                     st.write("Il n'est pas possible d'établir un lien clair entre la balance de ces clients et leur âge.")
+                    if selected_variable in ["education"] :
+                     st.write("Il n'est pas possible d'établir un lien clair entre la balance de ces clients et leur niveau d'éducation.")
                 
                 elif selected_variable == "marital status":
                     # Variables associées à marital status
