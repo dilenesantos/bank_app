@@ -2995,7 +2995,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)       
                 plt.close()
      
-                st.write("Le graphique en U confirme que **les souscriptions au dépôt à terme concernent principalement des clients jeunes (18-28 ans) ou les clients plus âgés (59 ans et plus)**, tandis que les clients d'âge intermédiaire (29-59 ans) sont majoritairement associés à des valeurs SHAP négatives, indiquant une tendance à ne pas souscrire.") 
+                st.write("Le graphique en U confirme que **les souscriptions au dépôt à terme concernent principalement des clients jeunes (18-28 ans) ou des clients plus âgés (59 ans et plus)**, tandis que les clients d'un âge intermédiaire (29-59 ans) sont majoritairement associés à des valeurs SHAP négatives, ceux-ci ont tendance à ne pas souscrire.") 
 
 
             if submenu_local == "PREVIOUS" :
