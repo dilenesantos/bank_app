@@ -3612,9 +3612,9 @@ if selected == 'Outil  Prédictif':
 
             
         if prediction[0] == 0:
-            st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+            st.write("Conclusion : **Ce client N'EST PAS susceptible de souscrire à un dépôt à terme.**")
         else:
-            st.write("Conclusion: Ce client est susceptible de souscrire à un dépôt à terme.")
+            st.write("Conclusion : **Ce client EST susceptible de souscrire à un dépôt à terme.**")
             st.write("\nRecommandations : ")
             st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, veiller à rester le plus longtemps possible au téléphone avec ce client.")
             st.write("- Nombre de contacts : il serait contre-productif de le contacter plus d'une fois.")
