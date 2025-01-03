@@ -2886,7 +2886,7 @@ if selected == 'Interprétation':
                 - Les clients avec un solde compris entre 200 et 800€ sont scindés en deux groupes : une moitié ne souscrit pas au produit, mais l’autre oui.")
 
                 st.subheader("Recherche d'autres dépendances")
-                st.write("Pour tenter de départager ces clients dont la balance est comprise entre 200 et 800€, examinons les relations avec d'autres variables pour voir si nous pouvons identifier des tendances.")
+                st.write("Pour tenter de départager ces clients dont la balance est comprise entre 200 et 800€, examinons leurs relations avec d'autres variables afin d'identifier des tendances.")
                 # Extraction des valeurs SHAP
                 shap_values = shap_XGBOOST_1_VALUES
                 X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
