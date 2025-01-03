@@ -3593,12 +3593,13 @@ if selected == 'Outil  Prédictif':
         st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
 
         st.write("Force plot du client :")
-        import base64
+        import tempfile
         shap.initjs()  # Initialiser JavaScript pour les visualisations SHAP
-        force_plot_html = shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False)
-        
-        # Encode le plot en base64 pour l'affichage HTML
-        plot_html = force_plot_html.html
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmpfile:
+            shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False, show=False, out_names=tmpfile.name)
+            # Lire le contenu du fichier HTML
+            tmpfile.seek(0)
+            plot_html = tmpfile.read().decode('utf-8')
         
         # Afficher le graphique dans Streamlit
         st.components.v1.html(plot_html, height=400, scrolling=True)
