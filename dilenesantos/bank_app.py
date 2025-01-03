@@ -2848,11 +2848,12 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
 
-                st.write("La graduation du bleu (solde bas) au rouge (solde élevé) indique qu'**un solde bancaire moyen ou élevé augmente la probabilité d'appartenir à la classe 'YES'.**")         
+                st.write("On constate ici qu'**un solde bancaire moyen (violet) ou élevé (rouge) augmente la probabilité d'appartenir à la classe 'YES'.**")         
 
                 #GRAPHIQUE DEPENDENCE PLOT
                 feature_name = "balance"
-                st.write("Le dependence plot présente une distribution en courbe qui confirme notre précédent constat : **plus la balance est élevée et plus les valeurs SHAP tendent vers le positif.**")
+                st.write("Le dependence plot ci-dessous présente une distribution en courbe confirmant notre précédent constat : **plus la balance est élevée, plus les valeurs SHAP sont positives.**")
+                st.write("On constate cependant qu'au centre de cette courbe, les valeurs de shap sont à la fois positives et négatives.")
                 shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
                 plt.axhline(0, color='red', linestyle='--', linewidth=1) 
                 xticks = range(-1500, 4300, 300)
@@ -2880,11 +2881,13 @@ if selected == 'Interprétation':
                 plt.close() 
                 
 
-                st.markdown("Les clients dont la balance est comprise entre -1000€ et 200 affichent très nettement des valeurs shap négatives. \n\
-                Les clients affichant un solde positif entre 200 et 800€ sont globalement scindés en 2 groupes : une moitié de ces clients ne souscrivent pas au produit, mais l’autre moitié oui.")
+                st.markdown("Ce zoom nous permet de mieux visualiser les choses : \n\
+                Les clients dont la balance est comprise entre 0€ et 200 affichent majoritairement des valeurs shap négatives. \n\
+                Les clients dont la balance est supérieure à 800€ sont affichent majoritairement des valeurs shap positives. \n\
+                Les clients affichant un solde entre 200 et 800€ sont globalement scindés en 2 groupes : une moitié de ces clients ne souscrit pas au produit, mais l’autre moitié oui.")
                 
                 st.subheader("Recherche d'autres dépendances")
-                st.write("Pour tenter de départager ces clients ayant une balance entre 200 et 800€, examinons la relation de la balance pour ces valeurs avec d'autres variables pour voir si nous pouvons identifier des tendances.")
+                st.write("Pour tenter de départager ces clients dont la balance est comprise entre 200 et 800€, examinons les relations avec d'autres variables pour voir si nous pouvons identifier des tendances.")
                 # Extraction des valeurs SHAP
                 shap_values = shap_XGBOOST_1_VALUES
                 X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
