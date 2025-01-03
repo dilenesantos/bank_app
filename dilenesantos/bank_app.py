@@ -3493,8 +3493,8 @@ if selected == 'Outil  Prédictif':
     
     housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
 
-    previous = st.slider("Lors de la précédente campagne marketing, combien de fois le client a-t-il été contacté ?", 0,6,1)
-    
+    previous = st.selectbox("Lors de la précédente campagne marketing, combien de fois le client a-t-il été contacté ?", 
+                             options=["0 fois", "1 fois", "2 fois ou plus"])    
 
     # Vérifiez si age et balance sont correctement remplis
     if age is not None and balance is not None:
@@ -3504,7 +3504,7 @@ if selected == 'Outil  Prédictif':
         st.write("Le client a un niveau d'étude :  ", niveau_etude)
         st.write("Le solde de son compte en banque est de :  ", balance, "euros")
         st.write("Le client est-il propriétaire :  ", housing)
-        st.write("Le clients a été contacté  ", previous, " fois lors de la dernière campagne marketing")
+        st.write("Le client a été contacté  ", previous, " lors de la dernière campagne marketing")
   
         
         # Créer un dataframe récapitulatif des données du prospect
@@ -3928,7 +3928,7 @@ if selected == 'Outil  Prédictif':
                 st.write("Le client a un niveau d'étude : ", niveau_etude)
                 st.write("Le solde de son compte en banque est de : ", balance, "euros")
                 st.write("Le client est-il propriétaire : ", housing)
-                st.write("Le client a été contacté ", previous, " fois lors de la précédente campagne marketing")
+                st.write("Le client a été contacté ", previous, " lors de la précédente campagne marketing")
                 
                 # Afficher les informations supplémentaires définies
                 if option_to_add == "loan":
