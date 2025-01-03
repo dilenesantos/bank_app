@@ -2133,10 +2133,10 @@ if selected == "Modélisation":
         submenu_modelisation = st.radio("", ("Scores modèles sans paramètres", "Hyperparamètres et choix du modèle"), horizontal=True)
         if submenu_modelisation == "Scores modèles sans paramètres" :
             st.subheader("Scores modèles sans paramètres")
-            st.write("On affiche le tableau des résultats des modèles :")
+            st.write("Tableau avec les résultats des modèles :")
             st.dataframe(results_sans_param)
                 
-            st.write("Graphique :")
+            st.write("Visualisation des différents scores :")
             # Visualisation des résultats des différents modèles :
             fig = plt.figure(figsize=(12, 6))
             sns.barplot(data=results_melted,x="Classifier",y="Score",hue="Metric",palette="rainbow")
@@ -2304,7 +2304,7 @@ if selected == "Modélisation":
             melted_df_results_SD_sans_param = df_results_SD_sans_param.reset_index().melt(id_vars="index", var_name="Metric", value_name="Score")
             melted_df_results_SD_sans_param.rename(columns={"index": "Classifier"}, inplace=True)
 
-            st.write("La variable 'duration' a été retirée du dataset, les modèles ont été initialement testés sans hyperparamètres et classés selon le score 'Recall' afin de sélection les tops modèles pour optimisation ultérieure.")
+            st.write("La variable **'duration'** a été **retirée** du dataset, les modèles ont été testés sans paramètres et classés selon le score 'Recall' afin de sélectionner les tops modèles pour optimisation ultérieure.")
             st.dataframe(df_results_SD_sans_param)
             
             st.write("Visualiation des résultats :")
@@ -2321,12 +2321,12 @@ if selected == "Modélisation":
             plt.tight_layout()
             st.pyplot(fig)
 
-            st.markdown("Ces scores nous permettent de sélectionner notre top 3 des modèles à tester avec le GridSearchCV, qui sont donc : \n\
-            - Le modèle **Decision Tree** \n\
-            - Le modèle **XGBOOST** \n\
-            - Le modèle **Random Forest**")
+            st.markdown("Ces scores nous permettent de sélectionner notre **top 3 des modèles** à tester avec le GridSearchCV, qui sont donc : \n\
+            1. Le modèle **Decision Tree** \n\
+            2. Le modèle **XGBOOST** \n\
+            3. Le modèle **Random Forest**")
 
-            st.markdown("Puisque le modèle **SVM** donne de bien **meilleurs résultats sur le score de Précision**, nous allons également effectuer des tests avec ce modèle SVM, en plus des modèles listés ci-dessus.")
+            st.markdown("Puisque le modèle **SVM** affiche de bien **meilleurs résultats sur le score de Précision**, nous allons également effectuer des tests avec ce modèle, en plus des 3 modèles listés ci-dessus.")
 
         if submenu_modelisation2 == "Hyperparamètres et choix du modèle" :
             st.write("Scores des modèles hyperparamétrés :")            
