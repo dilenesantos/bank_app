@@ -1654,8 +1654,8 @@ if selected == "Pre-processing":
 
                 
         if submenupages2 == "Standardisation des variables" :    
-            st.write("Standardisation des variables")
-            st.write("On standardise les variables quantitatives à l'aide de la fonction StandardScaler.")
+            st.subheader("Standardisation des variables")
+            st.write("On **standardise les variables quantitatives** à l'aide de la **fonction StandardScaler**.")
             dffpre_pros2 = df.copy()                        
             dffpre_pros2 = dffpre_pros2[dffpre_pros2['age'] < 75]
             dffpre_pros2 = dffpre_pros2.loc[dffpre_pros2["balance"] > -2257]
@@ -1726,16 +1726,16 @@ if selected == "Pre-processing":
             X_train_pre_pros2 [cols_num] = scaler.fit_transform(X_train_pre_pros2 [cols_num])
             X_test_pre_pros2 [cols_num] = scaler.transform (X_test_pre_pros2 [cols_num])
                 
-            st.write("Vérification sur X_train, les données quantitatives sont-elles bien standardisées ?")
+            st.write("Vérification de la standardisation des variables quantitatives sur X_train :")
             st.dataframe(X_train_pre_pros2.head())
                 
-            st.write("Vérification sur X_test, les données quantitatives sont-elles bien standardisées ?")
+            st.write("Sur X_test :")
             st.dataframe(X_test_pre_pros2.head())
 
                 
         if submenupages2 == "Encodage" :    
             st.subheader("Encodage")
-            st.write("On encode la variable cible avec le Label Encoder.")
+            st.write("On **encode la variable cible** avec le **Label Encoder**.")
             dffpre_pros2 = df.copy()                        
             dffpre_pros2 = dffpre_pros2[dffpre_pros2['age'] < 75]
             dffpre_pros2 = dffpre_pros2.loc[dffpre_pros2["balance"] > -2257]
@@ -1811,7 +1811,7 @@ if selected == "Pre-processing":
             y_train_pre_pros2 = le.fit_transform(y_train_pre_pros2)
             y_test_pre_pros2 = le.transform(y_test_pre_pros2)
                 
-            st.write("Pour les variables qualitatives 'default', 'housing' et 'loan', on encode avec le One Hot Encoder")
+            st.write("S'agissant des **variables qualitatives à 2 modalités 'default', 'housing' et 'loan'**, on encode avec le **One Hot Encoder**.")
             # Encodage des variables explicatives de type 'objet'
             oneh = OneHotEncoder(drop = 'first', sparse_output = False)
             cat1 = ['default', 'housing','loan']
@@ -1821,7 +1821,7 @@ if selected == "Pre-processing":
             X_train_pre_pros2[cat1] = X_train_pre_pros2[cat1].astype('int64')
             X_test_pre_pros2[cat1] = X_test_pre_pros2[cat1].astype('int64')
                 
-            st.write("Pour les variables ordinales 'education' et et 'Client_Category', on remplace les modalités par des nombres en gardant l'ordre initial.")
+            st.write("Pour les **variables ordinales 'education' et 'Client_Category'**, on **remplace les modalités par des nombres** en tenant compte de l'ordre.")
                 
             # 'education' est une variable catégorielle ordinale, remplacer les modalités de la variable par des nombres, en gardant l'ordre initial
             X_train_pre_pros2['education'] = X_train_pre_pros2['education'].replace(['primary', 'secondary', 'tertiary'], [0, 1, 2])
@@ -1832,7 +1832,7 @@ if selected == "Pre-processing":
             X_test_pre_pros2['Client_Category_M'] = X_test_pre_pros2['Client_Category_M'].replace(['Prospect', 'Reached-6M', 'Reached+6M'], [0, 1, 2])
 
 
-            st.write("Pour les autres variables catégorielles à plus de 2 modalités on applique le get dummies à la fois à X_train et X_test.")
+            st.write("Enfin pour les **variables catégorielles à plus de 2 modalités** on applique le **get dummies sur X_train et X_test**.")
                 
             # Encoder les variables à plus de 2 modalités 'job', 'marital', 'poutome', 'month', 'weekday' pour X_train
             dummies = pd.get_dummies(X_train_pre_pros2['job'], prefix='job').astype(int)
@@ -1865,17 +1865,11 @@ if selected == "Pre-processing":
             st.dataframe(X_train_pre_pros2.head())
                 
             #Afficher les dimensions des jeux reconstitués.
-            st.write("Dimensions du jeu d'entraînement:",X_train_pre_pros2.shape)
+            st.write("**Dimensions du jeu d'entraînement :**",X_train_pre_pros2.shape)
                 
             st.write("Dataframe final X_test : ")
             st.dataframe(X_test_pre_pros2.head())
-            st.write("Dimensions du jeu de test:",X_test_pre_pros2.shape)
-                
-            st.write("Vérification sur X_train, reste-t-il des Nans ?")
-            st.dataframe(X_train_pre_pros2.isna().sum())
-                
-            st.write("Vérification sur X_test, reste-t-il des Nans ?")
-            st.dataframe(X_test_pre_pros2.isna().sum())
+            st.write("**Dimensions du jeu de test :**",X_test_pre_pros2.shape)
                 
 
 if selected == "Modélisation":
