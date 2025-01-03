@@ -2321,12 +2321,12 @@ if selected == "Modélisation":
             plt.tight_layout()
             st.pyplot(fig)
 
-            st.markdown("Ces scores nous permettent de sélectionner notre **top 3 des modèles** à tester avec le GridSearchCV, qui sont donc : \n\
-            1. Le modèle **Decision Tree** \n\
-            2. Le modèle **XGBOOST** \n\
+            st.markdown("Ces scores nous permettent de sélectionner notre **top 3 des modèles** à tester avec le GridSearchCV, qui sont donc :  \n\
+            1. Le modèle **Decision Tree**  \n\
+            2. Le modèle **XGBOOST**  \n\
             3. Le modèle **Random Forest**")
 
-            st.markdown("Puisque le modèle **SVM** affiche de bien **meilleurs résultats sur le score de Précision**, nous allons également effectuer des tests avec ce modèle, en plus des 3 modèles listés ci-dessus.")
+            st.markdown("Puisque le modèle **SVM** affiche un **meilleur résultat sur le score de Précision**, nous allons également effectuer des tests avec ce modèle, en plus des 3 modèles listés ci-dessus.")
 
         if submenu_modelisation2 == "Hyperparamètres et choix du modèle" :
             st.write("Scores des modèles hyperparamétrés :")            
