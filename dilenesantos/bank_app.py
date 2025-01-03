@@ -3717,8 +3717,9 @@ if selected == 'Outil  Prédictif':
                 
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
-              
-                     # Conditions pour charger le modèle approprié
+                    st.write("Dataframe du client en question")
+                    st.dataframe(pred_df)
+                    # Conditions pour charger le modèle approprié
                     filename_marital = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
                     additional_model = joblib.load(filename_marital)
                     explainer = shap.TreeExplainer(additional_model)
@@ -3728,8 +3729,7 @@ if selected == 'Outil  Prédictif':
                     prediction_opt_marital = additional_model.predict(pred_df)
                     prediction_proba_opt_marital = additional_model.predict_proba(pred_df)
                     max_proba_opt_marital = np.max(prediction_proba_opt_marital[0]) * 100
-                    st.write("Dataframe du client en question")
-                    st.dataframe(pred_df)
+
                  
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_marital[0]}**")
