@@ -3579,7 +3579,7 @@ if selected == 'Outil  Prédictif':
         filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
         model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
         explainer = shap.TreeExplainer(model_XGBOOST_1_SD_model_PRED_AVEC_parametres)
-        shap_values = explainer.shap_values(pred_df)
+        shap_values_pred = explainer.shap_values(pred_df)
        
 
         # Prédiction
@@ -3595,7 +3595,7 @@ if selected == 'Outil  Prédictif':
         st.write("Force plot du client :")
         # Générer un graphique de force SHAP avec matplotlib
         shap.initjs() 
-        shap.force_plot(explainer.expected_value, shap_values[0,:], pred_df[0,:], matplotlib=True)
+        shap.force_plot(explainer.expected_value, shap_values_pred, pred_df, matplotlib=True)
         
         # Récupérer la figure courante
         fig = plt.gcf()
