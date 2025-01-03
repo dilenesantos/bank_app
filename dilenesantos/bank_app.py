@@ -3596,11 +3596,7 @@ if selected == 'Outil  Prédictif':
         # Générer un graphique de force SHAP avec matplotlib
         shap.initjs() 
         shap.force_plot(explainer.expected_value, shap_values_pred, pred_df, matplotlib=True)
-        
-        # Récupérer la figure courante
         fig = plt.gcf()
-        
-        # Afficher la figure dans Streamlit
         st.pyplot(fig)
         plt.close()
 
@@ -3650,15 +3646,25 @@ if selected == 'Outil  Prédictif':
                     # Conditions pour charger le modèle approprié
                     filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
                     additional_model = joblib.load(filename_LOAN)
-                
+                    explainer = shap.TreeExplainer(additional_model)
+                    shap_values_loan = explainer.shap_values(pred_df)
+       
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_loan = additional_model.predict(pred_df)
                     prediction_proba_opt_loan = additional_model.predict_proba(pred_df)
                     max_proba_opt_loan = np.max(prediction_proba_opt_loan[0]) * 100
-                
+                   
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_loan[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan:.2f}%**")
+                    
+                    st.write("Force plot du client :")
+                    shap.initjs() 
+                    shap.force_plot(explainer.expected_value, shap_values_loan, pred_df, matplotlib=True)
+                    fig = plt.gcf()
+                    st.pyplot(fig)
+                    plt.close()
+                 
                     if prediction_opt_loan[0] == 0:
                         st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                     else:
@@ -3704,6 +3710,8 @@ if selected == 'Outil  Prédictif':
                      # Conditions pour charger le modèle approprié
                     filename_marital = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
                     additional_model = joblib.load(filename_marital)
+                    explainer = shap.TreeExplainer(additional_model)
+                    shap_values_marital = explainer.shap_values(pred_df)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_marital = additional_model.predict(pred_df)
@@ -3713,6 +3721,14 @@ if selected == 'Outil  Prédictif':
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_marital[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%**")
+                 
+                    st.write("Force plot du client :")
+                    shap.initjs() 
+                    shap.force_plot(explainer.expected_value, shap_values_marital, pred_df, matplotlib=True)
+                    fig = plt.gcf()
+                    st.pyplot(fig)
+                    plt.close()
+                 
                     if prediction_opt_marital[0] == 0:
                         st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                     else:
@@ -3759,6 +3775,8 @@ if selected == 'Outil  Prédictif':
                      # Conditions pour charger le modèle approprié
                     filename_poutcome = "dilenesantos/XGBOOST_1_SD_model_PRED_poutcome_XGBOOST_quater.pkl"
                     additional_model = joblib.load(filename_poutcome)
+                    explainer = shap.TreeExplainer(additional_model)
+                    shap_values_poutcome = explainer.shap_values(pred_df)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_poutcome = additional_model.predict(pred_df)
@@ -3768,6 +3786,13 @@ if selected == 'Outil  Prédictif':
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_poutcome[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
+                    st.write("Force plot du client :")
+                    shap.initjs() 
+                    shap.force_plot(explainer.expected_value, shap_values_poutcome, pred_df, matplotlib=True)
+                    fig = plt.gcf()
+                    st.pyplot(fig)
+                    plt.close()
+                 
                     if prediction_opt_poutcome[0] == 0:
                         st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                     else:
@@ -3817,6 +3842,8 @@ if selected == 'Outil  Prédictif':
                      # Conditions pour charger le modèle approprié
                     filename_job = "dilenesantos/XGBOOST_1_SD_model_PRED_job_XGBOOST_1.pkl"
                     additional_model = joblib.load(filename_job)
+                    explainer = shap.TreeExplainer(additional_model)
+                    shap_values_job = explainer.shap_values(pred_df)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_job = additional_model.predict(pred_df)
@@ -3826,6 +3853,13 @@ if selected == 'Outil  Prédictif':
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_job[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%**")
+                    st.write("Force plot du client :")
+                    shap.initjs() 
+                    shap.force_plot(explainer.expected_value, shap_values_job, pred_df, matplotlib=True)
+                    fig = plt.gcf()
+                    st.pyplot(fig)
+                    plt.close()
+                 
                     if prediction_opt_job[0] == 0:
                         st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                     else:
@@ -3863,6 +3897,8 @@ if selected == 'Outil  Prédictif':
                      # Conditions pour charger le modèle approprié
                     filename_client_category = "dilenesantos/XGBOOST_1_SD_model_PRED_client_category_XGBOOST_1.pkl"
                     additional_model = joblib.load(filename_client_category)
+                    explainer = shap.TreeExplainer(additional_model)
+                    shap_values_client_category = explainer.shap_values(pred_df)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_client_category = additional_model.predict(pred_df)
@@ -3872,6 +3908,13 @@ if selected == 'Outil  Prédictif':
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_client_category[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%**")
+                    st.write("Force plot du client :")
+                    shap.initjs() 
+                    shap.force_plot(explainer.expected_value, shap_values_client_category, pred_df, matplotlib=True)
+                    fig = plt.gcf()
+                    st.pyplot(fig)
+                    plt.close()
+                 
                     if prediction_opt_client_category[0] == 0:
                         st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
                     else:
