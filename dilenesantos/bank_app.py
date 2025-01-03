@@ -3550,7 +3550,8 @@ if selected == 'Outil  Prédictif':
         # Affichage du DataFrame transformé avant la standardisation
         #st.write("Affichage du dataframe transformé (avant standardisation):")
         #st.dataframe(pred_df)
-    
+        
+
         # Liste des colonnes numériques à standardiser
         num_cols = ['age', 'balance','previous']
     
@@ -3577,6 +3578,9 @@ if selected == 'Outil  Prédictif':
         # Interface utilisateur
         filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
         model_XGBOOST_1_SD_model_PRED_AVEC_parametres = joblib.load(filename)
+        explainer = shap.TreeExplainer(model_XGBOOST_1_SD_model_PRED_AVEC_parametres)
+        shap_values = explainer.shap_values(pred_df)
+       
 
         # Prédiction
         prediction = model_XGBOOST_1_SD_model_PRED_AVEC_parametres.predict(pred_df)
@@ -3587,6 +3591,10 @@ if selected == 'Outil  Prédictif':
         # Affichage des résultats
         st.subheader(f"Prediction : {prediction[0]}")
         st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
+        shap.force_plot(explainer.expected_value, shap_values[0,:], pred_df.iloc[0,:])
+        fig = plt.gcf()          
+        st.pyplot(fig)       
+        plt.close() 
     
         if prediction[0] == 0:
             st.write("Conclusion: Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
