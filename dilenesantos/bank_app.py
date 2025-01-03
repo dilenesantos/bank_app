@@ -3594,7 +3594,6 @@ if selected == 'Outil  Prédictif':
 
         st.write("Force plot du client :")
         import tempfile
-        shap.initjs()  # Initialiser JavaScript pour les visualisations SHAP
         with tempfile.NamedTemporaryFile(delete=False, suffix='.html') as tmpfile:
             shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False, show=False, out_names=tmpfile.name)
             # Lire le contenu du fichier HTML
