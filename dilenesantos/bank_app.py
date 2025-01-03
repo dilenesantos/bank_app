@@ -3593,12 +3593,11 @@ if selected == 'Outil  Prédictif':
         st.markdown(f"**Niveau de confiance: {max_proba:.2f}%**")
 
         st.write("Force plot du client :")
-        shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=True)
+        st.write("Résumé des valeurs SHAP :")
+        shap.summary_plot(shap_values, pred_df, plot_type="bar")  # Utilisez 'bar' pour une approche plus compacte
         
-        # Récupérer la figure courante
+        # Récupérer la figure courante et l'afficher dans Streamlit
         fig = plt.gcf()
-        
-        # Afficher la figure dans Streamlit
         st.pyplot(fig)
         plt.close()
 
