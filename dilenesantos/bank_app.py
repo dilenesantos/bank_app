@@ -3601,6 +3601,9 @@ if selected == 'Outil  Prédictif':
         st.pyplot(fig)
         plt.close()
 
+        force_plot = shap.force_plot(explainer.expected_value, shap_values, pred_df, matplotlib=False)
+        st.components.v1.html(force_plot.html, height=400, scrolling=True)
+
         
             
         if prediction[0] == 0:
