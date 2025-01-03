@@ -1517,7 +1517,7 @@ if selected == "Pre-processing":
          
         if submenupages2 == "Séparation train test" :
             st.subheader("Séparation train test")
-            st.write("Nous appliquons un ratio de 80/20 pour notre train test split, soit 80% des données en Train et 20% en Test.")
+            st.write("Nous appliquons un **ratio de 80/20 pour notre train test split** : 80% des données en Train et 20% en Test.")
             dffpre_pros2 = df.copy()                        
             dffpre_pros2 = dffpre_pros2[dffpre_pros2['age'] < 75]
             dffpre_pros2 = dffpre_pros2.loc[dffpre_pros2["balance"] > -2257]
@@ -1563,16 +1563,15 @@ if selected == "Pre-processing":
             # Séparation des données en un jeu d'entrainement et jeu de test
             X_train_pre_pros2, X_test_pre_pros2, y_train_pre_pros2, y_test_pre_pros2 = train_test_split(X_pre_pros2, y_pre_pros2, test_size = 0.20, random_state = 48)
 
-            st.write("Affichage de X_train :")
+
             colonnes_count = X_train_pre_pros2.shape[1]
             nb_lignes = X_train_pre_pros2.shape[0]
-            st.write("Le dataframe X_train compte :", colonnes_count, "colonnes et", nb_lignes, "lignes.")
+            st.write("Le dataframe X_train compte :", colonnes_count, "colonnes et", nb_lignes, "lignes :")
             st.dataframe(X_train_pre_pros2.head())
                 
-            st.write("Affichage de X_test :")
             colonnes_count = X_test_pre_pros2.shape[1]
             nb_lignes = X_test_pre_pros2.shape[0]
-            st.write("Le dataframe X_test compte :", colonnes_count, "colonnes et", nb_lignes, "lignes.")
+            st.write("Le dataframe X_test compte :", colonnes_count, "colonnes et", nb_lignes, "lignes :")
             st.dataframe(X_test_pre_pros2.head())
                 
         if submenupages2 == "Traitement des valeurs manquantes" :    
