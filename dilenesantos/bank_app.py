@@ -3666,8 +3666,8 @@ if selected == 'Outil  Prédictif':
         else:
             st.write("Conclusion : **Ce client EST susceptible de souscrire à un dépôt à terme.**")
             st.write("\nRecommandations : ")
-            st.write("- Durée d'appel : pour maximiser les chances de souscription au dépôt, veiller à rester le plus longtemps possible au téléphone avec ce client.")
-            st.write("- Nombre de contacts : il serait contre-productif de le contacter plus d'une fois.")
+            st.write("- **Durée d'appel** : pour maximiser les chances de souscription au produit, veiller à rester le plus longtemps possible au téléphone avec ce client (idéalement au moins 6 minute).")
+            st.write("- **Nombre de contacts avec le client pendant la campagne** : il serait contre-productif de le contacter plus d'une fois.")
     
             st.write("__________________________________________________")
     
