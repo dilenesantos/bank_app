@@ -3064,6 +3064,7 @@ if selected == 'Interprétation':
 
             if submenu_local == "AUTRES" :
                 st.title("Loan")
+                fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("loan")]], 
                                   X_test_sd[["loan"]], 
                                   feature_names=["loan"], 
@@ -3080,6 +3081,7 @@ if selected == 'Interprétation':
                 plt.close() 
              
                 st.title("Marital status")
+                fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("marital")]], 
                                   X_test_sd[["marital"]], 
                                   feature_names=["marital"], 
