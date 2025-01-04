@@ -1382,7 +1382,7 @@ if selected == "Pre-processing":
             
             st.subheader("Création de la colonne 'weekday'")
             st.markdown("Avant de pouvoir créer la colonne weekday, nous devons passer par deux étapes :  \n\
-            1. **ajouter une colonne year** : les données fournies par la banque portugaises sont datées de juin 2014. Nous en déduisons que les mois allant de juin à décembre correspondent à l'année 2023 et que les mois allant de janvier à mai correspondent à l'année 2014  \n\
+            1. **ajouter une colonne year** : les données fournies par la banque portugaises sont datées de juin 2014. Nous en déduisons que les mois allant de juin à décembre correspondent à l'année 2013 et que les mois allant de janvier à mai correspondent à l'année 2014  \n\
             2. **ajouter une colonne date au format datetime** : cela est désormais possibles grâce aux colonnes mois, day et year")
             
             st.markdown("**Nous pouvons alors créer la colonne weekday grâce à la fonction 'dt.weekday'**")
@@ -2886,7 +2886,7 @@ if selected == 'Interprétation':
                 - Les clients avec un solde compris entre 300 et 800€ sont scindés en deux groupes : une moitié ne souscrit pas au produit, mais l’autre oui.")
 
                 st.subheader("Recherche d'autres dépendances")
-                st.write("Pour tenter de départager ces clients dont la balance est comprise entre 200 et 800€, examinons leurs relations avec d'autres variables afin d'identifier des tendances.")
+                st.write("Pour tenter de départager ces clients dont la balance est comprise entre 300 et 800€, examinons leurs relations avec d'autres variables afin d'identifier des tendances.")
                 # Extraction des valeurs SHAP
                 shap_values = shap_XGBOOST_1_VALUES
                 X_data = X_test_original_figures  # Remplacez-le par vos données d'entrée réelle
@@ -3185,7 +3185,7 @@ if selected == "Recommandations & Perspectives":
                 st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus ( Impact positif).")
                 st.write("Pour la **tranche d'âge intermédiaire (29-58 ans)**, le modèle **prédit majoritairement des résultats négatifs**. Étant donné que cette tranche constitue **la majorité des clients**, il est **essentiel de cibler en priorité** ceux qui : ")
                 st.write(" -  N'ont **pas de prêt immobilier**.")
-                st.write(" -  Ont une **balance supérieure à 200 €**, idéalement **au-delà de 800 €**.")
+                st.write(" -  Ont une **balance supérieure à 300 €**, idéalement **au-delà de 800 €**.")
             
             if submenu_profil == "BALANCE" :
                 st.write("#### BALANCE:","Solde bancaire du client")
