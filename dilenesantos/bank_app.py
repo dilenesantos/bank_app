@@ -3540,11 +3540,11 @@ if selected == 'Outil  Prédictif':
     if age is not None and balance is not None:
         # Affichage du récapitulatif
         st.write(f'### Récapitulatif')
-        st.write("Le client a  ", age, "ans")   
-        st.write("Le client a un niveau d'étude  ", education)
-        st.write("Le solde de son compte en banque est de  ", balance, "euros")
-        st.write("Le client est-il propriétaire :  ", housing)
-        st.write("Le client a été contacté  ", previous, " lors de la dernière campagne marketing")
+        st.write("Le client a  **", age, "ans**")   
+        st.write("Le client a un niveau d'étude ** ", education, "**")
+        st.write("Le solde de son compte en banque est de  **", balance, "euros**")
+        st.write("Le client est-il propriétaire :  **", housing, "**")
+        st.write("Le client a été contacté  **", previous, "** lors de la dernière campagne marketing")
 
         # Mapper les options à des valeurs entières
         if previous == "0 fois":
