@@ -3086,12 +3086,13 @@ if selected == 'Interprétation':
                 explanation_marital = shap.Explanation(values=shap_values_marital,
                                                       data=X_test_sd.values[:, marital_indices], feature_names=marital_columns)
                 
-                # Générer le plot beeswarm
-                fig, ax = plt.subplots()  # Créer une nouvelle figure
-                shap.plots.beeswarm(explanation_marital, ax=ax)
+                # plot beeswarm
+                shap.plots.beeswarm(explanation_marital)
                 
-                # Afficher le plot dans Streamlit
+                # Récupérer la figure courante et l'afficher
+                fig = plt.gcf()
                 st.pyplot(fig)
+                plt.close()
                 
 
   
