@@ -3071,6 +3071,7 @@ if selected == 'Interprétation':
                                   show=True)
                 st.pyplot(fig)
                 st.write("Si le client ne possède **pas de crédit personnel**, les prédictions tendent clairement vers le **'YES'**.")         
+                st.write("__________________________________")
              
                 st.subheader("Marital status")
 
@@ -3096,7 +3097,9 @@ if selected == 'Interprétation':
                 plt.close()
                 st.markdown("Si le client n'est **pas marié**, les prédictions tendent vers le **'YES'.**  \n\
                 Si le client est **célibataire ou divorcé**, les prédictions tendent globalement plutôt vers le **'YES'**.")
-             
+
+                st.write("__________________________________")
+
 
                 st.subheader("Poutcome")
 
@@ -3121,6 +3124,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 plt.close()
                 st.write("Si le résultat de la **précédente campagne** a été un **succès**, les prédictions tendent plutôt vers le **'YES'**.")     
+                st.write("__________________________________")
 
                 st.subheader("Job")
 
@@ -3145,6 +3149,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 plt.close()
                 st.write("Si le client est **édudiant**, **sans emploi**, **retraité** ou si son **job** est dans les **services**, alors les prédictions tendent assez clairement vers le **'YES'**.")     
+                st.write("__________________________________")
 
                 st.subheader("Client_Category")
 
