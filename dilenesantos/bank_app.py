@@ -3208,7 +3208,10 @@ if selected == "Recommandations & Perspectives":
             if submenu_profil == "EDUCATION" :
                 st.write("#### EDUCATION:","Niveau d'étude du client")
                 st.write("##### Prioriser les clients qui ont un niveau d'éducation tertiaire")
-                
+                st.write("Le modèle indique que les clients ayant **un niveau d'éducation primaire ou secondaire sont moins susceptibles de souscrire au DAT**. Une analyse plus approfondie révèle que :")
+                st.write(" -  Les tranches d'âge **jeunes et intermédiaires** sont majoritairement associées à un niveau d'**éducation tertiaire**.")
+                st.write(" -  Les **métiers de management** se distinguent par **une forte proportion de personnes ayant un niveau d'éducation tertiaire**.")
+  
 
       if submenu_reco == "NOMBRE ET DUREE D’APPEL" :
             submenu_appel = st.radio("", ("DURATION", "CAMPAIGN"), horizontal=True) 
