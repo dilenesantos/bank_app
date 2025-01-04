@@ -3087,17 +3087,13 @@ if selected == 'Interprétation':
                                                       data=X_test_sd.values[:, marital_indices], feature_names=marital_columns)
                 
                 
-                # Générer le plot beeswarm sur l'axe spécifié
-                shap.plots.beeswarm(explanation_marital, matplotlib=False)
+                # Générer le plot beeswarm sans spécifier d'axe
+                shap.plots.beeswarm(explanation_marital)
                 
-                # Capturer l'HTML du plot
-                js_plot = shap.plots.beeswarm(explanation_marital, show=False)
-                
-                # Afficher le graphique de force dans Streamlit
-                # Cela pourrait générer un graphique HTML interactif
-                st.components.v1.html(js_plot.html, height=600, scrolling=True)
-
-                
+                # Récupérer la figure courante et l'afficher
+                fig = plt.gcf()
+                st.pyplot(fig)
+                plt.close()
 
   
 if selected == "Recommandations & Perspectives":
