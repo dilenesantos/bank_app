@@ -3693,8 +3693,8 @@ if selected == 'Outil  Prédictif':
                 
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
-                    st.write("Dataframe du client en question")
-                    st.dataframe(pred_df)
+                    #st.write("Dataframe du client en question")
+                    #st.dataframe(pred_df)
     
                     # Conditions pour charger le modèle approprié
                     filename_LOAN = "dilenesantos/XGBOOST_1_SD_model_PRED_loan_XGBOOST_1.pkl"
@@ -3729,7 +3729,7 @@ if selected == 'Outil  Prédictif':
                 elif option_to_add == "marital":
                     marital = st.selectbox("Quelle est la situation maritale du client ?", ("married", "single", "divorced"))
                     pred_df['marital'] = marital
-                    st.write("Situation maritale : ", marital)
+                    #st.write("Situation maritale : ", marital)
                     
                     # Liste des variables catégorielles multi-modales à traiter
                     cat_cols_multi_modal = ['marital']
@@ -3761,8 +3761,8 @@ if selected == 'Outil  Prédictif':
                 
                     # Réinitialiser l'index de pred_df après la manipulation (facultatif)
                     pred_df = pred_df.reset_index(drop=True)
-                    st.write("Dataframe du client en question")
-                    st.dataframe(pred_df)
+                    #st.write("Dataframe du client en question")
+                    #st.dataframe(pred_df)
                     # Conditions pour charger le modèle approprié
                     filename_marital = "dilenesantos/XGBOOST_1_SD_model_PRED_marital_XGBOOST_1.pkl"
                     additional_model = joblib.load(filename_marital)
@@ -3796,7 +3796,7 @@ if selected == 'Outil  Prédictif':
                 elif option_to_add == "poutcome":
                     poutcome = st.selectbox("Quel a été le résultat de la précédente campagne avec le client ?", ('success', 'failure', 'other'))
                     pred_df['poutcome'] = poutcome
-                    st.write("Résultat de la campagne : ", poutcome)
+                    #st.write("Résultat de la campagne : ", poutcome)
                     
                    
                     # Liste des variables catégorielles multi-modales à traiter
@@ -3869,7 +3869,7 @@ if selected == 'Outil  Prédictif':
                                                                          'self-employed', 'services', 'student', 
                                                                          'technician', 'unemployed'))
                     pred_df['job'] = job
-                    st.write("Emploi : ", job)
+                    #st.write("Emploi : ", job)
                  
                     # Liste des variables catégorielles multi-modales à traiter
                     cat_cols_multi_modal_job = ['job']
@@ -3909,8 +3909,8 @@ if selected == 'Outil  Prédictif':
                     shap_values_job = explainer.shap_values(pred_df)
                     shap_values_job_rounded = np.round(shap_values_job, 2)
                  
-                    st.write("Dataframe du client en question")
-                    st.dataframe(pred_df)
+                    #st.write("Dataframe du client en question")
+                    #st.dataframe(pred_df)
                 
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_job = additional_model.predict(pred_df)
@@ -3978,8 +3978,8 @@ if selected == 'Outil  Prédictif':
                     explainer = shap.TreeExplainer(additional_model)
                     shap_values_client_category = explainer.shap_values(pred_df)
                     shap_values_client_category_rounded = np.round(shap_values_client_category, 2)
-                    st.write("Dataframe du client en question")
-                    st.dataframe(pred_df)
+                    #st.write("Dataframe du client en question")
+                    #st.dataframe(pred_df)
                  
                     # Prédiction avec le DataFrame optimisé
                     prediction_opt_client_category = additional_model.predict(pred_df)
@@ -4017,7 +4017,7 @@ if selected == 'Outil  Prédictif':
                 elif option_to_add == "marital":
                     st.markdown(f"Situation maritale : **{marital}**")
                 elif option_to_add == "poutcome":
-                    st.markdown(f"Résultat de la campagne : **{poutcome}**")
+                    st.markdown(f"Résultat de la précédente campagne : **{poutcome}**")
                 elif option_to_add == "job":
                     st.markdown(f"Emploi : **{job}**")
                 elif option_to_add == "Dernier_contact":
