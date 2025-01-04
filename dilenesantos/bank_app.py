@@ -2881,9 +2881,9 @@ if selected == 'Interprétation':
                 plt.close() 
                 
                 st.markdown("Ce zoom offre une meilleure visibilité :  \n\
-                - Les clients avec un solde compris entre 0 et 200€ affichent majoritairement des valeurs shap négatives  \n\
+                - Les clients avec un solde compris entre 0 et 300€ affichent majoritairement des valeurs shap négatives  \n\
                 - Les clients avec une balance supérieure à 800€ affichent majoritairement des valeurs shap positives  \n\
-                - Les clients avec un solde compris entre 200 et 800€ sont scindés en deux groupes : une moitié ne souscrit pas au produit, mais l’autre oui.")
+                - Les clients avec un solde compris entre 300 et 800€ sont scindés en deux groupes : une moitié ne souscrit pas au produit, mais l’autre oui.")
 
                 st.subheader("Recherche d'autres dépendances")
                 st.write("Pour tenter de départager ces clients dont la balance est comprise entre 200 et 800€, examinons leurs relations avec d'autres variables afin d'identifier des tendances.")
@@ -2905,8 +2905,8 @@ if selected == 'Interprétation':
                   
                     # Titre et axe horizontal rouge
                     ax.axhline(0, color='red', linewidth=1, linestyle='--')
-                    xticks = range(200, 800, 100)
-                    plt.xlim(200, 800) 
+                    xticks = range(300, 800, 100)
+                    plt.xlim(300, 800) 
 
                     plt.tight_layout()
                     st.pyplot(fig)
@@ -2934,8 +2934,8 @@ if selected == 'Interprétation':
                         axes[i].set_title(f'Balance x {variable}', fontsize=14)
                         axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
                         #focus valeurs entre 200 et 800 
-                        axes[i].set_xlim(200, 800)  # Définir les limites de l'axe x
-                        xticks = range(200, 801, 100)  # Créer une gamme de ticks
+                        axes[i].set_xlim(300, 800)  # Définir les limites de l'axe x
+                        xticks = range(300, 801, 100)  # Créer une gamme de ticks
                         axes[i].set_xticks(xticks)
        
                     plt.tight_layout()
@@ -2960,8 +2960,8 @@ if selected == 'Interprétation':
                         axes[i].set_title(f'Balance x {variable}', fontsize=14)
                         axes[i].axhline(0, color='red', linewidth=1, linestyle='--')
                         #focus valeurs entre 200 et 800 
-                        axes[i].set_xlim(200, 800)  # Définir les limites de l'axe x
-                        xticks = range(200, 801, 100)  # Créer une gamme de ticks
+                        axes[i].set_xlim(300, 800)  # Définir les limites de l'axe x
+                        xticks = range(300, 801, 100)  # Créer une gamme de ticks
                         axes[i].set_xticks(xticks) 
                      
                     plt.tight_layout()
