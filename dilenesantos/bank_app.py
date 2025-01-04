@@ -3556,7 +3556,7 @@ if selected == 'Outil  Prédictif':
             previous = 0
         elif previous == "1 fois":
             previous = 1
-        else:  # "2 fois ou plus"
+        elif previous == "2 fois ou plus" :
             previous = 2
         
         # Créer un dataframe récapitulatif des données du prospect
