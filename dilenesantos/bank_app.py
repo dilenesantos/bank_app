@@ -3542,7 +3542,7 @@ if selected == 'Outil  Prédictif':
         st.write(f'### Récapitulatif')
         st.markdown(f"Le client a **{age}** ans")
         st.markdown(f"Le client a un niveau d'étude **{education}**")
-        st.markdown(f"Le solde de son compte en banque est de **{balance}** euros")
+        st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
         st.markdown(f"Le client est-il propriétaire : **{housing}**")
         st.markdown(f"Le client a été contacté **{previous}** lors de la dernière campagne marketing")
 
@@ -4005,23 +4005,23 @@ if selected == 'Outil  Prédictif':
     
                 # Afficher le récapitulatif
                 st.write(f'### Récapitulatif')
-                st.write("Le client a ", age, "ans")
-                st.write("Le client a un niveau d'étude ", education)
-                st.write("Le solde de son compte en banque est de ", balance, "euros")
-                st.write("Le client est-il propriétaire : ", housing)
-                st.write("Le client a été contacté ", previous, " lors de la précédente campagne marketing")
+                st.markdown(f"Le client a **{age}** ans")
+                st.markdown(f"Le client a un niveau d'étude **{education}**")
+                st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
+                st.markdown(f"Le client est-il propriétaire : **{housing}**")
+                st.markdown(f"Le client a été contacté **{previous}** lors de la dernière campagne marketing")
                 
                 # Afficher les informations supplémentaires définies
                 if option_to_add == "loan":
-                    st.write(f"A un crédit personnel : {loan}")
+                    st.markdown(f"A un crédit personnel : **{loan}**")
                 elif option_to_add == "marital":
-                    st.write(f"Situation maritale : {marital}")
+                    st.markdown(f"Situation maritale : **{marital}**")
                 elif option_to_add == "poutcome":
-                    st.write(f"Résultat de la campagne : {poutcome}")
+                    st.markdown(f"Résultat de la campagne : **{poutcome}**")
                 elif option_to_add == "job":
-                    st.write(f"Emploi : {job}")
+                    st.markdown(f"Emploi : **{job}**")
                 elif option_to_add == "Dernier_contact":
-                    st.write("Dernier contact avec le client lors de la précédente campagne : ", Dernier_contact)
+                    st.markdown(f"Dernier contact avec le client lors de la précédente campagne : **{Dernier_contact}**")
          
     
     
