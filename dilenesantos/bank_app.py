@@ -3849,12 +3849,10 @@ if selected == 'Outil  Prédictif':
                 
                 elif option_to_add == "Dernier_contact":
                 
-                    # Déterminer les options basées sur la valeur précédente
-                    if previous_value == 0:
-                        # Si le client n'a jamais été contacté, seule cette option est pertinente
+                    #ptions basées selon valeur de previous
+                    if previous == 0:
                         contact_options = ['Client jamais contacté']
                     else:
-                        # Sinon, on propose les options correspondantes à un contact
                         contact_options = ['Client contacté il y a moins de 6 mois', 'Client contacté il y a plus de 6 mois']
                     
                     # Afficher le selectbox avec les options déterminées
