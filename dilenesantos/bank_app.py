@@ -1145,7 +1145,7 @@ if selected == 'DataVisualisation':
                         # Barplot de distribution
                         fig, ax = plt.subplots(figsize=(9, 6))
                         sns.barplot(x=counts.index, y=counts.values, color='skyblue', ax=ax)
-                    
+                     
                         # Ajouter les annotations de pourcentage sur les barres
                         for p in ax.patches:  # Pour chaque barre
                             ax.annotate(f'{p.get_height():.1f}%', 
