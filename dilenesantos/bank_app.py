@@ -3094,8 +3094,9 @@ if selected == 'Interprétation':
                 # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
                 plt.close()
-                st.markdown("Si le client n'est **pas marié**, les prédictions tendent vers le **'YES'.** \n\
-                Si le client est **célibataire ou divorcé**, les prédictions tendent globalement plutôt vers le **'YES'**.")         
+                st.markdown("Si le client n'est **pas marié**, les prédictions tendent vers le **'YES'.**  \n\
+                Si le client est **célibataire ou divorcé**, les prédictions tendent globalement plutôt vers le **'YES'**.")
+             
 
                 st.title("Poutcome")
 
