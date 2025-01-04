@@ -3094,6 +3094,75 @@ if selected == 'Interprétation':
                 # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
                 plt.close()
+                st.write("Si le client n'est pas marié, les prédictions tendent vers le 'YES'.")     
+                st.write("Si le client est célibataire ou divorcé, les prédictions globalement plutôt vers le 'YES'.")         
+
+                st.title("Poutcome")
+
+                # Étape 1 : Trouver les colonnes qui contiennent 'POUTCOME'
+                poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
+                
+                # Étape 2 : Filtrer les valeurs SHAP et les données correspondantes
+                # Identifier les indices des colonnes à garder
+                poutcome_indices = [X_test_sd.columns.get_loc(col) for col in poutcome_columns]
+                shap_values_poutcome = shap_values_XGBOOST_1[:, poutcome_indices]
+                
+                # Créer un figure pour le summary plot
+                fig = plt.figure()
+                
+                # Générer le summary plot pour les variables maritales
+                shap.summary_plot(shap_values_poutcome, 
+                                  X_test_sd.iloc[:, poutcome_indices], 
+                                  feature_names=poutcome_columns, 
+                                  show=False)
+                
+                # Afficher le graphique dans Streamlit
+                st.pyplot(fig)
+                plt.close()
+                st.write("Si le client n'est pas marié, les prédictions tendent vers le 'YES'.")     
+                st.write("Si le client est célibataire ou divorcé, les prédictions globalement plutôt vers le 'YES'.")         
+
+                st.title("Job")
+
+                # Étape 1 : Trouver les colonnes qui contiennent 'JOB'
+                job_columns = [col for col in X_test_sd.columns if 'job' in col]
+                
+                # Étape 2 : Filtrer les valeurs SHAP et les données correspondantes
+                # Identifier les indices des colonnes à garder
+                job_indices = [X_test_sd.columns.get_loc(col) for col in job_columns]
+                shap_values_job = shap_values_XGBOOST_1[:, job_indices]
+                
+                # Créer un figure pour le summary plot
+                fig = plt.figure()
+                
+                # Générer le summary plot pour les variables maritales
+                shap.summary_plot(shap_values_job, 
+                                  X_test_sd.iloc[:, job_indices], 
+                                  feature_names=job_columns, 
+                                  show=False)
+                
+                # Afficher le graphique dans Streamlit
+                st.pyplot(fig)
+                plt.close()
+                st.write("Si le client n'est pas marié, les prédictions tendent vers le 'YES'.")     
+                st.write("Si le client est célibataire ou divorcé, les prédictions globalement plutôt vers le 'YES'.")         
+
+                st.title("Client_Category")
+
+                feature_name = "Client_Category_M"
+                
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()          
+                st.pyplot(fig)       
+                plt.close() 
+                st.write("Si le client n'est pas marié, les prédictions tendent vers le 'YES'.")     
+                st.write("Si le client est célibataire ou divorcé, les prédictions globalement plutôt vers le 'YES'.")         
+
+
+
+
+
 
 
   
