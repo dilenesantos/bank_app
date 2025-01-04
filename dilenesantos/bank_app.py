@@ -529,7 +529,7 @@ if selected == 'DataVisualisation':
         # Sidebar for sub-page selection
         
         if st.checkbox('**Matrice de corrélation**') :
-            cor = df[['age', 'balance', 'duration', 'campaign', 'pdays', 'previous']].corr()
+            cor = df[['age', 'balance', 'duration', 'campaign', 'previous']].corr()
             fig, ax = plt.subplots()
             sns.heatmap(cor, annot=True, ax=ax, cmap='rainbow')
             st.write(fig)
