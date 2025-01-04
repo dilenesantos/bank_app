@@ -1113,7 +1113,7 @@ if selected == 'DataVisualisation':
                         sns.barplot(x=counts.index, y=counts.values, color='skyblue')
                         plt.title(f"Distribution de {column} (%)", fontsize=5)
                         plt.xlabel(xlabel, fontsize=8)
-                        plt.ylabel("Percentage (%)", fontsize=5)
+                        plt.ylabel("Percentage (%)", fontsize=8)
                         st.pyplot(plt)
                         plt.clf()  
 
