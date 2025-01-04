@@ -3541,7 +3541,7 @@ if selected == 'Outil  Prédictif':
         # Affichage du récapitulatif
         st.write(f'### Récapitulatif')
         st.write("Le client a  ", age, "ans")   
-        st.write("Le client a un niveau d'étude :  ", education)
+        st.write("Le client a un niveau d'étude  ", education)
         st.write("Le solde de son compte en banque est de  ", balance, "euros")
         st.write("Le client est-il propriétaire :  ", housing)
         st.write("Le client a été contacté  ", previous, " lors de la dernière campagne marketing")
@@ -4006,7 +4006,7 @@ if selected == 'Outil  Prédictif':
                 # Afficher le récapitulatif
                 st.write(f'### Récapitulatif')
                 st.write("Le client a ", age, "ans")
-                st.write("Le client a un niveau d'étude : ", education)
+                st.write("Le client a un niveau d'étude ", education)
                 st.write("Le solde de son compte en banque est de ", balance, "euros")
                 st.write("Le client est-il propriétaire : ", housing)
                 st.write("Le client a été contacté ", previous, " lors de la précédente campagne marketing")
