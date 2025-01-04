@@ -1189,7 +1189,7 @@ if selected == 'DataVisualisation':
                 
                         plt.title(f"Distribution de {column} (%)", fontsize=15) 
                         plt.xlabel(xlabel, fontsize=12)
-                        plt.ylabel("Percentage (%)", fontsize=7)
+                        plt.ylabel("Percentage (%)", fontsize=3)
                         
                         st.pyplot(fig)
                         plt.clf()  
