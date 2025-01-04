@@ -1112,7 +1112,7 @@ if selected == 'DataVisualisation':
                         fig = plt.figure(figsize=(9,6))
                         sns.barplot(x=counts.index, y=counts.values, color='skyblue')
                         plt.title(f"Distribution de {column} (%)", fontsize=5)
-                        plt.xlabel(xlabel, fontsize=4)
+                        plt.xlabel(xlabel, fontsize=8)
                         plt.ylabel("Percentage (%)", fontsize=3)
                         plt.xticks(rotation=45, fontsize=4)  
                         st.pyplot(plt)
