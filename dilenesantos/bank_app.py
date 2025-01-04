@@ -3088,11 +3088,8 @@ if selected == 'Interprétation':
                 
                 # plot beeswarm
                 shap.plots.beeswarm(explanation_marital)
-                
-                # Récupérer la figure courante et l'afficher
-                fig = plt.gcf()
-                st.pyplot(fig)
-                plt.close()
+                st.pyplot()
+
                 
 
   
