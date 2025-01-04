@@ -1178,13 +1178,20 @@ if selected == 'DataVisualisation':
                         counts = data[column].value_counts(normalize=True) * 100
             
                         # Barplot de distribution
-                        plt.figure(figsize=(9, 6))
-                        sns.barplot(x=counts.index, y=counts.values, color='skyblue')
-                        plt.title(f"Distribution de {column} (%)")
-                        plt.xlabel(xlabel)
-                        plt.ylabel("Percentage (%)")
-                        plt.xticks(rotation=45)  
-                        st.pyplot(plt)
+                        fig, ax = plt.subplots(figsize=(9, 6))
+                        sns.barplot(x=counts.index, y=counts.values, color='skyblue', ax=ax)
+                        
+                        # Ajouter les annotations de pourcentage sur les barres
+                        for p in ax.patches:  # Pour chaque barre du plot
+                            ax.annotate(f'{p.get_height():.1f}%', 
+                                        (p.get_x() + p.get_width() / 2., p.get_height()), 
+                                        ha='center', va='bottom') 
+                
+                        plt.title(f"Distribution de {column} (%)", fontsize=15) 
+                        plt.xlabel(xlabel, fontsize=12)
+                        plt.ylabel("Percentage (%)", fontsize=12)
+                        
+                        st.pyplot(fig)
                         plt.clf()  
                     st.write("Nombre de contacts réalisés avec le client avant la campagne")   
                     plot_percentage(clients_yes, "previous", "Nombre de contact réalisé avant la campagne")
