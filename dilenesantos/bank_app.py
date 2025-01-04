@@ -3515,17 +3515,6 @@ if selected == 'Outil  Prédictif':
         pass  # Vous pouvez aussi utiliser `st.write("")` pour rien afficher.
     
     education = st.selectbox("Quel est son niveau d'étude ?", ("tertiary", "secondary", "unknown", "primary"))
-    #conditions d'affichage pour education : 
-    if education == "tertiary":
-        niveau_etude = "Tertiaire"
-    elif education == "secondary":
-        niveau_etude = "Secondaire"
-    elif education == "primary":
-        niveau_etude = "Primaire"
-    elif education == "unknown":
-        niveau_etude = "Inconnu"
-    else:
-        niveau_etude = "Inconnu"  # Par défaut si `education` a une valeur inattendue
          
     # Collecte du solde bancaire avec vérification
     balance_input = st.text_input("Quel est le solde de son compte en banque ?")  # Pas de valeur par défaut
@@ -3551,9 +3540,9 @@ if selected == 'Outil  Prédictif':
     if age is not None and balance is not None:
         # Affichage du récapitulatif
         st.write(f'### Récapitulatif')
-        st.write("Le client a :  ", age, "ans")   
-        st.write("Le client a un niveau d'étude :  ", niveau_etude)
-        st.write("Le solde de son compte en banque est de :  ", balance, "euros")
+        st.write("Le client a  ", age, "ans")   
+        st.write("Le client a un niveau d'étude :  ", education)
+        st.write("Le solde de son compte en banque est de  ", balance, "euros")
         st.write("Le client est-il propriétaire :  ", housing)
         st.write("Le client a été contacté  ", previous, " lors de la dernière campagne marketing")
 
@@ -4016,9 +4005,9 @@ if selected == 'Outil  Prédictif':
     
                 # Afficher le récapitulatif
                 st.write(f'### Récapitulatif')
-                st.write("Le client a : ", age, "ans")
-                st.write("Le client a un niveau d'étude : ", niveau_etude)
-                st.write("Le solde de son compte en banque est de : ", balance, "euros")
+                st.write("Le client a ", age, "ans")
+                st.write("Le client a un niveau d'étude : ", education)
+                st.write("Le solde de son compte en banque est de ", balance, "euros")
                 st.write("Le client est-il propriétaire : ", housing)
                 st.write("Le client a été contacté ", previous, " lors de la précédente campagne marketing")
                 
