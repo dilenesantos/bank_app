@@ -3084,16 +3084,18 @@ if selected == 'Interprétation':
                 
                 # Créer un nouvel Explanation pour Marital
                 explanation_marital = shap.Explanation(values=shap_values_marital,
-                                                      data=X_test_sd.values[:, marital_indices], feature_names=marital_columns)
+                                                       data=X_test_sd.values[:, marital_indices],
+                                                       feature_names=marital_columns)
                 
+                # Générer le summary plot
+                fig, ax = plt.subplots()  # Créer une nouvelle figure pour éviter les conflits
                 
-                # Générer le plot beeswarm sans spécifier d'axe
-                shap.summary_plot(explanation_marital)
+                shap.summary_plot(explanation_marital, ax=ax)  # Passer le subplot à la fonction
                 
-                # Récupérer la figure courante pour Streamlit
-                fig = plt.gcf()
+                # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
                 plt.close()
+
 
   
 if selected == "Recommandations & Perspectives":
