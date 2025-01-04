@@ -3182,7 +3182,7 @@ if selected == "Recommandations & Perspectives":
 
             if submenu_profil == "ÂGE" :
                 st.write("#### ÂGE:")
-                st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus (** Impact positif**).")
+                st.write("##### Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus ( Impact positif).")
                 st.write("Pour la **tranche d'âge intermédiaire (29-58 ans)**, le modèle **prédit majoritairement des résultats négatifs**. Étant donné que cette tranche constitue **la majorité des clients**, il est **essentiel de cibler en priorité** ceux qui : ")
                 st.write(" -  N'ont **pas de prêt immobilier**.")
                 st.write(" -  Ont une **balance supérieure à 200 €**, idéalement **au-delà de 800 €**.")
