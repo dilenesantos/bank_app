@@ -3711,8 +3711,18 @@ if selected == 'Outil  Prédictif':
                    
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_loan[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan:.2f}%**")
+                    if max_proba_opt_loan > max_proba:
+                        variation = "en hausse"
+                    elif max_proba_opt_loan == max_proba:
+                        variation = "inchangé"
+                    else:
+                        variation = "en baisse"
                     
+                    # Affiche le niveau de confiance après affinage avec la variation
+                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_loan:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
+
+
+                                     
                     st.write("Force plot du client :")
                     shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_loan_rounded, pred_df, matplotlib=True)
