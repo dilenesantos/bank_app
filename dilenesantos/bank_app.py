@@ -1156,7 +1156,6 @@ if selected == 'DataVisualisation':
                         plt.title(f"Distribution de {column} (%)")
                         plt.xlabel(xlabel)
                         plt.ylabel("Percentage (%)")
-                        plt.xticks(rotation=45)
                         
                         # Afficher le graphique dans Streamlit
                         st.pyplot(fig)
