@@ -546,7 +546,7 @@ if selected == 'DataVisualisation':
                 
                 st.write("____________________________________")
     
-                st.subheader(f"Analyse du {sub_pages1}")
+                st.subheader(f"{sub_pages1}")
     
                 if sub_pages1 == "Lien âge x deposit" :
                     fig = plt.figure(figsize=(4,2))
@@ -657,7 +657,7 @@ if selected == 'DataVisualisation':
     
                 st.write("____________________________________")
     
-                st.subheader(f"Analyse du {sub_pages2}")
+                st.subheader(f"{sub_pages2}")
     
                 if sub_pages2 == "Lien job x deposit" :
                     fig = plt.figure(figsize=(20,10))
