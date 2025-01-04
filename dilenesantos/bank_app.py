@@ -3543,7 +3543,7 @@ if selected == 'Outil  Prédictif':
         st.markdown(f"Le client a **{age} ans**")
         st.markdown(f"Le client a un niveau d'étude **{education}**")
         st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
-        st.markdown(f"Le client est-il propriétaire : **{housing}**")
+        st.markdown(f"Le client a-t-il un crédit immobilier : **{housing}**")
         st.markdown(f"Le client a été contacté **{previous}** lors de la dernière campagne marketing")
 
         # Mapper les options à des valeurs entières
@@ -4008,7 +4008,7 @@ if selected == 'Outil  Prédictif':
                 st.markdown(f"Le client a **{age} ans**")
                 st.markdown(f"Le client a un niveau d'étude **{education}**")
                 st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
-                st.markdown(f"Le client est-il propriétaire : **{housing}**")
+                st.markdown(f"Le client a-t-il un crédit immobilier : **{housing}**")
                 st.markdown(f"Le client a été contacté **{previous}** lors de la dernière campagne marketing")
                 
                 # Afficher les informations supplémentaires définies
