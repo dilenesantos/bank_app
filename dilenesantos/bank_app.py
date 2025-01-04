@@ -3086,13 +3086,16 @@ if selected == 'Interprétation':
                 explanation_marital = shap.Explanation(values=shap_values_marital,
                                                       data=X_test_sd.values[:, marital_indices], feature_names=marital_columns)
                 
-                fig, ax = plt.subplots()
                 
                 # Générer le plot beeswarm sur l'axe spécifié
-                shap.plots.beeswarm(explanation_marital, ax=ax)
+                shap.plots.beeswarm(explanation_marital, matplotlib=False)
                 
-                # Afficher le graphique dans Streamlit
-                st.pyplot(fig)
+                # Capturer l'HTML du plot
+                js_plot = shap.plots.beeswarm(explanation_marital, show=False)
+                
+                # Afficher le graphique de force dans Streamlit
+                # Cela pourrait générer un graphique HTML interactif
+                st.components.v1.html(js_plot.html, height=600, scrolling=True)
 
                 
 
