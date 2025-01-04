@@ -2670,7 +2670,7 @@ if selected == 'Interprétation':
                 fig = plt.figure()
                 shap.summary_plot(shap_values_RF_CAROLLE_1[:, [X_test.columns.get_loc("previous")]], 
                                   X_test[["previous"]], 
-                                  feature_names=["preious"], 
+                                  feature_names=["previous"], 
                                   show=True)
                 st.pyplot(fig)
                 
