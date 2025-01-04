@@ -3848,11 +3848,24 @@ if selected == 'Outil  Prédictif':
         
                 
                 elif option_to_add == "Dernier_contact":
-                    Dernier_contact = st.selectbox("À quand remonte le dernier contact avec le client lors de la précédente campagne?", ('Client jamais contacté', 'Client contacté il y a moins de 6 mois', 'Client contacté il y a plus de 6  mois'))
-                        
+                
+                    # Déterminer les options basées sur la valeur précédente
+                    if previous_value == 0:
+                        # Si le client n'a jamais été contacté, seule cette option est pertinente
+                        contact_options = ['Client jamais contacté']
+                    else:
+                        # Sinon, on propose les options correspondantes à un contact
+                        contact_options = ['Client contacté il y a moins de 6 mois', 'Client contacté il y a plus de 6 mois']
+                    
+                    # Afficher le selectbox avec les options déterminées
+                    if option_to_add == "Dernier_contact":
+                        Dernier_contact = st.selectbox(
+                            "À quand remonte le dernier contact avec le client lors de la précédente campagne?", 
+                            options=contact_options
+                        )
+ 
                     pred_df['Client_Category_M'] = Dernier_contact
-                    pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Client jamais contacté', 'Client contacté il y a moins de 6 mois', 'Client contacté il y a plus de 6  mois'], [0, 1, 2])
-                    st.write("Dernier contact de la banque avec le client lors de la précédente campagne : ", Dernier_contact)
+                    pred_df['Client_Category_M'] = pred_df['Client_Category_M'].replace(['Client jamais contacté', 'Client contacté il y a moins de 6 mois', 'Client contacté il y a plus de 6 mois'], [0, 1, 2])
                     
                     # Étape 2 : Concaténer dff et pred_df
                     # Concaténer les deux DataFrames dff et pred_df sur les colonnes numériques
