@@ -3540,7 +3540,7 @@ if selected == 'Outil  Prédictif':
     if age is not None and balance is not None:
         # Affichage du récapitulatif
         st.write(f'### Récapitulatif')
-        st.markdown(f"Le client a **{age}** ans")
+        st.markdown(f"Le client a **{age} ans**")
         st.markdown(f"Le client a un niveau d'étude **{education}**")
         st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
         st.markdown(f"Le client est-il propriétaire : **{housing}**")
@@ -4005,7 +4005,7 @@ if selected == 'Outil  Prédictif':
     
                 # Afficher le récapitulatif
                 st.write(f'### Récapitulatif')
-                st.markdown(f"Le client a **{age}** ans")
+                st.markdown(f"Le client a **{age} ans**")
                 st.markdown(f"Le client a un niveau d'étude **{education}**")
                 st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
                 st.markdown(f"Le client est-il propriétaire : **{housing}**")
