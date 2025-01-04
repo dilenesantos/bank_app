@@ -3021,7 +3021,7 @@ if selected == 'Interprétation':
                 st.write("La distribution des valeurs de previous montre très clairement que lorsque les clients n’ont jamais été contactés (previous = 0) alors la shap value est négative, tandis que **les clients qui ont été contactés par le passé affichent des valeurs shap très nettement positives, ils sont donc plus susceptibles de souscrire au produit.**")
                         
             if submenu_local == "CAMPAIGN" :
-                st.title("PREVIOUS : POIDS +0.10")
+                st.title("CAMPAIGN : POIDS +0.10")
                 st.subheader("IMPACT POSITIF DE PREVIOUS SUR LA CLASSE 1")
                 st.write("Le nombre de contacts effectués avec le client pendant la campagne (dernier contact inclus) est également un paramètre relativement important dans la prédiction de notre modèle. Valeurs comprises entre 1 et 5.")
                 fig = plt.figure()
