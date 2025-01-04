@@ -3721,9 +3721,9 @@ if selected == 'Outil  Prédictif':
                     plt.close()
                  
                     if prediction_opt_loan[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client N'EST PAS susceptible de souscrire à un dépôt à terme.**")
                     else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client EST susceptible de souscrire à un dépôt à terme.**")
                 
         
                 elif option_to_add == "marital":
@@ -3788,9 +3788,9 @@ if selected == 'Outil  Prédictif':
                     plt.close()
                  
                     if prediction_opt_marital[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client N'EST PAS susceptible de souscrire à un dépôt à terme.**")
                     else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client EST susceptible de souscrire à un dépôt à terme.**")
                 
         
                 elif option_to_add == "poutcome":
@@ -3857,9 +3857,9 @@ if selected == 'Outil  Prédictif':
                     plt.close()
                  
                     if prediction_opt_poutcome[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client N'EST PAS susceptible de souscrire à un dépôt à terme.**")
                     else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client EST susceptible de souscrire à un dépôt à terme.**")
                 
         
         
@@ -3928,9 +3928,9 @@ if selected == 'Outil  Prédictif':
                     plt.close()
                  
                     if prediction_opt_job[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client N'EST PAS susceptible de souscrire à un dépôt à terme.**")
                     else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client EST susceptible de souscrire à un dépôt à terme.**")
                 
         
                 
@@ -3997,9 +3997,9 @@ if selected == 'Outil  Prédictif':
                     plt.close()
                  
                     if prediction_opt_client_category[0] == 0:
-                        st.write("Conclusion : Ce client n'est pas susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client N'EST PAS susceptible de souscrire à un dépôt à terme.**")
                     else:
-                        st.write("Conclusion : Ce client est susceptible de souscrire à un dépôt à terme.")
+                        st.write("Conclusion : **Ce client EST susceptible de souscrire à un dépôt à terme.**")
                 
     
     
