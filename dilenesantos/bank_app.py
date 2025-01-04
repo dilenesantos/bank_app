@@ -1116,9 +1116,9 @@ if selected == 'DataVisualisation':
                         for p in ax.patches:  # Pour chaque barre du plot
                             ax.annotate(f'{p.get_height():.1f}%', 
                                         (p.get_x() + p.get_width() / 2., p.get_height()), 
-                                        ha='center', va='bottom')  # Positionner le pourcentage au-dessus de la barre
+                                        ha='center', va='bottom') 
                 
-                        plt.title(f"Distribution de {column} (%)", fontsize=15)  # Ajustez la taille de police
+                        plt.title(f"Distribution de {column} (%)", fontsize=15) 
                         plt.xlabel(xlabel, fontsize=12)
                         plt.ylabel("Percentage (%)", fontsize=12)
                         
@@ -1150,12 +1150,12 @@ if selected == 'DataVisualisation':
                         for p in ax.patches:  # Pour chaque barre
                             ax.annotate(f'{p.get_height():.1f}%', 
                                         (p.get_x() + p.get_width() / 2., p.get_height()), 
-                                        ha='center', va='bottom')  # Positionner le pourcentage au-dessus de la barre
+                                        ha='center', va='bottom') 
                     
                         # Paramètres du graphique
-                        plt.title(f"Distribution de {column} (%)")
-                        plt.xlabel(xlabel)
-                        plt.ylabel("Percentage (%)")
+                        plt.title(f"Distribution de {column} (%)", fontsize=15) 
+                        plt.xlabel(xlabel, fontsize=12)
+                        plt.ylabel("Percentage (%)", fontsize=12)
                         
                         # Afficher le graphique dans Streamlit
                         st.pyplot(fig)
