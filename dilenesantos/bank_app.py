@@ -2817,7 +2817,7 @@ if selected == 'Interprétation':
                 st.write("6. **EDUCATION** : niveau scolaire du client")                
 
         if submenu_interpretation == "ANALYSE DES VARIABLES LES PLUS IMPORTANTES" :
-            submenu_local = st.radio("", ("HOUSING", "BALANCE", "AGE", "PREVIOUS", "CAMPAIGN", "EDUCATION"), horizontal=True)
+            submenu_local = st.radio("", ("HOUSING", "BALANCE", "AGE", "PREVIOUS", "CAMPAIGN", "EDUCATION", "AUTRES"), horizontal=True)
             shap_XGBOOST_1_VALUES = shap_values_XGBOOST_1.values
             X_test_original_figures = X_test_sd_original 
             
@@ -3061,6 +3061,48 @@ if selected == 'Interprétation':
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
+
+            if submenu_local == "AUTRES" :
+                st.title("Loan")
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("loan")]], 
+                                  X_test_sd[["loan"]], 
+                                  feature_names=["loan"], 
+                                  show=True)
+                st.pyplot(fig)
+                st.write("Cela est confirmé par le dependence plot.")         
+
+                feature_name = "loan"
+                
+                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
+                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
+                fig = plt.gcf()          
+                st.pyplot(fig)       
+                plt.close() 
+             
+                st.title("Marital status")
+                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("marital")]], 
+                                  X_test_sd[["marital"]], 
+                                  feature_names=["marital"], 
+                                  show=True)
+                st.pyplot(fig)
+                st.write("Cela est confirmé par le dependence plot.")         
+
+                # Étape 1 : Trouver les colonnes qui contiennent 'marital'
+                marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
+                
+                # Étape 2 : Filtrer les valeurs SHAP et les données correspondantes
+                # Identifier les indices des colonnes à garder
+                marital_indices = [X_test_sd.columns.get_loc(col) for col in marital_columns]
+                shap_values_marital = shap_values_XGBOOST_1[:, marital_indices]
+                
+                # Créer un nouvel Explanation pour Marital
+                explanation_marital = shap.Explanation(values=shap_values_marital,
+                                                      data=X_test_sd.values[:, marital_indices],
+                                                      feature_names=marital_columns)
+                
+                shap.plots.beeswarm(explanation_marital)
+                st.pyplot(fig) 
+                
 
   
 if selected == "Recommandations & Perspectives":
