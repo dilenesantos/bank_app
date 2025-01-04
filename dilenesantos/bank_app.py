@@ -3537,7 +3537,7 @@ if selected == 'Outil  Prédictif':
     
     housing = st.selectbox("As-t-il un crédit immobilier ?", ('yes', 'no'))
 
-    previous = st.selectbox("Lors de la précédente campagne marketing, combien de fois le client a-t-il été contacté ?", 
+    previous = st.selectbox("Avant cette campagne marketing, combien de fois le client a-t-il été contacté ?", 
                              options=["0 fois", "1 fois", "2 fois ou plus"])    
 
 
@@ -3549,7 +3549,7 @@ if selected == 'Outil  Prédictif':
         st.markdown(f"Le client a un niveau d'étude **{education}**")
         st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
         st.markdown(f"Le client a-t-il un crédit immobilier : **{housing}**")
-        st.markdown(f"Le client a été contacté **{previous}** lors de la dernière campagne marketing")
+        st.markdown(f"Le client a été contacté **{previous}** avant cette campagne marketing")
 
         # Mapper les options à des valeurs entières
         if previous == "0 fois":
@@ -4066,7 +4066,7 @@ if selected == 'Outil  Prédictif':
                     previous = "1 fois"
                 else:  # "2 fois ou plus"
                     previous = "2 fois ou plus"
-                st.markdown(f"Le client a été contacté **{previous}** lors de la dernière campagne marketing")
+                st.markdown(f"Le client a été contacté **{previous}** avant cette campagne marketing")
                 
                 # Afficher les informations supplémentaires définies
                 if option_to_add == "loan":
