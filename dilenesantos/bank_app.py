@@ -3198,10 +3198,12 @@ if selected == "Recommandations & Perspectives":
                 st.write("#### PREVIOUS:","Nombre de contacts effectués avant la campagne avec le client")
                 st.write("##### Prioriser les clients déjà contactés")
                 st.write("L'objectif managérial serait de **renforcer les actions auprès des clients déjà engagés** tout en explorant des méthodes pour **réactiver ceux qui n'ont jamais été contactés.** ")
-                st.write(" -  **Prioriser les clients ayant déjà été contactés :** Étant donné que les clients ayant été contactés précédemment présentent des SHAP values positives, il est recommandé de concentrer les efforts de marketing et de vente sur ces clients. Ils semblent plus susceptibles de souscrire à un produit comme un dépôt à terme. ")
-                st.write(" -  **Cibler les clients sans contact préalable :** Pour les clients n'ayant jamais été contactés (avec une SHAP value négative), il pourrait être utile **d'envisager des actions spécifiques pour les réengager**, comme des campagnes de sensibilisation ou des offres adaptées, afin de **stimuler leur intérêt pour l'achat d'un dépôt à terme. Le manque de contact préalable ne signifie pas nécessairement un manque d'intérêt**, mais cela peut refléter un manque de communication qui pourrait être corrigé.")
-                st.write(" -  **Optimiser les campagnes de relance :** Pour les clients ayant été contactés une ou plusieurs fois, il est important d'adapter les messages de communication en fonction de leur historique. **Les relances personnalisées** et ciblées peuvent être plus efficaces pour ces clients, en leur offrant des informations supplémentaires sur les avantages des dépôts à terme.")
-                st.write(" -  **Utiliser des stratégies de segmentation avancées :** Les clients ayant été contactés plusieurs fois semblent réceptifs aux produits proposés. **Il pourrait être utile de segmenter davantage cette population en fonction de l’intensité et du type de contact préalable** (par exemple, par téléphone, e-mail, ou rencontre en agence) pour **personnaliser encore plus les offres et maximiser les chances de conversion.**")
+                st.write("###### Les clients déjà contactés: ")
+                st.write(" -  Optimiser les campagnes de relance en **personnalisant les messages en fonction de leur historique**. Des relances ciblées, mettant en avant les avantages des DAT, peuvent accroître leur efficacité. ")
+                st.write(" -  Utiliser des stratégies de segmentation avancées : En les classant selon l'intensité et le type de contact (téléphone, e-mail, rencontre en agence), il est possible de personnaliser davantage les offres et d'augmenter les chances de conversion.")
+                st.write("###### les clients jamais contactés (SHAP value négative): ")
+                st.write(" -  Il est conseillé **de lancer des actions spécifiques**, comme des campagnes de sensibilisation ou des offres personnalisées, pour susciter leur intérêt. **L'absence de contact préalable** n'indique pas forcément un désintérêt, mais peut **refléter un manque de communication à combler**.")
+                
           
             if submenu_profil == "EDUCATION" :
                 st.write("#### EDUCATION:","Niveau d'étude du client")
