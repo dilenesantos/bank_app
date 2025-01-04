@@ -3070,7 +3070,7 @@ if selected == 'Interprétation':
                                   feature_names=["loan"], 
                                   show=True)
                 st.pyplot(fig)
-                st.write("Si le client ne possède pas de crédit personnel, les prédictions tendent clairement vers le 'YES'.")         
+                st.write("Si le client ne possède **pas de crédit personnel**, les prédictions tendent clairement vers le **'YES'**.")         
              
                 st.title("Marital status")
 
@@ -3094,8 +3094,8 @@ if selected == 'Interprétation':
                 # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
                 plt.close()
-                st.write("Si le client n'est pas marié, les prédictions tendent vers le 'YES'.")     
-                st.write("Si le client est célibataire ou divorcé, les prédictions globalement plutôt vers le 'YES'.")         
+                st.markdown("Si le client n'est **pas marié**, les prédictions tendent vers le **'YES'.** \n\
+                Si le client est **célibataire ou divorcé**, les prédictions tendent globalement plutôt vers le **'YES'**.")         
 
                 st.title("Poutcome")
 
@@ -3119,7 +3119,7 @@ if selected == 'Interprétation':
                 # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
                 plt.close()
-                st.write("Si le résultat de la précédente campagne a été un succès, les prédictions tendent plutôt vers le 'YES'.")     
+                st.write("Si le résultat de la **précédente campagne** a été un **succès**, les prédictions tendent plutôt vers le **'YES'**.")     
 
                 st.title("Job")
 
@@ -3143,7 +3143,7 @@ if selected == 'Interprétation':
                 # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
                 plt.close()
-                st.write("Si le client est édudiant, sans emploi, retraité ou s'il travaille dans les services, alors les prédictions tendent assez clairement vers le 'YES'.")     
+                st.write("Si le client est **édudiant**, **sans emploi**, **retraité** ou si son **job** est dans les **services**, alors les prédictions tendent assez clairement vers le **'YES'**.")     
 
                 st.title("Client_Category")
 
@@ -3154,7 +3154,7 @@ if selected == 'Interprétation':
                 fig = plt.gcf()          
                 st.pyplot(fig)       
                 plt.close() 
-                st.write("Si le dernier contact avec le client remonte à moins de 6 mois, les prédictions tendent majoritairement vers le 'YES'.")          
+                st.write("Si le **dernier contact avec le client** remonte à **moins de 6 mois**, les prédictions tendent majoritairement vers le **'YES'**.")          
 
 
   
