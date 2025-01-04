@@ -3063,7 +3063,7 @@ if selected == 'Interprétation':
                 plt.close() 
 
             if submenu_local == "AUTRES" :
-                st.title("Loan")
+                st.subheader("Loan")
                 fig = plt.figure()
                 shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("loan")]], 
                                   X_test_sd[["loan"]], 
@@ -3072,7 +3072,7 @@ if selected == 'Interprétation':
                 st.pyplot(fig)
                 st.write("Si le client ne possède **pas de crédit personnel**, les prédictions tendent clairement vers le **'YES'**.")         
              
-                st.title("Marital status")
+                st.subheader("Marital status")
 
                 # Étape 1 : Trouver les colonnes qui contiennent 'marital'
                 marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
@@ -3098,7 +3098,7 @@ if selected == 'Interprétation':
                 Si le client est **célibataire ou divorcé**, les prédictions tendent globalement plutôt vers le **'YES'**.")
              
 
-                st.title("Poutcome")
+                st.subheader("Poutcome")
 
                 # Étape 1 : Trouver les colonnes qui contiennent 'POUTCOME'
                 poutcome_columns = [col for col in X_test_sd.columns if 'poutcome' in col]
@@ -3122,7 +3122,7 @@ if selected == 'Interprétation':
                 plt.close()
                 st.write("Si le résultat de la **précédente campagne** a été un **succès**, les prédictions tendent plutôt vers le **'YES'**.")     
 
-                st.title("Job")
+                st.subheader("Job")
 
                 # Étape 1 : Trouver les colonnes qui contiennent 'JOB'
                 job_columns = [col for col in X_test_sd.columns if 'job' in col]
@@ -3146,7 +3146,7 @@ if selected == 'Interprétation':
                 plt.close()
                 st.write("Si le client est **édudiant**, **sans emploi**, **retraité** ou si son **job** est dans les **services**, alors les prédictions tendent assez clairement vers le **'YES'**.")     
 
-                st.title("Client_Category")
+                st.subheader("Client_Category")
 
                 feature_name = "Client_Category_M"
                 
