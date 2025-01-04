@@ -3631,8 +3631,8 @@ if selected == 'Outil  Prédictif':
     
         # Réinitialiser l'index de pred_df après la manipulation (facultatif)
         pred_df = pred_df.reset_index(drop=True)
-        st.write("Dataframe du client en question")
-        st.dataframe(pred_df)
+        #st.write("Dataframe du client en question")
+        #st.dataframe(pred_df)
         
         # Interface utilisateur
         filename = "dilenesantos/XGBOOST_1_SD_model_PRED_AVEC_parametres.pkl"
@@ -3855,8 +3855,8 @@ if selected == 'Outil  Prédictif':
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_poutcome[0]}**")
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
-                    st.write("Dataframe du client en question")
-                    st.dataframe(pred_df)
+                    #st.write("Dataframe du client en question")
+                    #st.dataframe(pred_df)
                  
                     st.write("Force plot du client :")
                     shap.initjs() 
