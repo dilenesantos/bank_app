@@ -3200,8 +3200,8 @@ if selected == "Recommandations & Perspectives":
                 st.write("L'objectif managérial serait de **renforcer les actions auprès des clients déjà engagés** tout en explorant des méthodes pour **réactiver ceux qui n'ont jamais été contactés.** ")
                 st.write("###### Les clients déjà contactés: ")
                 st.write(" -  Optimiser les campagnes de relance en **personnalisant les messages en fonction de leur historique**. Des relances ciblées, mettant en avant les avantages des DAT, peuvent accroître leur efficacité. ")
-                st.write(" -  Utiliser des stratégies de segmentation avancées : En les classant selon l'intensité et le type de contact (téléphone, e-mail, rencontre en agence), il est possible de personnaliser davantage les offres et d'augmenter les chances de conversion.")
-                st.write("###### les clients jamais contactés (SHAP value négative): ")
+                st.write(" -  Utiliser des **stratégies de segmentation avancées** : En les **classant selon l'intensité et le type de contact** (téléphone, e-mail, rencontre en agence), il est possible de **personnaliser davantage les offres** et d'augmenter les chances de conversion.")
+                st.write("###### Les clients jamais contactés (SHAP value négative): ")
                 st.write(" -  Il est conseillé **de lancer des actions spécifiques**, comme des campagnes de sensibilisation ou des offres personnalisées, pour susciter leur intérêt. **L'absence de contact préalable** n'indique pas forcément un désintérêt, mais peut **refléter un manque de communication à combler**.")
                 
           
