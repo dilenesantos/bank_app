@@ -3088,9 +3088,9 @@ if selected == 'Interprétation':
                 
                 
                 # Générer le plot beeswarm sans spécifier d'axe
-                shap.plots.beeswarm(explanation_marital)
+                shap.summary_plot(explanation_marital)
                 
-                # Récupérer la figure courante et l'afficher
+                # Récupérer la figure courante pour Streamlit
                 fig = plt.gcf()
                 st.pyplot(fig)
                 plt.close()
