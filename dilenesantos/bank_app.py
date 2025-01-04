@@ -3082,15 +3082,14 @@ if selected == 'Interprétation':
                 marital_indices = [X_test_sd.columns.get_loc(col) for col in marital_columns]
                 shap_values_marital = shap_values_XGBOOST_1[:, marital_indices]
                 
-                # Créer un nouvel Explanation pour Marital
-                explanation_marital = shap.Explanation(values=shap_values_marital,
-                                                       data=X_test_sd.values[:, marital_indices],
-                                                       feature_names=marital_columns)
+                # Créer un figure pour le summary plot
+                fig = plt.figure()
                 
-                # Générer le summary plot
-                fig, ax = plt.subplots()  # Créer une nouvelle figure pour éviter les conflits
-                
-                shap.summary_plot(explanation_marital, ax=ax)  # Passer le subplot à la fonction
+                # Générer le summary plot pour les variables maritales
+                shap.summary_plot(shap_values_marital, 
+                                  X_test_sd.iloc[:, marital_indices], 
+                                  feature_names=marital_columns, 
+                                  show=False)
                 
                 # Afficher le graphique dans Streamlit
                 st.pyplot(fig)
