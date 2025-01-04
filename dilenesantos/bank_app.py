@@ -1143,15 +1143,28 @@ if selected == 'DataVisualisation':
                         counts = data[column].value_counts(normalize=True) * 100
             
                         # Barplot de distribution
-                        plt.figure(figsize=(9, 6))
-                        sns.barplot(x=counts.index, y=counts.values, color='skyblue')
+                        fig, ax = plt.subplots(figsize=(9, 6))
+                        sns.barplot(x=counts.index, y=counts.values, color='skyblue', ax=ax)
+                    
+                        # Ajouter les annotations de pourcentage sur les barres
+                        for p in ax.patches:  # Pour chaque barre
+                            ax.annotate(f'{p.get_height():.1f}%', 
+                                        (p.get_x() + p.get_width() / 2., p.get_height()), 
+                                        ha='center', va='bottom')  # Positionner le pourcentage au-dessus de la barre
+                    
+                        # Paramètres du graphique
                         plt.title(f"Distribution de {column} (%)")
                         plt.xlabel(xlabel)
                         plt.ylabel("Percentage (%)")
-                        plt.xticks(rotation=45)  
-                        st.pyplot(plt)
+                        plt.xticks(rotation=45)
+                        
+                        # Afficher le graphique dans Streamlit
+                        st.pyplot(fig)
                         plt.clf()  
+                    
+                    # Appel de la fonction pour tracer le graphique
                     plot_percentage(clients_yes, "poutcome2", "Poutcome: Résultat de la précédente campagne")
+
                     st.write("Plus de 70 % des clients précédemment contactés, qui avaient refusé l'offre lors de la campagne précédente, ont accepté de souscrire à cette nouvelle campagne de dépôt à terme.")
                     st.write("____________________________________")
 
