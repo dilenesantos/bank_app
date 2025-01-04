@@ -3175,9 +3175,9 @@ if selected == "Recommandations & Perspectives":
                 st.write("#### HOUSING:","Détention ou non d’un prêt immobilier")
                 st.write("##### Prioriser les clients qui n’ont pas de prêt immobilier")
                 st.write("Le modèle montre que les **clients ayant un prêt immobilier ont une probabilité plus faible de souscrire au DAT**.")
-                st.write("Il faudrait analyser plus en profondeur le contexte métier pour comprendre pourquoi la possession d'un prêt immobilier est négativement corrélée à la classe 1. Par exemple :")
-                st.write(" - La classe 1 de ‘housing’ pourrait représenter des clients à risque de défaut de paiement. Dans ce cas, les clients ayant déjà un prêt pourraient être considérés comme plus à risque, car ils ont déjà une dette.")
-                st.write(" - La classe 1 de ‘housing’ pourrait représenter des clients ciblés pour une nouvelle offre de prêt. Dans ce cas, les clients ayant déjà un prêt seraient moins susceptibles d'être sollicités pour un nouveau crédit.")
+                st.write("Une **analyse approfondie du contexte métier** est nécessaire pour **expliquer cette corrélation négative**. Deux hypothèses possibles :")
+                st.write(" - Les clients ayant un prêt immobilier pourraient **être perçus comme plus à risque de défaut de paiement en raison de leur dette existante**.")
+                st.write(" - Ces clients pourrait représenter des clients **ciblés pour une autre offre de prêt de la banque**. Dans ce cas, les clients ayant déjà un prêt seraient **moins susceptibles d'être sollicités pour un nouveau crédit**.")
                 
 
             if submenu_profil == "ÂGE" :
