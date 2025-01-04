@@ -3207,6 +3207,7 @@ if selected == "Recommandations & Perspectives":
           
             if submenu_profil == "EDUCATION" :
                 st.write("#### EDUCATION:","Niveau d'étude du client")
+                st.write("##### Prioriser les clients qui ont un niveau d'éducation tertiaire")
                 
 
       if submenu_reco == "NOMBRE ET DUREE D’APPEL" :
@@ -3233,7 +3234,7 @@ if selected == "Recommandations & Perspectives":
           st.write("##### -  Prioriser les clients âgés de 18 à 28 ans et de 59 ans ou plus.")
           st.write("##### -  Contacter en priorité les clients dont la balance est supérieure à 800€.")
           st.write("##### -  Prioriser les clients déjà contactés")
-          st.write("##### -  Prioriser xxxxxxxx pr EDUCATION")
+          st.write("##### -  Prioriser les clients qui ont un niveau d'éducation tertiaire")
           st.write("##### -  Maintenir autant que possible une durée d’appel de minimum 6 minutes ")
           st.write("##### -  Il ne semble pas pertinent de contacter les clients plus d’une fois pendant la campagne. ")
           
