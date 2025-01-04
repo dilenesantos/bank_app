@@ -764,7 +764,6 @@ if selected == 'DataVisualisation':
     
                 if sub_pages2 == "Conclusion" :
     
-                    st.subheader("Conclusion")
                     st.image("dilenesantos/recap_Chi-deux.png")
                     st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables qualitatives ont un lien significatif avec notre variable cible.**")
                     st.write("____________________________________")
