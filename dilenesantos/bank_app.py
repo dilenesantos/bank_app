@@ -3070,24 +3070,9 @@ if selected == 'Interprétation':
                                   feature_names=["loan"], 
                                   show=True)
                 st.pyplot(fig)
-                st.write("Cela est confirmé par le dependence plot.")         
-
-                feature_name = "loan"
-                
-                shap.dependence_plot(feature_name, shap_values=shap_XGBOOST_1_VALUES, features=X_test_original_figures, interaction_index=feature_name, show=False)
-                plt.axhline(0, color='red', linestyle='--', linewidth=1) 
-                fig = plt.gcf()          
-                st.pyplot(fig)       
-                plt.close() 
+                st.write("Si le client ne possède pas de crédit personnel, les prédictions tendent clairement vers le 'YES'.")         
              
                 st.title("Marital status")
-                fig = plt.figure()
-                shap.summary_plot(shap_values_XGBOOST_1[:, [X_test_sd.columns.get_loc("marital")]], 
-                                  X_test_sd[["marital"]], 
-                                  feature_names=["marital"], 
-                                  show=True)
-                st.pyplot(fig)
-                st.write("Cela est confirmé par le dependence plot.")         
 
                 # Étape 1 : Trouver les colonnes qui contiennent 'marital'
                 marital_columns = [col for col in X_test_sd.columns if 'marital' in col]
