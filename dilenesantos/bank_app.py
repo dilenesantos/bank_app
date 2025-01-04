@@ -546,7 +546,7 @@ if selected == 'DataVisualisation':
                 
                 st.write("____________________________________")
     
-                st.subheader(f"{sub_pages1}")
+                st.subheader(f"Analyse du {sub_pages1}")
     
                 if sub_pages1 == "Lien âge x deposit" :
                     fig = plt.figure(figsize=(4,2))
@@ -646,7 +646,6 @@ if selected == 'DataVisualisation':
                     st.markdown("P_value = 7.125338e-50  ➡️  **Il y a un lien significatif entre Previous et Deposit**") 
                     
                 if sub_pages1 == "Conclusion" :
-                    st.subheader("Conclusion")
                     st.image("dilenesantos/recap_test_anova.png")
                     st.write("Au regard des p-values (qui sont toutes inférieures à 0.05), on peut conclure que **toutes les variables quantitatives ont un lien significatif avec notre variable cible.**")
                     st.write("____________________________________")
