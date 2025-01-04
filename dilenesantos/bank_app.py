@@ -4054,6 +4054,13 @@ if selected == 'Outil  Prédictif':
                 st.markdown(f"Le client a un niveau d'étude **{education}**")
                 st.markdown(f"Le solde de son compte en banque est de **{balance} euros**")
                 st.markdown(f"Le client a-t-il un crédit immobilier : **{housing}**")
+                # Mapper les options à des valeurs entières
+                if previous == 0 :
+                    previous = "0 fois"
+                elif previous == 1 :
+                    previous = "1 fois"
+                else:  # "2 fois ou plus"
+                    previous = "2 fois ou plus"
                 st.markdown(f"Le client a été contacté **{previous}** lors de la dernière campagne marketing")
                 
                 # Afficher les informations supplémentaires définies
