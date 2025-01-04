@@ -3788,7 +3788,15 @@ if selected == 'Outil  Prédictif':
                  
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_marital[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%**")
+                    if max_proba_opt_marital > max_proba:
+                        variation = "en hausse"
+                    elif max_proba_opt_marital == max_proba:
+                        variation = "inchangé"
+                    else:
+                        variation = "en baisse"
+                    
+                    # Affiche le niveau de confiance après affinage avec la variation
+                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
                  
                     st.write("Force plot du client :")
                     shap.initjs() 
@@ -3855,7 +3863,16 @@ if selected == 'Outil  Prédictif':
                     
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_poutcome[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%**")
+                    if max_proba_opt_poutcome > max_proba:
+                        variation = "en hausse"
+                    elif max_proba_opt_poutcome == max_proba:
+                        variation = "inchangé"
+                    else:
+                        variation = "en baisse"
+                    
+                    # Affiche le niveau de confiance après affinage avec la variation
+                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_poutcome:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
+
                     #st.write("Dataframe du client en question")
                     #st.dataframe(pred_df)
                  
@@ -3929,7 +3946,16 @@ if selected == 'Outil  Prédictif':
                 
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_job[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%**")
+                    if max_proba_opt_job > max_proba:
+                        variation = "en hausse"
+                    elif max_proba_opt_job == max_proba:
+                        variation = "inchangé"
+                    else:
+                        variation = "en baisse"
+                    
+                    # Affiche le niveau de confiance après affinage avec la variation
+                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
+
                     st.write("Force plot du client :")
                     shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_job_rounded, pred_df, matplotlib=True)
@@ -3998,7 +4024,16 @@ if selected == 'Outil  Prédictif':
                 
                     # Affichage des résultats
                     st.markdown(f"Prediction après affinage : **{prediction_opt_client_category[0]}**")
-                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%**")
+                    if max_proba_opt_client_category > max_proba:
+                        variation = "en hausse"
+                    elif max_proba_opt_client_category == max_proba:
+                        variation = "inchangé"
+                    else:
+                        variation = "en baisse"
+                    
+                    # Affiche le niveau de confiance après affinage avec la variation
+                    st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
+
                     st.write("Force plot du client :")
                     shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_client_category_rounded, pred_df, matplotlib=True)
