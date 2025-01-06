@@ -2495,7 +2495,7 @@ if selected == 'Interprétation':
     page=st.sidebar.radio('AVEC ou SANS Duration', pages)
 
     if page == pages[0] : 
-        st.subheader("Interpréation SHAP avec la colonne Duration")
+        st.subheader("Interprétation SHAP avec la colonne Duration")
         #submenu_interpretation = st.selectbox("Menu", ("Summary plot", "Bar plot poids des variables", "Analyses des variables catégorielles", "Dependence plots"))
         submenu_interpretation_Duration = st.radio("", ("ANALYSE GLOBALE", "ANALYSE DES VARIABLES LES PLUS INFLUENTES"), horizontal=True)
 
