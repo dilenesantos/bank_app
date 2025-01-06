@@ -2177,15 +2177,9 @@ if selected == "Modélisation":
             st.write("Recherches Gridsearch des 4 membres de la Team sur les top 3 modèles ressortis sans paramètres")
             st.write("Tableau des résultats des modèles hyperparamétrés")
             st.dataframe(df_results_AD_top_3_hyperparam_TEAM)
+          
             
-            
-            st.subheader("Étape 2 : Nouvelles recherches GridSeach ")
-            st.write("Melting de nos différents hyperparamètres trouvés pour chaque modèle pour une nouvelle recherche GridSearch")
-            st.write("Tableau des résultats des modèles :")
-            st.dataframe(df_results_hyperparam_gridsearch2)
-            
-            
-            st.subheader("Étape 3 : Modèle sélectionné")
+            st.subheader("Étape 2 : Modèle sélectionné")
             st.write("Le modèle Random Forest 'RF_carolle' avec les hyperparamètres ci-dessous affiche la meilleure performance en termes de Recall, aussi nous choisisons de poursuivre notre modélisation avec ce modèle")
             st.write("RandomForestClassifier(**class_weight= 'balanced', max_depth=20, max_features='sqrt',min_samples_leaf=2, min_samples_split=10, n_estimators= 200, random_state=42**)")
                 
