@@ -295,10 +295,10 @@ with st.sidebar:
 with st.sidebar:
     st.markdown("---")  
     st.subheader("Membres du projet")  
-    st.markdown("- **Dilène Santos**")
-    st.markdown("- **Carolle Lorvine**")
-    st.markdown("- **Fatoumata Diallo**")
-    st.markdown("- **Dounia Filialiboissy**")
+    st.markdown("- **Dilène SANTOS**")
+    st.markdown("- **Carolle DEUMENI**")
+    st.markdown("- **Fatoumata DIALLO**")
+    st.markdown("- **Douniazed FILALI**")
  
 if selected == 'Introduction':  
     st.title("Prédiction du succès d’une campagne Marketing pour une banque")
