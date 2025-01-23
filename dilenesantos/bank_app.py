@@ -292,7 +292,14 @@ with st.sidebar:
     selected = option_menu(
         menu_title='Sections',
         options=['Introduction','DataVisualisation', "Pre-processing", "Modélisation", "Interprétation", "Recommandations & Perspectives", "Outil  Prédictif"]) 
-
+with st.sidebar:
+    st.markdown("---")  
+    st.subheader("Membres du projet")  
+    st.markdown("- **Dilène Santos**")
+    st.markdown("- **Carolle Lorvine**")
+    st.markdown("- **Fatoumata Diallo**")
+    st.markdown("- **Dounia Filialiboissy**")
+ 
 if selected == 'Introduction':  
     st.title("Prédiction du succès d’une campagne Marketing pour une banque")
     st.subheader("Contexte du projet")
