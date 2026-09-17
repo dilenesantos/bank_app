@@ -18,7 +18,6 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import SimpleImputer
 
 from streamlit_option_menu import option_menu
-from streamlit_extras.no_default_selectbox import selectbox
 
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
@@ -38,8 +37,9 @@ from sklearn.metrics import classification_report
 import joblib
 import shap
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-df=pd.read_csv('dilenesantos/bank.csv')
+df = pd.read_csv(os.path.join(BASE_DIR, 'bank.csv'))
 
 dff = df.copy()
 dff = dff[dff['age'] < 75]
