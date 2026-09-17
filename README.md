@@ -1,6 +1,7 @@
 # Bank App
 
 Application Streamlit d'analyse et de prediction pour le projet bancaire.
+URL = https://bankapp-meycfbeyrtgusvaljnvh4r.streamlit.app/
 
 ## Lancer en local
 
