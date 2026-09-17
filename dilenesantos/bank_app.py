@@ -3672,7 +3672,6 @@ if selected == 'Outil  Prédictif':
 
         st.write("Force plot du client :")
         # Générer un graphique de force SHAP avec matplotlib
-        shap.initjs() 
         shap.force_plot(explainer.expected_value, shap_values_pred_rounded, pred_df, matplotlib=True)
         fig = plt.gcf()
         st.pyplot(fig)
@@ -3753,7 +3752,6 @@ if selected == 'Outil  Prédictif':
 
                                      
                     st.write("Force plot du client :")
-                    shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_loan_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
@@ -3828,7 +3826,6 @@ if selected == 'Outil  Prédictif':
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_marital:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
                  
                     st.write("Force plot du client :")
-                    shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_marital_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
@@ -3906,7 +3903,6 @@ if selected == 'Outil  Prédictif':
                     #st.dataframe(pred_df)
                  
                     st.write("Force plot du client :")
-                    shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_poutcome_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
@@ -3986,7 +3982,6 @@ if selected == 'Outil  Prédictif':
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_job:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
 
                     st.write("Force plot du client :")
-                    shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_job_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
@@ -4064,7 +4059,6 @@ if selected == 'Outil  Prédictif':
                     st.markdown(f"Niveau de confiance après affinage : **{max_proba_opt_client_category:.2f}%** (**{variation}** avec cette nouvelle information sur le client)")
 
                     st.write("Force plot du client :")
-                    shap.initjs() 
                     shap.force_plot(explainer.expected_value, shap_values_client_category_rounded, pred_df, matplotlib=True)
                     fig = plt.gcf()
                     st.pyplot(fig)
